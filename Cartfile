@@ -1,4 +1,4 @@
 github "robbiehanson/CocoaAsyncSocket" "master"
 github "CocoaLumberjack/CocoaLumberjack"
-github "lexrus/MMDB-Swift"
+github "zhuhaow/MMDB-Swift" "master"
 github "behrang/YamlSwift"
