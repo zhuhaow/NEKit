@@ -7,7 +7,7 @@ protocol TunnelDelegate : class {
 
 class Tunnel : NSObject, SocketDelegate {
     var proxySocket : ProxySocketProtocol
-    var adapterSocket: AdapterSocketProtocol?
+    var adapterSocket: AdapterSocket?
     
     weak var delegate : TunnelDelegate?
     
@@ -85,7 +85,7 @@ class Tunnel : NSObject, SocketDelegate {
         }
     }
     
-    func didConnect(adapterSocket: AdapterSocketProtocol, withResponse response: ConnectResponse) {
+    func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {
         proxySocket.respondToResponse(response)
     }
     

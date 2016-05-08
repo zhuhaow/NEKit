@@ -1,6 +1,6 @@
 import Foundation
 
-class AdapterSocket : NSObject, AdapterSocketProtocol, RawSocketDelegate {
+class AdapterSocket : NSObject, SocketProtocol, RawSocketDelegate {
     var socket: RawSocketProtocol!
     var request : ConnectRequest!
     weak var delegate: SocketDelegate?

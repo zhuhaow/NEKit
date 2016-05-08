@@ -49,21 +49,17 @@ protocol ProxySocketProtocol : SocketProtocol {
     func respondToResponse(response: ConnectResponse)
 }
 
-protocol AdapterSocketProtocol : SocketProtocol {
-    func openSocketWithRequest(request: ConnectRequest)
-}
-
 protocol SocketDelegate : class {
     func readyForForward(socket: SocketProtocol)
     func didWriteData(data: NSData?, withTag: Int, from: SocketProtocol)
     func didReadData(data: NSData, withTag: Int, from: SocketProtocol)
     func didDisconnect(socket: SocketProtocol)
     func didReceiveRequest(request: ConnectRequest, from: ProxySocketProtocol)
-    func didConnect(adapterSocket: AdapterSocketProtocol, withResponse: ConnectResponse)
+    func didConnect(adapterSocket: AdapterSocket, withResponse: ConnectResponse)
 }
 
 extension SocketDelegate {
     func didReceiveRequest(request: ConnectRequest, from: ProxySocketProtocol) {}
     
-    func didConnect(adapterSocket: AdapterSocketProtocol, withResponse: ConnectResponse) {}
+    func didConnect(adapterSocket: AdapterSocket, withResponse: ConnectResponse) {}
 }
