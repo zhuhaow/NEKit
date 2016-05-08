@@ -52,7 +52,7 @@ class SOCKS5ProxySocket: ProxySocket {
             data.getBytes(&rawPort, length: sizeof(UInt16))
             destinationPort = Int(NSSwapBigShortToHost(rawPort))
             DDLogInfo("Recieved request to \(destinationHost):\(destinationPort)")
-            request = ConnectRequest(host: destinationHost!, port: destinationPort!, method: .SOCKS5)
+            request = ConnectRequest(host: destinationHost!, port: destinationPort!)
             delegate?.didReceiveRequest(request!, from: self)
         case _ where tag >= 0:
             delegate?.didReadData(data, withTag: tag, from: self)
