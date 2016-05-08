@@ -1,7 +1,7 @@
 import Foundation
 
 public class RuleManager {
-    static var currentManager: RuleManager = RuleManager(fromRules: [], appendDirect: true)
+    public static var currentManager: RuleManager = RuleManager(fromRules: [], appendDirect: true)
     
     var rules :[Rule] = []
     

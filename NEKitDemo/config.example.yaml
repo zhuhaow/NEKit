@@ -1,0 +1,12 @@
+port: 9090
+adapter:
+  - id: goagentx
+    type: HTTP
+    host: 127.0.0.1
+    port: 8016
+
+rule:
+  - type: country
+    country: CN
+    match: false
+    adapter: goagentx

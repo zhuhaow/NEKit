@@ -4,20 +4,27 @@ import CocoaLumberjackSwift
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
+    
     @IBOutlet weak var window: NSWindow!
     var proxy: SOCKS5ProxyServer!
-
+    
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         DDLog.addLogger(DDTTYLogger.sharedInstance(), withLevel: .All)
-        proxy = SOCKS5ProxyServer(port: 9090)
-        proxy.start()
+        let config = Configuration()
+        let filepath = (NSHomeDirectory() as NSString).stringByAppendingPathComponent(".NEKit_demo.yaml")
+        if config.load(fromConfigFile: filepath) {
+            RuleManager.currentManager = config.ruleManager
+            proxy = SOCKS5ProxyServer(port: config.proxyPort!)
+            proxy.start()
+        } else {
+            exit(1)
+        }
     }
-
+    
     func applicationWillTerminate(aNotification: NSNotification) {
         proxy.stop()
     }
-
-
+    
+    
 }
 

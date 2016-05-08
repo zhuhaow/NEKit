@@ -4,7 +4,12 @@ class AdapterFactoryManager {
     var factoryDict: [String: AdapterFactoryProtocol]
     
     subscript(index: String) -> AdapterFactoryProtocol? {
-        get { return factoryDict[index] }
+        get {
+            if index == "direct" {
+                return DirectAdapterFactory()
+            }
+            return factoryDict[index]
+        }
         set { factoryDict[index] = newValue }
     }
     
