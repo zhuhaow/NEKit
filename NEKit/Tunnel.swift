@@ -89,6 +89,12 @@ class Tunnel : NSObject, SocketDelegate {
         proxySocket.respondToResponse(response)
     }
     
+    func updateAdapter(newAdapter: AdapterSocket) {
+        adapterSocket = newAdapter
+        adapterSocket?.delegate = self
+        adapterSocket?.delegateQueue = delegateQueue
+    }
+    
     private func checkStatus() {
         if closed {
             delegate?.tunnelDidClose(self)

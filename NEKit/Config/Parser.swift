@@ -106,6 +106,7 @@ public class Configuration {
     struct AdapterFactoryParser {
         static func parseAdapterFactoryManager(config :Yaml) -> AdapterFactoryManager {
             var factoryDict: [String: AdapterFactoryProtocol] = [:]
+            factoryDict["direct"] = DirectAdapterFactory()
             guard let adapterConfigs = config.array else {
                 DDLogWarn("Failed to parse adapter configuration or there is no adapter configuration.")
                 return AdapterFactoryManager(factoryDict: factoryDict)
@@ -119,9 +120,13 @@ public class Configuration {
                 
                 switch adapterConfig["type"] {
                     //                case "SOCKS5":
-                    //                    factoryDict[id] = parseServerAdapterFactory(adapterConfig, type: SOCKS5AdapterFactory.self)
-                    //                case "group":
-                //                    factoryDict[id] = parseAdapterFactoryGroup(adapterConfig, factoryDict: factoryDict)
+                //                    factoryDict[id] = parseServerAdapterFactory(adapterConfig, type: SOCKS5AdapterFactory.self)
+                case "SPEED":
+                    guard let adapterFactory = parseSpeedAdapterFactory(adapterConfig, factoryDict: factoryDict) else {
+                        DDLogError("Failed to parse adapter \(id).")
+                        continue
+                    }
+                    factoryDict[id] = adapterFactory
                 case "HTTP":
                     guard let adapterFactory = parseServerAdapterFactory(adapterConfig, type: HTTPAdapterFactory.self) else {
                         DDLogError("Failed to parse adapter \(id).")
@@ -174,24 +179,20 @@ public class Configuration {
             return type.init(host: host, port: port, auth: authentication)
         }
         
-        //        static func parseAdapterFactoryGroup(config: Yaml, factoryDict: [String:AdapterFactory]) -> AdapterFactoryGroup {
-        //            var _factories :[AdapterFactory] = []
-        //            if let _adapterIDs = config["adapter"].array {
-        //                for _ID in _adapterIDs {
-        //                    if let _IDString = _ID.string {
-        //                        if let _factory = factoryDict[_IDString] {
-        //                            _factories.append(_factory)
-        //                        } else {
-        //                            // warning _IDString is not found, ignored
-        //                        }
-        //                    } else {
-        //                        // error : id must be a validate string
-        //                    }
-        //                }
-        //            } else {
-        //                // error : adapter group must have some ids
-        //            }
-        //            return AdapterFactoryGroup(factories: _factories)
-        //        }
+        static func parseSpeedAdapterFactory(config: Yaml, factoryDict: [String:AdapterFactoryProtocol]) -> SpeedAdapterFactory? {
+            var factories: [AdapterFactoryProtocol] = []
+            guard let adapterIDs = config["adapter"].array else {
+                DDLogError("Speed Adatper should specify a set of adapters.")
+                return nil
+            }
+            for id in adapterIDs {
+                if let id = id.string {
+                    factories.append(factoryDict[id]!)
+                }
+            }
+            let adapter = SpeedAdapterFactory()
+            adapter.adapterFactories = factories
+            return adapter
+        }
     }
 }

@@ -6,7 +6,7 @@ class AdapterSocket : NSObject, SocketProtocol, RawSocketDelegate {
     weak var delegate: SocketDelegate?
     var delegateQueue: dispatch_queue_t! {
         didSet {
-            socket.delegateQueue = delegateQueue
+            socket?.delegateQueue = delegateQueue
         }
     }
     

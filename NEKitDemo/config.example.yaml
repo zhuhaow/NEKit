@@ -4,9 +4,15 @@ adapter:
     type: HTTP
     host: 127.0.0.1
     port: 8016
-
+  - id: speed
+    type: SPEED
+    adapter:
+      - goagentx
+      - direct
 rule:
   - type: country
     country: CN
-    match: false
-    adapter: goagentx
+    match: true
+    adapter: direct
+  - type: all
+    adapter: speed

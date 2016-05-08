@@ -56,6 +56,7 @@ protocol SocketDelegate : class {
     func didDisconnect(socket: SocketProtocol)
     func didReceiveRequest(request: ConnectRequest, from: ProxySocketProtocol)
     func didConnect(adapterSocket: AdapterSocket, withResponse: ConnectResponse)
+    func updateAdapter(newAdapter: AdapterSocket)
 }
 
 extension SocketDelegate {
