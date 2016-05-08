@@ -1,12 +1,6 @@
 import Foundation
 
-protocol RuleProtocol : class {
-    var name :String? { get }
-    
-    func match(request: ConnectRequest) -> AdapterFactoryProtocol?
-}
-
-class Rule : RuleProtocol {
+class Rule {
     let name :String?
     
     init() {
