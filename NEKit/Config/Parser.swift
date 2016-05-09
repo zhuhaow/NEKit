@@ -118,22 +118,22 @@ public class Configuration {
                     continue
                 }
                 
-                switch adapterConfig["type"] {
+                switch adapterConfig["type"].string?.lowercaseString {
                     //                case "SOCKS5":
                 //                    factoryDict[id] = parseServerAdapterFactory(adapterConfig, type: SOCKS5AdapterFactory.self)
-                case "SPEED":
+                case .Some("speed"):
                     guard let adapterFactory = parseSpeedAdapterFactory(adapterConfig, factoryDict: factoryDict) else {
                         DDLogError("Failed to parse adapter \(id).")
                         continue
                     }
                     factoryDict[id] = adapterFactory
-                case "HTTP":
+                case .Some("http"):
                     guard let adapterFactory = parseServerAdapterFactory(adapterConfig, type: HTTPAdapterFactory.self) else {
                         DDLogError("Failed to parse adapter \(id).")
                         continue
                     }
                     factoryDict[id] = adapterFactory
-                case "SHTTP":
+                case .Some("shttp"):
                     guard let adapterFactory = parseServerAdapterFactory(adapterConfig, type: SecureHTTPAdapterFactory.self) else {
                         DDLogError("Failed to parse adapter \(id).")
                         continue
