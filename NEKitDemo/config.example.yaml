@@ -14,5 +14,8 @@ rule:
     country: CN
     match: true
     adapter: direct
+  - type: list
+    file: ~/.NEKitDemo/direct
+    adapter: direct
   - type: all
     adapter: speed
