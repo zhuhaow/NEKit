@@ -37,7 +37,10 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
         delegate?.didDisconnect(self)
     }
     
-    func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {
+    func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {}
+    
+    func readyForForward(socket: SocketProtocol) {
+        let adapterSocket = socket as! AdapterSocket
         // first we disconnect all other adapter now, and set delegate to nil
         for var adapter in adapters {
             if adapter != adapterSocket {
@@ -45,8 +48,10 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
                 adapter.forceDisconnect()
             }
         }
-        delegate?.didConnect(adapterSocket, withResponse: response)
+
         delegate?.updateAdapter(adapterSocket)
+        delegate?.didConnect(adapterSocket, withResponse: adapterSocket.response)
+        delegate?.readyForForward(adapterSocket)
     }
     
     func didDisconnect(socket: SocketProtocol) {
@@ -57,7 +62,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
     
-    func readyForForward(socket: SocketProtocol) {}
+    
     func didWriteData(data: NSData?, withTag: Int, from: SocketProtocol) {}
     func didReadData(data: NSData, withTag: Int, from: SocketProtocol) {}
     func updateAdapter(newAdapter: AdapterSocket) {}

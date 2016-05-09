@@ -2,7 +2,8 @@ import Foundation
 
 class AdapterSocket : NSObject, SocketProtocol, RawSocketDelegate {
     var socket: RawSocketProtocol!
-    var request : ConnectRequest!
+    var request: ConnectRequest!
+    var response: ConnectResponse = ConnectResponse()
     weak var delegate: SocketDelegate?
     var delegateQueue: dispatch_queue_t! {
         didSet {
