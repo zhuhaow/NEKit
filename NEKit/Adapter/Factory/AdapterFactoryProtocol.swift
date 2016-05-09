@@ -8,7 +8,7 @@ protocol AdapterFactoryProtocol: class {
 extension AdapterFactoryProtocol {
     func getDirectAdapter() -> AdapterSocket {
         let adapter = DirectAdapter()
-        adapter.socket = GCDSocket()
+        adapter.socket = RawSocketFactory.getRawSocket()
         return adapter
     }
 }

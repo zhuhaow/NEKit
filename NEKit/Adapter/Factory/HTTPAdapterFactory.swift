@@ -8,7 +8,7 @@ class HTTPAdapterFactory : AuthenticationAdapterFactory {
     
     override func getAdapter(request: ConnectRequest) -> AdapterSocket {
         let adapter = HTTPAdapter(serverHost: serverHost, serverPort: serverPort, auth: auth)
-        adapter.socket = GCDSocket()
+        adapter.socket = RawSocketFactory.getRawSocket()
         return adapter
     }
 }

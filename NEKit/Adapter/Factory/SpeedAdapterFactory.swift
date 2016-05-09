@@ -10,7 +10,7 @@ class SpeedAdapterFactory: AdapterFactoryProtocol {
     func getAdapter(request: ConnectRequest) -> AdapterSocket {
         let adapters = adapterFactories.map { adapterFactory -> AdapterSocket in
             let adapter = adapterFactory.getAdapter(request)
-            adapter.socket = GCDSocket()
+            adapter.socket = RawSocketFactory.getRawSocket()
             return adapter
         }
         let speedAdapter = SpeedAdapter()
