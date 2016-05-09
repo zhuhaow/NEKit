@@ -27,6 +27,7 @@
 		366EB5C91CE061C500E0E942 /* RuleParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5C81CE061C500E0E942 /* RuleParser.swift */; };
 		366EB5CB1CE061F200E0E942 /* AdapterFactoryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CA1CE061F200E0E942 /* AdapterFactoryParser.swift */; };
 		366EB5CD1CE06B5E00E0E942 /* RawSocketFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */; };
+		366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */; };
 		36B161FB1CDCDF3A00F24C97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */; };
 		36B161FD1CDCDF3B00F24C97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */; };
 		36B162001CDCDF3B00F24C97 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FE1CDCDF3B00F24C97 /* MainMenu.xib */; };
@@ -127,6 +128,7 @@
 		366EB5C81CE061C500E0E942 /* RuleParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleParser.swift; sourceTree = "<group>"; };
 		366EB5CA1CE061F200E0E942 /* AdapterFactoryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdapterFactoryParser.swift; sourceTree = "<group>"; };
 		366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawSocketFactory.swift; sourceTree = "<group>"; };
+		366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapter.swift; sourceTree = "<group>"; };
 		36B161F81CDCDF3A00F24C97 /* NEKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NEKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 			children = (
 				36B162331CDDA0F300F24C97 /* Factory */,
 				36B162321CDDA0F300F24C97 /* DirectAdapter.swift */,
+				366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */,
 				366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */,
 				366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */,
 				366EB5C21CDF375B00E0E942 /* SpeedAdapter.swift */,
@@ -567,6 +570,7 @@
 				36B162281CDDA0EA00F24C97 /* NWTCPSocket.swift in Sources */,
 				366EB5B61CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift in Sources */,
 				36B1625A1CDDA31B00F24C97 /* SOCKS5Proxy.swift in Sources */,
+				366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */,
 				366EB5CD1CE06B5E00E0E942 /* RawSocketFactory.swift in Sources */,
 				36B162271CDDA0EA00F24C97 /* GCDSocket.swift in Sources */,
 				36B162291CDDA0EA00F24C97 /* ProxySocket.swift in Sources */,
