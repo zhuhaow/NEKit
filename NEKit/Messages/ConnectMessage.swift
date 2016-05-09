@@ -33,6 +33,14 @@ class ConnectRequest {
     func isIP() -> Bool {
         return isIPv4() || isIPv6()
     }
+    
+    
+}
+
+extension ConnectRequest: CustomStringConvertible {
+    var description: String {
+        return "Request to: \(host):\(port)"
+    }
 }
 
 class ConnectResponse {}
