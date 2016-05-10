@@ -1,5 +1,5 @@
 github "robbiehanson/CocoaAsyncSocket" "7.4.3"
 github "CocoaLumberjack/CocoaLumberjack" "2.3.0"
-github "iosdevzone/IDZSwiftCommonCrypto" "0.7.2"
+github "soffes/Crypto" "v0.3.0"
 github "lexrus/MMDB-Swift" "0.0.1"
 github "behrang/YamlSwift" "1.4.3"
