@@ -44,7 +44,6 @@ class AdapterSocket : NSObject, SocketProtocol, RawSocketDelegate {
     
     func didConnect(socket: RawSocketProtocol) {
         state = .Established
-        let response = ConnectResponse()
         delegate?.didConnect(self, withResponse: response)
     }
 }
