@@ -38,6 +38,13 @@ struct AdapterFactoryParser {
                     continue
                 }
                 factoryDict[id] = adapterFactory
+            case .Some("ss"):
+                guard let adapterFactory = parseShadowsocksAdapterFactory(adapterConfig) else {
+                    DDLogError("Failed to parse adapter \(id).")
+                    continue
+                }
+                factoryDict[id] = adapterFactory
+                
             case nil:
                 DDLogError("\(id) must have a type identifier. Ignored")
                 continue
@@ -76,6 +83,30 @@ struct AdapterFactoryParser {
             }
         }
         return type.init(host: host, port: port, auth: authentication)
+    }
+    
+    static func parseShadowsocksAdapterFactory(config: Yaml) -> ShadowsocksAdapterFactory? {
+        guard let host = config["host"].string else {
+            DDLogError("Host is required.")
+            return nil
+        }
+        
+        guard let port = config["port"].int else {
+            DDLogError("Port is required.")
+            return nil
+        }
+        
+        guard let encryptMethod = config["method"].string else {
+            DDLogError("Shadowsocks adapter must define method.")
+            return nil
+        }
+        
+        guard let password = config["password"].string else {
+            DDLogError("Shadowsocks adapter must define password.")
+            return nil
+        }
+        
+        return ShadowsocksAdapterFactory(host: host, port: port, encryptMethod: encryptMethod, password: password)
     }
     
     static func parseSpeedAdapterFactory(config: Yaml, factoryDict: [String:AdapterFactoryProtocol]) -> SpeedAdapterFactory? {

@@ -13,6 +13,7 @@
 		3664F0B41CE194ED008BA6D8 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */; };
 		3664F0B51CE194F6008BA6D8 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */; };
 		3664F0B61CE194F6008BA6D8 /* CommonCrypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */; };
 		366EB5AE1CDE0FCE00E0E942 /* HTTPAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */; };
 		366EB5AF1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */; };
 		366EB5B11CDE119200E0E942 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B01CDE119200E0E942 /* Authentication.swift */; };
@@ -117,6 +118,7 @@
 		36463A3F1CDCD5EB0040579C /* NEKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NEKitTests.swift; sourceTree = "<group>"; };
 		36463A411CDCD5EB0040579C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CommonCrypto.framework; path = Carthage/Build/Mac/CommonCrypto.framework; sourceTree = "<group>"; };
+		3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapterFactory.swift; sourceTree = "<group>"; };
 		366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAdapter.swift; sourceTree = "<group>"; };
 		366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureHTTPAdapter.swift; sourceTree = "<group>"; };
 		366EB5B01CDE119200E0E942 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 				366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */,
 				366EB5B51CDE150C00E0E942 /* ServerAdapterFactory.swift */,
 				366EB5C41CDF3FA700E0E942 /* SpeedAdapterFactory.swift */,
+				3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */,
 			);
 			path = Factory;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				366EB5AF1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift in Sources */,
 				36B1623F1CDDA0F300F24C97 /* DirectAdapterFactory.swift in Sources */,
 				36B162261CDDA0EA00F24C97 /* ConnectMessage.swift in Sources */,
+				3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */,
 				366EB5B11CDE119200E0E942 /* Authentication.swift in Sources */,
 				36B1622B1CDDA0EA00F24C97 /* RawSocketProtocol.swift in Sources */,
 				36B1623C1CDDA0F300F24C97 /* AdapterFactoryProtocol.swift in Sources */,
