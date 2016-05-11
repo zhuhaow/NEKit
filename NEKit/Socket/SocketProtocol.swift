@@ -20,13 +20,13 @@ extension SocketProtocol {
         socket.writeData(data, withTag: tag)
     }
     
-    func readDataToLength(length: Int, withTag tag: Int) {
-        socket.readDataToLength(length, withTag: tag)
-    }
-    
-    func readDataToData(data: NSData, withTag tag: Int) {
-        socket.readDataToData(data, withTag: tag)
-    }
+//    func readDataToLength(length: Int, withTag tag: Int) {
+//        socket.readDataToLength(length, withTag: tag)
+//    }
+//    
+//    func readDataToData(data: NSData, withTag tag: Int) {
+//        socket.readDataToData(data, withTag: tag)
+//    }
     
     func readDataWithTag(tag: Int = 0) {
         socket.readDataWithTag(tag)

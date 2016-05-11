@@ -20,6 +20,8 @@ class ShadowsocksAdapterFactory: ServerAdapterFactory {
     }
     
     override func getAdapter(request: ConnectRequest) -> AdapterSocket {
-        return ShadowsocksAdapter(host: serverHost, port: serverPort, encryptMethod: encryptMethod, password: password)
+        let adapter = ShadowsocksAdapter(host: serverHost, port: serverPort, encryptMethod: encryptMethod, password: password)
+        adapter.socket = RawSocketFactory.getRawSocket()
+        return adapter
     }
 }

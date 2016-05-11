@@ -49,7 +49,7 @@ class HTTPAdapter : AdapterSocket {
         }
         
         writeData(requestData, withTag: WriteTag.CONNECT.rawValue)
-        readDataToData(Utils.HTTPData.DoubleCRLF, withTag: ReadTag.CONNECT_RESPONSE.rawValue)
+        socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: ReadTag.CONNECT_RESPONSE.rawValue)
     }
     
     override func didReadData(data: NSData, withTag tag: Int, from socket: RawSocketProtocol) {

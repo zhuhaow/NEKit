@@ -14,6 +14,9 @@
 		3664F0B51CE194F6008BA6D8 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */; };
 		3664F0B61CE194F6008BA6D8 /* CommonCrypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */; };
+		3664F0BA1CE21A60008BA6D8 /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B91CE21A60008BA6D8 /* Sodium.framework */; };
+		3664F0BB1CE21A66008BA6D8 /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B91CE21A60008BA6D8 /* Sodium.framework */; };
+		3664F0BC1CE21A66008BA6D8 /* Sodium.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B91CE21A60008BA6D8 /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		366EB5AE1CDE0FCE00E0E942 /* HTTPAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */; };
 		366EB5AF1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */; };
 		366EB5B11CDE119200E0E942 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B01CDE119200E0E942 /* Authentication.swift */; };
@@ -102,6 +105,7 @@
 				36B162521CDDA28200F24C97 /* CocoaAsyncSocket.framework in Embed Frameworks */,
 				36B162541CDDA28200F24C97 /* CocoaLumberjack.framework in Embed Frameworks */,
 				3664F0B61CE194F6008BA6D8 /* CommonCrypto.framework in Embed Frameworks */,
+				3664F0BC1CE21A66008BA6D8 /* Sodium.framework in Embed Frameworks */,
 				36B162681CDDECDC00F24C97 /* NEKit.framework in Embed Frameworks */,
 				366EB5BD1CDE329500E0E942 /* Yaml.framework in Embed Frameworks */,
 			);
@@ -119,6 +123,7 @@
 		36463A411CDCD5EB0040579C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CommonCrypto.framework; path = Carthage/Build/Mac/CommonCrypto.framework; sourceTree = "<group>"; };
 		3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapterFactory.swift; sourceTree = "<group>"; };
+		3664F0B91CE21A60008BA6D8 /* Sodium.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sodium.framework; path = Carthage/Build/Mac/Sodium.framework; sourceTree = "<group>"; };
 		366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAdapter.swift; sourceTree = "<group>"; };
 		366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureHTTPAdapter.swift; sourceTree = "<group>"; };
 		366EB5B01CDE119200E0E942 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
@@ -175,6 +180,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3664F0BA1CE21A60008BA6D8 /* Sodium.framework in Frameworks */,
 				3664F0B41CE194ED008BA6D8 /* CommonCrypto.framework in Frameworks */,
 				366EB5BB1CDE328F00E0E942 /* Yaml.framework in Frameworks */,
 				36B1625E1CDDAD6E00F24C97 /* MMDB.framework in Frameworks */,
@@ -201,6 +207,7 @@
 				36B162531CDDA28200F24C97 /* CocoaLumberjack.framework in Frameworks */,
 				36B162551CDDA28200F24C97 /* CocoaLumberjackSwift.framework in Frameworks */,
 				3664F0B51CE194F6008BA6D8 /* CommonCrypto.framework in Frameworks */,
+				3664F0BB1CE21A66008BA6D8 /* Sodium.framework in Frameworks */,
 				36B162671CDDECDC00F24C97 /* NEKit.framework in Frameworks */,
 				366EB5BC1CDE329500E0E942 /* Yaml.framework in Frameworks */,
 			);
@@ -212,6 +219,7 @@
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
+				3664F0B91CE21A60008BA6D8 /* Sodium.framework */,
 				3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */,
 				36463A321CDCD5EB0040579C /* NEKit */,
 				36B161F91CDCDF3A00F24C97 /* NEKitDemo */,

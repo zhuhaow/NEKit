@@ -8,6 +8,9 @@ class ShadowsocksAdapter: AdapterSocket {
     let host: String
     let port: Int
     
+    var readingIV: Bool = false
+    var nextReadTag: Int = 0
+    
     lazy var writeIV: NSData = {
         [unowned self] in
         ShadowsocksEncryptHelper.getIV(self.encryptMethod)
@@ -43,6 +46,11 @@ class ShadowsocksAdapter: AdapterSocket {
         super.init()
     }
     
+    override func openSocketWithRequest(request: ConnectRequest) {
+        super.openSocketWithRequest(request)
+        socket.connectTo(host, port: port, enableTLS: false, tlsSettings: nil)
+    }
+    
     
     override func didConnect(socket: RawSocketProtocol) {
         super.didConnect(socket)
@@ -51,34 +59,43 @@ class ShadowsocksAdapter: AdapterSocket {
         if request.isIPv4() {
             var response :[UInt8] = [0x01]
             response += Utils.IP.IPv4ToBytes(request.host)!
-            var responseData = NSData(bytes: &response, length: response.count)
+            var responseData = NSData(bytes: response, length: response.count)
             responseData = encryptData(responseData)
             helloData.appendData(responseData)
         } else if request.isIPv6() {
             var response :[UInt8] = [0x04]
             response += Utils.IP.IPv6ToBytes(request.host)!
-            var responseData = NSData(bytes: &response, length: response.count)
+            var responseData = NSData(bytes: response, length: response.count)
             responseData = encryptData(responseData)
             helloData.appendData(responseData)
         } else {
             var response :[UInt8] = [0x03]
             response.append(UInt8(request.host.utf8.count))
             response += [UInt8](request.host.utf8)
-            var responseData = NSData(bytes: &response, length: response.count)
+            var responseData = NSData(bytes: response, length: response.count)
             responseData = encryptData(responseData)
             helloData.appendData(responseData)
         }
-        var portBytes = Utils.toByteArray(UInt16(request.port)).reverse()
-        var responseData = NSData(bytes: &portBytes, length: portBytes.count)
+        let portBytes = [UInt8](Utils.toByteArray(UInt16(request.port)).reverse())
+        var responseData = NSData(bytes: portBytes, length: portBytes.count)
         responseData = encryptData(responseData)
         helloData.appendData(responseData)
         
         writeRawData(helloData, withTag: ShadowsocksTag.Connect.rawValue)
-        readDataToLength(ivLength, withTag: ShadowsocksTag.IV.rawValue)
     }
     
     func writeRawData(data: NSData, withTag tag: Int) {
         super.writeData(data, withTag: tag)
+    }
+    
+    override func readDataWithTag(tag: Int) {
+        if readIV == nil && !readingIV {
+            readingIV = true
+            socket.readDataToLength(ivLength, withTag: ShadowsocksTag.IV.rawValue)
+            nextReadTag = tag
+        } else {
+            super.readDataWithTag(tag)
+        }
     }
     
     override func writeData(data: NSData, withTag tag: Int) {
@@ -88,7 +105,8 @@ class ShadowsocksAdapter: AdapterSocket {
     override func didReadData(data: NSData, withTag tag: Int, from socket: RawSocketProtocol) {
         if tag == ShadowsocksTag.IV.rawValue {
             readIV = data
-            delegate?.readyForForward(self)
+            readingIV = false
+            super.readDataWithTag(nextReadTag)
         } else {
             super.didReadData(decryptData(data), withTag: tag, from: socket)
         }
@@ -96,7 +114,7 @@ class ShadowsocksAdapter: AdapterSocket {
     
     override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawSocketProtocol) {
         if tag == ShadowsocksTag.Connect.rawValue {
-            // do nothing
+            delegate?.readyForForward(self)
         } else {
             super.didWriteData(data, withTag: tag, from: socket)
         }
@@ -221,14 +239,12 @@ struct ShadowsocksEncryptHelper {
         let extendPasswordData = NSMutableData(length: passwordData.length + md5result.length)!
         passwordData.getBytes(extendPasswordData.mutableBytes + md5result.length, length: passwordData.length)
         var length = 0
-        var i = 0
         repeat {
             let copyLength = min(result.length - length, md5result.length)
             md5result.getBytes(result.mutableBytes + length, length: copyLength)
             extendPasswordData.replaceBytesInRange(NSRange(location: 0, length: md5result.length), withBytes: md5result.bytes)
             md5result = Utils.Crypto.MD5(extendPasswordData)
             length += copyLength
-            i += 1
         } while length < result.length
         return (result.subdataWithRange(NSRange(location: 0, length: key.length)), result.subdataWithRange(NSRange(location: key.length, length: iv.length)))
     }
