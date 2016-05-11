@@ -2,8 +2,8 @@ import Foundation
 import NetworkExtension
 import CocoaLumberjackSwift
 
-struct NetworkInterface {
-    weak static var TunnelProvider : NEPacketTunnelProvider!
+public struct NetworkInterface {
+    public weak static var TunnelProvider : NEPacketTunnelProvider!
 }
 
 
