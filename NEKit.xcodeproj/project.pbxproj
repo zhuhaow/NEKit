@@ -17,6 +17,8 @@
 		3664F0BA1CE21A60008BA6D8 /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B91CE21A60008BA6D8 /* Sodium.framework */; };
 		3664F0BB1CE21A66008BA6D8 /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B91CE21A60008BA6D8 /* Sodium.framework */; };
 		3664F0BC1CE21A66008BA6D8 /* Sodium.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B91CE21A60008BA6D8 /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3664F0BE1CE3069F008BA6D8 /* Opt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0BD1CE3069F008BA6D8 /* Opt.swift */; };
+		3664F0C01CE30957008BA6D8 /* StreamScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */; };
 		366EB5AE1CDE0FCE00E0E942 /* HTTPAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */; };
 		366EB5AF1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */; };
 		366EB5B11CDE119200E0E942 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B01CDE119200E0E942 /* Authentication.swift */; };
@@ -124,6 +126,8 @@
 		3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CommonCrypto.framework; path = Carthage/Build/Mac/CommonCrypto.framework; sourceTree = "<group>"; };
 		3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapterFactory.swift; sourceTree = "<group>"; };
 		3664F0B91CE21A60008BA6D8 /* Sodium.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sodium.framework; path = Carthage/Build/Mac/Sodium.framework; sourceTree = "<group>"; };
+		3664F0BD1CE3069F008BA6D8 /* Opt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Opt.swift; sourceTree = "<group>"; };
+		3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamScanner.swift; sourceTree = "<group>"; };
 		366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAdapter.swift; sourceTree = "<group>"; };
 		366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureHTTPAdapter.swift; sourceTree = "<group>"; };
 		366EB5B01CDE119200E0E942 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
@@ -264,6 +268,8 @@
 				36B1625B1CDDA54600F24C97 /* NetworkInterface.swift */,
 				36B162231CDDA0EA00F24C97 /* Tunnel.swift */,
 				36B162241CDDA0EA00F24C97 /* Utils.swift */,
+				3664F0BD1CE3069F008BA6D8 /* Opt.swift */,
+				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
 			);
 			path = NEKit;
 			sourceTree = "<group>";
@@ -565,9 +571,11 @@
 				36B162251CDDA0EA00F24C97 /* AdapterSocket.swift in Sources */,
 				366EB5C01CDE32CD00E0E942 /* Parser.swift in Sources */,
 				366EB5B91CDE150C00E0E942 /* ServerAdapterFactory.swift in Sources */,
+				3664F0C01CE30957008BA6D8 /* StreamScanner.swift in Sources */,
 				36B1620F1CDDA0E000F24C97 /* CountryRule.swift in Sources */,
 				36B1623D1CDDA0F300F24C97 /* AdapterFactoryManager.swift in Sources */,
 				36B162111CDDA0E000F24C97 /* RuleManager.swift in Sources */,
+				3664F0BE1CE3069F008BA6D8 /* Opt.swift in Sources */,
 				366EB5B81CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift in Sources */,
 				36B1622D1CDDA0EA00F24C97 /* SocketTag.swift in Sources */,
 				366EB5C31CDF375B00E0E942 /* SpeedAdapter.swift in Sources */,
