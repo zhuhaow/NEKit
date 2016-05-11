@@ -70,8 +70,10 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
         }
     }
 
-    // Actually, this method is available as `- (void)readToPattern:(id)arg1 maximumLength:(unsigned int)arg2 completionHandler:(id /* block */)arg3;` which is sadly not available in public header for some reason I don't know.
-    // I don't want to do it myself since This method is not trival to implement and I don't like reinventing the wheel. Here is only the most naive version, which may not be the optimal if using with large data blocks.
+    // Actually, this method is available as `- (void)readToPattern:(id)arg1 maximumLength:(unsigned int)arg2 completionHandler:(id /* block */)arg3;`
+    // which is sadly not available in public header for some reason I don't know.
+    // I don't want to do it myself since This method is not trival to implement and I don't like reinventing the wheel. 
+    // Here is only the most naive version, which may not be the optimal if using with large data blocks.
     func readDataToData(data: NSData, withTag tag: Int) {
         scanner = StreamScanner(pattern: data, maximumLength: Opt.MAXNWTCPScanLength)
         scannerTag = tag

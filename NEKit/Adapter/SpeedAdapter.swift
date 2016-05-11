@@ -40,7 +40,9 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
     func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {}
 
     func readyForForward(socket: SocketProtocol) {
-        let adapterSocket = socket as! AdapterSocket
+        guard let adapterSocket = socket as? AdapterSocket else {
+            return
+        }
         // first we disconnect all other adapter now, and set delegate to nil
         for var adapter in adapters {
             if adapter != adapterSocket {

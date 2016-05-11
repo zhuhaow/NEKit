@@ -34,18 +34,18 @@ class SOCKS5ProxySocket: ProxySocket {
         case SocketTag.SOCKS5.ConnectIPv4:
             var address = [Int8](count: Int(INET_ADDRSTRLEN), repeatedValue: 0)
             inet_ntop(AF_INET, data.bytes, &address, socklen_t(INET_ADDRSTRLEN))
-            destinationHost = NSString(bytes: &address, length: Int(INET_ADDRSTRLEN), encoding: NSUTF8StringEncoding) as! String
+            destinationHost = NSString(bytes: &address, length: Int(INET_ADDRSTRLEN), encoding: NSUTF8StringEncoding)! as String
             socket.readDataToLength(2, withTag: SocketTag.SOCKS5.ConnectPort)
         case SocketTag.SOCKS5.ConnectIPv6:
             var address = [Int8](count: Int(INET6_ADDRSTRLEN), repeatedValue: 0)
             inet_ntop(AF_INET, data.bytes, &address, socklen_t(INET6_ADDRSTRLEN))
-            destinationHost = NSString(bytes: &address, length: Int(INET6_ADDRSTRLEN), encoding: NSUTF8StringEncoding) as! String
+            destinationHost = NSString(bytes: &address, length: Int(INET6_ADDRSTRLEN), encoding: NSUTF8StringEncoding)! as String
             socket.readDataToLength(2, withTag: SocketTag.SOCKS5.ConnectPort)
         case SocketTag.SOCKS5.ConnectDomainLength:
             let length: UInt8 = UnsafePointer<UInt8>(data.bytes).memory
             socket.readDataToLength(Int(length), withTag: SocketTag.SOCKS5.ConnectDomain)
         case SocketTag.SOCKS5.ConnectDomain:
-            destinationHost = NSString(bytes: data.bytes, length: data.length, encoding: NSUTF8StringEncoding) as! String
+            destinationHost = NSString(bytes: data.bytes, length: data.length, encoding: NSUTF8StringEncoding)! as String
             socket.readDataToLength(2, withTag: SocketTag.SOCKS5.ConnectPort)
         case SocketTag.SOCKS5.ConnectPort:
             var rawPort: UInt16 = 0

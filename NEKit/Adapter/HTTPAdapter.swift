@@ -8,10 +8,10 @@ class HTTPAdapter: AdapterSocket {
     var secured: Bool
 
     enum ReadTag: Int {
-        case CONNECT_RESPONSE = 30000
+        case ConnectResponse = 30000
     }
     enum WriteTag: Int {
-        case CONNECT = 40000, HEADER
+        case Connect = 40000, HEADER
     }
 
     init(serverHost: String, serverPort: Int, auth: Authentication?) {
@@ -48,12 +48,12 @@ class HTTPAdapter: AdapterSocket {
             return
         }
 
-        writeData(requestData, withTag: WriteTag.CONNECT.rawValue)
-        socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: ReadTag.CONNECT_RESPONSE.rawValue)
+        writeData(requestData, withTag: WriteTag.Connect.rawValue)
+        socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: ReadTag.ConnectResponse.rawValue)
     }
 
     override func didReadData(data: NSData, withTag tag: Int, from socket: RawSocketProtocol) {
-        if tag == ReadTag.CONNECT_RESPONSE.rawValue {
+        if tag == ReadTag.ConnectResponse.rawValue {
             delegate?.readyForForward(self)
         } else {
             super.didReadData(data, withTag: tag, from: socket)
@@ -61,7 +61,7 @@ class HTTPAdapter: AdapterSocket {
     }
 
     override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawSocketProtocol) {
-        if tag != WriteTag.CONNECT.rawValue {
+        if tag != WriteTag.Connect.rawValue {
             super.didWriteData(data, withTag: tag, from: socket)
         }
     }
