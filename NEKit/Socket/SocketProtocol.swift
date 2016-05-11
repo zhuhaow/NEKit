@@ -5,45 +5,45 @@ enum SocketStatus {
 }
 
 protocol SocketProtocol {
-    var socket : RawSocketProtocol! { get }
-    var delegate : SocketDelegate? { get set }
-    var delegateQueue : dispatch_queue_t! { get set }
-    var state : SocketStatus { get set }
+    var socket: RawSocketProtocol! { get }
+    var delegate: SocketDelegate? { get set }
+    var delegateQueue: dispatch_queue_t! { get set }
+    var state: SocketStatus { get set }
 }
 
 extension SocketProtocol {
     var disconnected: Bool {
         return state == .Closed || state == .Invalid
     }
-    
+
     func writeData(data: NSData, withTag tag: Int = 0) {
         socket.writeData(data, withTag: tag)
     }
-    
+
 //    func readDataToLength(length: Int, withTag tag: Int) {
 //        socket.readDataToLength(length, withTag: tag)
 //    }
-//    
+//
 //    func readDataToData(data: NSData, withTag tag: Int) {
 //        socket.readDataToData(data, withTag: tag)
 //    }
-    
+
     func readDataWithTag(tag: Int = 0) {
         socket.readDataWithTag(tag)
     }
-    
+
     mutating func disconnect() {
         state = .Disconnecting
         socket.disconnect()
     }
-    
+
     mutating func forceDisconnect() {
         state = .Disconnecting
         socket.forceDisconnect()
     }
 }
 
-protocol ProxySocketProtocol : SocketProtocol {
+protocol ProxySocketProtocol: SocketProtocol {
     var request: ConnectRequest? { get }
     func openSocket()
     func respondToResponse(response: ConnectResponse)
@@ -61,6 +61,6 @@ protocol SocketDelegate : class {
 
 extension SocketDelegate {
     func didReceiveRequest(request: ConnectRequest, from: ProxySocketProtocol) {}
-    
+
     func didConnect(adapterSocket: AdapterSocket, withResponse: ConnectResponse) {}
 }

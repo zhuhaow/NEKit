@@ -7,10 +7,10 @@ class ShadowsocksAdapter: AdapterSocket {
     let encryptMethod: EncryptMethod
     let host: String
     let port: Int
-    
+
     var readingIV: Bool = false
     var nextReadTag: Int = 0
-    
+
     lazy var writeIV: NSData = {
         [unowned self] in
         ShadowsocksEncryptHelper.getIV(self.encryptMethod)
@@ -27,17 +27,17 @@ class ShadowsocksAdapter: AdapterSocket {
         [unowned self] in
         Cryptor(op: .Decrypt, mode: .CFB, alg: .AES, iv: self.readIV, key: self.key)
     }()
-    
+
     enum EncryptMethod: String {
         case AES128CFB = "AES-128-CFB", AES192CFB = "AES-192-CFB", AES256CFB = "AES-256-CFB"
-        
+
         static let allValues: [EncryptMethod] = [.AES128CFB, .AES192CFB, .AES256CFB]
     }
-    
+
     enum ShadowsocksTag: Int {
         case IV = 25000, Connect
     }
-    
+
     init(host: String, port: Int, encryptMethod: EncryptMethod, password: String) {
         self.encryptMethod = encryptMethod
         (self.key, _) = ShadowsocksEncryptHelper.getKeyAndIV(password, methodType: encryptMethod)
@@ -45,31 +45,31 @@ class ShadowsocksAdapter: AdapterSocket {
         self.port = port
         super.init()
     }
-    
+
     override func openSocketWithRequest(request: ConnectRequest) {
         super.openSocketWithRequest(request)
         socket.connectTo(host, port: port, enableTLS: false, tlsSettings: nil)
     }
-    
-    
+
+
     override func didConnect(socket: RawSocketProtocol) {
         super.didConnect(socket)
-        
+
         let helloData = NSMutableData(data: writeIV)
         if request.isIPv4() {
-            var response :[UInt8] = [0x01]
+            var response: [UInt8] = [0x01]
             response += Utils.IP.IPv4ToBytes(request.host)!
             var responseData = NSData(bytes: response, length: response.count)
             responseData = encryptData(responseData)
             helloData.appendData(responseData)
         } else if request.isIPv6() {
-            var response :[UInt8] = [0x04]
+            var response: [UInt8] = [0x04]
             response += Utils.IP.IPv6ToBytes(request.host)!
             var responseData = NSData(bytes: response, length: response.count)
             responseData = encryptData(responseData)
             helloData.appendData(responseData)
         } else {
-            var response :[UInt8] = [0x03]
+            var response: [UInt8] = [0x03]
             response.append(UInt8(request.host.utf8.count))
             response += [UInt8](request.host.utf8)
             var responseData = NSData(bytes: response, length: response.count)
@@ -80,14 +80,14 @@ class ShadowsocksAdapter: AdapterSocket {
         var responseData = NSData(bytes: portBytes, length: portBytes.count)
         responseData = encryptData(responseData)
         helloData.appendData(responseData)
-        
+
         writeRawData(helloData, withTag: ShadowsocksTag.Connect.rawValue)
     }
-    
+
     func writeRawData(data: NSData, withTag tag: Int) {
         super.writeData(data, withTag: tag)
     }
-    
+
     override func readDataWithTag(tag: Int) {
         if readIV == nil && !readingIV {
             readingIV = true
@@ -97,11 +97,11 @@ class ShadowsocksAdapter: AdapterSocket {
             super.readDataWithTag(tag)
         }
     }
-    
+
     override func writeData(data: NSData, withTag tag: Int) {
         writeRawData(encryptData(data), withTag: tag)
     }
-    
+
     override func didReadData(data: NSData, withTag tag: Int, from socket: RawSocketProtocol) {
         if tag == ShadowsocksTag.IV.rawValue {
             readIV = data
@@ -111,7 +111,7 @@ class ShadowsocksAdapter: AdapterSocket {
             super.didReadData(decryptData(data), withTag: tag, from: socket)
         }
     }
-    
+
     override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawSocketProtocol) {
         if tag == ShadowsocksTag.Connect.rawValue {
             delegate?.readyForForward(self)
@@ -119,11 +119,11 @@ class ShadowsocksAdapter: AdapterSocket {
             super.didWriteData(data, withTag: tag, from: socket)
         }
     }
-    
+
     func encryptData(data: NSData) -> NSData {
         return encryptor.update(data)
     }
-    
+
     func decryptData(data: NSData) -> NSData {
         return decryptor.update(data)
     }
@@ -132,7 +132,7 @@ class ShadowsocksAdapter: AdapterSocket {
 class Cryptor {
     enum Operation {
         case Encrypt, Decrypt
-        
+
         func op() -> CCOperation {
             switch self {
             case .Encrypt:
@@ -142,10 +142,10 @@ class Cryptor {
             }
         }
     }
-    
+
     enum Algorithm {
         case AES, CAST, RC4
-        
+
         func algorithm() -> CCAlgorithm {
             switch self {
             case .AES:
@@ -157,10 +157,10 @@ class Cryptor {
             }
         }
     }
-    
+
     enum Mode {
         case CFB
-        
+
         func mode() -> CCMode {
             switch self {
             case .CFB:
@@ -168,43 +168,43 @@ class Cryptor {
             }
         }
     }
-    
+
     let cryptor: CCCryptorRef
 
-    
+
     init(op: Operation, mode: Mode, alg: Algorithm, iv: NSData, key: NSData) {
         let cryptor = UnsafeMutablePointer<CCCryptorRef>.alloc(1)
         CCCryptorCreateWithMode(op.op(), mode.mode(), alg.algorithm(), CCPadding(ccNoPadding), iv.bytes, key.bytes, key.length, nil, 0, 0, 0, cryptor)
         self.cryptor = cryptor.memory
     }
-    
+
     func update(data: NSData) -> NSData {
         let outData = NSMutableData(length: data.length)!
         CCCryptorUpdate(cryptor, data.bytes, data.length, outData.mutableBytes, outData.length, nil)
         return NSData(data: outData)
     }
-    
+
     deinit {
         CCCryptorRelease(cryptor)
     }
-    
+
 }
 
 struct ShadowsocksEncryptHelper {
-    static let infoDictionary: [ShadowsocksAdapter.EncryptMethod:(Int,Int)] = [
-        .AES128CFB:(16,16),
-        .AES192CFB:(24,16),
-        .AES256CFB:(32,16),
+    static let infoDictionary: [ShadowsocksAdapter.EncryptMethod:(Int, Int)] = [
+        .AES128CFB:(16, 16),
+        .AES192CFB:(24, 16),
+        .AES256CFB:(32, 16),
     ]
-    
+
     static func getKeyLength(methodType: ShadowsocksAdapter.EncryptMethod) -> Int {
         return infoDictionary[methodType]!.0
     }
-    
+
     static func getIVLength(methodType: ShadowsocksAdapter.EncryptMethod) -> Int {
         return infoDictionary[methodType]!.1
     }
-    
+
 //    static func getKey(password: String, methodType: ShadowsocksAdapter.EncryptMethod) -> NSData {
 //        let key = NSMutableData(length: getKeyLength(methodType))!
 //        let passwordData = password.dataUsingEncoding(NSUTF8StringEncoding)!
@@ -223,13 +223,13 @@ struct ShadowsocksEncryptHelper {
 //        } while length < key.length
 //        return NSData(data: key)
 //    }
-    
+
     static func getIV(methodType: ShadowsocksAdapter.EncryptMethod) -> NSData {
         let IV = NSMutableData(length: getIVLength(methodType))!
         SecRandomCopyBytes(kSecRandomDefault, IV.length, UnsafeMutablePointer<UInt8>(IV.mutableBytes))
         return NSData(data: IV)
     }
-    
+
     static func getKeyAndIV(password: String, methodType: ShadowsocksAdapter.EncryptMethod) -> (NSData, NSData) {
         let key = NSMutableData(length: getKeyLength(methodType))!
         let iv = NSMutableData(length: getIVLength(methodType))!

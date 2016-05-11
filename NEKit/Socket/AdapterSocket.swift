@@ -1,6 +1,6 @@
 import Foundation
 
-class AdapterSocket : NSObject, SocketProtocol, RawSocketDelegate {
+class AdapterSocket: NSObject, SocketProtocol, RawSocketDelegate {
     var socket: RawSocketProtocol!
     var request: ConnectRequest!
     var response: ConnectResponse = ConnectResponse()
@@ -10,20 +10,20 @@ class AdapterSocket : NSObject, SocketProtocol, RawSocketDelegate {
             socket?.delegateQueue = delegateQueue
         }
     }
-    
+
     var state: SocketStatus = .Invalid
-    
+
     func openSocketWithRequest(request: ConnectRequest) {
         self.request = request
         socket.delegate = self
         socket.delegateQueue = delegateQueue
         state = .Connecting
     }
-    
+
     func writeData(data: NSData, withTag tag: Int = 0) {
         socket.writeData(data, withTag: tag)
     }
-    
+
     func readDataWithTag(tag: Int = 0) {
         socket.readDataWithTag(tag)
     }
@@ -33,15 +33,15 @@ class AdapterSocket : NSObject, SocketProtocol, RawSocketDelegate {
         state = .Closed
         delegate?.didDisconnect(self)
     }
-    
+
     func didReadData(data: NSData, withTag tag: Int, from: RawSocketProtocol) {
         delegate?.didReadData(data, withTag: tag, from: self)
     }
-    
+
     func didWriteData(data: NSData?, withTag tag: Int, from: RawSocketProtocol) {
         delegate?.didWriteData(data, withTag: tag, from: self)
     }
-    
+
     func didConnect(socket: RawSocketProtocol) {
         state = .Established
         delegate?.didConnect(self, withResponse: response)

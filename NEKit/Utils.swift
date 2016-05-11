@@ -7,26 +7,26 @@ struct Utils {
         static let CRLF = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
         static let ConnectSuccessResponse = "HTTP/1.1 200 Connection Established\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
     }
-    
+
     struct DNS {
         enum QueryType {
             case A, AAAA, UNSPEC
         }
-        
+
         static func resolve(name: String, type: QueryType = .UNSPEC) -> String {
             let remoteHostEnt = gethostbyname2((name as NSString).UTF8String, AF_INET)
-            
+
             if remoteHostEnt == nil {
                 return ""
             }
-            
+
             let remoteAddr = UnsafeMutablePointer<in_addr>(remoteHostEnt.memory.h_addr_list[0]).memory
-            
+
             let addr = inet_ntoa(remoteAddr)
             return NSString(UTF8String: addr)! as String
         }
     }
-    
+
     struct IP {
         static func isIPv4(ip: String) -> Bool {
             if IPv4ToInt(ip) != nil {
@@ -35,17 +35,17 @@ struct Utils {
                 return false
             }
         }
-        
+
         static func isIPv6(ip: String) -> Bool {
             let utf8Str = (ip as NSString).UTF8String
             var dst = [UInt8](count: 16, repeatedValue: 0)
             return inet_pton(AF_INET6, utf8Str, &dst) == 1
         }
-        
+
         static func isIP(ip: String) -> Bool {
             return isIPv4(ip) || isIPv6(ip)
         }
-        
+
         static func IPv4ToInt(ip: String) -> UInt32? {
             let utf8Str = (ip as NSString).UTF8String
             var dst = in_addr(s_addr: 0)
@@ -55,7 +55,7 @@ struct Utils {
                 return nil
             }
         }
-        
+
         static func IPv4ToBytes(ip: String) -> [UInt8]? {
             if let ipv4int = IPv4ToInt(ip) {
                 return Utils.toByteArray(ipv4int).reverse()
@@ -63,7 +63,7 @@ struct Utils {
                 return nil
             }
         }
-        
+
         static func IPv6ToBytes(ip: String) -> [UInt8]? {
             let utf8Str = (ip as NSString).UTF8String
             var dst = [UInt8](count: 16, repeatedValue: 0)
@@ -74,7 +74,7 @@ struct Utils {
             }
         }
     }
-    
+
     struct GeoIPLookup {
 //        static var _geoIPLookup : GeoIP {
 //            struct holder {
@@ -82,7 +82,7 @@ struct Utils {
 //            }
 //            return holder.geoIP
 //        }
-        
+
         static func Lookup(ip: String) -> String {
             if Utils.IP.isIPv4(ip) {
                 guard let result = GeoIP.LookUp(ip) else {
@@ -94,13 +94,13 @@ struct Utils {
             }
         }
     }
-    
+
     struct Crypto {
         static func MD5(value: String) -> NSData {
             let data = value.dataUsingEncoding(NSUTF8StringEncoding)!
             return MD5(data)
         }
-        
+
         static func MD5(value: NSData) -> NSData {
             let result = NSMutableData(length: Int(CC_MD5_DIGEST_LENGTH))!
             CC_MD5(value.bytes, CC_LONG(value.length), UnsafeMutablePointer<UInt8>(result.mutableBytes))

@@ -2,7 +2,7 @@ import Foundation
 class ConnectRequest {
     let host: String
     let port: Int
-    
+
     lazy var IP: String = {
         [unowned self] in
         if self.isIP() {
@@ -15,26 +15,26 @@ class ConnectRequest {
         [unowned self] in
         Utils.GeoIPLookup.Lookup(self.IP)
     }()
-    
-    
+
+
     init(host: String, port: Int) {
         self.host = host
         self.port = port
     }
-    
+
     func isIPv4() -> Bool {
         return Utils.IP.isIPv4(self.host)
     }
-    
+
     func isIPv6() -> Bool {
         return Utils.IP.isIPv6(self.host)
     }
-    
+
     func isIP() -> Bool {
         return isIPv4() || isIPv6()
     }
-    
-    
+
+
 }
 
 extension ConnectRequest: CustomStringConvertible {

@@ -4,10 +4,10 @@ import CocoaLumberjackSwift
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-    
+
     @IBOutlet weak var window: NSWindow!
     var proxy: SOCKS5ProxyServer!
-    
+
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         DDLog.addLogger(DDTTYLogger.sharedInstance(), withLevel: .All)
         let config = Configuration()
@@ -20,11 +20,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             exit(1)
         }
     }
-    
+
     func applicationWillTerminate(aNotification: NSNotification) {
         proxy.stop()
     }
-    
-    
-}
 
+
+}

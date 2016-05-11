@@ -4,9 +4,9 @@ import CocoaLumberjackSwift
 
 public class SOCKS5ProxyServer: ProxyServer, GCDAsyncSocketDelegate, TunnelDelegate {
     let listenQueue: dispatch_queue_t = dispatch_queue_create("me.zhuhaow.Specht.listenQueue", DISPATCH_QUEUE_SERIAL)
-    var listenSocket : GCDAsyncSocket!
+    var listenSocket: GCDAsyncSocket!
     var tunnels: [Tunnel] = []
-    
+
     override public func start() -> Bool {
         listenSocket = GCDAsyncSocket(delegate: self, delegateQueue: listenQueue)
         do {
@@ -18,14 +18,14 @@ public class SOCKS5ProxyServer: ProxyServer, GCDAsyncSocketDelegate, TunnelDeleg
             return false
         }
     }
-    
+
     override public func stop() {
         listenSocket.setDelegate(nil, delegateQueue: nil)
         listenSocket.disconnect()
         listenSocket = nil
         tunnels = []
     }
-    
+
     public func socket(sock: GCDAsyncSocket!, didAcceptNewSocket newSocket: GCDAsyncSocket!) {
         DDLogVerbose("Proxy server accepted new socket.")
         let gcdSocket = GCDSocket(socket: newSocket)
@@ -35,7 +35,7 @@ public class SOCKS5ProxyServer: ProxyServer, GCDAsyncSocketDelegate, TunnelDeleg
         tunnels.append(tunnel)
         tunnel.openTunnel()
     }
-    
+
     func tunnelDidClose(tunnel: Tunnel) {
         dispatch_async(listenQueue) {
             guard let index = self.tunnels.indexOf(tunnel) else {

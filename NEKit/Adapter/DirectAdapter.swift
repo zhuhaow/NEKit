@@ -1,9 +1,9 @@
 import Foundation
 import CocoaLumberjackSwift
 
-class DirectAdapter : AdapterSocket {
+class DirectAdapter: AdapterSocket {
     var resolveHost = false
-    
+
     override func openSocketWithRequest(request: ConnectRequest) {
         super.openSocketWithRequest(request)
         let host: String
@@ -18,7 +18,7 @@ class DirectAdapter : AdapterSocket {
         }
         socket.connectTo(host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
     }
-    
+
     override func didConnect(socket: RawSocketProtocol) {
         super.didConnect(socket)
         delegate?.readyForForward(self)
