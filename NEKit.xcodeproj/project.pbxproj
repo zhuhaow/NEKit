@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36164A2B1CE41C3300BAC90A /* IPPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2A1CE41C3300BAC90A /* IPPacket.swift */; };
+		36164A2D1CE6EB3800BAC90A /* TCPPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2C1CE6EB3800BAC90A /* TCPPacket.swift */; };
+		36164A2F1CE7099300BAC90A /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2E1CE7099300BAC90A /* Router.swift */; };
 		36463A341CDCD5EB0040579C /* NEKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 36463A331CDCD5EB0040579C /* NEKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36463A3B1CDCD5EB0040579C /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
 		36463A401CDCD5EB0040579C /* NEKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36463A3F1CDCD5EB0040579C /* NEKitTests.swift */; };
@@ -117,6 +120,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		36164A2A1CE41C3300BAC90A /* IPPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPPacket.swift; sourceTree = "<group>"; };
+		36164A2C1CE6EB3800BAC90A /* TCPPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPPacket.swift; sourceTree = "<group>"; };
+		36164A2E1CE7099300BAC90A /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		36463A301CDCD5EB0040579C /* NEKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NEKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36463A331CDCD5EB0040579C /* NEKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NEKit.h; sourceTree = "<group>"; };
 		36463A351CDCD5EB0040579C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -221,6 +227,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		36164A291CE41AF200BAC90A /* Packet */ = {
+			isa = PBXGroup;
+			children = (
+				36164A2A1CE41C3300BAC90A /* IPPacket.swift */,
+				36164A2C1CE6EB3800BAC90A /* TCPPacket.swift */,
+				36164A2E1CE7099300BAC90A /* Router.swift */,
+			);
+			name = Packet;
+			sourceTree = "<group>";
+		};
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
@@ -256,6 +272,7 @@
 		36463A321CDCD5EB0040579C /* NEKit */ = {
 			isa = PBXGroup;
 			children = (
+				36164A291CE41AF200BAC90A /* Packet */,
 				36B162311CDDA0F300F24C97 /* Adapter */,
 				366EB5BE1CDE32BF00E0E942 /* Config */,
 				36B162431CDDA0FB00F24C97 /* GeoIP */,
@@ -601,6 +618,7 @@
 				36B1622C1CDDA0EA00F24C97 /* SocketProtocol.swift in Sources */,
 				366EB5C71CE033FB00E0E942 /* ListRule.swift in Sources */,
 				366EB5AE1CDE0FCE00E0E942 /* HTTPAdapter.swift in Sources */,
+				36164A2B1CE41C3300BAC90A /* IPPacket.swift in Sources */,
 				36B162101CDDA0E000F24C97 /* Rule.swift in Sources */,
 				366EB5AF1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift in Sources */,
 				36B1623F1CDDA0F300F24C97 /* DirectAdapterFactory.swift in Sources */,
@@ -612,6 +630,7 @@
 				36B1623B1CDDA0F300F24C97 /* DirectAdapter.swift in Sources */,
 				36B162621CDDADC100F24C97 /* GeoIP.swift in Sources */,
 				36B162281CDDA0EA00F24C97 /* NWTCPSocket.swift in Sources */,
+				36164A2F1CE7099300BAC90A /* Router.swift in Sources */,
 				366EB5B61CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift in Sources */,
 				36B1625A1CDDA31B00F24C97 /* SOCKS5Proxy.swift in Sources */,
 				366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */,
@@ -623,6 +642,7 @@
 				36B1625C1CDDA54600F24C97 /* NetworkInterface.swift in Sources */,
 				366EB5C51CDF3FA700E0E942 /* SpeedAdapterFactory.swift in Sources */,
 				36B162591CDDA31B00F24C97 /* ProxyServer.swift in Sources */,
+				36164A2D1CE6EB3800BAC90A /* TCPPacket.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
