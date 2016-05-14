@@ -2,7 +2,7 @@ import Foundation
 import CocoaAsyncSocket
 
 public class ProxyServer: NSObject {
-    static var currentProxy: ProxyServer!
+    public static var currentProxy: ProxyServer!
     let port: Int
 
     public init(port: Int) {
