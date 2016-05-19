@@ -10,7 +10,7 @@ public class SOCKS5ProxyServer: ProxyServer, GCDAsyncSocketDelegate, TunnelDeleg
     override public func start() -> Bool {
         listenSocket = GCDAsyncSocket(delegate: self, delegateQueue: listenQueue)
         do {
-            try listenSocket.acceptOnInterface("127.0.0.1", port: UInt16(port))
+            try listenSocket.acceptOnInterface(address, port: UInt16(port))
             DDLogInfo("Successfully start SOCK5 proxy server on port \(port).")
             return true
         } catch let error as NSError {

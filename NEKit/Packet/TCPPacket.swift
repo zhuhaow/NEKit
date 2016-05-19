@@ -1,20 +1,18 @@
 import Foundation
 
 class TCPPacket: IPPacket {
-    var sourcePort: UInt16 {
+    var sourcePort: Port {
         get {
-            let sp = UnsafePointer<UInt16>(payload.bytes.advancedBy(IPHeaderLength)).memory
-            return NSSwapBigShortToHost(sp)
+            return Port(bytesInNetworkOrder: payload.bytes.advancedBy(IPHeaderLength))
         }
         set {
             setPort(sourcePort, newPort: newValue, at: 0)
         }
     }
 
-    var destinationPort: UInt16 {
+    var destinationPort: Port {
         get {
-            let dp = UnsafePointer<UInt16>(payload.bytes.advancedBy(IPHeaderLength + 2)).memory
-            return NSSwapBigShortToHost(dp)
+            return Port(bytesInNetworkOrder: payload.bytes.advancedBy(IPHeaderLength + 2))
         }
         set {
             setPort(destinationPort, newPort: newValue, at: 2)
@@ -23,15 +21,11 @@ class TCPPacket: IPPacket {
 
     override func updateChecksum(oldValue: UInt16, newValue: UInt16, type: ChangeType) {
         super.updateChecksum(oldValue, newValue: newValue, type: type)
-        updateChecksum(oldValue, newValue: newValue, at: 28)
+        updateChecksum(oldValue, newValue: newValue, at: IPHeaderLength + 16)
     }
 
-    private func setPort(oldPort: UInt16, newPort: UInt16, at: Int) {
-        var oport: UInt16 = NSSwapHostShortToBig(oldPort)
-        var nport: UInt16 = NSSwapHostShortToBig(newPort)
-        payload.replaceBytesInRange(NSRange(location: at, length: 2), withBytes: &nport, length: 2)
-        withUnsafePointers(&oport, &nport) { op, np in
-            updateChecksum(UnsafePointer<UInt16>(op).memory, newValue: UnsafePointer<UInt16>(np).memory, type: .Port)
-        }
+    private func setPort(oldPort: Port, newPort: Port, at: Int) {
+        payload.replaceBytesInRange(NSRange(location: at + IPHeaderLength, length: 2), withBytes: newPort.bytesInNetworkOrder, length: 2)
+        updateChecksum(oldPort.valueInNetworkOrder, newValue: newPort.valueInNetworkOrder, type: .Port)
     }
 }

@@ -2,20 +2,18 @@ import Foundation
 import CocoaLumberjackSwift
 
 public class Router {
-    var IPv4NATRoutes: [UInt16: (UInt32, UInt16)] = [:]
-    let interfaceIP: UInt32
-    let proxyServerIP: UInt32
-    let proxyServerPort: UInt16
+    var IPv4NATRoutes: [Port: (IPv4Address, Port)] = [:]
+    let interfaceIP: IPv4Address
+    let fakeSourceIP: IPv4Address
+    let proxyServerIP: IPv4Address
+    let proxyServerPort: Port
     //    let IPv6NATRoutes: [UInt16] = []
 
-    public init(interfaceIP: UInt32, proxyServerIP: UInt32, proxyServerPort: UInt16) {
-        self.interfaceIP = interfaceIP
-        self.proxyServerIP = proxyServerIP
-        self.proxyServerPort = proxyServerPort
-    }
-
-    public convenience init(interfaceIP: String, proxyServerIP: String, proxyServerPort: Int) {
-        self.init(interfaceIP: Utils.IP.IPv4ToInt(interfaceIP)!, proxyServerIP: Utils.IP.IPv4ToInt(proxyServerIP)!, proxyServerPort: UInt16(proxyServerPort))
+    public init(interfaceIP: String, fakeSourceIP: String, proxyServerIP: String, proxyServerPort: UInt16) {
+        self.interfaceIP = IPv4Address(fromString: interfaceIP)
+        self.fakeSourceIP = IPv4Address(fromString: fakeSourceIP)
+        self.proxyServerIP = IPv4Address(fromString: proxyServerIP)
+        self.proxyServerPort = Port(port: proxyServerPort)
     }
 
     public func rewritePacket(packet: IPPacket) -> IPPacket? {
@@ -28,20 +26,25 @@ public class Router {
             return nil
         }
 
-        if packet.sourceAddress.inaddr == interfaceIP {
-            IPv4NATRoutes[packet.sourcePort] = (packet.destinationAddress.inaddr, packet.destinationPort)
-            packet.destinationAddress = IPv4Address(address: proxyServerIP)
-            packet.destinationPort = proxyServerPort
-            return packet
-        } else if packet.destinationAddress.inaddr == interfaceIP {
-            guard let (address, port) = IPv4NATRoutes[packet.destinationPort] else {
-                return nil
+        if packet.sourceAddress == interfaceIP {
+            if packet.sourcePort == proxyServerPort {
+                guard let (address, port) = IPv4NATRoutes[packet.destinationPort] else {
+                    DDLogError("Does not know how to handle packet: \(packet) because can't find entry in NAT table.")
+                    return nil
+                }
+                packet.sourcePort = port
+                packet.sourceAddress = address
+                packet.destinationAddress = interfaceIP
+                return packet
+            } else {
+                IPv4NATRoutes[packet.sourcePort] = (packet.destinationAddress, packet.destinationPort)
+                packet.sourceAddress = fakeSourceIP
+                packet.destinationAddress = proxyServerIP
+                packet.destinationPort = proxyServerPort
+                return packet
             }
-            packet.sourcePort = port
-            packet.sourceAddress = IPv4Address(address: address)
-            return packet
         } else {
-            DDLogError("Does not know how to handle packet: \(packet)")
+            DDLogError("Does not know how to handle packet.")
             return nil
         }
     }
@@ -56,17 +59,27 @@ public class Router {
             let packets = $0.0.map { data in
                 IPPacket(payload: data)
                 }.filter { packet in
-                    packet.version == .IPv4
+                    packet.version == .IPv4 && packet.proto == .TCP
+                }.map {
+                    TCPPacket(payload: $0.payload)
             }
             for packet in packets {
+                DDLogVerbose("Received packet of type: \(packet.proto) from \(packet.sourceAddress) to \(packet.destinationAddress)")
                 if let packet = self.rewritePacket(packet) {
                     outputPackets.append(packet)
+                } else {
+                    DDLogVerbose("Failed to rewrite packet \(packet)")
                 }
             }
+
             let outputData = outputPackets.map { packet in
                 packet.payload
             }
-            NetworkInterface.TunnelProvider.packetFlow.writePackets(outputData, withProtocols: Array<NSNumber>(count: outputData.count, repeatedValue: 4))
+
+            if outputData.count > 0 {
+                DDLogVerbose("Write out \(outputData.count) packets.")
+                NetworkInterface.TunnelProvider.packetFlow.writePackets(outputData, withProtocols: Array<NSNumber>(count: outputData.count, repeatedValue: Int(AF_INET)))
+            }
             self.readAndProcessPackets()
         }
     }
