@@ -5,7 +5,7 @@ import CocoaLumberjackSwift
 /**
  *  This is the swift wrapper around GCDAsyncSocket.
  */
-class GCDSocket: NSObject, GCDAsyncSocketDelegate, RawSocketProtocol {
+class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawSocketProtocol {
     let socket: GCDAsyncSocket
     var delegateQueue: dispatch_queue_t! = nil {
         didSet {

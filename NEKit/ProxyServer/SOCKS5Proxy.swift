@@ -28,8 +28,8 @@ public class SOCKS5ProxyServer: ProxyServer, GCDAsyncSocketDelegate, TunnelDeleg
 
     public func socket(sock: GCDAsyncSocket!, didAcceptNewSocket newSocket: GCDAsyncSocket!) {
         DDLogVerbose("Proxy server accepted new socket.")
-        let gcdSocket = GCDSocket(socket: newSocket)
-        let proxySocket = SOCKS5ProxySocket(socket: gcdSocket)
+        let gcdTCPSocket = GCDTCPSocket(socket: newSocket)
+        let proxySocket = SOCKS5ProxySocket(socket: gcdTCPSocket)
         let tunnel = Tunnel(proxySocket: proxySocket)
         tunnel.delegate = self
         tunnels.append(tunnel)
