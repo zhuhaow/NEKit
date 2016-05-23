@@ -14,7 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let filepath = (NSHomeDirectory() as NSString).stringByAppendingPathComponent(".NEKit_demo.yaml")
         if config.load(fromConfigFile: filepath) {
             RuleManager.currentManager = config.ruleManager
-            proxy = SOCKS5ProxyServer(port: config.proxyPort!)
+            proxy = SOCKS5ProxyServer(address: "127.0.0.1", port: config.proxyPort!)
             proxy.start()
         } else {
             exit(1)
