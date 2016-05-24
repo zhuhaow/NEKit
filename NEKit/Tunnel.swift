@@ -1,6 +1,5 @@
 import Foundation
 import CocoaLumberjackSwift
-import Zip
 
 protocol TunnelDelegate : class {
     func tunnelDidClose(tunnel: Tunnel)
