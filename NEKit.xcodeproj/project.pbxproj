@@ -37,6 +37,7 @@
 		366EB5CD1CE06B5E00E0E942 /* RawSocketFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */; };
 		366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */; };
 		369E75761CF4281400D52D3C /* tun2socks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; };
+		36A503F71CF5AC6300D1FC78 /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36B161FB1CDCDF3A00F24C97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */; };
 		36B161FD1CDCDF3B00F24C97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */; };
 		36B162001CDCDF3B00F24C97 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FE1CDCDF3B00F24C97 /* MainMenu.xib */; };
@@ -122,6 +123,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		36A503F61CF5AC5800D1FC78 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				36A503F71CF5AC6300D1FC78 /* tun2socks.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		36E44A691CF33AB400185DBF /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -486,6 +497,7 @@
 				36463A2E1CDCD5EB0040579C /* Resources */,
 				C761B0AADCE235DA95F31D5A /* Warn for TODO and FIXME comments */,
 				E60ADF4730A8B268DBD07CAC /* Set version number */,
+				36A503F61CF5AC5800D1FC78 /* CopyFiles */,
 			);
 			buildRules = (
 			);
