@@ -38,6 +38,7 @@
 		366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */; };
 		369E75761CF4281400D52D3C /* tun2socks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; };
 		36A503F71CF5AC6300D1FC78 /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */; };
 		36B161FB1CDCDF3A00F24C97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */; };
 		36B161FD1CDCDF3B00F24C97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */; };
 		36B162001CDCDF3B00F24C97 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FE1CDCDF3B00F24C97 /* MainMenu.xib */; };
@@ -190,6 +191,7 @@
 		366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RawSocketFactory.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapter.swift; sourceTree = "<group>"; };
 		369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = tun2socks.xcodeproj; path = tun2socks/tun2socks.xcodeproj; sourceTree = "<group>"; };
+		36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectProxySocket.swift; sourceTree = "<group>"; };
 		36B161F81CDCDF3A00F24C97 /* NEKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NEKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -460,6 +462,7 @@
 				36B1621C1CDDA0EA00F24C97 /* ProxySocket.swift */,
 				36B162211CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift */,
 				36B1621F1CDDA0EA00F24C97 /* SocketProtocol.swift */,
+				36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */,
 			);
 			path = Socket;
 			sourceTree = "<group>";
@@ -720,6 +723,7 @@
 				366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */,
 				366EB5CD1CE06B5E00E0E942 /* RawSocketFactory.swift in Sources */,
 				36E44A021CF2ED4800185DBF /* IPStack.swift in Sources */,
+				36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */,
 				36B162271CDDA0EA00F24C97 /* GCDTCPSocket.swift in Sources */,
 				36B162291CDDA0EA00F24C97 /* ProxySocket.swift in Sources */,
 				36B1622F1CDDA0EA00F24C97 /* Tunnel.swift in Sources */,

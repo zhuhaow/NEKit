@@ -9,6 +9,22 @@ class TUNTCPSocket: RawSocketProtocol, TSTCPSocketDelegate {
     var remainWriteLength: Int = 0
     var closeAfterWriting = false
 
+    var sourceIPAddress: IPv4Address! {
+        return IPv4Address(fromInAddr: tsSocket.sourceAddress.s_addr)
+    }
+
+    var sourcePort: Int! {
+        return Int(tsSocket.sourcePort)
+    }
+
+    var destinationIPAddress: IPv4Address! {
+        return IPv4Address(fromInAddr: tsSocket.destinationAddress.s_addr)
+    }
+
+    var destinationPort: Int! {
+        return Int(tsSocket.destinationPort)
+    }
+
     init(socket: TSTCPSocket) {
         tsSocket = socket
     }

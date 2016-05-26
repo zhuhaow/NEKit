@@ -9,6 +9,10 @@ protocol IPAddress: CustomStringConvertible {
 class IPv4Address: IPAddress {
     var inaddr: UInt32
 
+    init(fromInAddr: UInt32) {
+        inaddr = fromInAddr
+    }
+
     init(fromUInt32InHostOrder: UInt32) {
         inaddr = NSSwapHostIntToBig(fromUInt32InHostOrder)
     }

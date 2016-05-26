@@ -19,6 +19,22 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawSocketProtocol {
         return !socket.isDisconnected
     }
 
+    var sourceIPAddress: IPv4Address! {
+        return nil
+    }
+
+    var sourcePort: Int! {
+        return nil
+    }
+
+    var destinationIPAddress: IPv4Address! {
+        return nil
+    }
+
+    var destinationPort: Int! {
+        return nil
+    }
+
     init(socket: GCDAsyncSocket? = nil) {
         if let socket = socket {
             self.socket = socket
