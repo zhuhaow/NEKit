@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "36463A2F1CDCD5EB0040579C"
+               BlueprintIdentifier = "36C48D4C1CF88DED0071804F"
                BuildableName = "NEKit.framework"
-               BlueprintName = "NEKit"
+               BlueprintName = "iOS Framework"
                ReferencedContainer = "container:NEKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,26 +28,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "36463A391CDCD5EB0040579C"
-               BuildableName = "NEKitTests.xctest"
-               BlueprintName = "NEKitTests"
-               ReferencedContainer = "container:NEKit.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "36463A2F1CDCD5EB0040579C"
-            BuildableName = "NEKit.framework"
-            BlueprintName = "NEKit"
-            ReferencedContainer = "container:NEKit.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -64,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "36463A2F1CDCD5EB0040579C"
+            BlueprintIdentifier = "36C48D4C1CF88DED0071804F"
             BuildableName = "NEKit.framework"
-            BlueprintName = "NEKit"
+            BlueprintName = "iOS Framework"
             ReferencedContainer = "container:NEKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -82,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "36463A2F1CDCD5EB0040579C"
+            BlueprintIdentifier = "36C48D4C1CF88DED0071804F"
             BuildableName = "NEKit.framework"
-            BlueprintName = "NEKit"
+            BlueprintName = "iOS Framework"
             ReferencedContainer = "container:NEKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

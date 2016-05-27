@@ -2,13 +2,13 @@ import Foundation
 import tun2socks
 
 class TunInterface: TunInterfaceProtocol {
-    func readPackets(completionHandler: ([NSData]?, NSError?) -> ()) {
+    func readPackets(completionHandler: ([NSData]) -> ()) {
         NetworkInterface.TunnelProvider.packetFlow.readPacketsWithCompletionHandler {
-            completionHandler($0.0, nil)
+            completionHandler($0.0)
         }
     }
 
-    func writePackets(packets: [NSData]) {
-        NetworkInterface.TunnelProvider.packetFlow.writePackets(packets, withProtocols: Array<NSNumber>(count: packets.count, repeatedValue: NSNumber(int: AF_INET)))
+    func writePackets(packets: [NSData], versions: [Int]) {
+        NetworkInterface.TunnelProvider.packetFlow.writePackets(packets, withProtocols: versions)
     }
 }
