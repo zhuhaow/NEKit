@@ -13,8 +13,6 @@
 		3636DA5E1CE87C08007F9787 /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA5D1CE87C08007F9787 /* IPAddress.swift */; };
 		3636DA621CE892EF007F9787 /* Port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA611CE892EF007F9787 /* Port.swift */; };
 		36463A341CDCD5EB0040579C /* NEKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 36463A331CDCD5EB0040579C /* NEKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		36463A3B1CDCD5EB0040579C /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
-		36463A401CDCD5EB0040579C /* NEKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36463A3F1CDCD5EB0040579C /* NEKitTests.swift */; };
 		3664F0B41CE194ED008BA6D8 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */; };
 		3664F0BA1CE21A60008BA6D8 /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B91CE21A60008BA6D8 /* Sodium.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -152,13 +150,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		36463A3C1CDCD5EB0040579C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 36463A271CDCD5EB0040579C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 36463A2F1CDCD5EB0040579C;
-			remoteInfo = NEKit;
-		};
 		369E75741CF4279E00D52D3C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */;
@@ -237,7 +228,6 @@
 		36463A301CDCD5EB0040579C /* NEKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NEKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36463A331CDCD5EB0040579C /* NEKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NEKit.h; sourceTree = "<group>"; };
 		36463A351CDCD5EB0040579C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		36463A3A1CDCD5EB0040579C /* NEKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NEKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		36463A3F1CDCD5EB0040579C /* NEKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NEKitTests.swift; sourceTree = "<group>"; };
 		36463A411CDCD5EB0040579C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CommonCrypto.framework; path = Carthage/Build/Mac/CommonCrypto.framework; sourceTree = "<group>"; };
@@ -332,14 +322,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		36463A371CDCD5EB0040579C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				36463A3B1CDCD5EB0040579C /* NEKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		36B161F51CDCDF3A00F24C97 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -427,7 +409,6 @@
 			isa = PBXGroup;
 			children = (
 				36463A301CDCD5EB0040579C /* NEKit.framework */,
-				36463A3A1CDCD5EB0040579C /* NEKitTests.xctest */,
 				36B161F81CDCDF3A00F24C97 /* NEKitDemo.app */,
 				36C48D4D1CF88DED0071804F /* NEKit.framework */,
 			);
@@ -642,24 +623,6 @@
 			productReference = 36463A301CDCD5EB0040579C /* NEKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		36463A391CDCD5EB0040579C /* NEKitTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 36463A471CDCD5EB0040579C /* Build configuration list for PBXNativeTarget "NEKitTests" */;
-			buildPhases = (
-				36463A361CDCD5EB0040579C /* Sources */,
-				36463A371CDCD5EB0040579C /* Frameworks */,
-				36463A381CDCD5EB0040579C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				36463A3D1CDCD5EB0040579C /* PBXTargetDependency */,
-			);
-			name = NEKitTests;
-			productName = NEKitTests;
-			productReference = 36463A3A1CDCD5EB0040579C /* NEKitTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		36B161F71CDCDF3A00F24C97 /* NEKitDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 36B162021CDCDF3B00F24C97 /* Build configuration list for PBXNativeTarget "NEKitDemo" */;
@@ -714,9 +677,6 @@
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = H5443445N6;
 					};
-					36463A391CDCD5EB0040579C = {
-						CreatedOnToolsVersion = 7.3;
-					};
 					36B161F71CDCDF3A00F24C97 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = H5443445N6;
@@ -747,7 +707,6 @@
 			targets = (
 				36463A2F1CDCD5EB0040579C /* Mac Framework */,
 				36C48D4C1CF88DED0071804F /* iOS Framework */,
-				36463A391CDCD5EB0040579C /* NEKitTests */,
 				36B161F71CDCDF3A00F24C97 /* NEKitDemo */,
 			);
 		};
@@ -772,13 +731,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		36463A2E1CDCD5EB0040579C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		36463A381CDCD5EB0040579C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -932,14 +884,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		36463A361CDCD5EB0040579C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				36463A401CDCD5EB0040579C /* NEKitTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		36B161F41CDCDF3A00F24C97 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1007,11 +951,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		36463A3D1CDCD5EB0040579C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 36463A2F1CDCD5EB0040579C /* Mac Framework */;
-			targetProxy = 36463A3C1CDCD5EB0040579C /* PBXContainerItemProxy */;
-		};
 		369E75781CF42AEC00D52D3C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = tun2socks;
@@ -1212,28 +1151,6 @@
 			};
 			name = Release;
 		};
-		36463A481CDCD5EB0040579C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = NEKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.NEKitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		36463A491CDCD5EB0040579C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = NEKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.NEKitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		36B162031CDCDF3B00F24C97 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1341,15 +1258,6 @@
 			buildConfigurations = (
 				36463A451CDCD5EB0040579C /* Debug */,
 				36463A461CDCD5EB0040579C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		36463A471CDCD5EB0040579C /* Build configuration list for PBXNativeTarget "NEKitTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				36463A481CDCD5EB0040579C /* Debug */,
-				36463A491CDCD5EB0040579C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
