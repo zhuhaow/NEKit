@@ -6,4 +6,4 @@ xcode_scheme:
   - NEKit-OSX
 
 install:
-  - carthage update --no-use-binaries --platform mac,ios
+  - carthage bootstrap --no-use-binaries --platform mac,ios
