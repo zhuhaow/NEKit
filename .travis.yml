@@ -4,3 +4,6 @@ xcode_project: NEKit.xcodeproj
 xcode_scheme:
   - NEKit-iOS
   - NEKit-OSX
+
+install:
+  - carthage update --no-use-binaries --platform mac,ios
