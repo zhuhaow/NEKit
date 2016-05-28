@@ -2,7 +2,7 @@ language: objective-c
 osx_image: xcode7.3
 xcode_project: NEKit.xcodeproj
 xcode_scheme:
-  - NEKit-iOS
+  # - NEKit-iOS
   - NEKit-OSX
 
 install:
