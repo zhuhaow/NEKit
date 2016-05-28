@@ -4,6 +4,9 @@ xcode_project: NEKit.xcodeproj
 xcode_scheme:
   # - NEKit-iOS
   - NEKit-OSX
+cache:
+  directories:
+    - Carthage
 
 install:
   - carthage bootstrap --no-use-binaries --platform mac,ios
