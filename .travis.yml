@@ -9,5 +9,6 @@ cache:
     - Carthage
 
 install:
+  - brew update && brew install swiftlint
   - bin/bootstrap-if-needed
 
