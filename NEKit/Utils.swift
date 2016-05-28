@@ -76,12 +76,6 @@ struct Utils {
     }
 
     struct GeoIPLookup {
-//        static var _geoIPLookup : GeoIP {
-//            struct holder {
-//                static let geoIP = GeoIP(database: NSBundle.mainBundle().pathForResource("GeoIP", ofType: "dat"))
-//            }
-//            return holder.geoIP
-//        }
 
         static func Lookup(ipAddress: String) -> String {
             if Utils.IP.isIPv4(ipAddress) {
