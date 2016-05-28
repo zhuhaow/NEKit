@@ -21,11 +21,11 @@ class ShadowsocksAdapter: AdapterSocket {
     }()
     lazy var encryptor: Cryptor = {
         [unowned self] in
-        Cryptor(op: .Encrypt, mode: .CFB, alg: .AES, iv: self.writeIV, key: self.key)
+        Cryptor(operation: .Encrypt, mode: .CFB, algorithm: .AES, initialVector: self.writeIV, key: self.key)
     }()
     lazy var decryptor: Cryptor = {
         [unowned self] in
-        Cryptor(op: .Decrypt, mode: .CFB, alg: .AES, iv: self.readIV, key: self.key)
+        Cryptor(operation: .Decrypt, mode: .CFB, algorithm: .AES, initialVector: self.readIV, key: self.key)
     }()
 
     enum EncryptMethod: String {
@@ -172,9 +172,9 @@ class Cryptor {
     let cryptor: CCCryptorRef
 
 
-    init(op: Operation, mode: Mode, alg: Algorithm, iv: NSData, key: NSData) {
+    init(operation: Operation, mode: Mode, algorithm: Algorithm, initialVector: NSData, key: NSData) {
         let cryptor = UnsafeMutablePointer<CCCryptorRef>.alloc(1)
-        CCCryptorCreateWithMode(op.op(), mode.mode(), alg.algorithm(), CCPadding(ccNoPadding), iv.bytes, key.bytes, key.length, nil, 0, 0, 0, cryptor)
+        CCCryptorCreateWithMode(operation.op(), mode.mode(), algorithm.algorithm(), CCPadding(ccNoPadding), initialVector.bytes, key.bytes, key.length, nil, 0, 0, 0, cryptor)
         self.cryptor = cryptor.memory
     }
 
