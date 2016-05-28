@@ -288,7 +288,6 @@
 		36B1625D1CDDAD6E00F24C97 /* MMDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMDB.framework; path = Carthage/Build/Mac/MMDB.framework; sourceTree = "<group>"; };
 		36B162611CDDADC100F24C97 /* GeoIP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoIP.swift; sourceTree = "<group>"; };
 		36BC589A1CF2A3D400E0E367 /* TUNTCPSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNTCPSocket.swift; sourceTree = "<group>"; };
-		36C48D471CF88DB30071804F /* Mac Framework copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Mac Framework copy-Info.plist"; path = "/Users/zhuhao/Projects/Specht/NEKit/Mac Framework copy-Info.plist"; sourceTree = "<absolute>"; };
 		36C48D4D1CF88DED0071804F /* NEKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NEKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36C48D4F1CF88DED0071804F /* iOS Framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iOS Framework.h"; sourceTree = "<group>"; };
 		36C48D511CF88DED0071804F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -384,7 +383,6 @@
 				36463A311CDCD5EB0040579C /* Products */,
 				3664F0C61CE37763008BA6D8 /* .swiftlint.yml */,
 				36B1624A1CDDA13500F24C97 /* Cartfile */,
-				36C48D471CF88DB30071804F /* Mac Framework copy-Info.plist */,
 			);
 			indentWidth = 4;
 			sourceTree = "<group>";
