@@ -374,16 +374,9 @@
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
-				36C48D8B1CF896A70071804F /* CocoaAsyncSocket.framework */,
-				36C48D8C1CF896A70071804F /* CocoaLumberjack.framework */,
-				36C48D8D1CF896A70071804F /* CocoaLumberjackSwift.framework */,
-				36C48D8E1CF896A70071804F /* CommonCrypto.framework */,
-				36C48D8F1CF896A70071804F /* Crypto.framework */,
-				36C48D901CF896A70071804F /* MMDB.framework */,
-				36C48D911CF896A70071804F /* Sodium.framework */,
-				36C48D921CF896A70071804F /* Yaml.framework */,
+				36C48D9C1CF948500071804F /* Carthage Framework OSX */,
+				36C48D9B1CF9483F0071804F /* Carthage Framework iOS */,
 				369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */,
-				36E44A4F1CF33A9D00185DBF /* Crypto.framework */,
 				36463A321CDCD5EB0040579C /* NEKit */,
 				36B161F91CDCDF3A00F24C97 /* NEKitDemo */,
 				36463A3E1CDCD5EB0040579C /* NEKitTests */,
@@ -391,13 +384,6 @@
 				36463A311CDCD5EB0040579C /* Products */,
 				3664F0C61CE37763008BA6D8 /* .swiftlint.yml */,
 				36B1624A1CDDA13500F24C97 /* Cartfile */,
-				36B1624B1CDDA26600F24C97 /* CocoaAsyncSocket.framework */,
-				36B1624C1CDDA26600F24C97 /* CocoaLumberjack.framework */,
-				36B1624D1CDDA26600F24C97 /* CocoaLumberjackSwift.framework */,
-				3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */,
-				36B1625D1CDDAD6E00F24C97 /* MMDB.framework */,
-				3664F0B91CE21A60008BA6D8 /* Sodium.framework */,
-				366EB5BA1CDE328F00E0E942 /* Yaml.framework */,
 				36C48D471CF88DB30071804F /* Mac Framework copy-Info.plist */,
 			);
 			indentWidth = 4;
@@ -576,6 +562,36 @@
 				36C48D511CF88DED0071804F /* Info.plist */,
 			);
 			path = "iOS Framework";
+			sourceTree = "<group>";
+		};
+		36C48D9B1CF9483F0071804F /* Carthage Framework iOS */ = {
+			isa = PBXGroup;
+			children = (
+				36C48D8B1CF896A70071804F /* CocoaAsyncSocket.framework */,
+				36C48D8C1CF896A70071804F /* CocoaLumberjack.framework */,
+				36C48D8D1CF896A70071804F /* CocoaLumberjackSwift.framework */,
+				36C48D8E1CF896A70071804F /* CommonCrypto.framework */,
+				36C48D8F1CF896A70071804F /* Crypto.framework */,
+				36C48D901CF896A70071804F /* MMDB.framework */,
+				36C48D911CF896A70071804F /* Sodium.framework */,
+				36C48D921CF896A70071804F /* Yaml.framework */,
+			);
+			name = "Carthage Framework iOS";
+			sourceTree = "<group>";
+		};
+		36C48D9C1CF948500071804F /* Carthage Framework OSX */ = {
+			isa = PBXGroup;
+			children = (
+				36E44A4F1CF33A9D00185DBF /* Crypto.framework */,
+				36B1624B1CDDA26600F24C97 /* CocoaAsyncSocket.framework */,
+				36B1624C1CDDA26600F24C97 /* CocoaLumberjack.framework */,
+				36B1624D1CDDA26600F24C97 /* CocoaLumberjackSwift.framework */,
+				3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */,
+				36B1625D1CDDAD6E00F24C97 /* MMDB.framework */,
+				3664F0B91CE21A60008BA6D8 /* Sodium.framework */,
+				366EB5BA1CDE328F00E0E942 /* Yaml.framework */,
+			);
+			name = "Carthage Framework OSX";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
