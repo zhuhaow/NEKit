@@ -35,7 +35,7 @@ class ShadowsocksAdapter: AdapterSocket {
     }
 
     enum ShadowsocksTag: Int {
-        case IV = 25000, Connect
+        case InitialVector = 25000, Connect
     }
 
     init(host: String, port: Int, encryptMethod: EncryptMethod, password: String) {
@@ -91,7 +91,7 @@ class ShadowsocksAdapter: AdapterSocket {
     override func readDataWithTag(tag: Int) {
         if readIV == nil && !readingIV {
             readingIV = true
-            socket.readDataToLength(ivLength, withTag: ShadowsocksTag.IV.rawValue)
+            socket.readDataToLength(ivLength, withTag: ShadowsocksTag.InitialVector.rawValue)
             nextReadTag = tag
         } else {
             super.readDataWithTag(tag)
@@ -103,7 +103,7 @@ class ShadowsocksAdapter: AdapterSocket {
     }
 
     override func didReadData(data: NSData, withTag tag: Int, from socket: RawSocketProtocol) {
-        if tag == ShadowsocksTag.IV.rawValue {
+        if tag == ShadowsocksTag.InitialVector.rawValue {
             readIV = data
             readingIV = false
             super.readDataWithTag(nextReadTag)
