@@ -28,26 +28,26 @@ struct Utils {
     }
 
     struct IP {
-        static func isIPv4(ip: String) -> Bool {
-            if IPv4ToInt(ip) != nil {
+        static func isIPv4(ipAddress: String) -> Bool {
+            if IPv4ToInt(ipAddress) != nil {
                 return true
             } else {
                 return false
             }
         }
 
-        static func isIPv6(ip: String) -> Bool {
-            let utf8Str = (ip as NSString).UTF8String
+        static func isIPv6(ipAddress: String) -> Bool {
+            let utf8Str = (ipAddress as NSString).UTF8String
             var dst = [UInt8](count: 16, repeatedValue: 0)
             return inet_pton(AF_INET6, utf8Str, &dst) == 1
         }
 
-        static func isIP(ip: String) -> Bool {
-            return isIPv4(ip) || isIPv6(ip)
+        static func isIP(ipAddress: String) -> Bool {
+            return isIPv4(ipAddress) || isIPv6(ipAddress)
         }
 
-        static func IPv4ToInt(ip: String) -> UInt32? {
-            let utf8Str = (ip as NSString).UTF8String
+        static func IPv4ToInt(ipAddress: String) -> UInt32? {
+            let utf8Str = (ipAddress as NSString).UTF8String
             var dst = in_addr(s_addr: 0)
             if inet_pton(AF_INET, utf8Str, &(dst.s_addr)) == 1 {
                 return UInt32(dst.s_addr)
@@ -56,16 +56,16 @@ struct Utils {
             }
         }
 
-        static func IPv4ToBytes(ip: String) -> [UInt8]? {
-            if let ipv4int = IPv4ToInt(ip) {
+        static func IPv4ToBytes(ipAddress: String) -> [UInt8]? {
+            if let ipv4int = IPv4ToInt(ipAddress) {
                 return Utils.toByteArray(ipv4int).reverse()
             } else {
                 return nil
             }
         }
 
-        static func IPv6ToBytes(ip: String) -> [UInt8]? {
-            let utf8Str = (ip as NSString).UTF8String
+        static func IPv6ToBytes(ipAddress: String) -> [UInt8]? {
+            let utf8Str = (ipAddress as NSString).UTF8String
             var dst = [UInt8](count: 16, repeatedValue: 0)
             if inet_pton(AF_INET6, utf8Str, &dst) == 1 {
                 return Utils.toByteArray(dst).reverse()
@@ -83,9 +83,9 @@ struct Utils {
 //            return holder.geoIP
 //        }
 
-        static func Lookup(ip: String) -> String {
-            if Utils.IP.isIPv4(ip) {
-                guard let result = GeoIP.LookUp(ip) else {
+        static func Lookup(ipAddress: String) -> String {
+            if Utils.IP.isIPv4(ipAddress) {
+                guard let result = GeoIP.LookUp(ipAddress) else {
                     return "--"
                 }
                 return result.isoCode

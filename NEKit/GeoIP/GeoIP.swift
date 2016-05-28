@@ -2,9 +2,9 @@ import Foundation
 import MMDB
 
 class GeoIP {
-    static let db = MMDB()
+    static let database = MMDB()
 
-    static func LookUp(ip: String) -> MMDBCountry? {
-        return GeoIP.db?.lookup(ip)
+    static func LookUp(ipAddress: String) -> MMDBCountry? {
+        return GeoIP.database?.lookup(ipAddress)
     }
 }
