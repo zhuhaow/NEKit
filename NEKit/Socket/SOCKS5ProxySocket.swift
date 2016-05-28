@@ -10,7 +10,8 @@ class SOCKS5ProxySocket: ProxySocket {
         socket.readDataToLength(3, withTag: SocketTag.SOCKS5.Open)
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable function_body_length
+    // swiftlint:disable cyclomatic_complexity
     override func didReadData(data: NSData, withTag tag: Int, from: RawSocketProtocol) {
         switch tag {
         case SocketTag.SOCKS5.Open:

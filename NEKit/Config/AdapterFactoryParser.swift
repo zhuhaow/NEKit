@@ -3,6 +3,7 @@ import CocoaLumberjackSwift
 import Yaml
 
 struct AdapterFactoryParser {
+    // swiftlint:disable:next cyclomatic_complexity
     static func parseAdapterFactoryManager(config: Yaml) -> AdapterFactoryManager {
         var factoryDict: [String: AdapterFactoryProtocol] = [:]
         factoryDict["direct"] = DirectAdapterFactory()
