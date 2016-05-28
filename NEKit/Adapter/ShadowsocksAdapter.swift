@@ -205,25 +205,6 @@ struct ShadowsocksEncryptHelper {
         return infoDictionary[methodType]!.1
     }
 
-//    static func getKey(password: String, methodType: ShadowsocksAdapter.EncryptMethod) -> NSData {
-//        let key = NSMutableData(length: getKeyLength(methodType))!
-//        let passwordData = password.dataUsingEncoding(NSUTF8StringEncoding)!
-//        let extendPasswordData = NSMutableData(length: passwordData.length + 1)!
-//        passwordData.getBytes(extendPasswordData.mutableBytes + 1, length: passwordData.length)
-//        var md5result = Utils.Crypto.MD5(password)
-//        var length = 0
-//        var i = 0
-//        repeat {
-//            let copyLength = min(key.length - length, md5result.length)
-//            md5result.getBytes(key.mutableBytes + length, length: copyLength)
-//            extendPasswordData.replaceBytesInRange(NSRange(location: i, length: 1), withBytes: key.bytes)
-//            md5result = Utils.Crypto.MD5(extendPasswordData)
-//            length += copyLength
-//            i += 1
-//        } while length < key.length
-//        return NSData(data: key)
-//    }
-
     static func getIV(methodType: ShadowsocksAdapter.EncryptMethod) -> NSData {
         let IV = NSMutableData(length: getIVLength(methodType))!
         SecRandomCopyBytes(kSecRandomDefault, IV.length, UnsafeMutablePointer<UInt8>(IV.mutableBytes))
