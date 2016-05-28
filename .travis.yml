@@ -9,4 +9,5 @@ cache:
     - Carthage
 
 install:
-  - carthage bootstrap --no-use-binaries --platform mac,ios
+  - bin/bootstrap-if-needed
+
