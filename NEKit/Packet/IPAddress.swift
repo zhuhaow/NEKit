@@ -56,6 +56,6 @@ class IPv4Address: IPAddress {
     }
 }
 
-func ==(left: IPv4Address, right: IPv4Address) -> Bool {
+func == (left: IPv4Address, right: IPv4Address) -> Bool {
     return left.inaddr == right.inaddr
 }

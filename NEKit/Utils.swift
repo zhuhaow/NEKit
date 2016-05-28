@@ -1,5 +1,5 @@
 import Foundation
- import CommonCrypto
+import CommonCrypto
 
 struct Utils {
     struct HTTPData {
@@ -9,7 +9,9 @@ struct Utils {
     }
 
     struct DNS {
+        // swiftlint:disable:next nesting
         enum QueryType {
+            // swiftlint:disable:next type_name
             case A, AAAA, UNSPEC
         }
 
@@ -27,6 +29,7 @@ struct Utils {
         }
     }
 
+    // swiftlint:disable:next type_name
     struct IP {
         static func isIPv4(ipAddress: String) -> Bool {
             if IPv4ToInt(ipAddress) != nil {

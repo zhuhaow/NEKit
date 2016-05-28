@@ -2,3 +2,4 @@ disabled_rules:
 - line_length
 excluded:
   - Carthage
+  - tun2socks

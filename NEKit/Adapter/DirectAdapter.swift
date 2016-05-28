@@ -8,7 +8,7 @@ class DirectAdapter: AdapterSocket {
         super.openSocketWithRequest(request)
         let host: String
         if resolveHost {
-            host = request.IP
+            host = request.ipAddress
             if host == "" {
                 DDLogError("DNS look up failed for direct connect to \(request.host), disconnect now.")
                 delegate?.didDisconnect(self)

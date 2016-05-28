@@ -40,6 +40,6 @@ class Port: CustomStringConvertible, Hashable {
     }
 }
 
-func ==(left: Port, right: Port) -> Bool {
+func == (left: Port, right: Port) -> Bool {
     return left.hashValue == right.hashValue
 }

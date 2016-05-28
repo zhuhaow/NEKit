@@ -52,6 +52,7 @@ public class IPPacket {
         }
     }
 
+    // swiftlint:disable:next variable_name
     internal func updateChecksum(oldValue: UInt16, newValue: UInt16, at: Int) {
         let oldChecksum = UnsafePointer<UInt16>(payload.bytes.advancedBy(at)).memory
         let oc32 = UInt32(~oldChecksum)
@@ -64,13 +65,16 @@ public class IPPacket {
         payload.replaceBytesInRange(NSRange(location: at, length: 2), withBytes: &newChecksum, length: 2)
     }
 
-    private func foldChecksum(var checksum: UInt32) -> UInt32 {
+    // swiftlint:disable:next variable_name
+    private func foldChecksum(checksum: UInt32) -> UInt32 {
+        var checksum = checksum
         while checksum > 0xFFFF {
             checksum = (checksum & 0xFFFF) + (checksum >> 16)
         }
         return checksum
     }
 
+    // swiftlint:disable:next variable_name
     private func setIPv4Address(oldAddress: IPv4Address, newAddress: IPv4Address, at: Int) {
         payload.replaceBytesInRange(NSRange(location: at, length: 4), withBytes: newAddress.bytesInNetworkOrder, length: 4)
             updateChecksum(UnsafePointer<UInt16>(oldAddress.bytesInNetworkOrder).memory, newValue: UnsafePointer<UInt16>(newAddress.bytesInNetworkOrder).memory, type: .Address)

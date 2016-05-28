@@ -3,7 +3,7 @@ class ConnectRequest {
     let host: String
     let port: Int
 
-    lazy var IP: String = {
+    lazy var ipAddress: String = {
         [unowned self] in
         if self.isIP() {
             return self.host
@@ -13,7 +13,7 @@ class ConnectRequest {
     }()
     lazy var country: String = {
         [unowned self] in
-        Utils.GeoIPLookup.Lookup(self.IP)
+        Utils.GeoIPLookup.Lookup(self.ipAddress)
     }()
 
 
