@@ -26,74 +26,85 @@ struct RuleParser {
 
         switch type {
         case "country":
-            guard let country = config["country"].string else {
-                DDLogError("Country rule requires country code.")
-                return nil
-            }
-
-            guard let adapter_id = config["adapter"].string else {
-                DDLogError("An adapter id is required.")
-                return nil
-            }
-
-            guard let adapter = adapterFactoryManager[adapter_id] else {
-                DDLogError("Unknown adapter id.")
-                return nil
-            }
-
-            guard let match = config["match"].bool else {
-                DDLogError("You have to specify whether to apply this rule to ip match the given country or not.")
-                return nil
-            }
-
-            return CountryRule(countryCode: country, match: match, adapterFactory: adapter)
+            return parseCountryRule(config, adapterFactoryManager: adapterFactoryManager)
         case "all":
-            guard let adapter_id = config["adapter"].string else {
-                DDLogError("An adapter id is required.")
-                return nil
-            }
-
-            guard let adapter = adapterFactoryManager[adapter_id] else {
-                DDLogError("Unknown adapter id.")
-                return nil
-            }
-
-            return AllRule(adapterFactory: adapter)
+            return parseAllRule(config, adapterFactoryManager: adapterFactoryManager)
         case "list":
-            guard let adapter_id = config["adapter"].string else {
-                DDLogError("An adapter id is required.")
-                return nil
-            }
-
-            guard let adapter = adapterFactoryManager[adapter_id] else {
-                DDLogError("Unknown adapter id.")
-                return nil
-            }
-
-            guard var filepath = config["file"].string else {
-                DDLogError("Must provide a file")
-                return nil
-            }
-
-            filepath = (filepath as NSString).stringByExpandingTildeInPath
-
-            do {
-                let content = try String(contentsOfFile: filepath)
-                var urls = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
-                if let url = urls.last {
-                    if url == "" {
-                        urls.removeLast()
-                    }
-                }
-                return try ListRule(adapterFactory: adapter, urls: urls)
-            } catch let error as NSError {
-                DDLogError("\(error)")
-                return nil
-            }
+            return parseListRule(config, adapterFactoryManager: adapterFactoryManager)
         default:
             DDLogError("Unknown rule type.")
             return nil
         }
     }
 
+    static func parseCountryRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) -> CountryRule? {
+        guard let country = config["country"].string else {
+            DDLogError("Country rule requires country code.")
+            return nil
+        }
+
+        guard let adapter_id = config["adapter"].string else {
+            DDLogError("An adapter id is required.")
+            return nil
+        }
+
+        guard let adapter = adapterFactoryManager[adapter_id] else {
+            DDLogError("Unknown adapter id.")
+            return nil
+        }
+
+        guard let match = config["match"].bool else {
+            DDLogError("You have to specify whether to apply this rule to ip match the given country or not.")
+            return nil
+        }
+
+        return CountryRule(countryCode: country, match: match, adapterFactory: adapter)
+    }
+
+    static func parseAllRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) -> AllRule? {
+        guard let adapter_id = config["adapter"].string else {
+            DDLogError("An adapter id is required.")
+            return nil
+        }
+
+        guard let adapter = adapterFactoryManager[adapter_id] else {
+            DDLogError("Unknown adapter id.")
+            return nil
+        }
+
+        return AllRule(adapterFactory: adapter)
+    }
+
+    static func parseListRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) -> ListRule? {
+        guard let adapter_id = config["adapter"].string else {
+            DDLogError("An adapter id is required.")
+            return nil
+        }
+
+        guard let adapter = adapterFactoryManager[adapter_id] else {
+            DDLogError("Unknown adapter id.")
+            return nil
+        }
+
+        guard var filepath = config["file"].string else {
+            DDLogError("Must provide a file")
+            return nil
+        }
+
+        filepath = (filepath as NSString).stringByExpandingTildeInPath
+
+        do {
+            let content = try String(contentsOfFile: filepath)
+            var urls = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
+            if let url = urls.last {
+                if url == "" {
+                    urls.removeLast()
+                }
+            }
+            return try ListRule(adapterFactory: adapter, urls: urls)
+        } catch let error as NSError {
+            DDLogError("\(error)")
+            return nil
+        }
+    }
 }
