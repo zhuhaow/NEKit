@@ -11,12 +11,29 @@ class ListRule: Rule {
         }
     }
 
-    override func match(request: ConnectRequest) -> AdapterFactoryProtocol? {
-        for url in urls {
-            if let _ = url.firstMatchInString(request.host, options: [], range: NSRange(location: 0, length: request.host.utf16.count)) {
-                return adapterFactory
+    override func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+        if matchDomain(session.name) {
+            if let _ = adapterFactory as? DirectAdapterFactory {
+                return .Real
             }
+            return .Fake
+        }
+        return .Pass
+    }
+
+    override func match(request: ConnectRequest) -> AdapterFactoryProtocol? {
+        if matchDomain(request.host) {
+            return adapterFactory
         }
         return nil
+    }
+
+    private func matchDomain(name: String) -> Bool {
+        for url in urls {
+            if let _ = url.firstMatchInString(name, options: [], range: NSRange(location: 0, length: name.utf16.count)) {
+                return true
+            }
+        }
+        return false
     }
 }

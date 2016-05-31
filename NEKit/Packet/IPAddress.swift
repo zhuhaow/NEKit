@@ -8,7 +8,7 @@ protocol IPAddress: CustomStringConvertible {
     var dataInNetworkOrder: NSData { get }
 }
 
-class IPv4Address: IPAddress {
+class IPv4Address: IPAddress, Hashable {
     var inaddr: UInt32
 
     init(fromInAddr: UInt32) {
@@ -47,6 +47,14 @@ class IPv4Address: IPAddress {
 
     var description: String {
         return "IPv4 address: \(presentation)"
+    }
+
+    var hashValue: Int {
+        return Int(inaddr)
+    }
+
+    var UInt32InHostOrder: UInt32 {
+        return NSSwapBigIntToHost(inaddr)
     }
 
     var bytesInNetworkOrder: UnsafePointer<Void> {
