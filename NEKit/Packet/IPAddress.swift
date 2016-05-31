@@ -4,6 +4,8 @@ protocol IPAddress: CustomStringConvertible {
     init(fromString: String)
     init(fromBytesInNetworkOrder: [UInt8])
     init(fromBytesInNetworkOrder: UnsafePointer<Void>)
+
+    var dataInNetworkOrder: NSData { get }
 }
 
 class IPv4Address: IPAddress {
@@ -53,6 +55,10 @@ class IPv4Address: IPAddress {
             pointer = UnsafePointer<Void>($0)
         }
         return pointer
+    }
+
+    var dataInNetworkOrder: NSData {
+        return NSData(bytes: bytesInNetworkOrder, length: sizeofValue(inaddr))
     }
 }
 

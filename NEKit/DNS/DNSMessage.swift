@@ -259,6 +259,10 @@ class DNSResource {
         self.data = data
     }
 
+    static func ARecord(name: String, TTL: UInt32 = 300, address: IPv4Address) -> DNSResource {
+        return DNSResource(name: name, type: .A, klass: .Internet, TTL: TTL, data: address.dataInNetworkOrder)
+    }
+
     init(payload: NSData, offset: Int) {
         self.name = DNSNameConverter.getNamefromData(payload, offset: offset + 4)
 
