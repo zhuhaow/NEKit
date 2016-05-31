@@ -291,6 +291,13 @@ class DNSResource {
     var bytesLength: Int {
         return nameBytesLength + 8 + Int(dataLength)
     }
+
+    var ipv4Address: IPv4Address? {
+        guard type == .A else {
+            return nil
+        }
+        return IPv4Address(fromBytesInNetworkOrder: data.bytes)
+    }
 }
 
 class DNSNameConverter {
