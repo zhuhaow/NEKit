@@ -33,12 +33,43 @@ class DNSServer {
         }
     }
 
-    func lookup(message: DNSMessage, completeHandler: (DNSSession) -> ()) {
+    private func lookup(message: DNSMessage, completeHandler: (DNSSession) -> ()) {
+        guard let session = DNSSession(message: message) else {
+            // ignore everything not a query
+            return
+        }
+
+        switch RuleManager.currentManager.matchDNS(session, type: .Domain) {
+        case .Fake:
+            setUpFakeIP(session)
+        case .Real:
+        case .Unknown:
+        default:
+            DDLogError("The rule match result should never be .Pass.")
+        }
+    }
+
+    private func lookupRemotely(session: DNSSession, completeHandler: (DNSSession) -> ()) {
 
     }
 
-    func getFakeIP() {
+    func inputPacket(data: NSData) {
+        let message = DNSMessage(payload: data)
+        lookup(message, completeHandler: <#T##(DNSSession) -> ()#>)
+    }
 
+    func isFakeIP(ipAddress: IPv4Address) -> Bool {
+        return pool.isInPool(ipAddress)
+    }
+
+    func setUpFakeIP(session: DNSSession) -> Bool {
+        guard let fakeIP = pool.fetchIP() else {
+            DDLogError("Failed to get a fake IP.")
+            return false
+        }
+        session.fakeIP = fakeIP
+        fakeSessions[fakeIP] = session
+        return true
     }
 }
 
@@ -87,5 +118,10 @@ class IPv4Pool {
 
     func releaseIP(ipAddress: IPv4Address) {
         pool.append(ipAddress.UInt32InHostOrder)
+    }
+
+    func isInPool(ipAddress: IPv4Address) -> Bool {
+        let addr = ipAddress.UInt32InHostOrder
+        return addr >= start && addr < end
     }
 }

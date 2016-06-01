@@ -14,6 +14,20 @@ public class RuleManager {
         }
     }
 
+    func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+        for rule in rules {
+            let result = rule.matchDNS(session, type: type)
+            switch result {
+            case .Fake, .Real, .Unknown:
+                session.matchedRule = rule
+                return result
+            case .Pass:
+                break
+            }
+        }
+        return .Real
+    }
+
     func match(request: ConnectRequest) -> AdapterFactoryProtocol! {
         for rule in rules {
             if let adapterFactory = rule.match(request) {
