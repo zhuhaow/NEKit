@@ -2,7 +2,10 @@ import Foundation
 
 class RawSocketFactory {
     static func getRawSocket() -> RawSocketProtocol {
-//        return GCDTCPSocket()
-        return NWTCPSocket()
+        if NetworkInterface.TunnelProvider == nil {
+            return GCDTCPSocket()
+        } else {
+            return NWTCPSocket()
+        }
     }
 }
