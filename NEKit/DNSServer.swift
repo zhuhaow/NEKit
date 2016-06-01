@@ -55,7 +55,7 @@ class DNSServer {
 
     func inputPacket(data: NSData) {
         let message = DNSMessage(payload: data)
-        lookup(message, completeHandler: <#T##(DNSSession) -> ()#>)
+        lookup(message, completeHandler: {_ in })
     }
 
     func isFakeIP(ipAddress: IPv4Address) -> Bool {
