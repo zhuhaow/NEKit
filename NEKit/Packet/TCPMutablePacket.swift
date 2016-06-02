@@ -1,6 +1,6 @@
 import Foundation
 
-class TCPPacket: IPPacket {
+class TCPMutablePacket: IPMutablePacket {
     var sourcePort: Port {
         get {
             return Port(bytesInNetworkOrder: payload.bytes.advancedBy(IPHeaderLength))

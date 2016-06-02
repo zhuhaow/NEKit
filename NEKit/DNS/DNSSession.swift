@@ -5,7 +5,7 @@ class DNSSession {
     let requestMessage: DNSMessage
     var realIP: IPv4Address?
     var fakeIP: IPv4Address?
-    var realDNSResponse: NSData?
+    var realResponseMessage: DNSMessage?
     var matchedRule: Rule?
     var matchResult: DNSSessionMatchResult?
     var indexToMatch = 0

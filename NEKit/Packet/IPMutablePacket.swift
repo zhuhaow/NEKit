@@ -12,7 +12,7 @@ enum ChangeType {
     case Address, Port
 }
 
-public class IPPacket {
+public class IPMutablePacket {
     // Support only IPv4 for now
 
     let version: IPVersion

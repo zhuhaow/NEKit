@@ -12,7 +12,7 @@ class ListRule: Rule {
     }
 
     override func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
-        if matchDomain(session.name) {
+        if matchDomain(session.requestMessage.queries.first!.name) {
             if let _ = adapterFactory as? DirectAdapterFactory {
                 return .Real
             }

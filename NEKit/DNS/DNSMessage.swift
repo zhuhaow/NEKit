@@ -2,6 +2,10 @@ import Foundation
 import CocoaLumberjackSwift
 
 class DNSMessage {
+    var sourceAddress: IPv4Address?
+    var sourcePort: Port?
+    var destinationAddress: IPv4Address?
+    var destinationPort: Port?
     var transactionID: UInt16 = 0
     var messageType: DNSMessageType = .Query
     var authoritative: Bool = false

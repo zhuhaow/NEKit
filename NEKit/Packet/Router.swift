@@ -16,13 +16,13 @@ public class Router {
         self.proxyServerPort = Port(port: proxyServerPort)
     }
 
-    public func rewritePacket(packet: IPPacket) -> IPPacket? {
+    public func rewritePacket(packet: IPMutablePacket) -> IPMutablePacket? {
         // Support only TCP as for now
         guard packet.proto == .TCP else {
             return nil
         }
 
-        guard let packet = packet as? TCPPacket else {
+        guard let packet = packet as? TCPMutablePacket else {
             return nil
         }
 
@@ -55,13 +55,13 @@ public class Router {
 
     func readAndProcessPackets() {
         NetworkInterface.TunnelProvider.packetFlow.readPacketsWithCompletionHandler() {
-            var outputPackets = [IPPacket]()
+            var outputPackets = [IPMutablePacket]()
             let packets = $0.0.map { data in
-                IPPacket(payload: data)
+                IPMutablePacket(payload: data)
                 }.filter { packet in
                     packet.version == .IPv4 && packet.proto == .TCP
                 }.map {
-                    TCPPacket(payload: $0.payload)
+                    TCPMutablePacket(payload: $0.payload)
             }
             for packet in packets {
                 DDLogVerbose("Received packet of type: \(packet.proto) from \(packet.sourceAddress) to \(packet.destinationAddress)")
