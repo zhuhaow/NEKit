@@ -1,11 +1,11 @@
 import Foundation
 
-enum IPVersion: Int {
+enum IPVersion: UInt8 {
     case IPv4 = 4, IPv6 = 6
 }
 
-enum IPProtocol: Int {
-    case TCP = 6, UDP = 17
+enum TransportType: UInt8 {
+    case ICMP = 1, TCP = 6, UDP = 17
 }
 
 enum ChangeType {
@@ -16,7 +16,7 @@ public class IPMutablePacket {
     // Support only IPv4 for now
 
     let version: IPVersion
-    let proto: IPProtocol
+    let proto: TransportType
     let IPHeaderLength: Int
     var sourceAddress: IPv4Address {
         get {
@@ -39,10 +39,10 @@ public class IPMutablePacket {
 
     public init(payload: NSData) {
         let vl = UnsafePointer<UInt8>(payload.bytes).memory
-        version = IPVersion(rawValue: Int(vl >> 4))!
+        version = IPVersion(rawValue: vl >> 4)!
         IPHeaderLength = Int(vl & 0x0F) * 4
         let p = UnsafePointer<UInt8>(payload.bytes.advancedBy(9)).memory
-        proto = IPProtocol(rawValue: Int(p))!
+        proto = TransportType(rawValue: p)!
         self.payload = NSMutableData(data: payload)
     }
 
