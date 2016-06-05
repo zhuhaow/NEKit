@@ -2,6 +2,32 @@ import Foundation
 import CocoaLumberjackSwift
 
 class IPPacket {
+    static func peekTransportType(data: NSData) -> TransportType? {
+        guard data.length > 20 else {
+            return nil
+        }
+
+        return TransportType(rawValue: UnsafePointer<UInt8>(data.bytes).advancedBy(9).memory)
+    }
+
+    static func peekDestinationAddress(data: NSData) -> IPv4Address? {
+        guard data.length > 20 else {
+            return nil
+        }
+
+        return IPv4Address(fromBytesInNetworkOrder: data.bytes.advancedBy(16))
+    }
+
+    static func peekDestinationPort(data: NSData) -> Port? {
+        guard data.length > 20 else {
+            return nil
+        }
+
+        // assume IP packet does have option
+        return Port(bytesInNetworkOrder: data.bytes.advancedBy(22))
+    }
+
+
     /// The version of the current IP packet.
     var version: IPVersion = .IPv4
     /// The length of the IP packet header.

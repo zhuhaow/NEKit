@@ -2,10 +2,10 @@ import Foundation
 import CocoaLumberjackSwift
 
 class DNSMessage {
-    var sourceAddress: IPv4Address?
-    var sourcePort: Port?
-    var destinationAddress: IPv4Address?
-    var destinationPort: Port?
+//    var sourceAddress: IPv4Address?
+//    var sourcePort: Port?
+//    var destinationAddress: IPv4Address?
+//    var destinationPort: Port?
     var transactionID: UInt16 = 0
     var messageType: DNSMessageType = .Query
     var authoritative: Bool = false
@@ -41,7 +41,9 @@ class DNSMessage {
         return len
     }
 
-    init(payload: NSData) {
+    init() {}
+
+    init?(payload: NSData) {
         self.payload = payload
         let scanner = BinaryDataScanner(data: payload, littleEndian: false)
 

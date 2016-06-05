@@ -3,6 +3,7 @@ import CocoaLumberjackSwift
 
 class DNSSession {
     let requestMessage: DNSMessage
+    var requestIPPacket: IPPacket?
     var realIP: IPv4Address?
     var fakeIP: IPv4Address?
     var realResponseMessage: DNSMessage?
@@ -30,5 +31,13 @@ class DNSSession {
         }
 
         self.requestMessage = message
+    }
+
+    convenience init?(packet: IPPacket) {
+        guard let message = DNSMessage(payload: packet.transportSegment.payload) else {
+            return nil
+        }
+        self.init(message: message)
+        requestIPPacket = packet
     }
 }
