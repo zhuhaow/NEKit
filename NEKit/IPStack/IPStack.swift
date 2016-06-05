@@ -3,7 +3,7 @@ import tun2socks
 import CocoaLumberjackSwift
 
 public class IPStack {
-    static let sharedStack = IPStack()
+    public static let sharedStack = IPStack()
     var stacks: [IPStackProtocol] = []
 
     public init() {}

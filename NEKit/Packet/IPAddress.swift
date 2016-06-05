@@ -8,22 +8,22 @@ protocol IPAddress: CustomStringConvertible {
     var dataInNetworkOrder: NSData { get }
 }
 
-class IPv4Address: IPAddress, Hashable {
+public class IPv4Address: IPAddress, Hashable {
     var inaddr: UInt32
 
-    init(fromInAddr: UInt32) {
+    public init(fromInAddr: UInt32) {
         inaddr = fromInAddr
     }
 
-    init(fromUInt32InHostOrder: UInt32) {
+    public init(fromUInt32InHostOrder: UInt32) {
         inaddr = NSSwapHostIntToBig(fromUInt32InHostOrder)
     }
 
-    required init(fromBytesInNetworkOrder: UnsafePointer<Void>) {
+    required public init(fromBytesInNetworkOrder: UnsafePointer<Void>) {
         inaddr = UnsafePointer<UInt32>(fromBytesInNetworkOrder).memory
     }
 
-    required init(fromString: String) {
+    required public init(fromString: String) {
         var addr: UInt32 = 0
         fromString.withCString {
             inet_pton(AF_INET, $0, &addr)
@@ -31,7 +31,7 @@ class IPv4Address: IPAddress, Hashable {
         inaddr = addr
     }
 
-    required init(fromBytesInNetworkOrder: [UInt8]) {
+    required public init(fromBytesInNetworkOrder: [UInt8]) {
         var addr: UInt32 = 0
         fromBytesInNetworkOrder.withUnsafeBufferPointer {
             addr = UnsafePointer<UInt32>($0.baseAddress).memory
@@ -45,11 +45,11 @@ class IPv4Address: IPAddress, Hashable {
         return String.fromCString(p)!
     }
 
-    var description: String {
+    public var description: String {
         return "IPv4 address: \(presentation)"
     }
 
-    var hashValue: Int {
+    public var hashValue: Int {
         return Int(inaddr)
     }
 
@@ -70,6 +70,6 @@ class IPv4Address: IPAddress, Hashable {
     }
 }
 
-func == (left: IPv4Address, right: IPv4Address) -> Bool {
+public func == (left: IPv4Address, right: IPv4Address) -> Bool {
     return left.inaddr == right.inaddr
 }

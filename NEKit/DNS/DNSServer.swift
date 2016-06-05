@@ -2,7 +2,7 @@ import Foundation
 import NetworkExtension
 import CocoaLumberjackSwift
 
-class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
+public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
     let serverAddress: IPv4Address
     let serverPort: Port
     let timer: dispatch_source_t
@@ -11,9 +11,9 @@ class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
     var pendingSessions: [UInt16: DNSSession] = [:]
     let pool: IPv4Pool
     var DNSServers: [NWUDPSocket] = []
-    var outputFunc: (([NSData], [NSNumber]) -> ())!
+    public var outputFunc: (([NSData], [NSNumber]) -> ())!
 
-    init(address: IPv4Address, port: Port, fakeIPPool: IPv4Pool) {
+    public init(address: IPv4Address, port: Port, fakeIPPool: IPv4Pool) {
         serverAddress = address
         serverPort = port
         pool = fakeIPPool
@@ -68,7 +68,7 @@ class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
         }
     }
 
-    func inputPacket(packet: NSData, version: NSNumber?) -> Bool {
+    public func inputPacket(packet: NSData, version: NSNumber?) -> Bool {
         guard IPPacket.peekTransportType(packet) == .UDP else {
             return false
         }
@@ -201,14 +201,14 @@ class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
  It is built under the strong assumtion that the start and end ips will end with 0, e.g, X.X.X.0, and stepSize will only be 256.
  - note: It is NOT thread-safe.
  */
-final class IPv4Pool {
+public final class IPv4Pool {
     let start: UInt32
     let end: UInt32
     var currentEnd: UInt32
     let stepSize: UInt32 = 256
     var pool: [UInt32] = []
 
-    init(start: IPv4Address, end: IPv4Address) {
+    public init(start: IPv4Address, end: IPv4Address) {
         self.start = start.UInt32InHostOrder
         self.end = end.UInt32InHostOrder
         self.currentEnd = self.start

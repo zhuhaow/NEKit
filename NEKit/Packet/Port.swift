@@ -1,13 +1,13 @@
 import Foundation
 
-class Port: CustomStringConvertible, Hashable {
+public class Port: CustomStringConvertible, Hashable {
     private var inport: UInt16
 
     init(portInNetworkOrder: UInt16) {
         self.inport = portInNetworkOrder
     }
 
-    convenience init(port: UInt16) {
+    public convenience init(port: UInt16) {
         self.init(portInNetworkOrder: NSSwapHostShortToBig(port))
     }
 
@@ -15,7 +15,7 @@ class Port: CustomStringConvertible, Hashable {
         self.init(portInNetworkOrder: UnsafePointer<UInt16>(bytesInNetworkOrder).memory)
     }
 
-    var description: String {
+    public var description: String {
         return "Port: \(value)"
     }
 
@@ -27,7 +27,7 @@ class Port: CustomStringConvertible, Hashable {
         return inport
     }
 
-    var hashValue: Int {
+    public var hashValue: Int {
         return Int(inport)
     }
 
@@ -40,6 +40,6 @@ class Port: CustomStringConvertible, Hashable {
     }
 }
 
-func == (left: Port, right: Port) -> Bool {
+public func == (left: Port, right: Port) -> Bool {
     return left.hashValue == right.hashValue
 }
