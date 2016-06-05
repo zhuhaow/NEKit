@@ -335,7 +335,7 @@
 		36C63DFB1D00797D00A00CA2 /* Checksum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checksum.swift; sourceTree = "<group>"; };
 		36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPStackProtocol.swift; sourceTree = "<group>"; };
 		36C63E031D02C0B700A00CA2 /* TCPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPStack.swift; sourceTree = "<group>"; };
-		36E44A011CF2ED4800185DBF /* IPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IPStack.swift; path = Packet/IPStack.swift; sourceTree = "<group>"; };
+		36E44A011CF2ED4800185DBF /* IPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPStack.swift; sourceTree = "<group>"; };
 		36E44A4F1CF33A9D00185DBF /* Crypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crypto.framework; path = Carthage/Build/Mac/Crypto.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -395,13 +395,13 @@
 		36164A291CE41AF200BAC90A /* Packet */ = {
 			isa = PBXGroup;
 			children = (
+				36C63DFB1D00797D00A00CA2 /* Checksum.swift */,
 				3636DA5D1CE87C08007F9787 /* IPAddress.swift */,
 				36164A2A1CE41C3300BAC90A /* IPMutablePacket.swift */,
+				36C63DF81D001FDA00A00CA2 /* IPPacket.swift */,
 				3636DA611CE892EF007F9787 /* Port.swift */,
 				36164A2E1CE7099300BAC90A /* Router.swift */,
 				36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */,
-				36C63DF81D001FDA00A00CA2 /* IPPacket.swift */,
-				36C63DFB1D00797D00A00CA2 /* Checksum.swift */,
 			);
 			path = Packet;
 			sourceTree = "<group>";
@@ -439,11 +439,11 @@
 		36463A321CDCD5EB0040579C /* NEKit */ = {
 			isa = PBXGroup;
 			children = (
-				36C63DFF1D02BDC700A00CA2 /* IPStack */,
 				36B162311CDDA0F300F24C97 /* Adapter */,
 				366EB5BE1CDE32BF00E0E942 /* Config */,
 				36C48DA71CF9D6250071804F /* DNS */,
 				36B162431CDDA0FB00F24C97 /* GeoIP */,
+				36C63DFF1D02BDC700A00CA2 /* IPStack */,
 				36B162661CDDD00B00F24C97 /* Messages */,
 				36164A291CE41AF200BAC90A /* Packet */,
 				36B162631CDDCDFC00F24C97 /* ProxyServer */,
@@ -519,11 +519,11 @@
 			children = (
 				36B162181CDDA0EA00F24C97 /* GCDTCPSocket.swift */,
 				36B1621A1CDDA0EA00F24C97 /* NWTCPSocket.swift */,
+				36C63DF51CFFDCAF00A00CA2 /* NWUDPSocket.swift */,
 				366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */,
 				36B1621E1CDDA0EA00F24C97 /* RawSocketProtocol.swift */,
 				36B162201CDDA0EA00F24C97 /* SocketTag.swift */,
 				36BC589A1CF2A3D400E0E367 /* TUNTCPSocket.swift */,
-				36C63DF51CFFDCAF00A00CA2 /* NWUDPSocket.swift */,
 			);
 			path = RawSocket;
 			sourceTree = "<group>";
@@ -661,7 +661,7 @@
 				36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */,
 				36C63E031D02C0B700A00CA2 /* TCPStack.swift */,
 			);
-			name = IPStack;
+			path = IPStack;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
