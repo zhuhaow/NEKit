@@ -3,32 +3,38 @@ import tun2socks
 import CocoaLumberjackSwift
 
 public class IPStack {
+    static let sharedStack = IPStack()
     var stacks: [IPStackProtocol] = []
 
     public init() {}
 
     public func start() {
-//        // start reading packets
-//        NetworkInterface.TunnelProvider.packetFlow.readPacketsWithCompletionHandler {
-//            for (i, version) in $1.enumerate() {
-//                if version == 6 {
-//                    // ignore all IPv6 packets for now
-//                    break
-//                }
-//
-//                if let type = IPPacket.peekTransportType($0[i]) {
-//                    switch type {
-//                    case .TCP:
-//                        TUNIPStack.stack.receivedPacket($0[i])
-//                    case .UDP:
-//                        // check if it is DNS query, discard otherwise (just for now)
-//                        break
-//                    case .ICMP:
-//                        break
-//                    }
-//                }
-//            }
-//        }
+        readPackets()
+    }
+
+    public func registerStack(stack: IPStackProtocol) {
+        stack.outputFunc = generateOutputBlock()
+        stacks.append(stack)
+    }
+
+    private func readPackets() {
+        NetworkInterface.TunnelProvider.packetFlow.readPacketsWithCompletionHandler { packets, versions in
+            for (i, packet) in packets.enumerate() {
+                for stack in self.stacks {
+                    if stack.inputPacket(packet, version: versions[i]) {
+                        break
+                    }
+                }
+            }
+            self.readPackets()
+        }
+    }
+
+
+    private func generateOutputBlock() -> ([NSData], [NSNumber]) -> () {
+        return { packets, versions in
+            NetworkInterface.TunnelProvider.packetFlow.writePackets(packets, withProtocols: versions)
+        }
     }
 
     public func didAcceptTCPSocket(sock: TSTCPSocket) {

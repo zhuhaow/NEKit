@@ -335,7 +335,7 @@
 		36C63DFB1D00797D00A00CA2 /* Checksum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checksum.swift; sourceTree = "<group>"; };
 		36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPStackProtocol.swift; sourceTree = "<group>"; };
 		36C63E031D02C0B700A00CA2 /* TCPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPStack.swift; sourceTree = "<group>"; };
-		36E44A011CF2ED4800185DBF /* IPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPStack.swift; sourceTree = "<group>"; };
+		36E44A011CF2ED4800185DBF /* IPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IPStack.swift; path = Packet/IPStack.swift; sourceTree = "<group>"; };
 		36E44A4F1CF33A9D00185DBF /* Crypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crypto.framework; path = Carthage/Build/Mac/Crypto.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -397,7 +397,6 @@
 			children = (
 				3636DA5D1CE87C08007F9787 /* IPAddress.swift */,
 				36164A2A1CE41C3300BAC90A /* IPMutablePacket.swift */,
-				36E44A011CF2ED4800185DBF /* IPStack.swift */,
 				3636DA611CE892EF007F9787 /* Port.swift */,
 				36164A2E1CE7099300BAC90A /* Router.swift */,
 				36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */,
@@ -658,6 +657,7 @@
 		36C63DFF1D02BDC700A00CA2 /* IPStack */ = {
 			isa = PBXGroup;
 			children = (
+				36E44A011CF2ED4800185DBF /* IPStack.swift */,
 				36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */,
 				36C63E031D02C0B700A00CA2 /* TCPStack.swift */,
 			);
