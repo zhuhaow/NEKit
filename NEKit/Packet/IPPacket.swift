@@ -136,7 +136,7 @@ class IPPacket {
         if let address = destinationAddress {
             result += address.UInt32InHostOrder >> 16 + address.UInt32InHostOrder & 0xFFFF
         }
-        result += UInt32(transportType.rawValue)
+        result += UInt32(transportType.rawValue) << 8
         result += UInt32(transportSegment.bytesLength)
         return result
     }
@@ -160,6 +160,8 @@ class IPPacket {
         // let TCP or UDP packet build
         let transportData = transportSegment.buildSegment(computePseudoHeaderChecksum())
         setPayloadWithData(transportData, at: Int(headerLength))
+
+        setPayloadWithUInt16(Checksum.computeChecksum(datagram, from: 0, to: Int(headerLength)), at: 10, swap: false)
     }
 
     func setPayloadWithUInt8(value: UInt8, at: Int) {
@@ -236,14 +238,15 @@ class UDPSegment: TransportProtocol {
     }
 
     func buildSegment(pseudoHeaderChecksum: UInt32) -> NSData {
-        let datagram = NSMutableData(length: 8 + bytesLength)!
+        let datagram = NSMutableData(length: bytesLength)!
         datagram.replaceBytesInRange(NSRange(location: 0, length: 2), withBytes: sourcePort.bytesInNetworkOrder)
         datagram.replaceBytesInRange(NSRange(location: 2, length: 2), withBytes: destinationPort.bytesInNetworkOrder)
-        var length = UInt16(payload.length)
+        var length = NSSwapHostShortToBig(UInt16(payload.length))
         datagram.replaceBytesInRange(NSRange(location: 4, length: 2), withBytes: &length)
         datagram.replaceBytesInRange(NSRange(location: 8, length: payload.length), withBytes: payload.bytes)
-        var checksum = Checksum.computeChecksum(datagram, from: 0, to: nil, withPseudoHeaderChecksum: pseudoHeaderChecksum)
-        datagram.replaceBytesInRange(NSRange(location: 6, length: 2), withBytes: &checksum)
+        datagram.resetBytesInRange(NSRange(location: 6, length: 2))
+//        var checksum = Checksum.computeChecksum(datagram, from: 0, to: nil, withPseudoHeaderChecksum: pseudoHeaderChecksum)
+//        datagram.replaceBytesInRange(NSRange(location: 6, length: 2), withBytes: &checksum)
         return datagram
     }
 }

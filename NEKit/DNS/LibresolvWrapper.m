@@ -15,7 +15,6 @@
         {
             char *rep = inet_ntoa(res->nsaddr_list[i].sin_addr);
             NSString *s = [NSString stringWithUTF8String: rep];
-            free(rep);
             [result addObject: s];
         }
     }

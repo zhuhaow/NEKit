@@ -2,10 +2,10 @@ import Foundation
 import CocoaLumberjackSwift
 
 class DNSMessage {
-//    var sourceAddress: IPv4Address?
-//    var sourcePort: Port?
-//    var destinationAddress: IPv4Address?
-//    var destinationPort: Port?
+    //    var sourceAddress: IPv4Address?
+    //    var sourcePort: Port?
+    //    var destinationAddress: IPv4Address?
+    //    var destinationPort: Port?
     var transactionID: UInt16 = 0
     var messageType: DNSMessageType = .Query
     var authoritative: Bool = false
@@ -39,6 +39,15 @@ class DNSMessage {
             $0 + $1.bytesLength
         }
         return len
+    }
+
+    var resolvedIPv4Address: IPv4Address? {
+        for answer in answers {
+            if let address = answer.ipv4Address {
+                return address
+            }
+        }
+        return nil
     }
 
     init() {}
@@ -77,22 +86,22 @@ class DNSMessage {
         let addtionalCount = scanner.read16()!
 
         for _ in 0..<queryCount {
-            queries.append(DNSQuery(payload: payload, offset: scanner.position))
+            queries.append(DNSQuery(payload: payload, offset: scanner.position, base: 0)!)
             scanner.advanceBy(queries.last!.bytesLength)
         }
 
         for _ in 0..<answerCount {
-            answers.append(DNSResource(payload: payload, offset: scanner.position))
+            answers.append(DNSResource(payload: payload, offset: scanner.position, base: 0)!)
             scanner.advanceBy(answers.last!.bytesLength)
         }
 
         for _ in 0..<nameserverCount {
-            nameservers.append(DNSResource(payload: payload, offset: scanner.position))
+            nameservers.append(DNSResource(payload: payload, offset: scanner.position, base: 0)!)
             scanner.advanceBy(nameservers.last!.bytesLength)
         }
 
         for _ in 0..<addtionalCount {
-            addtionals.append(DNSResource(payload: payload, offset: scanner.position))
+            addtionals.append(DNSResource(payload: payload, offset: scanner.position, base: 0)!)
             scanner.advanceBy(addtionals.last!.bytesLength)
         }
 
@@ -216,32 +225,35 @@ class DNSQuery {
     let name: String
     let type: DNSType
     let klass: DNSClass
+    let nameBytesLength: Int
 
     init(name: String, type: DNSType = .A, klass: DNSClass = .Internet) {
         self.name = name.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "."))
         self.type = type
         self.klass = klass
+        self.nameBytesLength = name.utf8.count + 2
     }
 
-    init(payload: NSData, offset: Int) {
+    init?(payload: NSData, offset: Int, base: Int = 0) {
+        (self.name, self.nameBytesLength) = DNSNameConverter.getNamefromData(payload, offset: offset, base: base)
+
         let scanner = BinaryDataScanner(data: payload, littleEndian: false)
-        scanner.skipTo(offset)
-        if let type = DNSType(rawValue: scanner.read16()!) {
-            self.type = type
-        } else {
-            self.type = .A
+        scanner.skipTo(offset + self.nameBytesLength)
+
+        guard let type = DNSType(rawValue: scanner.read16()!) else {
+            DDLogError("Received DNS packet with unknown type.")
+            return nil
         }
-        if let klass = DNSClass(rawValue: scanner.read16()!) {
-            self.klass = klass
-        } else {
-            self.klass = .Internet
+        self.type = type
+
+        guard let klass = DNSClass(rawValue: scanner.read16()!) else {
+            DDLogError("Received DNS packet with unknown class.")
+            return nil
         }
-        self.name = DNSNameConverter.getNamefromData(payload, offset: offset + 4)
+        self.klass = klass
+
     }
 
-    var nameBytesLength: Int {
-        return name.utf8.count + 2
-    }
 
     var bytesLength: Int {
         return nameBytesLength + 4
@@ -256,6 +268,8 @@ class DNSResource {
     let dataLength: UInt16
     let data: NSData
 
+    let nameBytesLength: Int
+
     init(name: String, type: DNSType = .A, klass: DNSClass = .Internet, TTL: UInt32 = 300, data: NSData) {
         self.name = name
         self.type = type
@@ -263,39 +277,37 @@ class DNSResource {
         self.TTL = TTL
         dataLength = UInt16(data.length)
         self.data = data
+        self.nameBytesLength = name.utf8.count + 2
     }
 
     static func ARecord(name: String, TTL: UInt32 = 300, address: IPv4Address) -> DNSResource {
         return DNSResource(name: name, type: .A, klass: .Internet, TTL: TTL, data: address.dataInNetworkOrder)
     }
 
-    init(payload: NSData, offset: Int) {
-        self.name = DNSNameConverter.getNamefromData(payload, offset: offset + 4)
+    init?(payload: NSData, offset: Int, base: Int = 0) {
+        (self.name, self.nameBytesLength) = DNSNameConverter.getNamefromData(payload, offset: offset, base: base)
 
         let scanner = BinaryDataScanner(data: payload, littleEndian: false)
-        scanner.skipTo(offset + name.utf8.count + 2)
+        scanner.skipTo(offset + self.nameBytesLength)
 
-        if let type = DNSType(rawValue: scanner.read16()!) {
-            self.type = type
-        } else {
-            self.type = .A
+        guard let type = DNSType(rawValue: scanner.read16()!) else {
+            DDLogError("Received DNS packet with unknown type.")
+            return nil
         }
-        if let klass = DNSClass(rawValue: scanner.read16()!) {
-            self.klass = klass
-        } else {
-            self.klass = .Internet
+        self.type = type
+
+        guard let klass = DNSClass(rawValue: scanner.read16()!) else {
+            DDLogError("Received DNS packet with unknown class.")
+            return nil
         }
+        self.klass = klass
         self.TTL = scanner.read32()!
         dataLength = scanner.read16()!
         self.data = payload.subdataWithRange(NSRange(location: scanner.position, length: Int(dataLength)))
     }
 
-    var nameBytesLength: Int {
-        return name.utf8.count + 2
-    }
-
     var bytesLength: Int {
-        return nameBytesLength + 8 + Int(dataLength)
+        return nameBytesLength + 10 + Int(dataLength)
     }
 
     var ipv4Address: IPv4Address? {
@@ -329,25 +341,48 @@ class DNSNameConverter {
         return true
     }
 
-    static func getNamefromData(data: NSData, offset: Int) -> String {
+    static func getNamefromData(data: NSData, offset: Int, base: Int = 0) -> (String, Int) {
         let scanner = BinaryDataScanner(data: data, littleEndian: false)
-        let length = scanner.read16()!
-        // is this a pointer?
-        if length & 0xC000 == 0xC000 {
-            scanner.skipTo(Int(length & 0x3FFF))
-        } else {
-            scanner.advanceBy(-2)
-        }
+        scanner.skipTo(offset)
+
+        var len: UInt8 = 0
         var name = ""
-        let len = scanner.readByte()!
-        while len != 0 {
+        var currentReadBytes = 0
+        var jumped = false
+        var nameBytesLength = 0
+        repeat {
+            let length = scanner.read16()!
+            // is this a pointer?
+            if length & 0xC000 == 0xC000 {
+                if !jumped {
+                    // save the length position
+                    nameBytesLength = 2 + currentReadBytes
+                    jumped = true
+                }
+                scanner.skipTo(Int(length & 0x3FFF) + base)
+            } else {
+                scanner.advanceBy(-2)
+            }
+
+            len = scanner.readByte()!
+            currentReadBytes += 1
+            if len == 0 {
+                break
+            }
+
+            currentReadBytes += Int(len)
             guard let label = NSString(bytes: scanner.current, length: Int(len), encoding: NSUTF8StringEncoding) else {
-                return ""
+                return ("", currentReadBytes)
             }
             // this is not efficient, but won't take much time, so maybe I'll optimize it later
-            name = name.stringByAppendingFormat(".%s", label)
+            name = name.stringByAppendingFormat(".%@", label)
+            scanner.advanceBy(Int(len))
+        } while true
+
+        if !jumped {
+            nameBytesLength = currentReadBytes
         }
 
-        return name.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "."))
+        return (name.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: ".")), nameBytesLength)
     }
 }

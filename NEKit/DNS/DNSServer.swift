@@ -25,6 +25,8 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
             [weak self] in
             self?.tmr()
         }
+
+        getCurrentDNSServers()
     }
 
     private func tmr() {
@@ -112,6 +114,7 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
             response.messageType = .Response
             response.recursionAvailable = true
             response.answers.append(DNSResource.ARecord(session.requestMessage.queries[0].name, TTL: 300, address: session.fakeIP!))
+            session.expireAt = NSDate().dateByAddingTimeInterval(300)
             guard response.buildMessage() else {
                 DDLogError("Failed to build DNS response.")
                 return
@@ -145,7 +148,7 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
         return true
     }
 
-    func getCurrentDNSServers() {
+    public func getCurrentDNSServers() {
         let servers = LibresolvWrapper.fetchDNSServers()
 
         guard servers.count > 0 else {
@@ -175,9 +178,12 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
             }
 
             session.realResponseMessage = message
-            // TODO: this should be guarded.
+            // TODO: response with origin message directly
             // TODO: check return code.
-            session.realIP = message.answers[0].ipv4Address!
+            guard let resolvedAddress = message.resolvedIPv4Address else {
+                return
+            }
+            session.realIP = resolvedAddress
 
             RuleManager.currentManager.matchDNS(session, type: .IP)
 
