@@ -241,7 +241,7 @@ class UDPSegment: TransportProtocol {
         let datagram = NSMutableData(length: bytesLength)!
         datagram.replaceBytesInRange(NSRange(location: 0, length: 2), withBytes: sourcePort.bytesInNetworkOrder)
         datagram.replaceBytesInRange(NSRange(location: 2, length: 2), withBytes: destinationPort.bytesInNetworkOrder)
-        var length = NSSwapHostShortToBig(UInt16(payload.length))
+        var length = NSSwapHostShortToBig(UInt16(bytesLength))
         datagram.replaceBytesInRange(NSRange(location: 4, length: 2), withBytes: &length)
         datagram.replaceBytesInRange(NSRange(location: 8, length: payload.length), withBytes: payload.bytes)
         datagram.resetBytesInRange(NSRange(location: 6, length: 2))
