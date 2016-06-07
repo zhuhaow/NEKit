@@ -2,8 +2,8 @@ import Foundation
 import tun2socks
 import CocoaLumberjackSwift
 
-class TCPStack: TSIPStackDelegate, IPStackProtocol {
-    var outputFunc: (([NSData], [NSNumber]) -> ())! {
+public class TCPStack: TSIPStackDelegate, IPStackProtocol {
+    public var outputFunc: (([NSData], [NSNumber]) -> ())! {
         get {
             return TSIPStack.stack.outputBlock
         }
@@ -12,11 +12,11 @@ class TCPStack: TSIPStackDelegate, IPStackProtocol {
         }
     }
 
-    init() {
+    public init() {
         TSIPStack.stack.delegate = self
     }
 
-    func inputPacket(packet: NSData, version: NSNumber?) -> Bool {
+    public func inputPacket(packet: NSData, version: NSNumber?) -> Bool {
         if let version = version {
             // we do not process IPv6 packets now
             if version.intValue == AF_INET6 {
@@ -30,7 +30,7 @@ class TCPStack: TSIPStackDelegate, IPStackProtocol {
         return false
     }
 
-    func didAcceptTCPSocket(sock: TSTCPSocket) {
+    public func didAcceptTCPSocket(sock: TSTCPSocket) {
         DDLogDebug("Accepted a new socket from IP stack.")
         let tunSocket = TUNTCPSocket(socket: sock)
         let proxySocket = DirectProxySocket(socket: tunSocket)
