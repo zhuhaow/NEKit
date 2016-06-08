@@ -27,6 +27,7 @@ class TUNTCPSocket: RawSocketProtocol, TSTCPSocketDelegate {
 
     init(socket: TSTCPSocket) {
         tsSocket = socket
+        tsSocket.delegate = self
     }
 
     private func delegateCall(block: ()->()) {
@@ -37,7 +38,9 @@ class TUNTCPSocket: RawSocketProtocol, TSTCPSocketDelegate {
         if pendingReadData.length > 0 {
             delegateCall {
                 // the didReadData might change the readTag
-                let tag = self.readTag!
+                guard let tag = self.readTag else {
+                    return
+                }
                 self.readTag = nil
                 self.delegate?.didReadData(self.pendingReadData, withTag: tag, from: self)
                 self.pendingReadData = NSMutableData()

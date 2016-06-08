@@ -66,7 +66,7 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
     }
 
     func readDataWithTag(tag: Int) {
-        connection.readMinimumLength(0, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
+        connection.readMinimumLength(1, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
                 return
@@ -142,32 +142,29 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
     }
 
     private func readCallback(data: NSData?, tag: Int) {
-        guard let data = consumeReadData(data) else {
-            // remote read is closed, but this is okay, nothing need to be done, if this socket is read again, then error occurs.
-            return
-        }
-
-        if tag == NWTCPSocket.ScannerReadTag {
-            guard let (match, rest) = scanner.addAndScan(data) else {
-                readDataWithTag(NWTCPSocket.ScannerReadTag)
+        delegateCall {
+            guard let data = self.consumeReadData(data) else {
+                // remote read is closed, but this is okay, nothing need to be done, if this socket is read again, then error occurs.
                 return
             }
 
-            guard let matchData = match else {
-                // do not find match in the given length, stop now
-                return
-            }
+            if tag == NWTCPSocket.ScannerReadTag {
+                guard let (match, rest) = self.scanner.addAndScan(data) else {
+                    self.readDataWithTag(NWTCPSocket.ScannerReadTag)
+                    return
+                }
 
-            readDataPrefix = rest
-            delegateCall() {
+                guard let matchData = match else {
+                    // do not find match in the given length, stop now
+                    return
+                }
+
+                self.readDataPrefix = rest
                 self.delegate?.didReadData(matchData, withTag: self.scannerTag, from: self)
-            }
-        } else {
-            delegateCall() {
+            } else {
                 self.delegate?.didReadData(data, withTag: tag, from: self)
             }
         }
-
     }
 
     private func sendData(data: NSData, withTag tag: Int) {
