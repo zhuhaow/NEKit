@@ -3,7 +3,7 @@ import NetworkExtension
 import CocoaLumberjackSwift
 
 public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
-    static var currentServer: DNSServer?
+    public static var currentServer: DNSServer?
 
     let serverAddress: IPv4Address
     let serverPort: Port
