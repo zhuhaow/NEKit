@@ -9,7 +9,21 @@ class ConnectRequest {
         if self.isIP() {
             return self.host
         } else {
-            return Utils.DNS.resolve(self.host)
+            let ip = Utils.DNS.resolve(self.host)
+            guard let dnsServer = DNSServer.currentServer else {
+                return ip
+            }
+
+            let address = IPv4Address(fromString: ip)
+            guard dnsServer.isFakeIP(address) else {
+                return ip
+            }
+
+            guard let session = dnsServer.fakeSessions[address] else {
+                return ip
+            }
+
+            return session.realIP!.presentation
         }
     }()
 
