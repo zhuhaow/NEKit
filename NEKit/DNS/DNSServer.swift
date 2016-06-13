@@ -7,7 +7,6 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
 
     let serverAddress: IPv4Address
     let serverPort: Port
-    let timer: dispatch_source_t
     let queue: dispatch_queue_t = dispatch_queue_create("NEKit.DNSServer", DISPATCH_QUEUE_SERIAL)
     var fakeSessions: [IPv4Address: DNSSession] = [:]
     var pendingSessions: [UInt16: DNSSession] = [:]
@@ -19,21 +18,10 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
         serverAddress = address
         serverPort = port
         pool = fakeIPPool
-        timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
-
-        dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, NSEC_PER_SEC, NSEC_PER_SEC)
-
-        dispatch_source_set_event_handler(timer) {
-            [weak self] in
-            self?.tmr()
-        }
 
         getCurrentDNSServers()
     }
 
-    private func tmr() {
-        checkTimeoutRecords()
-    }
 
     private func checkTimeoutRecords() {
         let now = NSDate()
@@ -141,6 +129,9 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
     }
 
     private func setUpFakeIP(session: DNSSession) -> Bool {
+        // clean up timeout records first
+        checkTimeoutRecords()
+
         guard let fakeIP = pool.fetchIP() else {
             DDLogError("Failed to get a fake IP.")
             return false
