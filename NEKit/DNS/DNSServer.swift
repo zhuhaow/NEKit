@@ -246,7 +246,7 @@ public final class IPv4Pool {
             }
         }
 
-        return IPv4Address(fromUInt32InHostOrder: pool.first!)
+        return IPv4Address(fromUInt32InHostOrder: pool.removeFirst())
     }
 
     func releaseIP(ipAddress: IPv4Address) {
