@@ -191,6 +191,9 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
         }
 
         if data == nil {
+            defer {
+                readDataPrefix = nil
+            }
             return readDataPrefix
         }
 
