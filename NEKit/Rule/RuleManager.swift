@@ -30,6 +30,10 @@ public class RuleManager {
     }
 
     func match(request: ConnectRequest) -> AdapterFactoryProtocol! {
+        if request.matchedRule != nil {
+            return request.matchedRule!.match(request)
+        }
+
         for rule in rules {
             if let adapterFactory = rule.match(request) {
                 DDLogVerbose("Rule \(rule) matches request: \(request)")

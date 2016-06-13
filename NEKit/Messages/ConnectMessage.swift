@@ -1,7 +1,8 @@
 import Foundation
 class ConnectRequest {
-    let host: String
-    let port: Int
+    var host: String
+    var port: Int
+    var matchedRule: Rule?
 
     lazy var ipAddress: String = {
         [unowned self] in
@@ -11,15 +12,41 @@ class ConnectRequest {
             return Utils.DNS.resolve(self.host)
         }
     }()
+
     lazy var country: String = {
         [unowned self] in
         Utils.GeoIPLookup.Lookup(self.ipAddress)
     }()
 
 
-    init(host: String, port: Int) {
+    init?(host: String, port: Int) {
         self.host = host
         self.port = port
+
+        guard let dnsServer = DNSServer.currentServer else {
+            return
+        }
+
+        guard isIPv4() else {
+            return
+        }
+
+        let address = IPv4Address(fromString: self.host)
+        guard dnsServer.isFakeIP(address) else {
+            return
+        }
+
+        guard let session = dnsServer.fakeSessions[address] else {
+            return nil
+        }
+
+        self.host = session.requestMessage.queries[0].name
+        ipAddress = session.realIP!.presentation
+        matchedRule = session.matchedRule
+
+        if session.countryCode != nil {
+            country = session.countryCode!
+        }
     }
 
     func isIPv4() -> Bool {
