@@ -39,7 +39,7 @@ class Tunnel: NSObject, SocketDelegate {
         if !proxySocket.disconnected {
             proxySocket.disconnect()
         }
-        if var adapterSocket = adapterSocket {
+        if let adapterSocket = adapterSocket {
             if !adapterSocket.disconnected {
                 adapterSocket.disconnect()
             }

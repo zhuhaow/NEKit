@@ -21,7 +21,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
     }
 
     func disconnect() {
-        for var adapter in adapters {
+        for adapter in adapters {
             adapter.delegate = nil
             adapter.disconnect()
         }
@@ -30,7 +30,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
     }
 
     func forceDisconnect() {
-        for var adapter in adapters {
+        for adapter in adapters {
             adapter.delegate = nil
             adapter.forceDisconnect()
         }
@@ -44,7 +44,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
             return
         }
         // first we disconnect all other adapter now, and set delegate to nil
-        for var adapter in adapters {
+        for adapter in adapters {
             if adapter != adapterSocket {
                 adapter.delegate = nil
                 adapter.forceDisconnect()

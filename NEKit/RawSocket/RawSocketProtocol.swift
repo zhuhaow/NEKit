@@ -7,10 +7,10 @@ protocol RawSocketProtocol : class {
     /// Every delegate method should be called on this dispatch queue.
     var delegateQueue: dispatch_queue_t! { get set }
     var connected: Bool { get }
-    var sourceIPAddress: IPv4Address! { get }
-    var sourcePort: Int! { get }
-    var destinationIPAddress: IPv4Address! { get }
-    var destinationPort: Int! { get }
+    var sourceIPAddress: IPv4Address? { get }
+    var sourcePort: Int? { get }
+    var destinationIPAddress: IPv4Address? { get }
+    var destinationPort: Int? { get }
 
     func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?)
     func disconnect()

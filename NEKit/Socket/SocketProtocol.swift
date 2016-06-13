@@ -4,7 +4,7 @@ enum SocketStatus {
     case Invalid, Connecting, Established, Disconnecting, Closed
 }
 
-protocol SocketProtocol {
+protocol SocketProtocol: class {
     var socket: RawSocketProtocol! { get }
     var delegate: SocketDelegate? { get set }
     var delegateQueue: dispatch_queue_t! { get set }
@@ -32,12 +32,12 @@ extension SocketProtocol {
         socket.readDataWithTag(tag)
     }
 
-    mutating func disconnect() {
+    func disconnect() {
         state = .Disconnecting
         socket.disconnect()
     }
 
-    mutating func forceDisconnect() {
+    func forceDisconnect() {
         state = .Disconnecting
         socket.forceDisconnect()
     }

@@ -19,19 +19,19 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawSocketProtocol {
         return !socket.isDisconnected
     }
 
-    var sourceIPAddress: IPv4Address! {
+    var sourceIPAddress: IPv4Address? {
         return nil
     }
 
-    var sourcePort: Int! {
+    var sourcePort: Int? {
         return nil
     }
 
-    var destinationIPAddress: IPv4Address! {
+    var destinationIPAddress: IPv4Address? {
         return nil
     }
 
-    var destinationPort: Int! {
+    var destinationPort: Int? {
         return nil
     }
 
