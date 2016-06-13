@@ -154,6 +154,8 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
                     return
                 }
 
+                self.scanner = nil
+
                 guard let matchData = match else {
                     // do not find match in the given length, stop now
                     return
@@ -186,21 +188,20 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
     }
 
     private func consumeReadData(data: NSData?) -> NSData? {
+        defer {
+            readDataPrefix = nil
+        }
+
         if readDataPrefix == nil {
             return data
         }
 
         if data == nil {
-            defer {
-                readDataPrefix = nil
-            }
             return readDataPrefix
         }
 
         let wholeData = NSMutableData(data: readDataPrefix!)
         wholeData.appendData(data!)
-        readDataPrefix = nil
-        scanner = nil
         return NSData(data: wholeData)
     }
 
