@@ -103,8 +103,12 @@ class TUNTCPSocket: RawSocketProtocol, TSTCPSocketDelegate {
     func readDataToData(data: NSData, withTag tag: Int) {}
 
     // MARK: TSTCPSocketDelegate implemention
-    // The local stop sending anything, just ignore it.
-    func localDidClose(socket: TSTCPSocket) {}
+    // The local stop sending anything.
+    // Theoretically, the local may still be reading data from remote.
+    // However, there is simply no way to know if the local is still open, so we can only assume that the local side close tx only when it decides that it does not need to read anymore.
+    func localDidClose(socket: TSTCPSocket) {
+        disconnect()
+    }
 
     func socketDidReset(socket: TSTCPSocket) {
         socketDidClose(socket)
