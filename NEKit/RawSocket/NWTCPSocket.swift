@@ -128,7 +128,6 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
             cancel()
         case .Cancelled:
             DDLogVerbose("Cancelled")
-            connection.removeObserver(self, forKeyPath: "state")
             if !cancelledSignaled {
                 cancelledSignaled = true
                 delegateCall() {
@@ -213,5 +212,9 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
         if closeAfterWriting && !writePending {
             cancel()
         }
+    }
+    
+    deinit {
+        connection?.removeObserver(self, forKeyPath: "state")
     }
 }
