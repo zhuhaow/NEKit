@@ -59,7 +59,7 @@ class TUNTCPSocket: RawSocketProtocol, TSTCPSocketDelegate {
 
     var delegateQueue: dispatch_queue_t!
     var connected: Bool {
-        return tsSocket.connected
+        return tsSocket.isConnected
     }
 
     // TUNTCPSocket can not connect to anything actively.
