@@ -38,8 +38,4 @@ public class SOCKS5ProxyServer: ProxyServer, GCDAsyncSocketDelegate {
             super.tunnelDidClose(tunnel)
         }
     }
-
-    public override func inQueue(block: () -> ()) {
-        dispatch_async(listenQueue, block)
-    }
 }
