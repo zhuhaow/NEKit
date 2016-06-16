@@ -1,8 +1,8 @@
 import Foundation
 
 class Atomic<T> {
-    var _value: T
-    let semaphore: dispatch_semaphore_t = dispatch_semaphore_create(1)
+    private var _value: T
+    private let semaphore: dispatch_semaphore_t = dispatch_semaphore_create(1)
 
     var value: T {
         get {
