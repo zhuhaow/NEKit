@@ -51,10 +51,10 @@ public class ProxyServer: NSObject, TunnelDelegate {
     }
 
     /**
-     Delegate method when the proxy server accept a new ProxySocket from local.
-     
+     Delegate method when the proxy server accepts a new ProxySocket from local.
+
      When implementing a concrete proxy server, e.g., HTTP proxy server, the server should listen on some port and then wrap the raw socket in a corresponding ProxySocket subclass, then call this method.
-     
+
      - parameter socket: The accepted proxy socket.
      */
     func didAcceptNewSocket(socket: ProxySocket) {
