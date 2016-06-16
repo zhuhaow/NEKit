@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "36463A2F1CDCD5EB0040579C"
                BuildableName = "NEKit.framework"
-               BlueprintName = "Mac Framework"
+               BlueprintName = "NEKit-macOS"
                ReferencedContainer = "container:NEKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,7 +34,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "36463A2F1CDCD5EB0040579C"
             BuildableName = "NEKit.framework"
-            BlueprintName = "Mac Framework"
+            BlueprintName = "NEKit-macOS"
             ReferencedContainer = "container:NEKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -56,7 +56,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "36463A2F1CDCD5EB0040579C"
             BuildableName = "NEKit.framework"
-            BlueprintName = "Mac Framework"
+            BlueprintName = "NEKit-macOS"
             ReferencedContainer = "container:NEKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -74,7 +74,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "36463A2F1CDCD5EB0040579C"
             BuildableName = "NEKit.framework"
-            BlueprintName = "Mac Framework"
+            BlueprintName = "NEKit-macOS"
             ReferencedContainer = "container:NEKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

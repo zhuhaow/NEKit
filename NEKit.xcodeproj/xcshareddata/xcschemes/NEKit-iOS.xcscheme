@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "36C48D4C1CF88DED0071804F"
                BuildableName = "NEKit.framework"
-               BlueprintName = "iOS Framework"
+               BlueprintName = "NEKit-iOS"
                ReferencedContainer = "container:NEKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,7 +47,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "36C48D4C1CF88DED0071804F"
             BuildableName = "NEKit.framework"
-            BlueprintName = "iOS Framework"
+            BlueprintName = "NEKit-iOS"
             ReferencedContainer = "container:NEKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -65,7 +65,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "36C48D4C1CF88DED0071804F"
             BuildableName = "NEKit.framework"
-            BlueprintName = "iOS Framework"
+            BlueprintName = "NEKit-iOS"
             ReferencedContainer = "container:NEKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
