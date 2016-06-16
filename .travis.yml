@@ -12,3 +12,6 @@ install:
   - brew update && brew install swiftlint
   - bin/bootstrap-if-needed
 
+after_success:
+  - ./scripts/build_docs.sh
+
