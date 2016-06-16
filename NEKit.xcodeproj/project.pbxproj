@@ -12,6 +12,8 @@
 		36164A2F1CE7099300BAC90A /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2E1CE7099300BAC90A /* Router.swift */; };
 		3636DA5E1CE87C08007F9787 /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA5D1CE87C08007F9787 /* IPAddress.swift */; };
 		3636DA621CE892EF007F9787 /* Port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA611CE892EF007F9787 /* Port.swift */; };
+		36411A551D12C123005F4108 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A541D12C123005F4108 /* Atomic.swift */; };
+		36411A561D12C123005F4108 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A541D12C123005F4108 /* Atomic.swift */; };
 		36463A341CDCD5EB0040579C /* NEKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 36463A331CDCD5EB0040579C /* NEKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3664F0B41CE194ED008BA6D8 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */; };
@@ -248,6 +250,7 @@
 		36164A2E1CE7099300BAC90A /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		3636DA5D1CE87C08007F9787 /* IPAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPAddress.swift; sourceTree = "<group>"; };
 		3636DA611CE892EF007F9787 /* Port.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Port.swift; sourceTree = "<group>"; };
+		36411A541D12C123005F4108 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		36463A301CDCD5EB0040579C /* NEKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NEKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36463A331CDCD5EB0040579C /* NEKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NEKit.h; sourceTree = "<group>"; };
 		36463A351CDCD5EB0040579C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -450,8 +453,8 @@
 				36B162631CDDCDFC00F24C97 /* ProxyServer */,
 				36B162121CDDA0EA00F24C97 /* RawSocket */,
 				36B1620B1CDDA0E000F24C97 /* Rule */,
-				36B162651CDDCF9900F24C97 /* Socket */,
 				36C63DC61CFD252400A00CA2 /* Utils */,
+				36B162651CDDCF9900F24C97 /* Socket */,
 				366EB5B01CDE119200E0E942 /* Authentication.swift */,
 				36B1625B1CDDA54600F24C97 /* NetworkInterface.swift */,
 				3664F0BD1CE3069F008BA6D8 /* Opt.swift */,
@@ -658,6 +661,7 @@
 			isa = PBXGroup;
 			children = (
 				36C63DC71CFD254100A00CA2 /* BinaryDataScanner.swift */,
+				36411A541D12C123005F4108 /* Atomic.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -932,6 +936,7 @@
 				36C63DCB1CFD602500A00CA2 /* DNSSession.swift in Sources */,
 				366EB5B71CDE150C00E0E942 /* HTTPAdapterFactory.swift in Sources */,
 				3636DA5E1CE87C08007F9787 /* IPAddress.swift in Sources */,
+				36411A551D12C123005F4108 /* Atomic.swift in Sources */,
 				36C63DCE1CFD70C100A00CA2 /* DNSServer.swift in Sources */,
 				3636DA621CE892EF007F9787 /* Port.swift in Sources */,
 				36C63E041D02C0B700A00CA2 /* TCPStack.swift in Sources */,
@@ -1006,6 +1011,7 @@
 				36C63DCC1CFD602500A00CA2 /* DNSSession.swift in Sources */,
 				36C48D5C1CF88EB60071804F /* ServerAdapterFactory.swift in Sources */,
 				36C48D651CF88EBC0071804F /* AdapterFactoryParser.swift in Sources */,
+				36411A561D12C123005F4108 /* Atomic.swift in Sources */,
 				36C63DCF1CFD70C100A00CA2 /* DNSServer.swift in Sources */,
 				36C48D7B1CF88EDA0071804F /* Rule.swift in Sources */,
 				36C63E051D02C0B700A00CA2 /* TCPStack.swift in Sources */,
