@@ -1,24 +1,32 @@
 import Foundation
 
+class Box<T> {
+    var value: T
+
+    init(_ value: T) {
+        self.value = value
+    }
+}
+
 class Atomic<T> {
-    private var _value: T
+    private var _value: Box<T>
     private let semaphore: dispatch_semaphore_t = dispatch_semaphore_create(1)
 
     var value: T {
         get {
             return withLock {
-                return self._value
+                return self._value.value
             }
         }
         set {
             withLock {
-                self._value = newValue
+                self._value = Box(newValue)
             }
         }
     }
 
-    init(value: T) {
-        self._value = value
+    init(_ value: T) {
+        self._value = Box(value)
     }
 
     private func withLock<U>(block: () -> (U)) -> U {
