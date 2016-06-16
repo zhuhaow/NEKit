@@ -29,6 +29,12 @@ class Atomic<T> {
         self._value = Box(value)
     }
 
+    func withBox<U>(block: (Box<T>) -> (U)) -> U {
+        return withLock {
+            return block(self._value)
+        }
+    }
+
     private func withLock<U>(block: () -> (U)) -> U {
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
 
