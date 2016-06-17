@@ -8,7 +8,7 @@ import CocoaLumberjackSwift
  This proxy does not listen on any port.
  */
 public class ProxyServer: NSObject, TunnelDelegate {
-    typealias TunnelPool = Atomic<[Tunnel]>
+    typealias TunnelArray = Atomic<[Tunnel]>
 
     /// The main proxy.
     ///
@@ -23,7 +23,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
     /// The address of proxy server.
     public let address: IPv4Address
 
-    private var tunnelPool: TunnelPool = Atomic([])
+    private var tunnels: TunnelArray = Atomic([])
 
     /**
      Create an instance of proxy server.
@@ -48,7 +48,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
      Stop the proxy server.
      */
     public func stop() {
-        tunnelPool.value.removeAll(keepCapacity: true)
+        tunnels.value.removeAll(keepCapacity: true)
     }
 
     /**
@@ -61,7 +61,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
     func didAcceptNewSocket(socket: ProxySocket) {
         let tunnel = Tunnel(proxySocket: socket)
         tunnel.delegate = self
-        tunnelPool.value.append(tunnel)
+        tunnels.value.append(tunnel)
         tunnel.openTunnel()
     }
 
@@ -73,18 +73,15 @@ public class ProxyServer: NSObject, TunnelDelegate {
      - parameter tunnel: The closed tunnel.
      */
     func tunnelDidClose(tunnel: Tunnel) {
-        tunnelPool.withBox { tunnels in
+        tunnels.withBox { tunnels in
             guard let index = tunnels.value.indexOf(tunnel) else {
                 // things went strange
-                DDLogError("Encountered an unknown tunnel.")
+                DDLogError("Encountered an unknown tunnel \(tunnel) when tries to remove it.")
                 return
             }
             tunnels.value.removeAtIndex(index)
             DDLogVerbose("Removed a closed tunnel, now there are \(tunnels.value.count) tunnels active.")
-            //            DDLogDebug("Active Tunnel Info:")
-            //            for tunnel in self.tunnels {
-            //                DDLogDebug("Tunnel to \(tunnel.proxySocket.request?.host), proxy socket state: \(tunnel.proxySocket.state), adapter socket state: \(tunnel.adapterSocket?.state), closed: \(tunnel.closed).")
-            //
+            DDLogDebug("Current active tunnels: \(tunnels.value)")
         }
     }
 }
