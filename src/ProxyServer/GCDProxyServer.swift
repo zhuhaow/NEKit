@@ -46,7 +46,7 @@ public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
     /**
      Delegate method to handle the newly accepted GCDTCPSocket.
 
-     Only this method should be overrided in any concrete implemention of proxy server which listening on some port with GCDAsyncSocket.
+     Only this method should be overrided in any concrete implemention of proxy server which listens on some port with GCDAsyncSocket.
 
      - parameter socket: The accepted socket.
      */
