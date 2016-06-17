@@ -20,18 +20,18 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawSocketProtocol {
     }
 
     var sourceIPAddress: IPv4Address? {
-        return nil
+        return IPv4Address(fromString: socket.localHost)
     }
 
-    var sourcePort: Int? {
-        return nil
+    var sourcePort: Port? {
+        return Port(port: socket.localPort)
     }
 
     var destinationIPAddress: IPv4Address? {
         return nil
     }
 
-    var destinationPort: Int? {
+    var destinationPort: Port? {
         return nil
     }
 

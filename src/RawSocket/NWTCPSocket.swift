@@ -25,7 +25,7 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
         return nil
     }
 
-    var sourcePort: Int? {
+    var sourcePort: Port? {
         return nil
     }
 
@@ -33,7 +33,7 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
         return nil
     }
 
-    var destinationPort: Int? {
+    var destinationPort: Port? {
         return nil
     }
 

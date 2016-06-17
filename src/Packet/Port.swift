@@ -23,6 +23,10 @@ public class Port: CustomStringConvertible, Hashable {
         return NSSwapBigShortToHost(inport)
     }
 
+    var intValue: Int {
+        return Int(value)
+    }
+
     var valueInNetworkOrder: UInt16 {
         return inport
     }

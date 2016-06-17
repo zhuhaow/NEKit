@@ -8,9 +8,9 @@ protocol RawSocketProtocol : class {
     var delegateQueue: dispatch_queue_t! { get set }
     var connected: Bool { get }
     var sourceIPAddress: IPv4Address? { get }
-    var sourcePort: Int? { get }
+    var sourcePort: Port? { get }
     var destinationIPAddress: IPv4Address? { get }
-    var destinationPort: Int? { get }
+    var destinationPort: Port? { get }
 
     func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?)
     func disconnect()

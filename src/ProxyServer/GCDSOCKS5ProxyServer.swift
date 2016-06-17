@@ -1,0 +1,25 @@
+import Foundation
+
+/// The SOCKS5 proxy server.
+public final class GCDSOCKS5ProxyServer: GCDProxyServer {
+    /**
+     Create an instance of SOCKS5 proxy server.
+
+     - parameter address: The address of proxy server.
+     - parameter port:    The port of proxy server.
+     */
+    override init(address: IPv4Address, port: Port) {
+        super.init(address: address, port: port)
+        type = "SOCKS5"
+    }
+
+    /**
+     Handle the new accepted socket as a SOCKS5 proxy connection.
+
+     - parameter socket: The accepted socket.
+     */
+    override func handleNewGCDSocket(socket: GCDTCPSocket) {
+        let proxySocket = SOCKS5ProxySocket(socket: socket)
+        didAcceptNewSocket(proxySocket)
+    }
+}

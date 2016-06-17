@@ -18,10 +18,10 @@ public class ProxyServer: NSObject, TunnelDelegate {
     public static var mainProxy: ProxyServer!
 
     /// The port of proxy server.
-    public let port: Int
+    public let port: Port
 
     /// The address of proxy server.
-    public let address: String
+    public let address: IPv4Address
 
     private var tunnelPool: TunnelPool = Atomic([])
 
@@ -31,7 +31,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
      - parameter address: The address of proxy server.
      - parameter port:    The port of proxy server.
      */
-    public init(address: String, port: Int) {
+    public init(address: IPv4Address, port: Port) {
         self.address = address
         self.port = port
     }
@@ -39,10 +39,9 @@ public class ProxyServer: NSObject, TunnelDelegate {
     /**
      Start the proxy server.
 
-     - returns: If the proxy starts successfully.
+     - throws: The error occured when starting the proxy server.
      */
-    public func start() -> Bool {
-        return true
+    public func start() throws {
     }
 
     /**

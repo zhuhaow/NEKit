@@ -13,16 +13,16 @@ class TUNTCPSocket: RawSocketProtocol, TSTCPSocketDelegate {
         return IPv4Address(fromInAddr: tsSocket.sourceAddress.s_addr)
     }
 
-    var sourcePort: Int? {
-        return Int(tsSocket.sourcePort)
+    var sourcePort: Port? {
+        return Port(port: tsSocket.sourcePort)
     }
 
     var destinationIPAddress: IPv4Address? {
         return IPv4Address(fromInAddr: tsSocket.destinationAddress.s_addr)
     }
 
-    var destinationPort: Int? {
-        return Int(tsSocket.destinationPort)
+    var destinationPort: Port? {
+        return Port(port: tsSocket.destinationPort)
     }
 
     init(socket: TSTCPSocket) {
