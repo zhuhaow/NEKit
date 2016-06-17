@@ -5,6 +5,11 @@ public class Box<T> {
     /// The underlying value.
     public var value: T
 
+    /**
+     Init the `Box`.
+
+     - parameter value: The variable to be wrapped in.
+     */
     init(_ value: T) {
         self.value = value
     }
@@ -51,7 +56,7 @@ public class Atomic<T> {
      }
      ```
 
-     - parameter block: The code to run with `variable` wrapped in a `Box`.
+     - parameter block: The code to run with the variable wrapped in a `Box`.
 
      - returns: Any value returned by the block.
      */
