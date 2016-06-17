@@ -52,7 +52,7 @@ class ShadowsocksAdapter: AdapterSocket {
     }
 
 
-    override func didConnect(socket: RawSocketProtocol) {
+    override func didConnect(socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
 
         let helloData = NSMutableData(data: writeIV)
@@ -102,7 +102,7 @@ class ShadowsocksAdapter: AdapterSocket {
         writeRawData(encryptData(data), withTag: tag)
     }
 
-    override func didReadData(data: NSData, withTag tag: Int, from socket: RawSocketProtocol) {
+    override func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
         if tag == ShadowsocksTag.InitialVector.rawValue {
             readIV = data
             readingIV = false
@@ -112,7 +112,7 @@ class ShadowsocksAdapter: AdapterSocket {
         }
     }
 
-    override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawSocketProtocol) {
+    override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
         if tag == ShadowsocksTag.Connect.rawValue {
             delegate?.readyForForward(self)
         } else {

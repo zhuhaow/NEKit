@@ -12,7 +12,7 @@ class SOCKS5ProxySocket: ProxySocket {
 
     // swiftlint:disable function_body_length
     // swiftlint:disable cyclomatic_complexity
-    override func didReadData(data: NSData, withTag tag: Int, from: RawSocketProtocol) {
+    override func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
         switch tag {
         case SocketTag.SOCKS5.Open:
             let response = NSData(bytes: [0x05, 0x00] as [UInt8], length: 2 * sizeof(UInt8))
@@ -65,7 +65,7 @@ class SOCKS5ProxySocket: ProxySocket {
 
     }
 
-    override func didWriteData(data: NSData?, withTag tag: Int, from: RawSocketProtocol) {
+    override func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
         if tag >= 0 {
             delegate?.didWriteData(data, withTag: tag, from: self)
         }

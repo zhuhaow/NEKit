@@ -19,7 +19,7 @@ class DirectAdapter: AdapterSocket {
         socket.connectTo(host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
     }
 
-    override func didConnect(socket: RawSocketProtocol) {
+    override func didConnect(socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
         delegate?.readyForForward(self)
     }

@@ -27,7 +27,7 @@ class HTTPAdapter: AdapterSocket {
         socket.connectTo(serverHost, port: serverPort, enableTLS: secured, tlsSettings: nil)
     }
 
-    override func didConnect(socket: RawSocketProtocol) {
+    override func didConnect(socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
 
         guard let url = NSURL(string: "\(request.host):\(request.port)") else {
@@ -52,7 +52,7 @@ class HTTPAdapter: AdapterSocket {
         socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: ReadTag.ConnectResponse.rawValue)
     }
 
-    override func didReadData(data: NSData, withTag tag: Int, from socket: RawSocketProtocol) {
+    override func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
         if tag == ReadTag.ConnectResponse.rawValue {
             delegate?.readyForForward(self)
         } else {
@@ -60,7 +60,7 @@ class HTTPAdapter: AdapterSocket {
         }
     }
 
-    override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawSocketProtocol) {
+    override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
         if tag != WriteTag.Connect.rawValue {
             super.didWriteData(data, withTag: tag, from: socket)
         }

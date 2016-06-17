@@ -1,7 +1,7 @@
 import Foundation
 
-class ProxySocket: NSObject, ProxySocketProtocol, RawSocketDelegate {
-    var socket: RawSocketProtocol!
+class ProxySocket: NSObject, ProxySocketProtocol, RawTCPSocketDelegate {
+    var socket: RawTCPSocketProtocol!
     weak var delegate: SocketDelegate?
     var delegateQueue: dispatch_queue_t! {
         didSet {
@@ -13,7 +13,7 @@ class ProxySocket: NSObject, ProxySocketProtocol, RawSocketDelegate {
 
     var state: SocketStatus = .Established
 
-    init(socket: RawSocketProtocol) {
+    init(socket: RawTCPSocketProtocol) {
         self.socket = socket
         super.init()
         self.socket.delegate = self
@@ -26,21 +26,21 @@ class ProxySocket: NSObject, ProxySocketProtocol, RawSocketDelegate {
 
     }
 
-    // MARK: RawSocketDelegate protocol implemention
-    func didDisconnect(socket: RawSocketProtocol) {
+    // MARK: RawTCPSocketDelegate protocol implemention
+    func didDisconnect(socket: RawTCPSocketProtocol) {
         state = .Closed
         delegate?.didDisconnect(self)
     }
 
-    func didReadData(data: NSData, withTag tag: Int, from: RawSocketProtocol) {
+    func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
         delegate?.didReadData(data, withTag: tag, from: self)
     }
 
-    func didWriteData(data: NSData?, withTag tag: Int, from: RawSocketProtocol) {
+    func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
         delegate?.didWriteData(data, withTag: tag, from: self)
     }
 
-    func didConnect(socket: RawSocketProtocol) {
+    func didConnect(socket: RawTCPSocketProtocol) {
 
     }
 }

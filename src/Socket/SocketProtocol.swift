@@ -5,7 +5,7 @@ enum SocketStatus {
 }
 
 protocol SocketProtocol: class {
-    var socket: RawSocketProtocol! { get }
+    var socket: RawTCPSocketProtocol! { get }
     var delegate: SocketDelegate? { get set }
     var delegateQueue: dispatch_queue_t! { get set }
     var state: SocketStatus { get set }

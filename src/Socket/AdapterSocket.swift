@@ -1,7 +1,7 @@
 import Foundation
 
-class AdapterSocket: NSObject, SocketProtocol, RawSocketDelegate {
-    var socket: RawSocketProtocol!
+class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
+    var socket: RawTCPSocketProtocol!
     var request: ConnectRequest!
     var response: ConnectResponse = ConnectResponse()
     weak var delegate: SocketDelegate?
@@ -29,20 +29,20 @@ class AdapterSocket: NSObject, SocketProtocol, RawSocketDelegate {
     }
 
     // MARK: SocketDelegate protocol implemention
-    func didDisconnect(socket: RawSocketProtocol) {
+    func didDisconnect(socket: RawTCPSocketProtocol) {
         state = .Closed
         delegate?.didDisconnect(self)
     }
 
-    func didReadData(data: NSData, withTag tag: Int, from: RawSocketProtocol) {
+    func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
         delegate?.didReadData(data, withTag: tag, from: self)
     }
 
-    func didWriteData(data: NSData?, withTag tag: Int, from: RawSocketProtocol) {
+    func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
         delegate?.didWriteData(data, withTag: tag, from: self)
     }
 
-    func didConnect(socket: RawSocketProtocol) {
+    func didConnect(socket: RawTCPSocketProtocol) {
         state = .Established
         delegate?.didConnect(self, withResponse: response)
     }

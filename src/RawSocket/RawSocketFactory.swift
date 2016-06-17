@@ -1,7 +1,7 @@
 import Foundation
 
 class RawSocketFactory {
-    static func getRawSocket() -> RawSocketProtocol {
+    static func getRawSocket() -> RawTCPSocketProtocol {
         if NetworkInterface.TunnelProvider == nil {
             return GCDTCPSocket()
         } else {

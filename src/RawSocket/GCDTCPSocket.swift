@@ -5,17 +5,17 @@ import CocoaLumberjackSwift
 /**
  *  This is the swift wrapper around GCDAsyncSocket.
  */
-class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawSocketProtocol {
+class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     let socket: GCDAsyncSocket
     var delegateQueue: dispatch_queue_t! = nil {
         didSet {
             socket.setDelegate(self, delegateQueue: delegateQueue)
         }
     }
-    weak var delegate: RawSocketDelegate?
+    weak var delegate: RawTCPSocketDelegate?
 
     private var enableTLS: Bool = false
-    var connected: Bool {
+    var isConnected: Bool {
         return !socket.isDisconnected
     }
 
@@ -44,7 +44,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawSocketProtocol {
         super.init()
     }
 
-    // MARK: RawSocketProtocol implemention
+    // MARK: RawTCPSocketProtocol implemention
     func connectTo(host: String, port: Int, enableTLS: Bool = false, tlsSettings: [NSObject : AnyObject]? = nil) {
         connectToHost(host, withPort: port)
         self.enableTLS = enableTLS

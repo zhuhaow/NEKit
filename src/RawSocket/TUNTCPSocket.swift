@@ -1,7 +1,7 @@
 import Foundation
 import tun2socks
 
-class TUNTCPSocket: RawSocketProtocol, TSTCPSocketDelegate {
+class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     let tsSocket: TSTCPSocket
     var readTag: Int?
     var pendingReadData: NSMutableData = NSMutableData()
@@ -54,11 +54,11 @@ class TUNTCPSocket: RawSocketProtocol, TSTCPSocketDelegate {
         }
     }
 
-    // MARK: RawSocketProtocol implemention
-    weak var delegate: RawSocketDelegate?
+    // MARK: RawTCPSocketProtocol implemention
+    weak var delegate: RawTCPSocketDelegate?
 
     var delegateQueue: dispatch_queue_t!
-    var connected: Bool {
+    var isConnected: Bool {
         return tsSocket.isConnected
     }
 

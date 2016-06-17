@@ -2,10 +2,10 @@ import Foundation
 import NetworkExtension
 import CocoaLumberjackSwift
 
-class NWTCPSocket: NSObject, RawSocketProtocol {
+class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     static let ScannerReadTag = 10000
 
-    weak var delegate: RawSocketDelegate?
+    weak var delegate: RawTCPSocketDelegate?
 
     var connection: NWTCPConnection!
     var delegateQueue: dispatch_queue_t!
@@ -17,7 +17,7 @@ class NWTCPSocket: NSObject, RawSocketProtocol {
     var scannerTag: Int!
     var readDataPrefix: NSData?
 
-    var connected: Bool {
+    var isConnected: Bool {
         return connection.state == .Connected
     }
 
