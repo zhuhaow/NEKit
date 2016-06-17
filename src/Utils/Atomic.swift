@@ -1,18 +1,22 @@
 import Foundation
 
-class Box<T> {
-    var value: T
+/// This is just a wrapper as a work around since there is no way to change a passed-in value in a block.
+public class Box<T> {
+    /// The underlying value.
+    public var value: T
 
     init(_ value: T) {
         self.value = value
     }
 }
 
-class Atomic<T> {
+/// Atomic provides thread-safety to access a variable.
+public class Atomic<T> {
     private var _value: Box<T>
     private let semaphore: dispatch_semaphore_t = dispatch_semaphore_create(1)
 
-    var value: T {
+    /// The thread-safe variable.
+    public var value: T {
         get {
             return withLock {
                 return self._value.value
@@ -25,11 +29,33 @@ class Atomic<T> {
         }
     }
 
-    init(_ value: T) {
+    /**
+     Init the `Atomic` to access the variable in a thread-safe way.
+
+     - parameter value: The variable needs to be thread-safe.
+     */
+    public init(_ value: T) {
         self._value = Box(value)
     }
 
-    func withBox<U>(block: (Box<T>) -> (U)) -> U {
+    /**
+     The provides a scheme to access the underlying variable in a block.
+
+     The variable can be accessed with `Box<T>.value` as:
+
+     ```
+     let atomic = Atomic([1,2,3])
+     atomic.withBox { array in
+        array.value.append(4)
+        return array.value.reduce(0, combine: +)
+     }
+     ```
+
+     - parameter block: The code to run with `variable` wrapped in a `Box`.
+
+     - returns: Any value returned by the block.
+     */
+    public func withBox<U>(block: (Box<T>) -> (U)) -> U {
         return withLock {
             return block(self._value)
         }
