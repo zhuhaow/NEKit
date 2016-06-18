@@ -2,9 +2,9 @@ import Foundation
 import CocoaAsyncSocket
 import CocoaLumberjackSwift
 
-/**
- *  This is the swift wrapper around GCDAsyncSocket.
- */
+/// The TCP socket build upon `GCDAsyncSocket`.
+///
+/// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `delegateQueue` only.
 class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     private let socket: GCDAsyncSocket
     private var enableTLS: Bool = false
@@ -216,6 +216,8 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
 
     func socketDidDisconnect(socket: GCDAsyncSocket!, withError err: NSError?) {
         delegate?.didDisconnect(self)
+        delegate = nil
+        socket.setDelegate(nil, delegateQueue: nil)
     }
 
     func socket(sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {

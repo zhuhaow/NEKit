@@ -97,7 +97,7 @@ protocol RawTCPSocketDelegate: class {
     /**
      The socket did disconnect.
 
-     This should only be called once in the entire life of a socket. After this is called, the delegate will not receive any other events from that socket and the socket should be released.
+     This should only be called once in the entire lifetime of a socket. After this is called, the delegate will not receive any other events from that socket and the socket should be released.
 
      - parameter socket: The socket which did disconnect.
      */
