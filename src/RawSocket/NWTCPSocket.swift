@@ -8,7 +8,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     weak var delegate: RawTCPSocketDelegate?
 
     var connection: NWTCPConnection!
-    var delegateQueue: dispatch_queue_t!
+    var queue: dispatch_queue_t!
 
     var writePending = false
     var closeAfterWriting = false
@@ -98,7 +98,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     }
 
     private func delegateCall(block: ()->()) {
-        dispatch_async(delegateQueue, block)
+        dispatch_async(queue, block)
     }
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {

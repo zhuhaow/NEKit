@@ -11,7 +11,7 @@ protocol RawTCPSocketProtocol : class {
     weak var delegate: RawTCPSocketDelegate? { get set }
 
     /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    var delegateQueue: dispatch_queue_t! { get set }
+    var queue: dispatch_queue_t! { get set }
 
     /// If the socket is connected.
     var isConnected: Bool { get }

@@ -7,7 +7,7 @@ class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     weak var delegate: SocketDelegate?
     var delegateQueue: dispatch_queue_t! {
         didSet {
-            socket?.delegateQueue = delegateQueue
+            socket?.queue = delegateQueue
         }
     }
 
@@ -16,7 +16,7 @@ class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     func openSocketWithRequest(request: ConnectRequest) {
         self.request = request
         socket.delegate = self
-        socket.delegateQueue = delegateQueue
+        socket.queue = delegateQueue
         state = .Connecting
     }
 

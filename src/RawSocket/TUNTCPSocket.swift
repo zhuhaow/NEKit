@@ -31,7 +31,7 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     }
 
     private func delegateCall(block: ()->()) {
-        dispatch_async(delegateQueue, block)
+        dispatch_async(queue, block)
     }
 
     private func checkReadData() {
@@ -57,7 +57,7 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     // MARK: RawTCPSocketProtocol implemention
     weak var delegate: RawTCPSocketDelegate?
 
-    var delegateQueue: dispatch_queue_t!
+    var queue: dispatch_queue_t!
     var isConnected: Bool {
         return tsSocket.isConnected
     }

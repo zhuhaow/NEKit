@@ -31,9 +31,9 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     /// And every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
     ///
     /// - warning: This should be set as soon as the instance is initialized.
-    var delegateQueue: dispatch_queue_t! = nil {
+    var queue: dispatch_queue_t! = nil {
         didSet {
-            socket.setDelegate(self, delegateQueue: delegateQueue)
+            socket.setDelegate(self, delegateQueue: queue)
         }
     }
 

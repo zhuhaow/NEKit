@@ -5,7 +5,7 @@ class ProxySocket: NSObject, ProxySocketProtocol, RawTCPSocketDelegate {
     weak var delegate: SocketDelegate?
     var delegateQueue: dispatch_queue_t! {
         didSet {
-            socket.delegateQueue = delegateQueue
+            socket.queue = delegateQueue
         }
     }
 
