@@ -2,11 +2,14 @@ import Foundation
 import CocoaLumberjackSwift
 
 /// The raw socket protocol which represents a TCP socket.
+///
+/// Any concrete implemention does not need to be thread-safe.
+/// - warning: It is expected that the instance is accessed on the `delegateQueue` only.
 protocol RawTCPSocketProtocol : class {
     /// The `RawTCPSocketDelegate` instance.
     weak var delegate: RawTCPSocketDelegate? { get set }
 
-    /// Every delegate method should be called on this dispatch queue.
+    /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
     var delegateQueue: dispatch_queue_t! { get set }
 
     /// If the socket is connected.
