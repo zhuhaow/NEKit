@@ -16,7 +16,9 @@ class DirectAdapter: AdapterSocket {
         } else {
             host = request.host
         }
-        socket.connectTo(host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
+        do {
+            try socket.connectTo(host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
+        } catch {}
     }
 
     override func didConnect(socket: RawTCPSocketProtocol) {

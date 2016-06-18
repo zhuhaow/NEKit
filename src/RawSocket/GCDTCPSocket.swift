@@ -6,35 +6,14 @@ import CocoaLumberjackSwift
  *  This is the swift wrapper around GCDAsyncSocket.
  */
 class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
-    let socket: GCDAsyncSocket
-    var delegateQueue: dispatch_queue_t! = nil {
-        didSet {
-            socket.setDelegate(self, delegateQueue: delegateQueue)
-        }
-    }
-    weak var delegate: RawTCPSocketDelegate?
-
+    private let socket: GCDAsyncSocket
     private var enableTLS: Bool = false
-    var isConnected: Bool {
-        return !socket.isDisconnected
-    }
 
-    var sourceIPAddress: IPv4Address? {
-        return IPv4Address(fromString: socket.localHost)
-    }
+    /**
+     Initailize an instance with `GCDAsyncSocket`.
 
-    var sourcePort: Port? {
-        return Port(port: socket.localPort)
-    }
-
-    var destinationIPAddress: IPv4Address? {
-        return nil
-    }
-
-    var destinationPort: Port? {
-        return nil
-    }
-
+     - parameter socket: The socket object to work with. If this is `nil`, then a new `GCDAsyncSocket` instance is created.
+     */
     init(socket: GCDAsyncSocket? = nil) {
         if let socket = socket {
             self.socket = socket
@@ -45,66 +24,188 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     }
 
     // MARK: RawTCPSocketProtocol implemention
-    func connectTo(host: String, port: Int, enableTLS: Bool = false, tlsSettings: [NSObject : AnyObject]? = nil) {
-        connectToHost(host, withPort: port)
+
+    /// The `RawTCPSocketDelegate` instance.
+    weak var delegate: RawTCPSocketDelegate?
+
+    /// And every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
+    ///
+    /// - warning: This should be set as soon as the instance is initialized.
+    var delegateQueue: dispatch_queue_t! = nil {
+        didSet {
+            socket.setDelegate(self, delegateQueue: delegateQueue)
+        }
+    }
+
+    /// If the socket is connected.
+    var isConnected: Bool {
+        return !socket.isDisconnected
+    }
+
+    /// The source address.
+    var sourceIPAddress: IPv4Address? {
+        return IPv4Address(fromString: socket.localHost)
+    }
+
+    /// The source port.
+    var sourcePort: Port? {
+        return Port(port: socket.localPort)
+    }
+
+    /// The destination address.
+    ///
+    /// - note: Always return `nil`.
+    var destinationIPAddress: IPv4Address? {
+        return nil
+    }
+
+    /// The destination port.
+    ///
+    /// - note: Always return `nil`.
+    var destinationPort: Port? {
+        return nil
+    }
+
+    /**
+     Connect to remote host.
+
+     - parameter host:        Remote host.
+     - parameter port:        Remote port.
+     - parameter enableTLS:   Should TLS be enabled.
+     - parameter tlsSettings: The settings of TLS.
+
+     - throws: The error occured when connecting to host.
+     */
+    func connectTo(host: String, port: Int, enableTLS: Bool = false, tlsSettings: [NSObject : AnyObject]? = nil) throws {
+        try connectToHost(host, withPort: port)
         self.enableTLS = enableTLS
         if enableTLS {
             startTLS(tlsSettings)
         }
     }
 
+    /**
+     Disconnect the socket.
+
+     The socket should disconnect elegantly after any queued writing data are successfully sent.
+
+     - note: Usually, any concrete implemention should wait before any pending writing data are finished then call `forceDisconnect()`.
+     */
     func disconnect() {
-        // This method is only called when the socket on the other side is closed, which means reading on this side simply makes no use.
-        // Further, this will significantly extend the waiting time before disconnecting.
         socket.disconnectAfterWriting()
     }
 
+    /**
+     Disconnect the socket immediately.
+
+     - note: The socket should disconnect as soon as possible.
+     */
     func forceDisconnect() {
         socket.disconnect()
     }
 
+    /**
+     Send data to remote.
+
+     - parameter data: Data to send.
+     - parameter tag:  The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
+     */
     func writeData(data: NSData, withTag tag: Int) {
         writeData(data, withTimeout: -1, withTag: tag)
     }
 
+    /**
+     Read data from the socket.
+
+     - parameter tag: The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+     */
     func readDataWithTag(tag: Int) {
         socket.readDataWithTimeout(-1, tag: tag)
     }
 
+    /**
+     Read specific length of data from the socket.
+
+     - parameter length: The length of the data to read.
+     - parameter tag:    The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+     */
     func readDataToLength(length: Int, withTag tag: Int) {
         readDataToLength(length, withTimeout: -1, withTag: tag)
     }
 
+    /**
+     Read data until a specific pattern (including the pattern).
+
+     - parameter data: The pattern.
+     - parameter tag:  The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+     */
     func readDataToData(data: NSData, withTag tag: Int) {
         readDataToData(data, withTimeout: -1, withTag: tag)
     }
 
-    // MARK: other helper methods
+    // MARK: Other helper methods
+    /**
+     Send data to remote.
+
+     - parameter data: Data to send.
+     - parameter timeout: Operation timeout.
+     - parameter tag:  The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
+     */
     func writeData(data: NSData, withTimeout timeout: Double, withTag tag: Int) {
         socket.writeData(data, withTimeout: timeout, tag: tag)
     }
 
+    /**
+     Read specific length of data from the socket.
+
+     - parameter length: The length of the data to read.
+     - parameter timeout: Operation timeout.
+     - parameter tag:    The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+     */
     func readDataToLength(length: Int, withTimeout timeout: Double, withTag tag: Int) {
         socket.readDataToLength(UInt(length), withTimeout: timeout, tag: tag)
     }
 
+    /**
+     Read data until a specific pattern (including the pattern).
+
+     - parameter data: The pattern.
+     - parameter timeout: Operation timeout.
+     - parameter tag:  The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+     */
     func readDataToData(data: NSData, withTimeout timeout: Double, withTag tag: Int) {
         socket.readDataToData(data, withTimeout: timeout, tag: tag)
     }
 
-    func connectToHost(host: String, withPort port: Int) {
-        do {
-            try socket.connectToHost(host, onPort: UInt16(port))
-        } catch let error as NSError {
-            DDLogError("\(error)")
-        }
+    /**
+     Connect to remote host.
+
+     - parameter host:        Remote host.
+     - parameter port:        Remote port.
+
+     - throws: The error occured when connecting to host.
+     */
+    func connectToHost(host: String, withPort port: Int) throws {
+        try socket.connectToHost(host, onPort: UInt16(port))
     }
 
+    /**
+     Secures the connection using SSL/TLS.
+
+     - parameter tlsSettings: TLS settings, refer to documents of `GCDAsyncSocket` for detail.
+     */
     func startTLS(tlsSettings: [NSObject : AnyObject]!) {
         socket.startTLS(tlsSettings)
     }
 
-    // MARK: delegate methods for GCDAsyncSocket
+    // MARK: Delegate methods for GCDAsyncSocket
     func socket(sock: GCDAsyncSocket!, didWriteDataWithTag tag: Int) {
         delegate?.didWriteData(nil, withTag: tag, from: self)
     }

@@ -48,7 +48,9 @@ class ShadowsocksAdapter: AdapterSocket {
 
     override func openSocketWithRequest(request: ConnectRequest) {
         super.openSocketWithRequest(request)
-        socket.connectTo(host, port: port, enableTLS: false, tlsSettings: nil)
+        do {
+            try socket.connectTo(host, port: port, enableTLS: false, tlsSettings: nil)
+        } catch {}
     }
 
 

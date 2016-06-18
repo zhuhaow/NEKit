@@ -4,6 +4,7 @@ import CocoaLumberjackSwift
 /// The raw socket protocol which represents a TCP socket.
 ///
 /// Any concrete implemention does not need to be thread-safe.
+///
 /// - warning: It is expected that the instance is accessed on the `delegateQueue` only.
 protocol RawTCPSocketProtocol : class {
     /// The `RawTCPSocketDelegate` instance.
@@ -34,8 +35,10 @@ protocol RawTCPSocketProtocol : class {
      - parameter port:        Remote port.
      - parameter enableTLS:   Should TLS be enabled.
      - parameter tlsSettings: The settings of TLS.
+
+     - throws: The error occured when connecting to host.
      */
-    func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?)
+    func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?) throws
 
     /**
      Disconnect the socket.

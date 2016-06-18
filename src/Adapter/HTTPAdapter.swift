@@ -24,7 +24,9 @@ class HTTPAdapter: AdapterSocket {
 
     override func openSocketWithRequest(request: ConnectRequest) {
         super.openSocketWithRequest(request)
-        socket.connectTo(serverHost, port: serverPort, enableTLS: secured, tlsSettings: nil)
+        do {
+            try socket.connectTo(serverHost, port: serverPort, enableTLS: secured, tlsSettings: nil)
+        } catch {}
     }
 
     override func didConnect(socket: RawTCPSocketProtocol) {
