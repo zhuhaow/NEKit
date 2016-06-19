@@ -4,7 +4,7 @@ import CocoaLumberjackSwift
 
 /// The TCP socket build upon `GCDAsyncSocket`.
 ///
-/// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `delegateQueue` only.
+/// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
 class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     private let socket: GCDAsyncSocket
     private var enableTLS: Bool = false
