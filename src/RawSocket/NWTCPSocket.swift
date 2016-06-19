@@ -9,12 +9,12 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     static let ScannerReadTag = 10000
     private var connection: NWTCPConnection!
 
-    var writePending = false
-    var closeAfterWriting = false
+    private var writePending = false
+    private var closeAfterWriting = false
 
-    var scanner: StreamScanner!
-    var scannerTag: Int!
-    var readDataPrefix: NSData?
+    private var scanner: StreamScanner!
+    private var scannerTag: Int!
+    private var readDataPrefix: NSData?
 
     // MARK: RawTCPSocketProtocol implemention
 
