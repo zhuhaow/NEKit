@@ -2,6 +2,7 @@ import Foundation
 
 /**
  Constants for predefined socket tags.
+
  - note: All nagtive integers are reserved. Use positive integers for custom tags.
 */
 struct SocketTag {
