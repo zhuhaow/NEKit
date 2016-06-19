@@ -152,7 +152,6 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
         for server in servers {
             let socket = NWUDPSocket(host: server, port: 53)
             socket.delegate = self
-            socket.queue = queue
             DNSServers.append(socket)
         }
     }

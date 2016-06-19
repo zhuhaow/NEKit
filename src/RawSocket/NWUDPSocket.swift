@@ -2,33 +2,54 @@ import Foundation
 import NetworkExtension
 import CocoaLumberjackSwift
 
+/// The delegate protocol of `NWUDPSocket`.
 protocol NWUDPSocketDelegate: class {
+    /**
+     Socket did receive data from remote.
+
+     - parameter data: The data.
+     - parameter from: The socket the data is read from.
+     */
     func didReceiveData(data: NSData, from: NWUDPSocket)
 }
 
+/// The wrapper for NWUDPSession.
+///
+/// - note: This class is thread-safe.
 class NWUDPSocket {
-    let session: NWUDPSession
-    weak var delegate: NWUDPSocketDelegate?
-    var queue: dispatch_queue_t!
-    var pendingWriteData: [NSData] = []
-    var writing = false
+    private let session: NWUDPSession
+    private var pendingWriteData: [NSData] = []
+    private var writing = false
+    private let queue: dispatch_queue_t = dispatch_queue_create("NWUDPSocket.queue", DISPATCH_QUEUE_SERIAL)
 
+    /// The delegate instance.
+    weak var delegate: NWUDPSocketDelegate?
+
+    /**
+     Create a new UDP socket connecting to remote.
+
+     - parameter host: The host.
+     - parameter port: The port.
+     */
     init(host: String, port: Int) {
         session = NetworkInterface.TunnelProvider.createUDPSessionToEndpoint(NWHostEndpoint(hostname: host, port: "\(port)"), fromEndpoint: nil)
         session.setReadHandler({ [ unowned self ] dataArray, error in
-                guard error == nil else {
-                    DDLogError("Error when reading from remote DNS server. \(error)")
-                    return
-                }
+            guard error == nil else {
+                DDLogError("Error when reading from remote server. \(error)")
+                return
+            }
 
-                dispatch_async(self.queue) {
-                    for data in dataArray! {
-                        self.delegate?.didReceiveData(data, from: self)
-                    }
-                }
+            for data in dataArray! {
+                self.delegate?.didReceiveData(data, from: self)
+            }
             }, maxDatagrams: 32)
     }
 
+    /**
+     Send data to remote.
+
+     - parameter data: The data to send.
+     */
     func writeData(data: NSData) {
         dispatch_async(queue) {
             self.pendingWriteData.append(data)
