@@ -16,6 +16,14 @@
 		36411A561D12C123005F4108 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A541D12C123005F4108 /* Atomic.swift */; };
 		36411A591D13988A005F4108 /* GCDSOCKS5ProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A581D13988A005F4108 /* GCDSOCKS5ProxyServer.swift */; };
 		36411A5A1D13988A005F4108 /* GCDSOCKS5ProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A581D13988A005F4108 /* GCDSOCKS5ProxyServer.swift */; };
+		36411A5C1D167AA9005F4108 /* DNSSessionMatchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A5B1D167AA9005F4108 /* DNSSessionMatchResult.swift */; };
+		36411A5D1D167AA9005F4108 /* DNSSessionMatchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A5B1D167AA9005F4108 /* DNSSessionMatchResult.swift */; };
+		36411A5F1D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A5E1D167AC3005F4108 /* DNSSessionMatchType.swift */; };
+		36411A601D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A5E1D167AC3005F4108 /* DNSSessionMatchType.swift */; };
+		36411A621D167AE0005F4108 /* AllRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A611D167AE0005F4108 /* AllRule.swift */; };
+		36411A631D167AE0005F4108 /* AllRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A611D167AE0005F4108 /* AllRule.swift */; };
+		36411A651D167AF2005F4108 /* DirectRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A641D167AF2005F4108 /* DirectRule.swift */; };
+		36411A661D167AF2005F4108 /* DirectRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A641D167AF2005F4108 /* DirectRule.swift */; };
 		36463A341CDCD5EB0040579C /* NEKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 36463A331CDCD5EB0040579C /* NEKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3664F0B41CE194ED008BA6D8 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3664F0B31CE194ED008BA6D8 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */; };
@@ -254,6 +262,10 @@
 		3636DA611CE892EF007F9787 /* Port.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Port.swift; sourceTree = "<group>"; };
 		36411A541D12C123005F4108 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		36411A581D13988A005F4108 /* GCDSOCKS5ProxyServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDSOCKS5ProxyServer.swift; sourceTree = "<group>"; };
+		36411A5B1D167AA9005F4108 /* DNSSessionMatchResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSSessionMatchResult.swift; sourceTree = "<group>"; };
+		36411A5E1D167AC3005F4108 /* DNSSessionMatchType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSSessionMatchType.swift; sourceTree = "<group>"; };
+		36411A611D167AE0005F4108 /* AllRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllRule.swift; sourceTree = "<group>"; };
+		36411A641D167AF2005F4108 /* DirectRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectRule.swift; sourceTree = "<group>"; };
 		36463A301CDCD5EB0040579C /* NEKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NEKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36463A331CDCD5EB0040579C /* NEKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NEKit.h; sourceTree = "<group>"; };
 		36463A351CDCD5EB0040579C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -523,7 +535,11 @@
 				36B1620C1CDDA0E000F24C97 /* CountryRule.swift */,
 				366EB5C61CE033FB00E0E942 /* ListRule.swift */,
 				36B1620D1CDDA0E000F24C97 /* Rule.swift */,
+				36411A641D167AF2005F4108 /* DirectRule.swift */,
+				36411A5E1D167AC3005F4108 /* DNSSessionMatchType.swift */,
 				36B1620E1CDDA0E000F24C97 /* RuleManager.swift */,
+				36411A5B1D167AA9005F4108 /* DNSSessionMatchResult.swift */,
+				36411A611D167AE0005F4108 /* AllRule.swift */,
 			);
 			path = Rule;
 			sourceTree = "<group>";
@@ -957,9 +973,12 @@
 				3664F0BE1CE3069F008BA6D8 /* Opt.swift in Sources */,
 				366EB5B81CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift in Sources */,
 				36B1622D1CDDA0EA00F24C97 /* SocketTag.swift in Sources */,
+				36411A5C1D167AA9005F4108 /* DNSSessionMatchResult.swift in Sources */,
+				36411A651D167AF2005F4108 /* DirectRule.swift in Sources */,
 				366EB5C31CDF375B00E0E942 /* SpeedAdapter.swift in Sources */,
 				366EB5C91CE061C500E0E942 /* RuleParser.swift in Sources */,
 				36B1622E1CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift in Sources */,
+				36411A621D167AE0005F4108 /* AllRule.swift in Sources */,
 				36B162301CDDA0EA00F24C97 /* Utils.swift in Sources */,
 				36B1622C1CDDA0EA00F24C97 /* SocketProtocol.swift in Sources */,
 				36C63E011D02BDEC00A00CA2 /* IPStackProtocol.swift in Sources */,
@@ -976,6 +995,7 @@
 				3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */,
 				366EB5B11CDE119200E0E942 /* Authentication.swift in Sources */,
 				36C63DF61CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */,
+				36411A5F1D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */,
 				36B1622B1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift in Sources */,
 				36B1623C1CDDA0F300F24C97 /* AdapterFactoryProtocol.swift in Sources */,
 				36B1623B1CDDA0F300F24C97 /* DirectAdapter.swift in Sources */,
@@ -1033,9 +1053,12 @@
 				36C48D591CF88EB60071804F /* DirectAdapterFactory.swift in Sources */,
 				36C48D6C1CF88ECB0071804F /* Port.swift in Sources */,
 				36C48D861CF88EE60071804F /* Tunnel.swift in Sources */,
+				36411A5D1D167AA9005F4108 /* DNSSessionMatchResult.swift in Sources */,
+				36411A661D167AF2005F4108 /* DirectRule.swift in Sources */,
 				36C48D691CF88EC50071804F /* ConnectMessage.swift in Sources */,
 				36C48D7A1CF88EDA0071804F /* ListRule.swift in Sources */,
 				36C48D621CF88EB60071804F /* ShadowsocksAdapter.swift in Sources */,
+				36411A631D167AE0005F4108 /* AllRule.swift in Sources */,
 				36C48D5F1CF88EB60071804F /* DirectAdapter.swift in Sources */,
 				36C48D781CF88ED40071804F /* TUNTCPSocket.swift in Sources */,
 				36C63E021D02BDEC00A00CA2 /* IPStackProtocol.swift in Sources */,
@@ -1052,6 +1075,7 @@
 				36C48D841CF88EE60071804F /* Opt.swift in Sources */,
 				36C48D671CF88EBC0071804F /* RuleParser.swift in Sources */,
 				36C63DF71CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */,
+				36411A601D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */,
 				36C48D801CF88EDE0071804F /* SocketProtocol.swift in Sources */,
 				36C48D6A1CF88ECB0071804F /* IPAddress.swift in Sources */,
 				36C48D6D1CF88ECB0071804F /* Router.swift in Sources */,

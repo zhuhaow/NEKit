@@ -1,54 +1,37 @@
 import Foundation
 
-enum DNSSessionMatchResult {
-    case Real, Fake, Unknown, Pass
-}
-
-enum DNSSessionMatchType {
-    // swiftlint:disable:next type_name
-    case Domain, IP
-}
-
+/// The rule defines what to do for DNS requests and connect requests.
 class Rule {
+    /// The name of this rule.
     let name: String?
 
+    /**
+     Create a new rule.
+     */
     init() {
         name = nil
     }
 
+    /**
+     Match DNS request to this rule.
+
+     - parameter session: The DNS session to match.
+     - parameter type:    What kind of information is available.
+
+     - returns: The result of match.
+     */
     func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
         return .Real
     }
 
+    /**
+     Match connect request to this rule.
+
+     - parameter request: Connect request to match.
+
+     - returns: The configured adapter if matched, return `nil` if not matched.
+     */
     func match(request: ConnectRequest) -> AdapterFactoryProtocol? {
         return nil
-    }
-}
-
-class AllRule: Rule {
-    let adapterFactory: AdapterFactoryProtocol
-
-    init(adapterFactory: AdapterFactoryProtocol) {
-        self.adapterFactory = adapterFactory
-        super.init()
-    }
-
-    override func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
-        // only return real IP when we connect to remote directly
-        if let _ = adapterFactory as? DirectAdapterFactory {
-            return .Real
-        } else {
-            return .Fake
-        }
-    }
-
-    override func match(request: ConnectRequest) -> AdapterFactoryProtocol? {
-        return adapterFactory
-    }
-}
-
-class DirectRule: AllRule {
-    init() {
-        super.init(adapterFactory: DirectAdapterFactory())
     }
 }
