@@ -1,7 +1,8 @@
 import Foundation
 
 /**
- *  All nagtive integers are reserved. Use positive integers for custom tags.
+ Constants for predefined socket tags.
+ - note: All nagtive integers are reserved. Use positive integers for custom tags.
 */
 struct SocketTag {
     static let Forward = 0
