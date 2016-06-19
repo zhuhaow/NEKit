@@ -45,7 +45,7 @@ protocol RawTCPSocketProtocol : class {
 
      The socket should disconnect elegantly after any queued writing data are successfully sent.
 
-     - note: Usually, any concrete implemention should wait before any pending writing data are finished then call `forceDisconnect()`.
+     - note: Usually, any concrete implemention should wait until any pending writing data are finished then call `forceDisconnect()`.
      */
     func disconnect()
 
