@@ -28,7 +28,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     /// The `RawTCPSocketDelegate` instance.
     weak var delegate: RawTCPSocketDelegate?
 
-    /// And every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
+    /// Every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
     ///
     /// - warning: This should be set as soon as the instance is initialized.
     var queue: dispatch_queue_t! = nil {
@@ -54,14 +54,14 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
 
     /// The destination address.
     ///
-    /// - note: Always return `nil`.
+    /// - note: Always returns `nil`.
     var destinationIPAddress: IPv4Address? {
         return nil
     }
 
     /// The destination port.
     ///
-    /// - note: Always return `nil`.
+    /// - note: Always returns `nil`.
     var destinationPort: Port? {
         return nil
     }
@@ -87,9 +87,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     /**
      Disconnect the socket.
 
-     The socket should disconnect elegantly after any queued writing data are successfully sent.
-
-     - note: Usually, any concrete implemention should wait before any pending writing data are finished then call `forceDisconnect()`.
+     The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
     func disconnect() {
         socket.disconnectAfterWriting()
@@ -97,8 +95,6 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
 
     /**
      Disconnect the socket immediately.
-
-     - note: The socket should disconnect as soon as possible.
      */
     func forceDisconnect() {
         socket.disconnect()
