@@ -98,7 +98,7 @@
 		36C48D691CF88EC50071804F /* ConnectMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162161CDDA0EA00F24C97 /* ConnectMessage.swift */; };
 		36C48D6A1CF88ECB0071804F /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA5D1CE87C08007F9787 /* IPAddress.swift */; };
 		36C48D6C1CF88ECB0071804F /* Port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA611CE892EF007F9787 /* Port.swift */; };
-		36C48D701CF88ECB0071804F /* IPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* IPStack.swift */; };
+		36C48D701CF88ECB0071804F /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
 		36C48D711CF88ECF0071804F /* ProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162571CDDA31B00F24C97 /* ProxyServer.swift */; };
 		36C48D721CF88ECF0071804F /* GCDProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162581CDDA31B00F24C97 /* GCDProxyServer.swift */; };
 		36C48D731CF88ED40071804F /* GCDTCPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162181CDDA0EA00F24C97 /* GCDTCPSocket.swift */; };
@@ -156,7 +156,7 @@
 		36C63E021D02BDEC00A00CA2 /* IPStackProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */; };
 		36C63E041D02C0B700A00CA2 /* TCPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63E031D02C0B700A00CA2 /* TCPStack.swift */; };
 		36C63E051D02C0B700A00CA2 /* TCPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63E031D02C0B700A00CA2 /* TCPStack.swift */; };
-		36E44A021CF2ED4800185DBF /* IPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* IPStack.swift */; };
+		36E44A021CF2ED4800185DBF /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
 		36E44A511CF33A9D00185DBF /* Crypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E44A4F1CF33A9D00185DBF /* Crypto.framework */; };
 		36E44A531CF33AB400185DBF /* Crypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E44A4F1CF33A9D00185DBF /* Crypto.framework */; };
 		36E44A541CF33AB400185DBF /* Crypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36E44A4F1CF33A9D00185DBF /* Crypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -347,7 +347,7 @@
 		36C63DFB1D00797D00A00CA2 /* Checksum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checksum.swift; sourceTree = "<group>"; };
 		36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPStackProtocol.swift; sourceTree = "<group>"; };
 		36C63E031D02C0B700A00CA2 /* TCPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPStack.swift; sourceTree = "<group>"; };
-		36E44A011CF2ED4800185DBF /* IPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPStack.swift; sourceTree = "<group>"; };
+		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
 		36E44A4F1CF33A9D00185DBF /* Crypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crypto.framework; path = Carthage/Build/Mac/Crypto.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -691,7 +691,7 @@
 		36C63DFF1D02BDC700A00CA2 /* IPStack */ = {
 			isa = PBXGroup;
 			children = (
-				36E44A011CF2ED4800185DBF /* IPStack.swift */,
+				36E44A011CF2ED4800185DBF /* TUNInterface.swift */,
 				36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */,
 				36C63E031D02C0B700A00CA2 /* TCPStack.swift */,
 			);
@@ -1007,7 +1007,7 @@
 				36B1625A1CDDA31B00F24C97 /* GCDProxyServer.swift in Sources */,
 				366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */,
 				366EB5CD1CE06B5E00E0E942 /* RawSocketFactory.swift in Sources */,
-				36E44A021CF2ED4800185DBF /* IPStack.swift in Sources */,
+				36E44A021CF2ED4800185DBF /* TUNInterface.swift in Sources */,
 				36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */,
 				36B162271CDDA0EA00F24C97 /* GCDTCPSocket.swift in Sources */,
 				36B162291CDDA0EA00F24C97 /* ProxySocket.swift in Sources */,
@@ -1046,7 +1046,7 @@
 				36C48DAD1CF9D6580071804F /* DNSEnums.swift in Sources */,
 				36C48D661CF88EBC0071804F /* Parser.swift in Sources */,
 				36411A5A1D13988A005F4108 /* GCDSOCKS5ProxyServer.swift in Sources */,
-				36C48D701CF88ECB0071804F /* IPStack.swift in Sources */,
+				36C48D701CF88ECB0071804F /* TUNInterface.swift in Sources */,
 				36C48D771CF88ED40071804F /* SocketTag.swift in Sources */,
 				36C48D591CF88EB60071804F /* DirectAdapterFactory.swift in Sources */,
 				36C48D6C1CF88ECB0071804F /* Port.swift in Sources */,
