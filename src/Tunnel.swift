@@ -5,36 +5,50 @@ protocol TunnelDelegate : class {
     func tunnelDidClose(tunnel: Tunnel)
 }
 
+/// The tunnel forwards data from local to remote and back.
 class Tunnel: NSObject, SocketDelegate {
+    /// The proxy socket on local.
     var proxySocket: ProxySocket
+
+    /// The adapter socket connected to remote.
     var adapterSocket: AdapterSocket?
 
+    /// The delegate instance.
     weak var delegate: TunnelDelegate?
 
-    var delegateQueue = dispatch_queue_create("TunnelQueue", DISPATCH_QUEUE_SERIAL) {
+    /// Every method call and variable access will be called on this queue.
+    var queue = dispatch_queue_create("NEKit.TunnelQueue", DISPATCH_QUEUE_SERIAL) {
         didSet {
-            self.proxySocket.queue = delegateQueue
-            self.adapterSocket?.queue = delegateQueue
+            self.proxySocket.queue = queue
+            self.adapterSocket?.queue = queue
         }
     }
 
+    /// Indicating how many socket is ready to forward data.
     var readySignal = 0
 
-    var closed: Bool {
+    /// If the tunnel is closed, i.e., proxy socket and adapter socket are both disconnected.
+    var isClosed: Bool {
         return proxySocket.isDisconnected && (adapterSocket?.isDisconnected ?? true)
     }
 
     init(proxySocket: ProxySocket) {
         self.proxySocket = proxySocket
-        self.proxySocket.queue = delegateQueue
+        self.proxySocket.queue = queue
         super.init()
         self.proxySocket.delegate = self
     }
 
+    /**
+     Start running the tunnel.
+     */
     func openTunnel() {
         proxySocket.openSocket()
     }
 
+    /**
+     Close the tunnel.
+     */
     func close() {
         if !proxySocket.isDisconnected {
             proxySocket.disconnect()
@@ -50,7 +64,7 @@ class Tunnel: NSObject, SocketDelegate {
         let manager = RuleManager.currentManager
         let factory = manager.match(request)
         adapterSocket = factory.getAdapter(request)
-        adapterSocket!.queue = delegateQueue
+        adapterSocket!.queue = queue
         adapterSocket!.delegate = self
         adapterSocket!.openSocketWithRequest(request)
     }
@@ -92,11 +106,11 @@ class Tunnel: NSObject, SocketDelegate {
     func updateAdapter(newAdapter: AdapterSocket) {
         adapterSocket = newAdapter
         adapterSocket?.delegate = self
-        adapterSocket?.queue = delegateQueue
+        adapterSocket?.queue = queue
     }
 
     private func checkStatus() {
-        if closed {
+        if isClosed {
             delegate?.tunnelDidClose(self)
             delegate = nil
         }
