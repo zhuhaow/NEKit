@@ -1,5 +1,6 @@
 import Foundation
 
+/// Factory building server adapter which requires authentication.
 class AuthenticationAdapterFactory: ServerAdapterFactory {
     let auth: Authentication?
 

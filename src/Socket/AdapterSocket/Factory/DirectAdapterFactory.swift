@@ -1,10 +1,14 @@
 import Foundation
 
+/// Factory building direct adapter.
 class DirectAdapterFactory: AdapterFactoryProtocol {
-    func canHandle(request: ConnectRequest) -> Bool {
-        return true
-    }
+    /**
+     Get a direct adapter.
 
+     - parameter request: The connect request.
+
+     - returns: The built adapter.
+     */
     func getAdapter(request: ConnectRequest) -> AdapterSocket {
         return getDirectAdapter()
     }

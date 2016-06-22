@@ -1,5 +1,6 @@
 import Foundation
 
+/// Factory building Shadowsocks adapter.
 class ShadowsocksAdapterFactory: ServerAdapterFactory {
     typealias EncryptMethod = ShadowsocksAdapter.EncryptMethod
     let encryptMethod: EncryptMethod
@@ -19,6 +20,13 @@ class ShadowsocksAdapterFactory: ServerAdapterFactory {
         self.init(host: host, port: port, encryptMethod: encryptMethod, password: password)
     }
 
+    /**
+     Get a Shadowsocks adapter.
+
+     - parameter request: The connect request.
+
+     - returns: The built adapter.
+     */
     override func getAdapter(request: ConnectRequest) -> AdapterSocket {
         let adapter = ShadowsocksAdapter(host: serverHost, port: serverPort, encryptMethod: encryptMethod, password: password)
         adapter.socket = RawSocketFactory.getRawSocket()
