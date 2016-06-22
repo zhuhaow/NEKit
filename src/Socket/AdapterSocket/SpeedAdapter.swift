@@ -1,13 +1,14 @@
 import Foundation
 
+/// This adpater selects the fastest proxy automatically from a set of proxies.
 class SpeedAdapter: AdapterSocket, SocketDelegate {
     var adapters: [AdapterSocket]!
     var connectingCount = 0
 
-    override var delegateQueue: dispatch_queue_t! {
+    override var queue: dispatch_queue_t! {
         didSet {
             for adapter in adapters {
-                adapter.delegateQueue = delegateQueue
+                adapter.queue = queue
             }
         }
     }
@@ -39,7 +40,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
 
     func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {}
 
-    func readyForForward(socket: SocketProtocol) {
+    func readyToForward(socket: SocketProtocol) {
         guard let adapterSocket = socket as? AdapterSocket else {
             return
         }
@@ -53,7 +54,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
 
         delegate?.updateAdapter(adapterSocket)
         delegate?.didConnect(adapterSocket, withResponse: adapterSocket.response)
-        delegate?.readyForForward(adapterSocket)
+        delegate?.readyToForward(adapterSocket)
     }
 
     func didDisconnect(socket: SocketProtocol) {

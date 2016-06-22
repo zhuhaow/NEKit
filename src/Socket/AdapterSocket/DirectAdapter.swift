@@ -1,9 +1,16 @@
 import Foundation
 import CocoaLumberjackSwift
 
+/// This adapter connects to remote directly.
 class DirectAdapter: AdapterSocket {
+    /// If this is set to `false`, then the IP address will be resolved by system.
     var resolveHost = false
 
+    /**
+     Connect to remote according to the `ConnectRequest`.
+
+     - parameter request: The connect request.
+     */
     override func openSocketWithRequest(request: ConnectRequest) {
         super.openSocketWithRequest(request)
         let host: String
@@ -21,8 +28,13 @@ class DirectAdapter: AdapterSocket {
         } catch {}
     }
 
+    /**
+     The socket did connect to remote.
+
+     - parameter socket: The connected socket.
+     */
     override func didConnect(socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
-        delegate?.readyForForward(self)
+        delegate?.readyToForward(self)
     }
 }

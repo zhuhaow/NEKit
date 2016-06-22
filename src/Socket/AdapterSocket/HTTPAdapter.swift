@@ -1,10 +1,18 @@
 import Foundation
 import CocoaLumberjackSwift
 
+/// This adapter connects to remote host through a HTTP proxy.
 class HTTPAdapter: AdapterSocket {
+    /// The host domain of the HTTP proxy.
     let serverHost: String
+
+    /// The port of the HTTP proxy.
     let serverPort: Int
+
+    /// The authentication information for the HTTP proxy.
     let auth: Authentication?
+
+    /// Whether the connection to the proxy should be secured or not.
     var secured: Bool
 
     enum ReadTag: Int {
@@ -55,16 +63,18 @@ class HTTPAdapter: AdapterSocket {
     }
 
     override func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
+        super.didReadData(data, withTag: tag, from: socket)
         if tag == ReadTag.ConnectResponse.rawValue {
-            delegate?.readyForForward(self)
+            delegate?.readyToForward(self)
         } else {
-            super.didReadData(data, withTag: tag, from: socket)
+            delegate?.didReadData(data, withTag: tag, from: self)
         }
     }
 
     override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
+        super.didWriteData(data, withTag: tag, from: socket)
         if tag != WriteTag.Connect.rawValue {
-            super.didWriteData(data, withTag: tag, from: socket)
+            delegate?.didWriteData(data, withTag: tag, from: self)
         }
     }
 }

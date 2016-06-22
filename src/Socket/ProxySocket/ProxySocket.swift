@@ -81,6 +81,8 @@ class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /**
      The socket did connect to remote.
 
+     - note: This never happens for `ProxySocket`.
+
      - parameter socket: The connected socket.
      */
     func didConnect(socket: RawTCPSocketProtocol) {
