@@ -1,4 +1,7 @@
 # NEKit
+
+[![Build Status](https://travis-ci.org/zhuhaow/NEKit.svg?branch=master)](https://travis-ci.org/zhuhaow/NEKit)
+
 A toolkit for NetworkExtension Framework
 
 The design goal of NEKit is to provide everything needed in building a Network Extension app with TunnelProvider while keep the framework as non-opinionated as possible.
