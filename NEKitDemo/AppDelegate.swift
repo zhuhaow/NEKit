@@ -6,7 +6,7 @@ import CocoaLumberjackSwift
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
-    var proxy: SOCKS5ProxyServer!
+    var proxy: GCDSOCKS5ProxyServer!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         DDLog.addLogger(DDTTYLogger.sharedInstance(), withLevel: .All)
@@ -14,8 +14,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let filepath = (NSHomeDirectory() as NSString).stringByAppendingPathComponent(".NEKit_demo.yaml")
         if config.load(fromConfigFile: filepath) {
             RuleManager.currentManager = config.ruleManager
-            proxy = SOCKS5ProxyServer(address: "127.0.0.1", port: config.proxyPort!)
-            proxy.start()
+            proxy = GCDSOCKS5ProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: UInt16(config.proxyPort!)))
+            // swiftlint:disable force_try
+            try! proxy.start()
         } else {
             exit(1)
         }
