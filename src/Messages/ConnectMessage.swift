@@ -1,5 +1,5 @@
 import Foundation
-class ConnectRequest {
+public class ConnectRequest {
     var host: String
     var port: Int
     var matchedRule: Rule?
@@ -79,7 +79,7 @@ class ConnectRequest {
 }
 
 extension ConnectRequest: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         return "Request to: \(host):\(port)"
     }
 }

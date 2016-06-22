@@ -30,8 +30,6 @@ public class RuleManager {
 
      - parameter session: The DNS session to match.
      - parameter type:    What kind of information is available.
-
-     - returns: The result of match.
      */
     func matchDNS(session: DNSSession, type: DNSSessionMatchType) {
         for (i, rule) in rules[session.indexToMatch..<rules.count].enumerate() {
@@ -55,7 +53,7 @@ public class RuleManager {
 
      - returns: The matched configured adapter.
      */
-    func match(request: ConnectRequest) -> AdapterFactoryProtocol! {
+    func match(request: ConnectRequest) -> AdapterFactory! {
         if request.matchedRule != nil {
             return request.matchedRule!.match(request)
         }

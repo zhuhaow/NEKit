@@ -5,7 +5,7 @@ import Yaml
 struct AdapterFactoryParser {
     // swiftlint:disable:next cyclomatic_complexity
     static func parseAdapterFactoryManager(config: Yaml) -> AdapterFactoryManager {
-        var factoryDict: [String: AdapterFactoryProtocol] = [:]
+        var factoryDict: [String: AdapterFactory] = [:]
         factoryDict["direct"] = DirectAdapterFactory()
         guard let adapterConfigs = config.array else {
             DDLogWarn("Failed to parse adapter configuration or there is no adapter configuration.")
@@ -110,8 +110,8 @@ struct AdapterFactoryParser {
         return ShadowsocksAdapterFactory(host: host, port: port, encryptMethod: encryptMethod, password: password)
     }
 
-    static func parseSpeedAdapterFactory(config: Yaml, factoryDict: [String:AdapterFactoryProtocol]) -> SpeedAdapterFactory? {
-        var factories: [AdapterFactoryProtocol] = []
+    static func parseSpeedAdapterFactory(config: Yaml, factoryDict: [String:AdapterFactory]) -> SpeedAdapterFactory? {
+        var factories: [AdapterFactory] = []
         guard let adapterIDs = config["adapter"].array else {
             DDLogError("Speed Adatper should specify a set of adapters.")
             return nil

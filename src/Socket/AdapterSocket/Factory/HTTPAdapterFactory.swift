@@ -1,7 +1,7 @@
 import Foundation
 
 /// Factory building HTTP adapter.
-class HTTPAdapterFactory: AuthenticationAdapterFactory {
+public class HTTPAdapterFactory: AuthenticationAdapterFactory {
     /**
      Get a HTTP adapter.
 

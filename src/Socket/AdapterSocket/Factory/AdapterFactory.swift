@@ -1,7 +1,7 @@
 import Foundation
 
-/// The protocol defines the adapter factory.
-protocol AdapterFactoryProtocol: class {
+/// The base class of adapter factory.
+public class AdapterFactory {
     /**
      Build an adapter.
 
@@ -9,10 +9,10 @@ protocol AdapterFactoryProtocol: class {
 
      - returns: The built adapter.
      */
-    func getAdapter(request: ConnectRequest) -> AdapterSocket
-}
+    func getAdapter(request: ConnectRequest) -> AdapterSocket {
+        return getDirectAdapter()
+    }
 
-extension AdapterFactoryProtocol {
     /**
      Helper method to get a `DirectAdapter`.
 
@@ -24,3 +24,8 @@ extension AdapterFactoryProtocol {
         return adapter
     }
 }
+
+/// Factory building direct adapters.
+///
+/// - note: This is needed since we need to identify direct adapter factory.
+class DirectAdapterFactory: AdapterFactory {}

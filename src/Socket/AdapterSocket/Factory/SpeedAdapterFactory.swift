@@ -1,8 +1,8 @@
 import Foundation
 
 /// Factory building speed adapter.
-class SpeedAdapterFactory: AdapterFactoryProtocol {
-    var adapterFactories: [AdapterFactoryProtocol]!
+public class SpeedAdapterFactory: AdapterFactory {
+    var adapterFactories: [AdapterFactory]!
 
     /**
      Get a speed adapter.
@@ -11,7 +11,7 @@ class SpeedAdapterFactory: AdapterFactoryProtocol {
 
      - returns: The built adapter.
      */
-    func getAdapter(request: ConnectRequest) -> AdapterSocket {
+    override func getAdapter(request: ConnectRequest) -> AdapterSocket {
         let adapters = adapterFactories.map { adapterFactory -> AdapterSocket in
             let adapter = adapterFactory.getAdapter(request)
             adapter.socket = RawSocketFactory.getRawSocket()

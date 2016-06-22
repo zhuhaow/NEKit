@@ -1,12 +1,12 @@
 import Foundation
 
-/// This is a very simple wrapper of a dict of type `[String: AdapterFactoryProtocol]`.
+/// This is a very simple wrapper of a dict of type `[String: AdapterFactory]`.
 ///
 /// Use it as a normal dict.
 class AdapterFactoryManager {
-    private var factoryDict: [String: AdapterFactoryProtocol]
+    private var factoryDict: [String: AdapterFactory]
 
-    subscript(index: String) -> AdapterFactoryProtocol? {
+    subscript(index: String) -> AdapterFactory? {
         get {
             if index == "direct" {
                 return DirectAdapterFactory()
@@ -21,7 +21,7 @@ class AdapterFactoryManager {
 
      - parameter factoryDict: The factory dict.
      */
-    init(factoryDict: [String: AdapterFactoryProtocol]) {
+    init(factoryDict: [String: AdapterFactory]) {
         self.factoryDict = factoryDict
     }
 }

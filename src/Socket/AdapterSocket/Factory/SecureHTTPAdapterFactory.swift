@@ -1,7 +1,7 @@
 import Foundation
 
 /// Factory building secured HTTP (HTTP with SSL) adapter.
-class SecureHTTPAdapterFactory: HTTPAdapterFactory {
+public class SecureHTTPAdapterFactory: HTTPAdapterFactory {
     /**
      Get a secured HTTP adapter.
 

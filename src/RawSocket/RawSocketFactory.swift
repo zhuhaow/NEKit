@@ -1,4 +1,5 @@
 import Foundation
+import NetworkExtension
 
 /**
  Represents the type of the socket.
@@ -6,12 +7,17 @@ import Foundation
  - NW:  The socket based on `NWTCPConnection`.
  - GCD: The socket based on `GCDAsyncSocket`.
  */
-enum SocketBaseType {
+public enum SocketBaseType {
     case NW, GCD
 }
 
 /// Factory to create `RawTCPSocket` based on configuration.
-class RawSocketFactory {
+public class RawSocketFactory {
+    /// Current active `NETunnelProvider` which creates `NWTCPConnection` instance.
+    ///
+    /// - note: Must set before any connection is created if `NWTCPSocket` is used.
+    public static weak var TunnelProvider: NETunnelProvider!
+
     /**
      Return `RawTCPSocket` instance.
 
@@ -26,7 +32,7 @@ class RawSocketFactory {
         case .Some(.GCD):
             return GCDTCPSocket()
         case nil:
-            if NetworkInterface.TunnelProvider == nil {
+            if RawSocketFactory.TunnelProvider == nil {
                 return GCDTCPSocket()
             } else {
                 return NWTCPSocket()

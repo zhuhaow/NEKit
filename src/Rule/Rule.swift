@@ -1,14 +1,14 @@
 import Foundation
 
 /// The rule defines what to do for DNS requests and connect requests.
-class Rule {
+public class Rule {
     /// The name of this rule.
     let name: String?
 
     /**
      Create a new rule.
      */
-    init() {
+    public init() {
         name = nil
     }
 
@@ -31,7 +31,7 @@ class Rule {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    func match(request: ConnectRequest) -> AdapterFactoryProtocol? {
+    func match(request: ConnectRequest) -> AdapterFactory? {
         return nil
     }
 }

@@ -2,14 +2,14 @@ import Foundation
 import CocoaLumberjackSwift
 
 /// The rule matches the request based on the geographical location of the corresponding IP address.
-class CountryRule: Rule {
-    private let adapterFactory: AdapterFactoryProtocol
+public class CountryRule: Rule {
+    private let adapterFactory: AdapterFactory
 
     /// The ISO code of the country.
-    let countryCode: String
+    public let countryCode: String
 
     /// The rule should match the request which matches the country or not.
-    let match: Bool
+    public let match: Bool
 
     /**
      Create a new `CountryRule` instance.
@@ -18,7 +18,7 @@ class CountryRule: Rule {
      - parameter match:          The rule should match the request which matches the country or not.
      - parameter adapterFactory: The factory which builds a corresponding adapter when needed.
      */
-    init(countryCode: String, match: Bool, adapterFactory: AdapterFactoryProtocol) {
+    public init(countryCode: String, match: Bool, adapterFactory: AdapterFactory) {
         self.countryCode = countryCode
         self.match = match
         self.adapterFactory = adapterFactory
@@ -55,7 +55,7 @@ class CountryRule: Rule {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(request: ConnectRequest) -> AdapterFactoryProtocol? {
+    override func match(request: ConnectRequest) -> AdapterFactory? {
         if (request.country != countryCode) != match {
             return adapterFactory
         }

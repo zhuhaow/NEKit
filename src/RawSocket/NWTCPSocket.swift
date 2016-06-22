@@ -76,7 +76,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             tlsParameters.setValuesForKeysWithDictionary(tlsSettings)
         }
 
-        connection = NetworkInterface.TunnelProvider.createTCPConnectionToEndpoint(endpoint, enableTLS: enableTLS, TLSParameters: tlsParameters, delegate: nil)
+        connection = RawSocketFactory.TunnelProvider.createTCPConnectionToEndpoint(endpoint, enableTLS: enableTLS, TLSParameters: tlsParameters, delegate: nil)
         connection.addObserver(self, forKeyPath: "state", options: [.Initial, .New], context: nil)
     }
 

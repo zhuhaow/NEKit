@@ -1,15 +1,15 @@
 import Foundation
 
 /// The rule matches all DNS and connect requests.
-class AllRule: Rule {
-    private let adapterFactory: AdapterFactoryProtocol
+public class AllRule: Rule {
+    private let adapterFactory: AdapterFactory
 
     /**
      Create a new `AllRule` instance.
 
      - parameter adapterFactory: The factory which builds a corresponding adapter when needed.
      */
-    init(adapterFactory: AdapterFactoryProtocol) {
+    public init(adapterFactory: AdapterFactory) {
         self.adapterFactory = adapterFactory
         super.init()
     }
@@ -38,7 +38,7 @@ class AllRule: Rule {
 
      - returns: The configured adapter.
      */
-    override func match(request: ConnectRequest) -> AdapterFactoryProtocol? {
+    override func match(request: ConnectRequest) -> AdapterFactory? {
         return adapterFactory
     }
 }

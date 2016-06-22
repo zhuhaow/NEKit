@@ -1,7 +1,7 @@
 import Foundation
 
 /// Factory building Shadowsocks adapter.
-class ShadowsocksAdapterFactory: ServerAdapterFactory {
+public class ShadowsocksAdapterFactory: ServerAdapterFactory {
     typealias EncryptMethod = ShadowsocksAdapter.EncryptMethod
     let encryptMethod: EncryptMethod
     let password: String
@@ -12,7 +12,7 @@ class ShadowsocksAdapterFactory: ServerAdapterFactory {
         super.init(host: host, port: port)
     }
 
-    convenience init?(host: String, port: Int, encryptMethod: String, password: String) {
+    public convenience init?(host: String, port: Int, encryptMethod: String, password: String) {
         guard let encryptMethod = EncryptMethod(rawValue: encryptMethod) else {
             return nil
         }

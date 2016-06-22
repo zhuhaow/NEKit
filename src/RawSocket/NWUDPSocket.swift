@@ -32,7 +32,7 @@ class NWUDPSocket {
      - parameter port: The port.
      */
     init(host: String, port: Int) {
-        session = NetworkInterface.TunnelProvider.createUDPSessionToEndpoint(NWHostEndpoint(hostname: host, port: "\(port)"), fromEndpoint: nil)
+        session = RawSocketFactory.TunnelProvider.createUDPSessionToEndpoint(NWHostEndpoint(hostname: host, port: "\(port)"), fromEndpoint: nil)
         session.setReadHandler({ [ unowned self ] dataArray, error in
             guard error == nil else {
                 DDLogError("Error when reading from remote server. \(error)")
