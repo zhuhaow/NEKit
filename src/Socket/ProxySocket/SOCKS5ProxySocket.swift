@@ -2,9 +2,15 @@ import Foundation
 import CocoaLumberjackSwift
 
 class SOCKS5ProxySocket: ProxySocket {
+    /// The remote host to connect to.
     var destinationHost: String!
+
+    /// The remote port to connect to.
     var destinationPort: Int!
 
+    /**
+     Begin reading and processing data from the socket.
+     */
     override func openSocket() {
         super.openSocket()
         socket.readDataToLength(3, withTag: SocketTag.SOCKS5.Open)
@@ -12,6 +18,13 @@ class SOCKS5ProxySocket: ProxySocket {
 
     // swiftlint:disable function_body_length
     // swiftlint:disable cyclomatic_complexity
+    /**
+     The socket did read some data.
+
+     - parameter data:    The data read from the socket.
+     - parameter withTag: The tag given when calling the `readData` method.
+     - parameter from:    The socket where the data is read from.
+     */
     override func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
         switch tag {
         case SocketTag.SOCKS5.Open:
@@ -65,15 +78,27 @@ class SOCKS5ProxySocket: ProxySocket {
 
     }
 
+    /**
+     The socket did send some data.
+
+     - parameter data:    The data which have been sent to remote (acknowledged). Note this may not be available since the data may be released to save memory.
+     - parameter withTag: The tag given when calling the `writeData` method.
+     - parameter from:    The socket where the data is sent out.
+     */
     override func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
         if tag >= 0 {
             delegate?.didWriteData(data, withTag: tag, from: self)
         }
         if tag == SocketTag.SOCKS5.ConnectResponse {
-            delegate?.readyForForward(self)
+            delegate?.readyToForward(self)
         }
     }
 
+    /**
+     Response to the `ConnectResponse` from `AdapterSocket` on the other side of the `Tunnel`.
+
+     - parameter response: The `ConnectResponse`.
+     */
     override func respondToResponse(response: ConnectResponse) {
         var responseBytes = [UInt8](count: 11, repeatedValue: 0)
         responseBytes[0...3] = [0x05, 0x00, 0x00, 0x01]

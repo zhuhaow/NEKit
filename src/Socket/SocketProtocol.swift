@@ -38,7 +38,7 @@ protocol SocketProtocol: class {
     /// The delegate instance.
     var delegate: SocketDelegate? { get set }
 
-    /// /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
+    /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
     var queue: dispatch_queue_t! { get set }
 
     /// The current connection status of the socket.
