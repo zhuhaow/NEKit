@@ -67,9 +67,7 @@ class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
-        delegate?.didReadData(data, withTag: tag, from: self)
-    }
+    func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {}
 
     /**
      The socket did send some data.
@@ -78,9 +76,7 @@ class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
-        delegate?.didWriteData(data, withTag: tag, from: self)
-    }
+    func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {}
 
     /**
      The socket did connect to remote.

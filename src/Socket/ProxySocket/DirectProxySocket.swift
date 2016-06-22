@@ -24,4 +24,28 @@ class DirectProxySocket: ProxySocket {
     override func respondToResponse(response: ConnectResponse) {
         delegate?.readyToForward(self)
     }
+
+    /**
+     The socket did read some data.
+
+     - parameter data:    The data read from the socket.
+     - parameter withTag: The tag given when calling the `readData` method.
+     - parameter from:    The socket where the data is read from.
+     */
+    override func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
+        super.didReadData(data, withTag: tag, from: from)
+        delegate?.didReadData(data, withTag: tag, from: self)
+    }
+
+    /**
+     The socket did send some data.
+
+     - parameter data:    The data which have been sent to remote (acknowledged). Note this may not be available since the data may be released to save memory.
+     - parameter withTag: The tag given when calling the `writeData` method.
+     - parameter from:    The socket where the data is sent out.
+     */
+    override func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
+        super.didWriteData(data, withTag: tag, from: from)
+        delegate?.didWriteData(data, withTag: tag, from: self)
+    }
 }

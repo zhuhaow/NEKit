@@ -26,6 +26,8 @@ class SOCKS5ProxySocket: ProxySocket {
      - parameter from:    The socket where the data is read from.
      */
     override func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
+        super.didReadData(data, withTag: tag, from: from)
+
         switch tag {
         case SocketTag.SOCKS5.Open:
             let response = NSData(bytes: [0x05, 0x00] as [UInt8], length: 2 * sizeof(UInt8))
@@ -86,6 +88,8 @@ class SOCKS5ProxySocket: ProxySocket {
      - parameter from:    The socket where the data is sent out.
      */
     override func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
+        super.didWriteData(data, withTag: tag, from: from)
+
         if tag >= 0 {
             delegate?.didWriteData(data, withTag: tag, from: self)
         }
