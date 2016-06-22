@@ -6,7 +6,7 @@ The design goal of NEKit is to provide everything needed in building a Network E
 Currently, NEKit supports:
 - Forward request through different proxies based on remote host location, remote host domain or the connection speed of proxies.
 - Integrated tun2socks framework to support TUN interface.
-- A DNS server that rewrite request and response.
+- A DNS server that rewrites request and response.
 - Some tools to build IP packets.
 - ...
 
