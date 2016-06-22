@@ -170,33 +170,19 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             return
         }
 
-        guard let change = change else {
-            return
-        }
-
-        DDLogVerbose("\(change)")
-        //        if let newValue = change[NSKeyValueChangeNewKey] as? NWTCPConnectionState {
-        //
-        //        }
-
-        DDLogVerbose("SNWTunnel state changed to \(connection.state.rawValue).")
-
         switch connection.state {
         case .Connected:
             queueCall {
                 self.delegate?.didConnect(self)
             }
         case .Disconnected:
-            DDLogVerbose("Disconnected")
             cancel()
         case .Cancelled:
-            DDLogVerbose("Cancelled")
             queueCall {
                 self.delegate?.didDisconnect(self)
                 self.delegate = nil
             }
         default:
-            DDLogVerbose("SNWTunnel state is \(connection.state.rawValue).")
             break
         }
     }
