@@ -1,13 +1,5 @@
 import Foundation
 
-enum IPVersion: UInt8 {
-    case IPv4 = 4, IPv6 = 6
-}
-
-enum TransportType: UInt8 {
-    case ICMP = 1, TCP = 6, UDP = 17
-}
-
 enum ChangeType {
     case Address, Port
 }

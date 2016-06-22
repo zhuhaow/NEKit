@@ -1,6 +1,6 @@
 import Foundation
 
-class ProxySocket: NSObject, ProxySocketProtocol, RawTCPSocketDelegate {
+class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     var socket: RawTCPSocketProtocol!
     weak var delegate: SocketDelegate?
     var delegateQueue: dispatch_queue_t! {

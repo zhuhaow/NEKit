@@ -5,7 +5,7 @@ import CocoaLumberjackSwift
 ///
 /// Any concrete implemention does not need to be thread-safe.
 ///
-/// - warning: It is expected that the instance is accessed on the `delegateQueue` only.
+/// - warning: It is expected that the instance is accessed on the `queue` only.
 protocol RawTCPSocketProtocol : class {
     /// The `RawTCPSocketDelegate` instance.
     weak var delegate: RawTCPSocketDelegate? { get set }
@@ -92,7 +92,7 @@ protocol RawTCPSocketProtocol : class {
     func readDataToData(data: NSData, withTag tag: Int)
 }
 
-/// The delegate protocol to handle the events from a TCP socket.
+/// The delegate protocol to handle the events from a raw TCP socket.
 protocol RawTCPSocketDelegate: class {
     /**
      The socket did disconnect.

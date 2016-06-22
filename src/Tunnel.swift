@@ -6,7 +6,7 @@ protocol TunnelDelegate : class {
 }
 
 class Tunnel: NSObject, SocketDelegate {
-    var proxySocket: ProxySocketProtocol
+    var proxySocket: ProxySocket
     var adapterSocket: AdapterSocket?
 
     weak var delegate: TunnelDelegate?
@@ -24,7 +24,7 @@ class Tunnel: NSObject, SocketDelegate {
         return proxySocket.disconnected && (adapterSocket?.disconnected ?? true)
     }
 
-    init(proxySocket: ProxySocketProtocol) {
+    init(proxySocket: ProxySocket) {
         self.proxySocket = proxySocket
         self.proxySocket.delegateQueue = delegateQueue
         super.init()
@@ -46,7 +46,7 @@ class Tunnel: NSObject, SocketDelegate {
         }
     }
 
-    func didReceiveRequest(request: ConnectRequest, from: ProxySocketProtocol) {
+    func didReceiveRequest(request: ConnectRequest, from: ProxySocket) {
         let manager = RuleManager.currentManager
         let factory = manager.match(request)
         adapterSocket = factory.getAdapter(request)
@@ -69,7 +69,7 @@ class Tunnel: NSObject, SocketDelegate {
     }
 
     func didReadData(data: NSData, withTag tag: Int, from socket: SocketProtocol) {
-        if let _ = socket as? ProxySocketProtocol {
+        if let _ = socket as? ProxySocket {
             adapterSocket!.writeData(data, withTag: tag)
         } else {
             proxySocket.writeData(data, withTag: tag)
@@ -77,7 +77,7 @@ class Tunnel: NSObject, SocketDelegate {
     }
 
     func didWriteData(data: NSData?, withTag: Int, from socket: SocketProtocol) {
-        if let _ = socket as? ProxySocketProtocol {
+        if let _ = socket as? ProxySocket {
             adapterSocket?.readDataWithTag(SocketTag.Forward)
         } else {
             proxySocket.readDataWithTag(SocketTag.Forward)

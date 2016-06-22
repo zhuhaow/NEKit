@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		36164A2B1CE41C3300BAC90A /* IPMutablePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2A1CE41C3300BAC90A /* IPMutablePacket.swift */; };
-		36164A2D1CE6EB3800BAC90A /* TCPMutablePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */; };
-		36164A2F1CE7099300BAC90A /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2E1CE7099300BAC90A /* Router.swift */; };
 		3636DA5E1CE87C08007F9787 /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA5D1CE87C08007F9787 /* IPAddress.swift */; };
 		3636DA621CE892EF007F9787 /* Port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA611CE892EF007F9787 /* Port.swift */; };
 		36411A551D12C123005F4108 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36411A541D12C123005F4108 /* Atomic.swift */; };
@@ -100,10 +97,7 @@
 		36C48D681CF88EC10071804F /* GeoIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162611CDDADC100F24C97 /* GeoIP.swift */; };
 		36C48D691CF88EC50071804F /* ConnectMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162161CDDA0EA00F24C97 /* ConnectMessage.swift */; };
 		36C48D6A1CF88ECB0071804F /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA5D1CE87C08007F9787 /* IPAddress.swift */; };
-		36C48D6B1CF88ECB0071804F /* IPMutablePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2A1CE41C3300BAC90A /* IPMutablePacket.swift */; };
 		36C48D6C1CF88ECB0071804F /* Port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA611CE892EF007F9787 /* Port.swift */; };
-		36C48D6D1CF88ECB0071804F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2E1CE7099300BAC90A /* Router.swift */; };
-		36C48D6E1CF88ECB0071804F /* TCPMutablePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */; };
 		36C48D701CF88ECB0071804F /* IPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* IPStack.swift */; };
 		36C48D711CF88ECF0071804F /* ProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162571CDDA31B00F24C97 /* ProxyServer.swift */; };
 		36C48D721CF88ECF0071804F /* GCDProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162581CDDA31B00F24C97 /* GCDProxyServer.swift */; };
@@ -424,6 +418,26 @@
 			path = Packet;
 			sourceTree = "<group>";
 		};
+		36411A671D1A3A71005F4108 /* ProxySocket */ = {
+			isa = PBXGroup;
+			children = (
+				36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */,
+				36B1621C1CDDA0EA00F24C97 /* ProxySocket.swift */,
+				36B162211CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift */,
+			);
+			path = ProxySocket;
+			sourceTree = "<group>";
+		};
+		36411A6B1D1A41BF005F4108 /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				36B162311CDDA0F300F24C97 /* AdapterSocket */,
+				36411A671D1A3A71005F4108 /* ProxySocket */,
+				36B1621F1CDDA0EA00F24C97 /* SocketProtocol.swift */,
+			);
+			path = Socket;
+			sourceTree = "<group>";
+		};
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
@@ -458,7 +472,6 @@
 		36463A321CDCD5EB0040579C /* src */ = {
 			isa = PBXGroup;
 			children = (
-				36B162311CDDA0F300F24C97 /* Adapter */,
 				366EB5BE1CDE32BF00E0E942 /* Config */,
 				36C48DA71CF9D6250071804F /* DNS */,
 				36B162431CDDA0FB00F24C97 /* GeoIP */,
@@ -468,8 +481,8 @@
 				36B162631CDDCDFC00F24C97 /* ProxyServer */,
 				36B162121CDDA0EA00F24C97 /* RawSocket */,
 				36B1620B1CDDA0E000F24C97 /* Rule */,
+				36411A6B1D1A41BF005F4108 /* Socket */,
 				36C63DC61CFD252400A00CA2 /* Utils */,
-				36B162651CDDCF9900F24C97 /* Socket */,
 				366EB5B01CDE119200E0E942 /* Authentication.swift */,
 				36B1625B1CDDA54600F24C97 /* NetworkInterface.swift */,
 				3664F0BD1CE3069F008BA6D8 /* Opt.swift */,
@@ -532,14 +545,14 @@
 		36B1620B1CDDA0E000F24C97 /* Rule */ = {
 			isa = PBXGroup;
 			children = (
+				36411A611D167AE0005F4108 /* AllRule.swift */,
 				36B1620C1CDDA0E000F24C97 /* CountryRule.swift */,
+				36411A5B1D167AA9005F4108 /* DNSSessionMatchResult.swift */,
+				36411A5E1D167AC3005F4108 /* DNSSessionMatchType.swift */,
+				36411A641D167AF2005F4108 /* DirectRule.swift */,
 				366EB5C61CE033FB00E0E942 /* ListRule.swift */,
 				36B1620D1CDDA0E000F24C97 /* Rule.swift */,
-				36411A641D167AF2005F4108 /* DirectRule.swift */,
-				36411A5E1D167AC3005F4108 /* DNSSessionMatchType.swift */,
 				36B1620E1CDDA0E000F24C97 /* RuleManager.swift */,
-				36411A5B1D167AA9005F4108 /* DNSSessionMatchResult.swift */,
-				36411A611D167AE0005F4108 /* AllRule.swift */,
 			);
 			path = Rule;
 			sourceTree = "<group>";
@@ -558,17 +571,18 @@
 			path = RawSocket;
 			sourceTree = "<group>";
 		};
-		36B162311CDDA0F300F24C97 /* Adapter */ = {
+		36B162311CDDA0F300F24C97 /* AdapterSocket */ = {
 			isa = PBXGroup;
 			children = (
 				36B162331CDDA0F300F24C97 /* Factory */,
+				36B162151CDDA0EA00F24C97 /* AdapterSocket.swift */,
 				36B162321CDDA0F300F24C97 /* DirectAdapter.swift */,
 				366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */,
 				366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */,
 				366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */,
 				366EB5C21CDF375B00E0E942 /* SpeedAdapter.swift */,
 			);
-			path = Adapter;
+			path = AdapterSocket;
 			sourceTree = "<group>";
 		};
 		36B162331CDDA0F300F24C97 /* Factory */ = {
@@ -598,23 +612,11 @@
 		36B162631CDDCDFC00F24C97 /* ProxyServer */ = {
 			isa = PBXGroup;
 			children = (
-				36B162571CDDA31B00F24C97 /* ProxyServer.swift */,
 				36B162581CDDA31B00F24C97 /* GCDProxyServer.swift */,
 				36411A581D13988A005F4108 /* GCDSOCKS5ProxyServer.swift */,
+				36B162571CDDA31B00F24C97 /* ProxyServer.swift */,
 			);
 			path = ProxyServer;
-			sourceTree = "<group>";
-		};
-		36B162651CDDCF9900F24C97 /* Socket */ = {
-			isa = PBXGroup;
-			children = (
-				36B162151CDDA0EA00F24C97 /* AdapterSocket.swift */,
-				36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */,
-				36B1621C1CDDA0EA00F24C97 /* ProxySocket.swift */,
-				36B162211CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift */,
-				36B1621F1CDDA0EA00F24C97 /* SocketProtocol.swift */,
-			);
-			path = Socket;
 			sourceTree = "<group>";
 		};
 		36B162661CDDD00B00F24C97 /* Messages */ = {
@@ -680,8 +682,8 @@
 		36C63DC61CFD252400A00CA2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				36C63DC71CFD254100A00CA2 /* BinaryDataScanner.swift */,
 				36411A541D12C123005F4108 /* Atomic.swift */,
+				36C63DC71CFD254100A00CA2 /* BinaryDataScanner.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -985,7 +987,6 @@
 				366EB5C71CE033FB00E0E942 /* ListRule.swift in Sources */,
 				36C63DE91CFECD6200A00CA2 /* LibresolvWrapper.m in Sources */,
 				366EB5AE1CDE0FCE00E0E942 /* HTTPAdapter.swift in Sources */,
-				36164A2B1CE41C3300BAC90A /* IPMutablePacket.swift in Sources */,
 				36C63DC81CFD254100A00CA2 /* BinaryDataScanner.swift in Sources */,
 				36B162101CDDA0E000F24C97 /* Rule.swift in Sources */,
 				366EB5AF1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift in Sources */,
@@ -1002,7 +1003,6 @@
 				36C63DFC1D00797D00A00CA2 /* Checksum.swift in Sources */,
 				36B162621CDDADC100F24C97 /* GeoIP.swift in Sources */,
 				36B162281CDDA0EA00F24C97 /* NWTCPSocket.swift in Sources */,
-				36164A2F1CE7099300BAC90A /* Router.swift in Sources */,
 				366EB5B61CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift in Sources */,
 				36B1625A1CDDA31B00F24C97 /* GCDProxyServer.swift in Sources */,
 				366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */,
@@ -1016,7 +1016,6 @@
 				36B1625C1CDDA54600F24C97 /* NetworkInterface.swift in Sources */,
 				366EB5C51CDF3FA700E0E942 /* SpeedAdapterFactory.swift in Sources */,
 				36B162591CDDA31B00F24C97 /* ProxyServer.swift in Sources */,
-				36164A2D1CE6EB3800BAC90A /* TCPMutablePacket.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1047,7 +1046,6 @@
 				36C48DAD1CF9D6580071804F /* DNSEnums.swift in Sources */,
 				36C48D661CF88EBC0071804F /* Parser.swift in Sources */,
 				36411A5A1D13988A005F4108 /* GCDSOCKS5ProxyServer.swift in Sources */,
-				36C48D6B1CF88ECB0071804F /* IPMutablePacket.swift in Sources */,
 				36C48D701CF88ECB0071804F /* IPStack.swift in Sources */,
 				36C48D771CF88ED40071804F /* SocketTag.swift in Sources */,
 				36C48D591CF88EB60071804F /* DirectAdapterFactory.swift in Sources */,
@@ -1078,9 +1076,7 @@
 				36411A601D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */,
 				36C48D801CF88EDE0071804F /* SocketProtocol.swift in Sources */,
 				36C48D6A1CF88ECB0071804F /* IPAddress.swift in Sources */,
-				36C48D6D1CF88ECB0071804F /* Router.swift in Sources */,
 				36C63DFD1D00797D00A00CA2 /* Checksum.swift in Sources */,
-				36C48D6E1CF88ECB0071804F /* TCPMutablePacket.swift in Sources */,
 				36C48D7D1CF88EDE0071804F /* AdapterSocket.swift in Sources */,
 				36C48D761CF88ED40071804F /* RawTCPSocketProtocol.swift in Sources */,
 				36C48D5B1CF88EB60071804F /* SecureHTTPAdapterFactory.swift in Sources */,
