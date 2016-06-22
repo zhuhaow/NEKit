@@ -1,7 +1,7 @@
 # NEKit
 A toolkit for NetworkExtension Framework
 
-The design goal of NEKit is to provide everything needed in building a Network Extension app with TunnelPrivider while keep the framework as non-opinionated as possible.
+The design goal of NEKit is to provide everything needed in building a Network Extension app with TunnelProvider while keep the framework as non-opinionated as possible.
 
 Currently, NEKit supports:
 - Forward request through different proxies based on remote host location, remote host domain or the connection speed of proxies.
