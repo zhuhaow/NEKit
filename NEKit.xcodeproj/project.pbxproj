@@ -434,11 +434,21 @@
 			path = Socket;
 			sourceTree = "<group>";
 		};
+		36411A751D1FC181005F4108 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				36C63DE51CFECD6200A00CA2 /* LibresolvWrapper.h */,
+				36C63DE61CFECD6200A00CA2 /* LibresolvWrapper.m */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
 				36C48D9C1CF948500071804F /* Carthage Framework OSX */,
 				36C48D9B1CF9483F0071804F /* Carthage Framework iOS */,
+				36411A751D1FC181005F4108 /* Demo */,
 				36C48D4E1CF88DED0071804F /* NEKit-iOS */,
 				368225B91D12484D00E7B495 /* NEKit-macOS */,
 				36B161F91CDCDF3A00F24C97 /* NEKitDemo */,
@@ -583,8 +593,8 @@
 		36B162331CDDA0F300F24C97 /* Factory */ = {
 			isa = PBXGroup;
 			children = (
-				36B162351CDDA0F300F24C97 /* AdapterFactoryManager.swift */,
 				36B162341CDDA0F300F24C97 /* AdapterFactory.swift */,
+				36B162351CDDA0F300F24C97 /* AdapterFactoryManager.swift */,
 				366EB5B21CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift */,
 				366EB5B31CDE150C00E0E942 /* HTTPAdapterFactory.swift */,
 				366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */,
@@ -665,11 +675,9 @@
 			children = (
 				36C48DAB1CF9D6580071804F /* DNSEnums.swift */,
 				36C48DA81CF9D6390071804F /* DNSMessage.swift */,
+				36411A6F1D1ACD27005F4108 /* DNSResolver.swift */,
 				36C63DCD1CFD70C100A00CA2 /* DNSServer.swift */,
 				36C63DCA1CFD602500A00CA2 /* DNSSession.swift */,
-				36C63DE51CFECD6200A00CA2 /* LibresolvWrapper.h */,
-				36C63DE61CFECD6200A00CA2 /* LibresolvWrapper.m */,
-				36411A6F1D1ACD27005F4108 /* DNSResolver.swift */,
 			);
 			path = DNS;
 			sourceTree = "<group>";
@@ -687,9 +695,9 @@
 		36C63DFF1D02BDC700A00CA2 /* IPStack */ = {
 			isa = PBXGroup;
 			children = (
-				36E44A011CF2ED4800185DBF /* TUNInterface.swift */,
 				36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */,
 				36C63E031D02C0B700A00CA2 /* TCPStack.swift */,
+				36E44A011CF2ED4800185DBF /* TUNInterface.swift */,
 			);
 			path = IPStack;
 			sourceTree = "<group>";
@@ -1243,7 +1251,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -1270,7 +1278,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
