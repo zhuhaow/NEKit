@@ -2,34 +2,52 @@ import Foundation
 import NetworkExtension
 import CocoaLumberjackSwift
 
-public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
+/// A DNS server designed as an `IPStackProtocol` implemention which works with TUN interface.
+///
+/// This class is thread-safe.
+public class DNSServer: DNSResolverDelegate, IPStackProtocol {
+    /// Current DNS server.
+    ///
+    /// - warning: There is at most one DNS server running at the same time. If a DNS server is registered to `TUNInterface` then it must also be set here.
     public static var currentServer: DNSServer?
 
+    /// The address of DNS server.
     let serverAddress: IPv4Address
+
+    /// The port of DNS server
     let serverPort: Port
-    let queue: dispatch_queue_t = dispatch_queue_create("NEKit.DNSServer", DISPATCH_QUEUE_SERIAL)
-    var fakeSessions: [IPv4Address: DNSSession] = [:]
-    var pendingSessions: [UInt16: DNSSession] = [:]
-    let pool: IPv4Pool
-    var DNSServers: [NWUDPSocket] = []
+
+    private let queue: dispatch_queue_t = dispatch_queue_create("NEKit.DNSServer", DISPATCH_QUEUE_SERIAL)
+    private var fakeSessions: [IPv4Address: DNSSession] = [:]
+    private var pendingSessions: [UInt16: DNSSession] = [:]
+    private let pool: IPv4Pool?
+    private var resolvers: [DNSResolverProtocol] = []
+
     public var outputFunc: (([NSData], [NSNumber]) -> ())!
 
-    public init(address: IPv4Address, port: Port, fakeIPPool: IPv4Pool) {
+    /**
+     Initailize a DNS server.
+
+     - parameter address:    The IP address of the server.
+     - parameter port:       The listening port of the server.
+     - parameter fakeIPPool: The pool of fake IP addresses. Set to nil if no fake IP is needed.
+     */
+    public init(address: IPv4Address, port: Port, fakeIPPool: IPv4Pool? = nil) {
         serverAddress = address
         serverPort = port
         pool = fakeIPPool
-
-        getCurrentDNSServers()
     }
 
+    /**
+     Clean up fake IP.
 
-    private func checkTimeoutRecords() {
-        let now = NSDate()
-        for (key, value) in fakeSessions {
-            if value.expireAt != nil && value.expireAt!.compare(now) == .OrderedAscending {
-                fakeSessions.removeValueForKey(key)
-                pool.releaseIP(key)
-            }
+     - parameter address: The fake IP address.
+     - parameter delay:   How long should the fake IP be valid.
+     */
+    private func cleanUp(address: IPv4Address, after delay: Int) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay) * Int64(NSEC_PER_SEC)), queue) {
+            self.fakeSessions.removeValueForKey(address)
+            self.pool?.releaseIP(address)
         }
     }
 
@@ -55,11 +73,19 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
     }
 
     private func sendQueryToRemote(session: DNSSession) {
-        for server in DNSServers {
-            server.writeData(session.requestMessage.payload)
+        for resolver in resolvers {
+            resolver.resolve(session)
         }
     }
 
+    /**
+     Input IP packet into the DNS server.
+
+     - parameter packet:  The IP packet.
+     - parameter version: The version of the IP packet.
+
+     - returns: If the packet is taken in by this DNS server.
+     */
     public func inputPacket(packet: NSData, version: NSNumber?) -> Bool {
         guard IPPacket.peekTransportType(packet) == .UDP else {
             return false
@@ -103,8 +129,8 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
             response.transactionID = session.requestMessage.transactionID
             response.messageType = .Response
             response.recursionAvailable = true
-            response.answers.append(DNSResource.ARecord(session.requestMessage.queries[0].name, TTL: 300, address: session.fakeIP!))
-            session.expireAt = NSDate().dateByAddingTimeInterval(300)
+            response.answers.append(DNSResource.ARecord(session.requestMessage.queries[0].name, TTL: UInt32(Opt.DNSFakeIPTTL), address: session.fakeIP!))
+            session.expireAt = NSDate().dateByAddingTimeInterval(Double(Opt.DNSFakeIPTTL))
             guard response.buildMessage() else {
                 DDLogError("Failed to build DNS response.")
                 return
@@ -125,39 +151,38 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
     }
 
     func isFakeIP(ipAddress: IPv4Address) -> Bool {
-        return pool.isInPool(ipAddress)
+        return pool?.isInPool(ipAddress) ?? false
+    }
+
+    func lookupFakeIP(address: IPv4Address) -> DNSSession? {
+        return fakeSessions[address]
+    }
+
+    /**
+     Add new DNS resolver to DNS server.
+
+     - parameter resolver: The resolver to add.
+     */
+    public func registerResolver(resolver: DNSResolverProtocol) {
+        resolver.delegate = self
+        resolvers.append(resolver)
     }
 
     private func setUpFakeIP(session: DNSSession) -> Bool {
-        // clean up timeout records first
-        checkTimeoutRecords()
 
-        guard let fakeIP = pool.fetchIP() else {
+        guard let fakeIP = pool?.fetchIP() else {
             DDLogError("Failed to get a fake IP.")
             return false
         }
         session.fakeIP = fakeIP
         fakeSessions[fakeIP] = session
+        session.expireAt = NSDate().dateByAddingTimeInterval(NSTimeInterval(Opt.DNSFakeIPTTL))
+        cleanUp(fakeIP, after: Opt.DNSFakeIPTTL)
         return true
     }
 
-    public func getCurrentDNSServers() {
-        let servers = LibresolvWrapper.fetchDNSServers()
-
-        guard servers.count > 0 else {
-            DDLogError("Failed to get current DNS server settings.")
-            return
-        }
-
-        for server in servers {
-            let socket = NWUDPSocket(host: server, port: 53)
-            socket.delegate = self
-            DNSServers.append(socket)
-        }
-    }
-
-    func didReceiveData(data: NSData, from: NWUDPSocket) {
-        guard let message = DNSMessage(payload: data) else {
+    public func didReceiveResponse(rawResponse: NSData) {
+        guard let message = DNSMessage(payload: rawResponse) else {
             DDLogError("Failed to parse response from remote DNS server.")
             return
         }
@@ -194,57 +219,3 @@ public class DNSServer: NWUDPSocketDelegate, IPStackProtocol {
     }
 }
 
-/**
- The pool is build to hold fake ips.
- It is built under the strong assumtion that the start and end ips will end with 0, e.g, X.X.X.0, and stepSize will only be 256.
- - note: It is NOT thread-safe.
- */
-public final class IPv4Pool {
-    let start: UInt32
-    let end: UInt32
-    var currentEnd: UInt32
-    let stepSize: UInt32 = 256
-    var pool: [UInt32] = []
-
-    public init(start: IPv4Address, end: IPv4Address) {
-        self.start = start.UInt32InHostOrder
-        self.end = end.UInt32InHostOrder
-        self.currentEnd = self.start
-    }
-
-    private func enlargePool() -> Bool {
-        guard end - currentEnd > 0 else {
-            DDLogError("The Fake IP Pool is full and cannot be enlarged. Try to enlarge the size of fake ip pool in configuration.")
-            return false
-        }
-
-        pool.reserveCapacity(pool.count + Int(stepSize))
-
-        // only use ip from .1 to .254
-        for i in 1..<stepSize - 1 {
-            pool.append(currentEnd + i)
-        }
-
-        currentEnd += stepSize
-        return true
-    }
-
-    func fetchIP() -> IPv4Address? {
-        if pool.count == 0 {
-            guard enlargePool() else {
-                return nil
-            }
-        }
-
-        return IPv4Address(fromUInt32InHostOrder: pool.removeFirst())
-    }
-
-    func releaseIP(ipAddress: IPv4Address) {
-        pool.append(ipAddress.UInt32InHostOrder)
-    }
-
-    func isInPool(ipAddress: IPv4Address) -> Bool {
-        let addr = ipAddress.UInt32InHostOrder
-        return addr >= start && addr < end
-    }
-}

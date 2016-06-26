@@ -1,12 +1,13 @@
 import Foundation
 import CocoaLumberjackSwift
 
-class DNSSession {
+public class DNSSession {
     let requestMessage: DNSMessage
     var requestIPPacket: IPPacket?
     var realIP: IPv4Address?
     var fakeIP: IPv4Address?
     var realResponseMessage: DNSMessage?
+    var realResponseIPPacket: IPPacket?
     var matchedRule: Rule?
     var matchResult: DNSSessionMatchResult?
     var indexToMatch = 0

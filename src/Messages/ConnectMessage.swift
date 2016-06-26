@@ -19,7 +19,7 @@ public class ConnectRequest {
                 return ip
             }
 
-            guard let session = dnsServer.fakeSessions[address] else {
+            guard let session = dnsServer.lookupFakeIP(address) else {
                 return ip
             }
 
@@ -50,7 +50,7 @@ public class ConnectRequest {
             return
         }
 
-        guard let session = dnsServer.fakeSessions[address] else {
+        guard let session = dnsServer.lookupFakeIP(address) else {
             return nil
         }
 
