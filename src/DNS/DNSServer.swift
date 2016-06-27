@@ -155,7 +155,11 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
     }
 
     func lookupFakeIP(address: IPv4Address) -> DNSSession? {
-        return fakeSessions[address]
+        var session: DNSSession?
+        dispatch_sync(queue) {
+            session = self.fakeSessions[address]
+        }
+        return session
     }
 
     /**
@@ -218,4 +222,3 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
         }
     }
 }
-
