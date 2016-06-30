@@ -66,7 +66,10 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
             return
         }
 
-        let (_, socket) = findOrCreateSocketForPacket(packet)
+        guard let (_, socket) = findOrCreateSocketForPacket(packet) else {
+            return
+        }
+
         // swiftlint:disable:next force_cast
         let payload = (packet.protocolParser as! UDPProtocolParser).payload
         socket.writeData(payload)
@@ -102,7 +105,7 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
         return result
     }
 
-    private func findOrCreateSocketForPacket(packet: IPPacket) -> (ConnectInfo, NWUDPSocket) {
+    private func findOrCreateSocketForPacket(packet: IPPacket) -> (ConnectInfo, NWUDPSocket)? {
         // swiftlint:disable:next force_cast
         let udpParser = packet.protocolParser as! UDPProtocolParser
         let connectInfo = ConnectInfo(sourceAddress: packet.sourceAddress, sourcePort: udpParser.sourcePort, destinationAddress: packet.destinationAddress, destinationPort: udpParser.destinationPort)
@@ -111,7 +114,11 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
             return (connectInfo, socket)
         }
 
-        let udpSocket = NWUDPSocket(host: connectInfo.destinationAddress.presentation, port: connectInfo.destinationPort.intValue)
+        guard let request = ConnectRequest(ipAddress: connectInfo.destinationAddress, port: connectInfo.destinationPort) else {
+            return nil
+        }
+
+        let udpSocket = NWUDPSocket(host: request.host, port: request.port)
         udpSocket.delegate = self
 
         dispatch_sync(queue) {
