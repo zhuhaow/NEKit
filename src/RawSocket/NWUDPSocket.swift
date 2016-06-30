@@ -16,7 +16,7 @@ protocol NWUDPSocketDelegate: class {
 /// The wrapper for NWUDPSession.
 ///
 /// - note: This class is thread-safe.
-class NWUDPSocket {
+public class NWUDPSocket {
     private let session: NWUDPSession
     private var pendingWriteData: [NSData] = []
     private var writing = false
@@ -24,6 +24,11 @@ class NWUDPSocket {
 
     /// The delegate instance.
     weak var delegate: NWUDPSocketDelegate?
+
+    /// The time when the last activity happens.
+    ///
+    /// Since UDP do not have a "close" semantic, this can be an indicator of timeout.
+    public var lastActive: NSDate = NSDate()
 
     /**
      Create a new UDP socket connecting to remote.
@@ -34,6 +39,8 @@ class NWUDPSocket {
     init(host: String, port: Int) {
         session = RawSocketFactory.TunnelProvider.createUDPSessionToEndpoint(NWHostEndpoint(hostname: host, port: "\(port)"), fromEndpoint: nil)
         session.setReadHandler({ [ unowned self ] dataArray, error in
+            self.lastActive = NSDate()
+
             guard error == nil else {
                 DDLogError("Error when reading from remote server. \(error)")
                 return
@@ -59,6 +66,8 @@ class NWUDPSocket {
 
     private func checkWrite() {
         dispatch_async(queue) {
+            self.lastActive = NSDate()
+
             guard !self.writing else {
                 return
             }

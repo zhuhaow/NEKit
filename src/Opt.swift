@@ -7,4 +7,8 @@ struct Opt {
     static let MAXNWTCPScanLength = 8912
 
     static let DNSFakeIPTTL = 300
+
+    static let UDPSocketActiveTimeout = 300
+
+    static let UDPSocketActiveCheckInterval = 60
 }

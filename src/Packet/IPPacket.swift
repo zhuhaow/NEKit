@@ -1,88 +1,208 @@
 import Foundation
 import CocoaLumberjackSwift
 
-enum IPVersion: UInt8 {
+public enum IPVersion: UInt8 {
     case IPv4 = 4, IPv6 = 6
 }
 
-enum TransportType: UInt8 {
+public enum TransportProtocol: UInt8 {
     case ICMP = 1, TCP = 6, UDP = 17
 }
 
+/// The class to process and build IP packet.
+///
+/// - note: Only IPv4 is supported as of now.
+public class IPPacket {
+    /**
+     Get the version of the IP Packet without parsing the whole packet.
 
-class IPPacket {
-    static func peekTransportType(data: NSData) -> TransportType? {
-        guard data.length > 20 else {
+     - parameter data: The data containing the whole IP packet.
+
+     - returns: The version of the packet. Returns `nil` if failed to parse the packet.
+     */
+    public static func peekIPVersion(data: NSData) -> IPVersion? {
+        guard data.length >= 20 else {
             return nil
         }
 
-        return TransportType(rawValue: UnsafePointer<UInt8>(data.bytes).advancedBy(9).memory)
+        let version = UnsafePointer<UInt8>(data.bytes).memory >> 4
+        return IPVersion(rawValue: version)
     }
 
-    static func peekDestinationAddress(data: NSData) -> IPv4Address? {
-        guard data.length > 20 else {
+    /**
+     Get the protocol of the IP Packet without parsing the whole packet.
+
+     - parameter data: The data containing the whole IP packet.
+
+     - returns: The protocol of the packet. Returns `nil` if failed to parse the packet.
+     */
+    public static func peekProtocol(data: NSData) -> TransportProtocol? {
+        guard data.length >= 20 else {
+            return nil
+        }
+
+        return TransportProtocol(rawValue: UnsafePointer<UInt8>(data.bytes).advancedBy(9).memory)
+    }
+
+    /**
+     Get the source IP address of the IP packet without parsing the whole packet.
+
+     - parameter data: The data containing the whole IP packet.
+
+     - returns: The source IP address of the packet. Returns `nil` if failed to parse the packet.
+     */
+    public static func peekSourceAddress(data: NSData) -> IPv4Address? {
+        guard data.length >= 20 else {
+            return nil
+        }
+
+        return IPv4Address(fromBytesInNetworkOrder: data.bytes.advancedBy(12))
+    }
+
+    /**
+     Get the destination IP address of the IP packet without parsing the whole packet.
+
+     - parameter data: The data containing the whole IP packet.
+
+     - returns: The destination IP address of the packet. Returns `nil` if failed to parse the packet.
+     */
+    public static func peekDestinationAddress(data: NSData) -> IPv4Address? {
+        guard data.length >= 20 else {
             return nil
         }
 
         return IPv4Address(fromBytesInNetworkOrder: data.bytes.advancedBy(16))
     }
 
-    static func peekDestinationPort(data: NSData) -> Port? {
-        guard data.length > 20 else {
+    /**
+     Get the source port of the IP packet without parsing the whole packet.
+
+     - parameter data: The data containing the whole IP packet.
+
+     - returns: The source IP address of the packet. Returns `nil` if failed to parse the packet.
+
+     - note: Only TCP and UDP packet has port field.
+     */
+    public static func peekSourcePort(data: NSData) -> Port? {
+        guard let proto = peekProtocol(data) else {
             return nil
         }
 
-        // assume IP packet does have option
-        return Port(bytesInNetworkOrder: data.bytes.advancedBy(22))
+        guard proto == .TCP || proto == .UDP else {
+            return nil
+        }
+
+        let headerLength = Int(UnsafePointer<UInt8>(data.bytes).memory & 0x0F * 4)
+
+        // Make sure there are bytes for source and destination bytes.
+        guard data.length > headerLength + 4 else {
+            return nil
+        }
+
+        return Port(bytesInNetworkOrder: data.bytes.advancedBy(headerLength))
+    }
+
+    /**
+     Get the destination port of the IP packet without parsing the whole packet.
+
+     - parameter data: The data containing the whole IP packet.
+
+     - returns: The destination IP address of the packet. Returns `nil` if failed to parse the packet.
+
+     - note: Only TCP and UDP packet has port field.
+     */
+    public static func peekDestinationPort(data: NSData) -> Port? {
+        guard let proto = peekProtocol(data) else {
+            return nil
+        }
+
+        guard proto == .TCP || proto == .UDP else {
+            return nil
+        }
+
+        let headerLength = Int(UnsafePointer<UInt8>(data.bytes).memory & 0x0F * 4)
+
+        // Make sure there are bytes for source and destination bytes.
+        guard data.length > headerLength + 4 else {
+            return nil
+        }
+
+        return Port(bytesInNetworkOrder: data.bytes.advancedBy(headerLength + 2))
     }
 
 
     /// The version of the current IP packet.
-    var version: IPVersion = .IPv4
-    /// The length of the IP packet header.
-    var headerLength: UInt8 = 20
-    /// This contains the DSCP and ECN of the IP packet. Since we can not send custom IP packet out with NetworkExtension, this is useless and simply ignored.
-    var tos: UInt8 = 0
+    public var version: IPVersion = .IPv4
 
-    /// This should be the length of the datagram which should be the length of the payload.
+    /// The length of the IP packet header.
+    public var headerLength: UInt8 = 20
+
+    /// This contains the DSCP and ECN of the IP packet.
+    ///
+    /// - note: Since we can not send custom IP packet out with NetworkExtension, this is useless and simply ignored.
+    public var tos: UInt8 = 0
+
+    /// This should be the length of the datagram.
     /// This value is not read from header since NEPacketTunnelFlow has already taken care of it for us.
-    var totalLength: UInt16 {
+    public var totalLength: UInt16 {
         get {
-            // payloadOffset should always be 0
-            // this should always be equal to `20 + transportSegment.bytesLength`
-            return UInt16(datagram.length - payloadOffset)
+            return UInt16(packetData.length)
         }
     }
 
-    /// Identification of the current packet. Since we do not support fragment, this is ignored and always will be zero. But you should set it whenever possible, e.g., when replying to DNS request, you can set this to be the same as the request packet.
+    /// Identification of the current packet.
+    ///
+    /// - note: Since we do not support fragment, this is ignored and always will be zero.
     /// - note: Theoratically, this should be a sequentially increasing number. It probably will be implemented.
     var identification: UInt16 = 0
-    /// Offset of the current packet. Since we do not support fragment, this is ignored and always will be zero.
+
+    /// Offset of the current packet.
+    ///
+    /// - note: Since we do not support fragment, this is ignored and always will be zero.
     var offset: UInt16 = 0
 
+    /// TTL of the packet.
     var TTL: UInt8 = 64
 
+    /// Source IP address.
     var sourceAddress: IPv4Address!
+
+    /// Destination IP address.
     var destinationAddress: IPv4Address!
-    var transportType: TransportType!
-    var transportSegment: TransportProtocol!
 
-    var datagram: NSData!
-    var mutableDatagram: NSMutableData! {
+    /// Transport protocol of the packet.
+    var transportProtocol: TransportProtocol!
+
+    /// Parser to parse the payload in IP packet.
+    var protocolParser: TransportProtocolParserProtocol!
+
+    /// The data representing the packet.
+    var packetData: NSData!
+
+    /// Helper to cast the `packetData` as mutable.
+    ///
+    /// - warning: Will error out if `packetData` is not an instance of `NSMutableData`.
+    var mutablePacketData: NSMutableData! {
         // swiftlint:disable:next force_cast
-        return datagram as! NSMutableData
+        return packetData as! NSMutableData
     }
-    var payloadOffset: Int = 0
 
+    /**
+     Initailize a new instance to build IP packet.
+     */
     init() {}
 
-    init?(datagram: NSData) {
+    /**
+     Initailize an `IPPacket` with data.
+
+     - parameter packetData: The data containing a whole packet.
+     */
+    init?(packetData: NSData) {
         // no need to validate the packet.
 
-        self.datagram = datagram
+        self.packetData = packetData
 
-        let scanner = BinaryDataScanner(data: datagram, littleEndian: false)
-        scanner.skipTo(payloadOffset)
+        let scanner = BinaryDataScanner(data: packetData, littleEndian: false)
 
         let vhl = scanner.readByte()!
         guard let v = IPVersion(rawValue: vhl >> 4) else {
@@ -91,8 +211,9 @@ class IPPacket {
         }
         version = v
         headerLength = vhl & 0x0F * 4
-        if headerLength != 20 {
-            DDLogWarn("Received an IP packet with option, which is not supported yet. The option is ignored.")
+
+        guard packetData.length >= Int(headerLength) else {
+            return nil
         }
 
         tos = scanner.readByte()!
@@ -106,11 +227,11 @@ class IPPacket {
         offset = scanner.read16()!
         TTL = scanner.readByte()!
 
-        guard let proto = TransportType(rawValue: scanner.readByte()!) else {
+        guard let proto = TransportProtocol(rawValue: scanner.readByte()!) else {
             DDLogWarn("Get unsupported packet protocol.")
             return nil
         }
-        transportType = proto
+        transportProtocol = proto
 
         // ignore checksum
         _ = scanner.read16()!
@@ -125,14 +246,14 @@ class IPPacket {
             return nil
         }
 
-        switch transportType! {
+        switch transportProtocol! {
         case .UDP:
-            guard let transportSegment = UDPSegment(rawSegment: datagram.subdataWithRange(NSRange(location: Int(headerLength), length: datagram.length - Int(headerLength)))) else {
-            return nil
+            guard let parser = UDPProtocolParser(packetData: packetData, offset: Int(headerLength)) else {
+                return nil
             }
-            self.transportSegment = transportSegment
+            self.protocolParser = parser
         default:
-            DDLogError("Can not parse packet header of type \(transportType) yet")
+            DDLogError("Can not parse packet header of type \(transportProtocol) yet")
             return nil
         }
     }
@@ -145,13 +266,13 @@ class IPPacket {
         if let address = destinationAddress {
             result += address.UInt32InHostOrder >> 16 + address.UInt32InHostOrder & 0xFFFF
         }
-        result += UInt32(transportType.rawValue) << 8
-        result += UInt32(transportSegment.bytesLength)
+        result += UInt32(transportProtocol.rawValue) << 8
+        result += UInt32(protocolParser.bytesLength)
         return result
     }
 
     func buildPacket() {
-        datagram = NSMutableData(length: Int(headerLength) + transportSegment.bytesLength)
+        packetData = NSMutableData(length: Int(headerLength) + protocolParser.bytesLength)
 
         // set header
         setPayloadWithUInt8(headerLength / 4 + version.rawValue << 4, at: 0)
@@ -160,22 +281,23 @@ class IPPacket {
         setPayloadWithUInt16(identification, at: 4)
         setPayloadWithUInt16(offset, at: 6)
         setPayloadWithUInt8(TTL, at: 8)
-        setPayloadWithUInt8(transportType.rawValue, at: 9)
+        setPayloadWithUInt8(transportProtocol.rawValue, at: 9)
         // clear checksum bytes
         resetPayloadAt(10, length: 2)
         setPayloadWithUInt32(sourceAddress.inaddr, at: 12, swap: false)
         setPayloadWithUInt32(destinationAddress.inaddr, at: 16, swap: false)
 
         // let TCP or UDP packet build
-        let transportData = transportSegment.buildSegment(computePseudoHeaderChecksum())
-        setPayloadWithData(transportData, at: Int(headerLength))
+        protocolParser.packetData = packetData
+        protocolParser.offset = Int(headerLength)
+        protocolParser.buildSegment(computePseudoHeaderChecksum())
 
-        setPayloadWithUInt16(Checksum.computeChecksum(datagram, from: 0, to: Int(headerLength)), at: 10, swap: false)
+        setPayloadWithUInt16(Checksum.computeChecksum(packetData, from: 0, to: Int(headerLength)), at: 10, swap: false)
     }
 
     func setPayloadWithUInt8(value: UInt8, at: Int) {
         var v = value
-        mutableDatagram.replaceBytesInRange(NSRange(location: at + payloadOffset, length: 1), withBytes: &v)
+        mutablePacketData.replaceBytesInRange(NSRange(location: at, length: 1), withBytes: &v)
     }
 
     func setPayloadWithUInt16(value: UInt16, at: Int, swap: Bool = true) {
@@ -185,7 +307,7 @@ class IPPacket {
         } else {
             v = value
         }
-        mutableDatagram.replaceBytesInRange(NSRange(location: at + payloadOffset, length: 2), withBytes: &v)
+        mutablePacketData.replaceBytesInRange(NSRange(location: at, length: 2), withBytes: &v)
     }
 
     func setPayloadWithUInt32(value: UInt32, at: Int, swap: Bool = true) {
@@ -195,7 +317,7 @@ class IPPacket {
         } else {
             v = value
         }
-        mutableDatagram.replaceBytesInRange(NSRange(location: at + payloadOffset, length: 4), withBytes: &v)
+        mutablePacketData.replaceBytesInRange(NSRange(location: at, length: 4), withBytes: &v)
     }
 
     func setPayloadWithData(data: NSData, at: Int, length: Int? = nil, from: Int = 0) {
@@ -204,58 +326,11 @@ class IPPacket {
             length = data.length - from
         }
         let pointer = data.bytes.advancedBy(from)
-        mutableDatagram.replaceBytesInRange(NSRange(location: at, length: length!), withBytes: pointer)
+        mutablePacketData.replaceBytesInRange(NSRange(location: at, length: length!), withBytes: pointer)
     }
 
     func resetPayloadAt(at: Int, length: Int) {
-        mutableDatagram.resetBytesInRange(NSRange(location: at, length: length))
+        mutablePacketData.resetBytesInRange(NSRange(location: at, length: length))
     }
 
-}
-
-protocol TransportProtocol {
-    var sourcePort: Port! { get set }
-    var destinationPort: Port! { get set }
-
-    var payload: NSData! { get set }
-
-    var bytesLength: Int { get }
-
-    func buildSegment(pseudoHeaderChecksum: UInt32) -> NSData
-}
-
-class UDPSegment: TransportProtocol {
-    var sourcePort: Port!
-    var destinationPort: Port!
-
-    var payload: NSData!
-
-    var bytesLength: Int {
-        return payload.length + 8
-    }
-
-    init() {}
-
-    init?(rawSegment: NSData) {
-        guard rawSegment.length > 8 else {
-            return nil
-        }
-
-        sourcePort = Port(bytesInNetworkOrder: rawSegment.bytes)
-        destinationPort = Port(bytesInNetworkOrder: rawSegment.bytes.advancedBy(2))
-        self.payload = rawSegment.subdataWithRange(NSRange(location: 8, length: rawSegment.length - 8))
-    }
-
-    func buildSegment(pseudoHeaderChecksum: UInt32) -> NSData {
-        let datagram = NSMutableData(length: bytesLength)!
-        datagram.replaceBytesInRange(NSRange(location: 0, length: 2), withBytes: sourcePort.bytesInNetworkOrder)
-        datagram.replaceBytesInRange(NSRange(location: 2, length: 2), withBytes: destinationPort.bytesInNetworkOrder)
-        var length = NSSwapHostShortToBig(UInt16(bytesLength))
-        datagram.replaceBytesInRange(NSRange(location: 4, length: 2), withBytes: &length)
-        datagram.replaceBytesInRange(NSRange(location: 8, length: payload.length), withBytes: payload.bytes)
-        datagram.resetBytesInRange(NSRange(location: 6, length: 2))
-//        var checksum = Checksum.computeChecksum(datagram, from: 0, to: nil, withPseudoHeaderChecksum: pseudoHeaderChecksum)
-//        datagram.replaceBytesInRange(NSRange(location: 6, length: 2), withBytes: &checksum)
-        return datagram
-    }
 }

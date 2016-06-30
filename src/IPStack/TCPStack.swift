@@ -38,7 +38,7 @@ public class TCPStack: TSIPStackDelegate, IPStackProtocol {
                 return false
             }
         }
-        if IPPacket.peekTransportType(packet) == .TCP {
+        if IPPacket.peekProtocol(packet) == .TCP {
             TSIPStack.stack.receivedPacket(packet)
             return true
         }

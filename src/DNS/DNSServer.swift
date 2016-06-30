@@ -87,7 +87,7 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
      - returns: If the packet is taken in by this DNS server.
      */
     public func inputPacket(packet: NSData, version: NSNumber?) -> Bool {
-        guard IPPacket.peekTransportType(packet) == .UDP else {
+        guard IPPacket.peekProtocol(packet) == .UDP else {
             return false
         }
 
@@ -99,7 +99,7 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
             return false
         }
 
-        guard let ipPacket = IPPacket(datagram: packet) else {
+        guard let ipPacket = IPPacket(packetData: packet) else {
             return false
         }
 
@@ -118,12 +118,13 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
             return
         }
 
-        let udpSegment = UDPSegment()
-        udpSegment.sourcePort = serverPort
-        udpSegment.destinationPort = session.requestIPPacket!.transportSegment.sourcePort
+        let udpParser = UDPProtocolParser()
+        udpParser.sourcePort = serverPort
+        // swiftlint:disable:next force_cast
+        udpParser.destinationPort = (session.requestIPPacket!.protocolParser as! UDPProtocolParser).sourcePort
         switch result {
         case .Real:
-            udpSegment.payload = session.realResponseMessage!.payload
+            udpParser.payload = session.realResponseMessage!.payload
         case .Fake:
             let response = DNSMessage()
             response.transactionID = session.requestMessage.transactionID
@@ -136,18 +137,18 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
                 return
             }
 
-            udpSegment.payload = response.payload
+            udpParser.payload = response.payload
         default:
             return
         }
         let ipPacket = IPPacket()
         ipPacket.sourceAddress = serverAddress
         ipPacket.destinationAddress = session.requestIPPacket!.sourceAddress
-        ipPacket.transportSegment = udpSegment
-        ipPacket.transportType = .UDP
+        ipPacket.protocolParser = udpParser
+        ipPacket.transportProtocol = .UDP
         ipPacket.buildPacket()
 
-        outputFunc([ipPacket.datagram], [NSNumber(int: AF_INET)])
+        outputFunc([ipPacket.packetData], [NSNumber(int: AF_INET)])
     }
 
     func isFakeIP(ipAddress: IPv4Address) -> Bool {

@@ -35,7 +35,7 @@ public class DNSSession {
     }
 
     convenience init?(packet: IPPacket) {
-        guard let message = DNSMessage(payload: packet.transportSegment.payload) else {
+        guard let message = DNSMessage(payload: packet.protocolParser.payload) else {
             return nil
         }
         self.init(message: message)
