@@ -150,6 +150,7 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
         udpParser.destinationPort = connectInfo.sourcePort
         udpParser.payload = data
         packet.protocolParser = udpParser
+        packet.transportProtocol = .UDP
         packet.buildPacket()
 
         outputFunc([packet.packetData], [NSNumber(int: AF_INET)])
