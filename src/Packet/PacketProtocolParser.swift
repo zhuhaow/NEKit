@@ -53,7 +53,7 @@ class UDPProtocolParser: TransportProtocolParserProtocol {
         sourcePort = Port(bytesInNetworkOrder: packetData.bytes.advancedBy(offset))
         destinationPort = Port(bytesInNetworkOrder: packetData.bytes.advancedBy(offset + 2))
 
-        payload = packetData.subdataWithRange(NSRange(location: 8, length: payload.length - offset - 8))
+        payload = packetData.subdataWithRange(NSRange(location: offset + 8, length: packetData.length - offset - 8))
     }
 
     func buildSegment(pseudoHeaderChecksum: UInt32) {
