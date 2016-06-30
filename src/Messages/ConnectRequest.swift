@@ -74,6 +74,10 @@ public class ConnectRequest {
         }
     }
 
+    convenience init?(ipAddress: IPv4Address, port: Port, fakeIPEnabled: Bool = true) {
+        self.init(host: ipAddress.presentation, port: port.intValue, fakeIPEnabled: fakeIPEnabled)
+    }
+
     private func lookupRealIP() -> Bool {
         /// If custom DNS server is set up.
         guard let dnsServer = DNSServer.currentServer else {
