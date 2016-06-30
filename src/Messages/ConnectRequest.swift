@@ -60,7 +60,7 @@ public class ConnectRequest {
         Utils.GeoIPLookup.Lookup(self.ipAddress)
         }()
 
-    init?(host: String, port: Int, fakeIPEnabled: Bool = false) {
+    init?(host: String, port: Int, fakeIPEnabled: Bool = true) {
         self.requestedHost = host
         self.port = port
 
