@@ -6,18 +6,18 @@ public class ShadowsocksAdapterFactory: ServerAdapterFactory {
     let encryptMethod: EncryptMethod
     let password: String
 
-    init(host: String, port: Int, encryptMethod: EncryptMethod, password: String) {
+    init(serverHost: String, serverPort: Int, encryptMethod: EncryptMethod, password: String) {
         self.encryptMethod = encryptMethod
         self.password = password
-        super.init(host: host, port: port)
+        super.init(serverHost: serverHost, serverPort: serverPort)
     }
 
-    public convenience init?(host: String, port: Int, encryptMethod: String, password: String) {
+    public convenience init?(serverHost: String, serverPort: Int, encryptMethod: String, password: String) {
         guard let encryptMethod = EncryptMethod(rawValue: encryptMethod) else {
             return nil
         }
 
-        self.init(host: host, port: port, encryptMethod: encryptMethod, password: password)
+        self.init(serverHost: serverHost, serverPort: serverPort, encryptMethod: encryptMethod, password: password)
     }
 
     /**

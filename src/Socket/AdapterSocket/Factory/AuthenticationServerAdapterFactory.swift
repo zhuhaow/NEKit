@@ -4,8 +4,8 @@ import Foundation
 public class AuthenticationAdapterFactory: ServerAdapterFactory {
     let auth: Authentication?
 
-    required public init(host: String, port: Int, auth: Authentication?) {
+    required public init(serverHost: String, serverPort: Int, auth: Authentication?) {
         self.auth = auth
-        super.init(host: host, port: port)
+        super.init(serverHost: serverHost, serverPort: serverPort)
     }
 }
