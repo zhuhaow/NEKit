@@ -123,7 +123,7 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
     // This shoule be called by the timer, so is already on `queue`.
     private func cleanUpTimeoutSocket() {
         for (connectInfo, socket) in activeSockets {
-            if (socket.lastActive.dateByAddingTimeInterval(NSTimeInterval(Opt.UDPSocketActiveTimeout)).compare(NSDate()) == .OrderedAscending) {
+            if socket.lastActive.dateByAddingTimeInterval(NSTimeInterval(Opt.UDPSocketActiveTimeout)).compare(NSDate()) == .OrderedAscending {
                 activeSockets.removeValueForKey(connectInfo)
             }
         }
