@@ -39,7 +39,7 @@ public class NWUDPSocket {
     init(host: String, port: Int) {
         session = RawSocketFactory.TunnelProvider.createUDPSessionToEndpoint(NWHostEndpoint(hostname: host, port: "\(port)"), fromEndpoint: nil)
         session.setReadHandler({ [ unowned self ] dataArray, error in
-            self.lastActive = NSDate()
+            self.updateActivityTimer()
 
             guard error == nil else {
                 DDLogError("Error when reading from remote server. \(error)")
@@ -66,7 +66,7 @@ public class NWUDPSocket {
 
     private func checkWrite() {
         dispatch_async(queue) {
-            self.lastActive = NSDate()
+            self.updateActivityTimer()
 
             guard !self.writing else {
                 return
@@ -85,4 +85,7 @@ public class NWUDPSocket {
         }
     }
 
+    private func updateActivityTimer() {
+        lastActive = NSDate()
+    }
 }
