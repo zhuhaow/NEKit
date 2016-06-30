@@ -166,7 +166,6 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         guard keyPath == "state" else {
-            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
             return
         }
 
