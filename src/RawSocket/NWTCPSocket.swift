@@ -115,7 +115,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     func readDataWithTag(tag: Int) {
-        connection.readMinimumLength(1, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
+        connection.readMinimumLength(0, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
                 return
@@ -169,6 +169,8 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             return
         }
 
+        DDLogDebug("The state of NSTCPSocket (\(self.connection.endpoint)) changed to \(connection.state.rawValue)")
+
         switch connection.state {
         case .Connected:
             queueCall {
@@ -178,8 +180,9 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             cancel()
         case .Cancelled:
             queueCall {
-                self.delegate?.didDisconnect(self)
+                let delegate = self.delegate
                 self.delegate = nil
+                delegate?.didDisconnect(self)
             }
         default:
             break
@@ -187,6 +190,8 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     }
 
     private func readCallback(data: NSData?, tag: Int) {
+        DDLogDebug("Did read data (\(data?.length ?? 0) bytes) from \(self.connection.endpoint) with tag \(tag).")
+
         queueCall {
             guard let data = self.consumeReadData(data) else {
                 // remote read is closed, but this is okay, nothing need to be done, if this socket is read again, then error occurs.
@@ -258,5 +263,13 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         if closeAfterWriting && !writePending {
             cancel()
         }
+    }
+
+    deinit {
+        guard let connection = connection else {
+            return
+        }
+
+        connection.removeObserver(self, forKeyPath: "state")
     }
 }
