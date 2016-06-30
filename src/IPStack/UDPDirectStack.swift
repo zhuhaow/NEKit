@@ -27,7 +27,7 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
 
     private let cleanUpTimer: dispatch_source_t
 
-    init() {
+    public init() {
         cleanUpTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
         dispatch_source_set_timer(cleanUpTimer, DISPATCH_TIME_NOW, NSEC_PER_SEC * UInt64(Opt.UDPSocketActiveCheckInterval), NSEC_PER_SEC * 30)
         dispatch_source_set_event_handler(cleanUpTimer) {
@@ -131,6 +131,7 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
     private func cleanUpTimeoutSocket() {
         for (connectInfo, socket) in activeSockets {
             if socket.lastActive.dateByAddingTimeInterval(NSTimeInterval(Opt.UDPSocketActiveTimeout)).compare(NSDate()) == .OrderedAscending {
+                socket.delegate = nil
                 activeSockets.removeValueForKey(connectInfo)
             }
         }
