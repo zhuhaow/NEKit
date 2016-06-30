@@ -13,7 +13,7 @@ public class UDPDNSResolver: DNSResolverProtocol, NWUDPSocketDelegate {
     let socket: NWUDPSocket
     public weak var delegate: DNSResolverDelegate?
 
-    init(address: IPv4Address, port: Port) {
+    public init(address: IPv4Address, port: Port) {
         socket = NWUDPSocket(host: address.presentation, port: port.intValue)
         socket.delegate = self
     }
