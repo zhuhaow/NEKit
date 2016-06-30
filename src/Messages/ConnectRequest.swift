@@ -2,11 +2,30 @@ import Foundation
 
 /// The request containing information to connect to remote.
 public class ConnectRequest {
+    /// The requested host.
+    ///
+    /// This is the host received in the request. May be a domain, a real IP or a fake IP.
+    let requestedHost: String
+
+    /// The real host for this request.
+    ///
+    /// If the request is initailized with a host domain, then `host == requestedHost`.
+    /// Otherwise, the requested IP address is looked up in the DNS server to see if it corresponds to a domain if `fakeIPEnabled` is `true`.
+    /// Unless there is a good reason not to, any socket shoule connect based on this directly.
     var host: String
-    var port: Int
+
+    /// The requested port.
+    let port: Int
+
+    /// The rule to use to connect to remote.
     var matchedRule: Rule?
+
+    /// Whether If the `requestedHost` is an IP address.
     let fakeIPEnabled: Bool
 
+    /// The resolved IP address.
+    ///
+    /// - note: This will always be real IP address.
     lazy var ipAddress: String = {
         [unowned self] in
         if self.isIP() {
@@ -35,18 +54,19 @@ public class ConnectRequest {
         }
         }()
 
+    /// The location of the host.
     lazy var country: String = {
         [unowned self] in
         Utils.GeoIPLookup.Lookup(self.ipAddress)
         }()
 
-
     init?(host: String, port: Int, fakeIPEnabled: Bool = false) {
-        self.host = host
+        self.requestedHost = host
         self.port = port
 
         self.fakeIPEnabled = fakeIPEnabled
 
+        self.host = host
         if fakeIPEnabled {
             guard lookupRealIP() else {
                 return nil
@@ -55,19 +75,22 @@ public class ConnectRequest {
     }
 
     private func lookupRealIP() -> Bool {
+        /// If custom DNS server is set up.
         guard let dnsServer = DNSServer.currentServer else {
             return true
         }
 
+        // Only IPv4 is supported as of now.
         guard isIPv4() else {
             return true
         }
 
-        let address = IPv4Address(fromString: host)
+        let address = IPv4Address(fromString: requestedHost)
         guard dnsServer.isFakeIP(address) else {
             return true
         }
 
+        // Look up fake IP reversely should never fail.
         guard let session = dnsServer.lookupFakeIP(address) else {
             return false
         }
@@ -97,6 +120,6 @@ public class ConnectRequest {
 
 extension ConnectRequest: CustomStringConvertible {
     public var description: String {
-        return "Request to: \(host):\(port)"
+        return "Request to: \(host):\(port) (\(requestedHost):\(port))"
     }
 }
