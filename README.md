@@ -56,7 +56,7 @@ NEKit basically consists of two parts, a proxy server forwarding socket data bas
 ### Rule manager
 Before starting any proxy server, we need to define rules.
 
-Each rule consists of two parts, one defining what kinding of request matches this rule and another defining what adapter to use. An adapter represents the abstraction of a socket connection to a remote proxy server (or connecting directly). We use `AdapterFactory` to build adapters.
+Each rule consists of two parts, one defining what kinding of request matches this rule and the other defining what adapter to use. An adapter represents the abstraction of a socket connection to a remote proxy server (or remote host). We use `AdapterFactory` to build adapters.
 
 ```swift
 // Define remote adapter first
