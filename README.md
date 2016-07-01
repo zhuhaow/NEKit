@@ -67,7 +67,7 @@ let ssAdapterFactory = ShadowsocksAdapterFactory(serverHost: "remote.ss.proxy", 
 // Then create rules
 let chinaRule = CountryRule(countryCode: "CN", match: true, adapterFactory: directAdapterFactory)
 // `urls` are regular expressions
-let listRule = try! ListRule(adapterFactory: ssAdapterFactory, urls: ["some\.site\.does\.not\.exists"])
+let listRule = try! ListRule(adapterFactory: ssAdapterFactory, urls: ["some\\.site\\.does\\.not\\.exists"])
 let allRule = AllRule(adapterFactory: httpAdapterFactory)
 
 // Create rule manager, rules will be matched in order.
