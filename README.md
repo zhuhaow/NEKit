@@ -167,6 +167,12 @@ When everything is set up, you should start processing packets by calling `inter
 ## Dive in
 TODO
 
+## TODO
+- [ ] More encryption algrithm in Shadowsocks
+- [ ] Documents.
+- [ ] IPv6 support.
+- [ ] tun2socks stability improvement.
+
 ## License
 Copyright (c) 2016, Zhuhao Wang
 All rights reserved.
