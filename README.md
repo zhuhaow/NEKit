@@ -98,7 +98,7 @@ If you want to read on, you will have to request Network Extention entitlement f
 
 ### IP stack
 
-Assuming you already set up a working extension with Network Extension and correct routing configurations (Google how, this is not trivial).
+Assuming you already set up a working extension with correct routing configurations (Google how, this is not trivial).
 
 In 
 
