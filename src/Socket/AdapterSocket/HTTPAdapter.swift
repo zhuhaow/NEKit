@@ -10,7 +10,7 @@ class HTTPAdapter: AdapterSocket {
     let serverPort: Int
 
     /// The authentication information for the HTTP proxy.
-    let auth: Authentication?
+    let auth: HTTPAuthentication?
 
     /// Whether the connection to the proxy should be secured or not.
     var secured: Bool
@@ -22,7 +22,7 @@ class HTTPAdapter: AdapterSocket {
         case Connect = 40000, HEADER
     }
 
-    init(serverHost: String, serverPort: Int, auth: Authentication?) {
+    init(serverHost: String, serverPort: Int, auth: HTTPAuthentication?) {
         self.serverHost = serverHost
         self.serverPort = serverPort
         self.auth = auth

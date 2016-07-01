@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Authentication {
+public struct HTTPAuthentication {
     let username: String
     let password: String
 

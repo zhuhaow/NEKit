@@ -58,7 +58,7 @@ struct AdapterFactoryParser {
         return AdapterFactoryManager(factoryDict: factoryDict)
     }
 
-    static func parseServerAdapterFactory(config: Yaml, type: AuthenticationAdapterFactory.Type) -> ServerAdapterFactory? {
+    static func parseServerAdapterFactory(config: Yaml, type: HTTPAuthenticationAdapterFactory.Type) -> ServerAdapterFactory? {
         guard let host = config["host"].string else {
             DDLogError("Host is required.")
             return nil
@@ -69,7 +69,7 @@ struct AdapterFactoryParser {
             return nil
         }
 
-        var authentication: Authentication? = nil
+        var authentication: HTTPAuthentication? = nil
         if let auth = config["auth"].bool {
             if auth {
                 guard let username = config["username"].string else {
@@ -80,7 +80,7 @@ struct AdapterFactoryParser {
                     DDLogError("Password is required.")
                     return nil
                 }
-                authentication = Authentication(username: username, password: password)
+                authentication = HTTPAuthentication(username: username, password: password)
             }
         }
         return type.init(serverHost: host, serverPort: port, auth: authentication)

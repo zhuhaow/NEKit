@@ -39,7 +39,7 @@
 		3664F0C01CE30957008BA6D8 /* StreamScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */; };
 		366EB5AE1CDE0FCE00E0E942 /* HTTPAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */; };
 		366EB5AF1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */; };
-		366EB5B11CDE119200E0E942 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B01CDE119200E0E942 /* Authentication.swift */; };
+		366EB5B11CDE119200E0E942 /* HTTPAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */; };
 		366EB5B61CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B21CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift */; };
 		366EB5B71CDE150C00E0E942 /* HTTPAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B31CDE150C00E0E942 /* HTTPAdapterFactory.swift */; };
 		366EB5B81CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */; };
@@ -123,7 +123,7 @@
 		36C48D7F1CF88EDE0071804F /* SOCKS5ProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162211CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift */; };
 		36C48D801CF88EDE0071804F /* SocketProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1621F1CDDA0EA00F24C97 /* SocketProtocol.swift */; };
 		36C48D811CF88EDE0071804F /* DirectProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */; };
-		36C48D821CF88EE60071804F /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B01CDE119200E0E942 /* Authentication.swift */; };
+		36C48D821CF88EE60071804F /* HTTPAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */; };
 		36C48D841CF88EE60071804F /* Opt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0BD1CE3069F008BA6D8 /* Opt.swift */; };
 		36C48D851CF88EE60071804F /* StreamScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */; };
 		36C48D861CF88EE60071804F /* Tunnel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162231CDDA0EA00F24C97 /* Tunnel.swift */; };
@@ -276,11 +276,11 @@
 		3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapterFactory.swift; sourceTree = "<group>"; };
 		3664F0B91CE21A60008BA6D8 /* Sodium.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sodium.framework; path = Carthage/Build/Mac/Sodium.framework; sourceTree = "<group>"; };
 		3664F0BD1CE3069F008BA6D8 /* Opt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Opt.swift; sourceTree = "<group>"; };
-		3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamScanner.swift; sourceTree = "<group>"; };
+		3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StreamScanner.swift; path = ../StreamScanner.swift; sourceTree = "<group>"; };
 		3664F0C61CE37763008BA6D8 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
 		366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAdapter.swift; sourceTree = "<group>"; };
 		366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureHTTPAdapter.swift; sourceTree = "<group>"; };
-		366EB5B01CDE119200E0E942 /* Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
+		366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HTTPAuthentication.swift; path = ../HTTPAuthentication.swift; sourceTree = "<group>"; };
 		366EB5B21CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationServerAdapterFactory.swift; sourceTree = "<group>"; };
 		366EB5B31CDE150C00E0E942 /* HTTPAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAdapterFactory.swift; sourceTree = "<group>"; };
 		366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureHTTPAdapterFactory.swift; sourceTree = "<group>"; };
@@ -498,9 +498,7 @@
 				36B1620B1CDDA0E000F24C97 /* Rule */,
 				36411A6B1D1A41BF005F4108 /* Socket */,
 				36C63DC61CFD252400A00CA2 /* Utils */,
-				366EB5B01CDE119200E0E942 /* Authentication.swift */,
 				3664F0BD1CE3069F008BA6D8 /* Opt.swift */,
-				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
 				36B162231CDDA0EA00F24C97 /* Tunnel.swift */,
 				36B162241CDDA0EA00F24C97 /* Utils.swift */,
 			);
@@ -699,6 +697,8 @@
 				36411A541D12C123005F4108 /* Atomic.swift */,
 				36C63DC71CFD254100A00CA2 /* BinaryDataScanner.swift */,
 				36411A721D1FBFB0005F4108 /* IPv4Pool.swift */,
+				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
+				366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1011,7 +1011,7 @@
 				36B162261CDDA0EA00F24C97 /* ConnectResponse.swift in Sources */,
 				36C48DA91CF9D6390071804F /* DNSMessage.swift in Sources */,
 				3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */,
-				366EB5B11CDE119200E0E942 /* Authentication.swift in Sources */,
+				366EB5B11CDE119200E0E942 /* HTTPAuthentication.swift in Sources */,
 				36C63DF61CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */,
 				36411A5F1D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */,
 				36B1622B1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift in Sources */,
@@ -1110,7 +1110,7 @@
 				36C48D851CF88EE60071804F /* StreamScanner.swift in Sources */,
 				36C48D811CF88EDE0071804F /* DirectProxySocket.swift in Sources */,
 				36C48D791CF88EDA0071804F /* CountryRule.swift in Sources */,
-				36C48D821CF88EE60071804F /* Authentication.swift in Sources */,
+				36C48D821CF88EE60071804F /* HTTPAuthentication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
