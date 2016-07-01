@@ -111,14 +111,14 @@ struct AdapterFactoryParser {
     }
 
     static func parseSpeedAdapterFactory(config: Yaml, factoryDict: [String:AdapterFactory]) -> SpeedAdapterFactory? {
-        var factories: [AdapterFactory] = []
-        guard let adapterIDs = config["adapter"].array else {
+        var factories: [(AdapterFactory, Int)] = []
+        guard let adapters = config["adapters"].array else {
             DDLogError("Speed Adatper should specify a set of adapters.")
             return nil
         }
-        for id in adapterIDs {
-            if let id = id.string {
-                factories.append(factoryDict[id]!)
+        for adapter in adapters {
+            if let id = adapter["id"].string, delay = adapter["delay"].int {
+                factories.append((factoryDict[id]!, delay))
             }
         }
         let adapter = SpeedAdapterFactory()
