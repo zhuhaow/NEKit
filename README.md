@@ -77,7 +77,7 @@ let manager = RuleManager(fromRules: [listRule, chinaRule, allRule], appendDirec
 RuleManager.currentManager = ruleManager
 ```
 
-There is also `Configuration` to load rules from a Yaml config file. But that is not recommended.
+There is also `Parser` to load rules from a Yaml config file. But that is not recommended.
 
 
 ### Proxy server
