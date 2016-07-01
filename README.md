@@ -30,7 +30,7 @@ NEKit follows one fundamental principle to keep the best network performance: Th
 
 This should not be a problem if the applications on your device connect to the local proxy server directly, where we can get the request domain information then send that to remote proxy server if needed.
 
-But think that if an application tries to make a socket connection by itself (e.g., Twitter.app), which generally consists of two steps: 
+But consider that if an application tries to make a socket connection by itself (e.g., Twitter.app), which generally consists of two steps: 
 
 1. Make a DNS lookup to find the IP address of the target server.
 2. Connect to the remote server by socket API provided by the system.
