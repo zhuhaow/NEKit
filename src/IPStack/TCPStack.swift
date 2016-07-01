@@ -4,6 +4,9 @@ import CocoaLumberjackSwift
 
 /// This class wraps around tun2socks to build a TCP only IP stack.
 public class TCPStack: TSIPStackDelegate, IPStackProtocol {
+    /// The `TCPStack` instance.
+    public static let stack: TCPStack = TCPStack()
+
     /// This is set automatically when the stack is registered to some interface.
     public var outputFunc: (([NSData], [NSNumber]) -> ())! {
         get {
@@ -17,7 +20,7 @@ public class TCPStack: TSIPStackDelegate, IPStackProtocol {
     /**
      Inistailize a new TCP stack.
      */
-    public init() {
+    init() {
         TSIPStack.stack.delegate = self
     }
 
