@@ -35,7 +35,7 @@ But think that if an application tries to make a socket connection by itself (e.
 1. Make a DNS lookup to find the IP address of the target server.
 2. Connect to the remote server by socket API provided by the system.
 
-We can read only two independent things from the TUN interface, a UDP packet containing the DNS lookup request and a TCP flow consisting of a serial of TCP packets. So there is no way we can know the initial request domain for the TCP flow. And since there may be multiple domains served on the same host, we can not get the origin domain by save the DNS response and look that up reversely later.
+We can read only two independent things from the TUN interface, a UDP packet containing the DNS lookup request and a TCP flow consisting of a serial of TCP packets. So there is no way we can know the initial request domain for the TCP flow. And since there may be multiple domains served on the same host, we can not get the origin domain by saving the DNS response and looking that up reversely later.
 
 The only solution is to create a fake IP pool and assign each requested domain with a unique fake IP so we can look that up reversely. Every connection later need to look that up from the DNS server; this is the only non-modular part of NEKit which is already encapsulated in `ConnectRequest`.
 
