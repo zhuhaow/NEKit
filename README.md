@@ -221,7 +221,8 @@ When any side of the tunnel is disconnected, the `func didDisconnect(socket: Soc
 
 
 ## TODO
-- [ ] More encryption algrithm in Shadowsocks
+- [ ] Support for iOS (MMDB needs to be fixed).
+- [ ] More encryption algrithm in Shadowsocks.
 - [ ] Documents.
 - [ ] IPv6 support.
 - [ ] tun2socks stability improvement.
