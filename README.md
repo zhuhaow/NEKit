@@ -203,7 +203,7 @@ The `TCPStack` wraps the reassembled TCP flow (`TUNTCPSocket`) in `DirectProxySo
 
 Similarly, `AdapterSocket` encapsulated the logic of how to connect to remote and process the data flow.
 
-Pretty much everything of NEKit follows the [delegation pattern](https://en.wikipedia.org/wiki/Delegation_pattern). If you are not familiar with that, you should learn it first, probabaly by learning how to use [GCDAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) (note that the sockets in NEKit are **not** thread-safe which is different from GCDAsyncSocket).
+Pretty much everything of NEKit follows the [delegation pattern](https://en.wikipedia.org/wiki/Delegation_pattern). If you are not familiar with that, you should learn it first, probabaly by learning how to use [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) (note that the sockets in NEKit are **not** thread-safe which is different from GCDAsyncSocket).
 
 ### The lifetime of a `Tunnel`
 
