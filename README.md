@@ -165,7 +165,60 @@ interface.registerStack(TCPStack.stack)
 When everything is set up, you should start processing packets by calling `interface.start()` in the completion handler of `setTunnelNetworkSettings`.
 
 ## Dive in
-TODO
+
+### Framework overview
+The structure of the proxy server is given as follows:
+
+```
+┌──────────────────────────────────────────────────┐
+│                                                  │
+│                   ProxyServer                    │
+│                                                  │
+├──────┬───┬──────┬───┬──────┬───┬──────┬───┬──────┤
+│Tunnel│   │Tunnel│   │Tunnel│   │Tunnel│   │Tunnel│
+└──────┘   └──────┘   └───▲──┘   └──────┘   └──────┘
+                         ╱ ╲                        
+                ╱───────╱   ╲─────╲                 
+               ╱                   ╲                
+     ┌────────▼────────┐   ┌────────▼────────┐      
+     │   ProxySocket   │   │  AdapterSocket  │      
+     └────────▲────────┘   └────────▲────────┘      
+              │                     │               
+              │                     │               
+     ┌────────▼────────┐   ┌────────▼────────┐      
+     │RawSocketProtocol│   │RawSocketProtocol│      
+     └────────▲────────┘   └────────▲────────┘      
+              │                     │               
+              │                     │               
+       ╔══════▼═══════╗     ╔═══════▼══════╗        
+       ║    LOCAL     ║     ║    REMOTE    ║        
+       ╚══════════════╝     ╚══════════════╝        
+```
+
+When a new socket is accepted from the listening socket of the proxy server, it is wrapped in some implemention of `RawSocketProtocol` as a raw socket which just reads and writes data. 
+
+Then it is wrapped in a subclass of `ProxySocket` which encapsulates the proxy logic. Currently, only `DirectProxySocket` (for sockets from `TCPStack`) and `SOCKS5ProxySocket` (for SOCKS5 proxy server) are implemented. If there is ever need for a HTTP proxy (Do you really need that? It's complicated, error-prone and full of edge cases which probably will never be implemented correctly. The real world does love non-standard implemention of HTTP.), then a `HTTPProxySocket` should be implemented and a proxy server called `GCDHTTPProxyServer` subclassing `GCDProxyServer` should wrap every accepted `RawSocketProtocol` in  `HTTPProxySocket`.
+
+The `TCPStack` wraps the reassembled TCP flow (`TUNTCPSocket`) in `DirectProxySocket` then send it to the `mainProxy` server.
+
+Similarly, `AdapterSocket` encapsulated the logic of how to connect to remote and process the data flow.
+
+Pretty much everything of NEKit follows the [delegation pattern](https://en.wikipedia.org/wiki/Delegation_pattern). If you are not familiar with that, you should learn it first, probabaly by learning how to use [GCDAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) (note that the sockets in NEKit are **not** thread-safe which is different from GCDAsyncSocket).
+
+### The lifetime of a `Tunnel`
+
+When a `RawSocketProtocol` socket is accepted or created by `TCPStack`, it is wrapped in a `ProxySocket` then in a `Tunnel`. The `Tunnel` will call `proxySocket.openSocket()` to let the proxy socket start process data. 
+
+When the `ProxySocket` read enough data to build a `ConnectRequest`, it calls `func didReceiveRequest(request: ConnectRequest, from: ProxySocket)` of the `delegate` (which should be the `Tunnel`). 
+
+The `Tunnel` then matches this request in `RuleManager` to get the corresponding `AdapterFactory`. Then `func openSocketWithRequest(request: ConnectRequest)` of the produced `AdapterSocket` is called to connect to remote server.
+
+The `AdapterSocket` calls `func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse)` of the `Tunnel` to let the `ProxySocket` has a chance to respond to remote response. (This is ignored as of now.) 
+
+Finally, when the `ProxySocket` and `AdapterSocket` are ready to forward data, they should call `func readyToForward(socket: SocketProtocol)` of the `Tunnel` to let it know. When both sides are ready, the tunnel will read from both sides and then send the received data to the other side intact.
+
+When any side of the tunnel is disconnected, the `func didDisconnect(socket: SocketProtocol)` is called then both sides are closed actively. The `Tunnel` will be released when both sides disconnect successfully.
+
 
 ## TODO
 - [ ] More encryption algrithm in Shadowsocks
