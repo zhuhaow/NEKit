@@ -200,9 +200,11 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
             }
 
             session.realResponseMessage = message
-            // TODO: response with origin message directly
+
             // TODO: check return code.
             guard let resolvedAddress = message.resolvedIPv4Address else {
+                session.matchResult = .Real
+                self.outputSession(session)
                 return
             }
             session.realIP = resolvedAddress
