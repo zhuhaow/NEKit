@@ -135,7 +135,7 @@ let fakeIPPool = IPv4Pool(start: IPv4Address(fromString: "172.169.1.0"), end: IP
 let dnsServer = DNSServer(address: IPv4Address(fromString: "172.169.0.1"), port: Port(port: 53), fakeIPPool: fakeIPPool)
 ```
 
-Then we have to define how to resolve the DNS requests, NEKit provides the most trivial one which send the request to remote DNS server directly with UDP protocol, you can implement anything you want by implementing `DNSResolverProtocol`.
+Then we have to define how to resolve the DNS requests, NEKit provides the most trivial one which sends the request to remote DNS server directly with UDP protocol, you can do anything you want by implementing `DNSResolverProtocol`.
 
 ```swift
 let resolver = UDPDNSResolver(address: IPv4Address(fromString: "114.114.114.114"), port: Port(port: 53))
