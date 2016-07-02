@@ -24,11 +24,11 @@ public class IPv4Address: IPAddress, Hashable {
     }
 
     required public init(fromString: String) {
-        var addr: UInt32 = 0
+        var addr: in_addr = in_addr(s_addr: 0)
         fromString.withCString {
             inet_pton(AF_INET, $0, &addr)
         }
-        inaddr = addr
+        inaddr = addr.s_addr
     }
 
     required public init(fromBytesInNetworkOrder: [UInt8]) {
@@ -41,7 +41,8 @@ public class IPv4Address: IPAddress, Hashable {
 
     var presentation: String {
         var buffer = [Int8](count: Int(INET_ADDRSTRLEN), repeatedValue: 0)
-        let p = inet_ntop(AF_INET, &inaddr, &buffer, UInt32(INET_ADDRSTRLEN))
+        var addr = in_addr(s_addr: inaddr)
+        let p = inet_ntop(AF_INET, &addr, &buffer, UInt32(INET_ADDRSTRLEN))
         return String.fromCString(p)!
     }
 
