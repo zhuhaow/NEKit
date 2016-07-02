@@ -57,6 +57,9 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
         switch session.matchResult! {
         case .Fake:
             guard setUpFakeIP(session) else {
+                // failed to set up a fake IP, return the result directly
+                session.matchResult = .Real
+                lookupRemotely(session)
                 return
             }
             outputSession(session)
@@ -176,13 +179,14 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
     private func setUpFakeIP(session: DNSSession) -> Bool {
 
         guard let fakeIP = pool?.fetchIP() else {
-            DDLogError("Failed to get a fake IP.")
+            DDLogVerbose("Failed to get a fake IP.")
             return false
         }
         session.fakeIP = fakeIP
         fakeSessions[fakeIP] = session
         session.expireAt = NSDate().dateByAddingTimeInterval(NSTimeInterval(Opt.DNSFakeIPTTL))
-        cleanUp(fakeIP, after: Opt.DNSFakeIPTTL)
+        // keep the fake session for 2 TTL
+        cleanUp(fakeIP, after: Opt.DNSFakeIPTTL * 2)
         return true
     }
 
@@ -209,12 +213,15 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
             }
             session.realIP = resolvedAddress
 
-            RuleManager.currentManager.matchDNS(session, type: .IP)
+            if session.matchResult != .Fake && session.matchResult != .Real {
+                RuleManager.currentManager.matchDNS(session, type: .IP)
+            }
 
             switch session.matchResult! {
             case .Fake:
-                guard self.setUpFakeIP(session) else {
-                    return
+                if !self.setUpFakeIP(session) {
+                    // return real response
+                    session.matchResult = .Real
                 }
                 self.outputSession(session)
             case .Real:
