@@ -56,7 +56,9 @@ NEKit basically consists of two parts, a proxy server forwarding socket data bas
 ### Rule manager
 Before starting any proxy server, we need to define rules.
 
-Each rule consists of two parts, one defining what kinding of request matches this rule and the other defining what adapter to use. An adapter represents the abstraction of a socket connection to a remote proxy server (or remote host). We use `AdapterFactory` to build adapters.
+Each rule consists of two parts, one defining what kinding of request matches this rule and the other defining what adapter to use. An adapter represents the abstraction of a socket connection to a remote proxy server (or remote host). We use `AdapterFactory` to build adapters. 
+
+NEKit provides `AdapterSocket` supporting HTTP/HTTPS/SOCK5 proxy and Shadowsocks(AES-128-CFB/AES-192-CFB/AES-256-CFB/chacha20/salsa20/rc4-md5). Let me know if there is any other type of proxy needed. You can also implement your own `AdapterSocket`.
 
 ```swift
 // Define remote adapter first
