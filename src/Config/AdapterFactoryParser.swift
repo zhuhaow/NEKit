@@ -107,7 +107,7 @@ struct AdapterFactoryParser {
             return nil
         }
 
-        return ShadowsocksAdapterFactory(serverHost: host, serverPort: port, encryptMethod: encryptMethod, password: password)
+        return ShadowsocksAdapterFactory(serverHost: host, serverPort: port, encryptAlgorithm: encryptMethod, password: password)
     }
 
     static func parseSpeedAdapterFactory(config: Yaml, factoryDict: [String:AdapterFactory]) -> SpeedAdapterFactory? {

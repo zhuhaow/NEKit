@@ -2,22 +2,21 @@ import Foundation
 
 /// Factory building Shadowsocks adapter.
 public class ShadowsocksAdapterFactory: ServerAdapterFactory {
-    typealias EncryptMethod = ShadowsocksAdapter.EncryptMethod
-    let encryptMethod: EncryptMethod
+    let encryptAlgorithm: CryptoAlgorithm
     let password: String
 
-    init(serverHost: String, serverPort: Int, encryptMethod: EncryptMethod, password: String) {
-        self.encryptMethod = encryptMethod
+    init(serverHost: String, serverPort: Int, encryptAlgorithm: CryptoAlgorithm, password: String) {
+        self.encryptAlgorithm = encryptAlgorithm
         self.password = password
         super.init(serverHost: serverHost, serverPort: serverPort)
     }
 
-    public convenience init?(serverHost: String, serverPort: Int, encryptMethod: String, password: String) {
-        guard let encryptMethod = EncryptMethod(rawValue: encryptMethod) else {
+    public convenience init?(serverHost: String, serverPort: Int, encryptAlgorithm: String, password: String) {
+        guard let encryptAlgorithm = CryptoAlgorithm(rawValue: encryptAlgorithm) else {
             return nil
         }
 
-        self.init(serverHost: serverHost, serverPort: serverPort, encryptMethod: encryptMethod, password: password)
+        self.init(serverHost: serverHost, serverPort: serverPort, encryptAlgorithm: encryptAlgorithm, password: password)
     }
 
     /**
@@ -28,7 +27,7 @@ public class ShadowsocksAdapterFactory: ServerAdapterFactory {
      - returns: The built adapter.
      */
     override func getAdapter(request: ConnectRequest) -> AdapterSocket {
-        let adapter = ShadowsocksAdapter(host: serverHost, port: serverPort, encryptMethod: encryptMethod, password: password)
+        let adapter = ShadowsocksAdapter(host: serverHost, port: serverPort, encryptAlgorithm: encryptAlgorithm, password: password)
         adapter.socket = RawSocketFactory.getRawSocket()
         return adapter
     }

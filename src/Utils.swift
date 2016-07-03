@@ -1,5 +1,4 @@
 import Foundation
-import CommonCrypto
 
 struct Utils {
     struct HTTPData {
@@ -89,19 +88,6 @@ struct Utils {
             } else {
                 return "--"
             }
-        }
-    }
-
-    struct Crypto {
-        static func MD5(value: String) -> NSData {
-            let data = value.dataUsingEncoding(NSUTF8StringEncoding)!
-            return MD5(data)
-        }
-
-        static func MD5(value: NSData) -> NSData {
-            let result = NSMutableData(length: Int(CC_MD5_DIGEST_LENGTH))!
-            CC_MD5(value.bytes, CC_LONG(value.length), UnsafeMutablePointer<UInt8>(result.mutableBytes))
-            return NSData(data: result)
         }
     }
 

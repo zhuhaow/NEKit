@@ -5,7 +5,7 @@ import CommonCrypto
 class ShadowsocksAdapter: AdapterSocket {
     var readIV: NSData!
     let key: NSData
-    let encryptMethod: EncryptMethod
+    let encryptAlgorithm: CryptoAlgorithm
     let host: String
     let port: Int
 
@@ -14,19 +14,19 @@ class ShadowsocksAdapter: AdapterSocket {
 
     lazy var writeIV: NSData = {
         [unowned self] in
-        ShadowsocksEncryptHelper.getIV(self.encryptMethod)
+        CryptoHelper.getIV(self.encryptAlgorithm)
     }()
     lazy var ivLength: Int = {
         [unowned self] in
-        ShadowsocksEncryptHelper.getIVLength(self.encryptMethod)
+        CryptoHelper.getIVLength(self.encryptAlgorithm)
     }()
-    lazy var encryptor: Cryptor = {
+    lazy var encryptor: StreamCryptoProtocol = {
         [unowned self] in
-        Cryptor(operation: .Encrypt, mode: .CFB, algorithm: .AES, initialVector: self.writeIV, key: self.key)
+        self.getCrypto(.Encrypt)
     }()
-    lazy var decryptor: Cryptor = {
+    lazy var decryptor: StreamCryptoProtocol = {
         [unowned self] in
-        Cryptor(operation: .Decrypt, mode: .CFB, algorithm: .AES, initialVector: self.readIV, key: self.key)
+        self.getCrypto(.Decrypt)
     }()
 
     enum EncryptMethod: String {
@@ -39,9 +39,9 @@ class ShadowsocksAdapter: AdapterSocket {
         case InitialVector = 25000, Connect
     }
 
-    init(host: String, port: Int, encryptMethod: EncryptMethod, password: String) {
-        self.encryptMethod = encryptMethod
-        (self.key, _) = ShadowsocksEncryptHelper.getKeyAndIV(password, methodType: encryptMethod)
+    init(host: String, port: Int, encryptAlgorithm: CryptoAlgorithm, password: String) {
+        self.encryptAlgorithm = encryptAlgorithm
+        self.key = CryptoHelper.getKey(password, methodType: encryptAlgorithm)
         self.host = host
         self.port = port
         super.init()
@@ -132,106 +132,41 @@ class ShadowsocksAdapter: AdapterSocket {
     func decryptData(data: NSData) -> NSData {
         return decryptor.update(data)
     }
-}
 
-class Cryptor {
-    enum Operation {
-        case Encrypt, Decrypt
-
-        func op() -> CCOperation {
-            switch self {
-            case .Encrypt:
-                return CCOperation(kCCEncrypt)
+    private func getCrypto(operation: CryptoOperation) -> StreamCryptoProtocol {
+        switch encryptAlgorithm {
+        case .AES128CFB, .AES192CFB, .AES256CFB:
+            switch operation {
             case .Decrypt:
-                return CCOperation(kCCDecrypt)
+                return CCCrypto(operation: .Decrypt, mode: .CFB, algorithm: .AES, initialVector: readIV, key: key)
+            case .Encrypt:
+                return CCCrypto(operation: .Encrypt, mode: .CFB, algorithm: .AES, initialVector: writeIV, key: key)
+            }
+        case .CHACHA20:
+            switch operation {
+            case .Decrypt:
+                return SodiumStreamCrypto(key: key, iv: readIV, algorithm: .Chacha20)
+            case .Encrypt:
+                return SodiumStreamCrypto(key: key, iv: writeIV, algorithm: .Chacha20)
+            }
+        case .SALSA20:
+            switch operation {
+            case .Decrypt:
+                return SodiumStreamCrypto(key: key, iv: readIV, algorithm: .Salsa20)
+            case .Encrypt:
+                return SodiumStreamCrypto(key: key, iv: writeIV, algorithm: .Salsa20)
+            }
+        case .RC4MD5:
+            let combinedKey = NSMutableData(capacity: key.length + ivLength)!
+            combinedKey.appendData(key)
+            switch operation {
+            case .Decrypt:
+                combinedKey.appendData(readIV)
+                return CCCrypto(operation: .Decrypt, mode: .RC4, algorithm: .RC4, initialVector: nil, key: MD5Hash.final(combinedKey))
+            case .Encrypt:
+                combinedKey.appendData(writeIV)
+                return CCCrypto(operation: .Encrypt, mode: .RC4, algorithm: .RC4, initialVector: nil, key: MD5Hash.final(combinedKey))
             }
         }
-    }
-
-    enum Algorithm {
-        case AES, CAST, RC4
-
-        func algorithm() -> CCAlgorithm {
-            switch self {
-            case .AES:
-                return CCAlgorithm(kCCAlgorithmAES)
-            case .RC4:
-                return CCAlgorithm(kCCAlgorithmRC4)
-            case .CAST:
-                return CCAlgorithm(kCCAlgorithmCAST)
-            }
-        }
-    }
-
-    enum Mode {
-        case CFB
-
-        func mode() -> CCMode {
-            switch self {
-            case .CFB:
-                return CCMode(kCCModeCFB)
-            }
-        }
-    }
-
-    let cryptor: CCCryptorRef
-
-
-    init(operation: Operation, mode: Mode, algorithm: Algorithm, initialVector: NSData, key: NSData) {
-        let cryptor = UnsafeMutablePointer<CCCryptorRef>.alloc(1)
-        CCCryptorCreateWithMode(operation.op(), mode.mode(), algorithm.algorithm(), CCPadding(ccNoPadding), initialVector.bytes, key.bytes, key.length, nil, 0, 0, 0, cryptor)
-        self.cryptor = cryptor.memory
-    }
-
-    func update(data: NSData) -> NSData {
-        let outData = NSMutableData(length: data.length)!
-        CCCryptorUpdate(cryptor, data.bytes, data.length, outData.mutableBytes, outData.length, nil)
-        return NSData(data: outData)
-    }
-
-    deinit {
-        CCCryptorRelease(cryptor)
-    }
-
-}
-
-struct ShadowsocksEncryptHelper {
-    static let infoDictionary: [ShadowsocksAdapter.EncryptMethod:(Int, Int)] = [
-        .AES128CFB:(16, 16),
-        .AES192CFB:(24, 16),
-        .AES256CFB:(32, 16),
-    ]
-
-    static func getKeyLength(methodType: ShadowsocksAdapter.EncryptMethod) -> Int {
-        return infoDictionary[methodType]!.0
-    }
-
-    static func getIVLength(methodType: ShadowsocksAdapter.EncryptMethod) -> Int {
-        return infoDictionary[methodType]!.1
-    }
-
-    static func getIV(methodType: ShadowsocksAdapter.EncryptMethod) -> NSData {
-        let IV = NSMutableData(length: getIVLength(methodType))!
-        SecRandomCopyBytes(kSecRandomDefault, IV.length, UnsafeMutablePointer<UInt8>(IV.mutableBytes))
-        return NSData(data: IV)
-    }
-
-    static func getKeyAndIV(password: String, methodType: ShadowsocksAdapter.EncryptMethod) -> (NSData, NSData) {
-        let key = NSMutableData(length: getKeyLength(methodType))!
-        let iv = NSMutableData(length: getIVLength(methodType))!
-        let result = NSMutableData(length: getIVLength(methodType) + getKeyLength(methodType))!
-        let passwordData = password.dataUsingEncoding(NSUTF8StringEncoding)!
-        var md5result = Utils.Crypto.MD5(password)
-        let extendPasswordData = NSMutableData(length: passwordData.length + md5result.length)!
-        passwordData.getBytes(extendPasswordData.mutableBytes + md5result.length, length: passwordData.length)
-        var length = 0
-        repeat {
-            let copyLength = min(result.length - length, md5result.length)
-            md5result.getBytes(result.mutableBytes + length, length: copyLength)
-            extendPasswordData.replaceBytesInRange(NSRange(location: 0, length: md5result.length), withBytes: md5result.bytes)
-            md5result = Utils.Crypto.MD5(extendPasswordData)
-            length += copyLength
-        } while length < result.length
-        return (result.subdataWithRange(NSRange(location: 0, length: key.length)), result.subdataWithRange(NSRange(location: key.length, length: iv.length)))
     }
 }
