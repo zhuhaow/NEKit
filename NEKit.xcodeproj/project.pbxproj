@@ -173,8 +173,6 @@
 		36C63E041D02C0B700A00CA2 /* TCPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63E031D02C0B700A00CA2 /* TCPStack.swift */; };
 		36C63E051D02C0B700A00CA2 /* TCPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63E031D02C0B700A00CA2 /* TCPStack.swift */; };
 		36E44A021CF2ED4800185DBF /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
-		36E44A531CF33AB400185DBF /* Crypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E44A4F1CF33A9D00185DBF /* Crypto.framework */; };
-		36E44A541CF33AB400185DBF /* Crypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36E44A4F1CF33A9D00185DBF /* Crypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36E44A571CF33AB400185DBF /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
 		36E44A581CF33AB400185DBF /* NEKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36E44A5B1CF33AB400185DBF /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36B1624B1CDDA26600F24C97 /* CocoaAsyncSocket.framework */; };
@@ -248,7 +246,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				36E44A541CF33AB400185DBF /* Crypto.framework in Embed Frameworks */,
 				36E44A581CF33AB400185DBF /* NEKit.framework in Embed Frameworks */,
 				36E44A641CF33AB400185DBF /* MMDB.framework in Embed Frameworks */,
 				36E44A601CF33AB400185DBF /* CocoaLumberjackSwift.framework in Embed Frameworks */,
@@ -373,7 +370,6 @@
 		36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPStackProtocol.swift; sourceTree = "<group>"; };
 		36C63E031D02C0B700A00CA2 /* TCPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPStack.swift; sourceTree = "<group>"; };
 		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
-		36E44A4F1CF33A9D00185DBF /* Crypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crypto.framework; path = Carthage/Build/Mac/Crypto.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -397,7 +393,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36E44A531CF33AB400185DBF /* Crypto.framework in Frameworks */,
 				36E44A571CF33AB400185DBF /* NEKit.framework in Frameworks */,
 				36E44A631CF33AB400185DBF /* MMDB.framework in Frameworks */,
 				36E44A5F1CF33AB400185DBF /* CocoaLumberjackSwift.framework in Frameworks */,
@@ -700,7 +695,6 @@
 		36C48D9C1CF948500071804F /* Carthage Framework OSX */ = {
 			isa = PBXGroup;
 			children = (
-				36E44A4F1CF33A9D00185DBF /* Crypto.framework */,
 				36B1624B1CDDA26600F24C97 /* CocoaAsyncSocket.framework */,
 				36B1624C1CDDA26600F24C97 /* CocoaLumberjack.framework */,
 				36B1624D1CDDA26600F24C97 /* CocoaLumberjackSwift.framework */,
