@@ -1,8 +1,6 @@
 # NEKit
 
-[![Join the chat at https://gitter.im/zhuhaow/NEKit](https://badges.gitter.im/zhuhaow/NEKit.svg)](https://gitter.im/zhuhaow/NEKit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Build Status](https://travis-ci.org/zhuhaow/NEKit.svg?branch=master)](https://travis-ci.org/zhuhaow/NEKit)
+[![Join the chat at https://gitter.im/zhuhaow/NEKit](https://badges.gitter.im/zhuhaow/NEKit.svg)](https://gitter.im/zhuhaow/NEKit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/zhuhaow/NEKit.svg?branch=master)](https://travis-ci.org/zhuhaow/NEKit)
 
 A toolkit for Network Extension Framework.
 
@@ -21,6 +19,8 @@ Currently, NEKit supports:
 Check document [here](https://zhuhaow.github.io/NEKit), which is not finished yet.
 
 Also, you may be more interested in [Potatso](https://github.com/shadowsocks/Potatso-iOS) if you just need a working app with GUI supporting shadowsocks.
+
+If you have any questions (not bug report), please join Gitter, **do not open an issue**.
 
 ## Principle
 
