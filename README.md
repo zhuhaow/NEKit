@@ -1,5 +1,7 @@
 # NEKit
 
+[![Join the chat at https://gitter.im/zhuhaow/NEKit](https://badges.gitter.im/zhuhaow/NEKit.svg)](https://gitter.im/zhuhaow/NEKit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/zhuhaow/NEKit.svg?branch=master)](https://travis-ci.org/zhuhaow/NEKit)
 
 A toolkit for Network Extension Framework.
