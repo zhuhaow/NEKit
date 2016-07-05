@@ -100,7 +100,7 @@ If you do not want to handle IP packets, then that's it, just set the proxy to `
 
 If you want to read on, you will have to request Network Extention entitlement from Apple. 
 
-But even if you use NetworkExtention to set up the network proxy, it does not mean you have to process packets, just do not route anything to the TUN interface. For iOS, if you claim you have implemented it but just do nothing the users probably will never notice.
+But even if you use NetworkExtention to set up the network proxy, it does not mean you have to process packets, just do not route anything to the TUN interface and do not set up `IPStack`. For iOS, if you claim you have implemented it but just do nothing the users probably will never notice.
 
 ### IP stack
 
