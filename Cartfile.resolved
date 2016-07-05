@@ -1,6 +1,6 @@
 github "robbiehanson/CocoaAsyncSocket" "7.4.3"
 github "CocoaLumberjack/CocoaLumberjack" "2.3.0"
 github "soffes/Crypto" "v0.3.0"
-github "lexrus/MMDB-Swift" "0.0.1"
+github "zhuhaow/MMDB-Swift" "v1.1.2"
 github "zhuhaow/Sodium-framework" "v1.0.10"
 github "behrang/YamlSwift" "1.4.3"
