@@ -32,7 +32,7 @@ NEKit follows one fundamental principle to keep the best network performance: Th
 
 This should not be a problem if the applications on your device connect to the local proxy server directly, where we can get the request domain information then send that to remote proxy server if needed.
 
-But consider that if an application tries to make a socket connection by itself (e.g., Twitter.app), which generally consists of two steps: 
+But consider that if an application tries to make a socket connection by itself, which generally consists of two steps: 
 
 1. Make a DNS lookup to find the IP address of the target server.
 2. Connect to the remote server by socket API provided by the system.
@@ -98,7 +98,9 @@ Now there is a SOCKS5 proxy server running on `127.0.0.1:9090` which will forwar
 
 If you do not want to handle IP packets, then that's it, just set the proxy to `127.0.0.1:9090` in System Preferences and you are good to go.
 
-If you want to read on, you will have to request Network Extention entitlement from Apple.
+If you want to read on, you will have to request Network Extention entitlement from Apple. 
+
+But even if you use NetworkExtention to set up the network proxy, it does not mean you have to process packets, just do not route anything to the TUN interface. For iOS, if you claim you have implemented it but just do nothing the users probably will never notice.
 
 ### IP stack
 
