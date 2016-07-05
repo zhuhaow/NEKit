@@ -147,7 +147,6 @@
 		36C48D941CF896A70071804F /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D8C1CF896A70071804F /* CocoaLumberjack.framework */; };
 		36C48D951CF896A70071804F /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D8D1CF896A70071804F /* CocoaLumberjackSwift.framework */; };
 		36C48D961CF896A70071804F /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D8E1CF896A70071804F /* CommonCrypto.framework */; };
-		36C48D971CF896A70071804F /* Crypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D8F1CF896A70071804F /* Crypto.framework */; };
 		36C48D981CF896A70071804F /* MMDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D901CF896A70071804F /* MMDB.framework */; };
 		36C48D991CF896A70071804F /* Sodium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D911CF896A70071804F /* Sodium.framework */; };
 		36C48D9A1CF896A70071804F /* Yaml.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D921CF896A70071804F /* Yaml.framework */; };
@@ -161,7 +160,6 @@
 		36C63DCC1CFD602500A00CA2 /* DNSSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63DCA1CFD602500A00CA2 /* DNSSession.swift */; };
 		36C63DCE1CFD70C100A00CA2 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63DCD1CFD70C100A00CA2 /* DNSServer.swift */; };
 		36C63DCF1CFD70C100A00CA2 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63DCD1CFD70C100A00CA2 /* DNSServer.swift */; };
-		36C63DDE1CFEBE0E00A00CA2 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C63DDD1CFEBE0E00A00CA2 /* libresolv.tbd */; };
 		36C63DF61CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63DF51CFFDCAF00A00CA2 /* NWUDPSocket.swift */; };
 		36C63DF71CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63DF51CFFDCAF00A00CA2 /* NWUDPSocket.swift */; };
 		36C63DF91D001FDA00A00CA2 /* IPPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C63DF81D001FDA00A00CA2 /* IPPacket.swift */; };
@@ -352,7 +350,6 @@
 		36C48D8C1CF896A70071804F /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
 		36C48D8D1CF896A70071804F /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/iOS/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		36C48D8E1CF896A70071804F /* CommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CommonCrypto.framework; path = Carthage/Build/iOS/CommonCrypto.framework; sourceTree = "<group>"; };
-		36C48D8F1CF896A70071804F /* Crypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crypto.framework; path = Carthage/Build/iOS/Crypto.framework; sourceTree = "<group>"; };
 		36C48D901CF896A70071804F /* MMDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMDB.framework; path = Carthage/Build/iOS/MMDB.framework; sourceTree = "<group>"; };
 		36C48D911CF896A70071804F /* Sodium.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sodium.framework; path = Carthage/Build/iOS/Sodium.framework; sourceTree = "<group>"; };
 		36C48D921CF896A70071804F /* Yaml.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Yaml.framework; path = Carthage/Build/iOS/Yaml.framework; sourceTree = "<group>"; };
@@ -377,7 +374,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36C63DDE1CFEBE0E00A00CA2 /* libresolv.tbd in Frameworks */,
 				369E75761CF4281400D52D3C /* tun2socks.framework in Frameworks */,
 				36B1624E1CDDA26600F24C97 /* CocoaAsyncSocket.framework in Frameworks */,
 				36B1624F1CDDA26600F24C97 /* CocoaLumberjack.framework in Frameworks */,
@@ -412,7 +408,6 @@
 				36C48D941CF896A70071804F /* CocoaLumberjack.framework in Frameworks */,
 				36C48D951CF896A70071804F /* CocoaLumberjackSwift.framework in Frameworks */,
 				36C48D961CF896A70071804F /* CommonCrypto.framework in Frameworks */,
-				36C48D971CF896A70071804F /* Crypto.framework in Frameworks */,
 				36C48D981CF896A70071804F /* MMDB.framework in Frameworks */,
 				36C48D991CF896A70071804F /* Sodium.framework in Frameworks */,
 				36C48D9A1CF896A70071804F /* Yaml.framework in Frameworks */,
@@ -684,7 +679,6 @@
 				36C48D8C1CF896A70071804F /* CocoaLumberjack.framework */,
 				36C48D8D1CF896A70071804F /* CocoaLumberjackSwift.framework */,
 				36C48D8E1CF896A70071804F /* CommonCrypto.framework */,
-				36C48D8F1CF896A70071804F /* Crypto.framework */,
 				36C48D901CF896A70071804F /* MMDB.framework */,
 				36C48D911CF896A70071804F /* Sodium.framework */,
 				36C48D921CF896A70071804F /* Yaml.framework */,
