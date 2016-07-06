@@ -4,7 +4,7 @@
 
 A toolkit for Network Extension Framework.
 
-NEKit is the successor of [Soca](https://github.com/zhuhaow/soca-ios). The design goal of NEKit is to provide things needed in building a Network Extension app with `NETunnelProvider` while keep the framework as non-opinionated as possible.
+NEKit is the successor of [Soca](https://github.com/zhuhaow/soca-ios). The main goal of NEKit is to provide things needed in building a Network Extension app with `NETunnelProvider` to bypass network filtering and censorship while keep the framework as non-opinionated as possible.
 
 **NEKit does not depend on Network Extension framework. You can use NEKit without Network Extension entitlement to build a rule based proxy in a few lines.**
 
