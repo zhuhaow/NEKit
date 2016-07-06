@@ -8,6 +8,8 @@ NEKit is the successor of [Soca](https://github.com/zhuhaow/soca-ios). The desig
 
 **NEKit does not depend on Network Extension framework. You can use NEKit without Network Extension entitlement to build a rule based proxy in a few lines.**
 
+The `NEKitDemo` target builds a rule based proxy in ten lines and you can uses it on your Mac without any entitlement.
+
 Currently, NEKit supports:
 
 - Forward requests through different proxies based on remote host location, remote host domain or the connection speed of proxies.
