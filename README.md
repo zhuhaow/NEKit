@@ -10,6 +10,8 @@ NEKit is the successor of [Soca](https://github.com/zhuhaow/soca-ios). The main 
 
 The `NEKitDemo` target builds a rule based proxy in ten lines and you can uses it on your Mac without any entitlement.
 
+[Specht](https://github.com/zhuhaow/Specht) is another demo that requires Network Extension entitlement.
+
 Currently, NEKit supports:
 
 - Forward requests through different proxies based on remote host location, remote host domain or the connection speed of proxies.
