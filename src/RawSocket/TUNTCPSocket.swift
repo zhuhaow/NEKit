@@ -39,7 +39,7 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
 
     /// The source address.
     var sourceIPAddress: IPv4Address? {
-        return IPv4Address(fromInAddr: tsSocket.sourceAddress.s_addr)
+        return IPv4Address(fromInAddr: tsSocket.sourceAddress)
     }
 
     /// The source port.
@@ -49,7 +49,7 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
 
     /// The destination address.
     var destinationIPAddress: IPv4Address? {
-        return IPv4Address(fromInAddr: tsSocket.destinationAddress.s_addr)
+        return IPv4Address(fromInAddr: tsSocket.destinationAddress)
     }
 
     /// The destination port.

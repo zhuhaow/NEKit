@@ -284,8 +284,8 @@ public class IPPacket {
         setPayloadWithUInt8(transportProtocol.rawValue, at: 9)
         // clear checksum bytes
         resetPayloadAt(10, length: 2)
-        setPayloadWithUInt32(sourceAddress.inaddr, at: 12, swap: false)
-        setPayloadWithUInt32(destinationAddress.inaddr, at: 16, swap: false)
+        setPayloadWithUInt32(sourceAddress.UInt32InNetworkOrder, at: 12, swap: false)
+        setPayloadWithUInt32(destinationAddress.UInt32InNetworkOrder, at: 16, swap: false)
 
         // let TCP or UDP packet build
         protocolParser.packetData = packetData
