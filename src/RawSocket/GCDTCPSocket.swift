@@ -44,7 +44,10 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
 
     /// The source address.
     var sourceIPAddress: IPv4Address? {
-        return IPv4Address(fromString: socket.localHost)
+        guard let localHost = socket.localHost else {
+            return nil
+        }
+        return IPv4Address(fromString: localHost)
     }
 
     /// The source port.
@@ -210,7 +213,11 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
      - parameter tlsSettings: TLS settings, refer to documents of `GCDAsyncSocket` for detail.
      */
     func startTLS(tlsSettings: [NSObject : AnyObject]!) {
-        socket.startTLS(tlsSettings)
+        if let settings = tlsSettings as? [String: NSNumber] {
+            socket.startTLS(settings)
+        } else {
+            socket.startTLS(nil)
+        }
     }
 
     // MARK: Delegate methods for GCDAsyncSocket

@@ -1,4 +1,4 @@
-github "robbiehanson/CocoaAsyncSocket" "7.4.3"
+github "robbiehanson/CocoaAsyncSocket" "7.5.0"
 github "CocoaLumberjack/CocoaLumberjack" "2.3.0"
 github "soffes/Crypto" "v0.3.0"
 github "zhuhaow/MMDB-Swift" "v1.1.2"
