@@ -12,6 +12,10 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     private var remainWriteLength: Int = 0
     private var closeAfterWriting = false
 
+    private var scanner: StreamScanner?
+
+    private var readLength: Int?
+
     /**
      Initailize an instance with `TSTCPSocket`.
 
@@ -68,15 +72,15 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
     func disconnect() {
-        self.closeAfterWriting = true
-        self.checkStatus()
+        closeAfterWriting = true
+        checkStatus()
     }
 
     /**
      Disconnect the socket immediately.
      */
     func forceDisconnect() {
-        self.tsSocket.close()
+        tsSocket.close()
     }
 
     /**
@@ -87,9 +91,9 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
     func writeData(data: NSData, withTag tag: Int) {
-        self.writeTag = tag
-        self.remainWriteLength = data.length
-        self.tsSocket.writeData(data)
+        writeTag = tag
+        remainWriteLength = data.length
+        tsSocket.writeData(data)
     }
 
     /**
@@ -99,8 +103,8 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     func readDataWithTag(tag: Int) {
-        self.readTag = tag
-        self.checkReadData()
+        readTag = tag
+        checkReadData()
     }
 
     /**
@@ -109,9 +113,12 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter length: The length of the data to read.
      - parameter tag:    The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
-     - warning: Not implemented yet.
      */
-    func readDataToLength(length: Int, withTag tag: Int) {}
+    func readDataToLength(length: Int, withTag tag: Int) {
+        readLength = length
+        readTag = tag
+        checkStatus()
+    }
 
     /**
      Read data until a specific pattern (including the pattern).
@@ -119,7 +126,6 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter data: The pattern.
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
-    - warning: Not implemented yet.
      */
     func readDataToData(data: NSData, withTag tag: Int) {
         readDataToData(data, withTag: tag, maxLength: 0)
@@ -132,10 +138,11 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - parameter maxLength: Ignored since `GCDAsyncSocket` does not support this. The max length of data to scan for the pattern.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
-     - warning: Not implemented yet.
      */
     func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
-
+        readTag = tag
+        scanner = StreamScanner(pattern: data, maximumLength: maxLength)
+        checkStatus()
     }
 
     private func queueCall(block: ()->()) {
@@ -145,13 +152,41 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     private func checkReadData() {
         if pendingReadData.length > 0 {
             queueCall {
-                // the didReadData might change the readTag
+                // the didReadData might change the `readTag`
                 guard let tag = self.readTag else {
+                    // no queued read request
                     return
                 }
-                self.readTag = nil
-                self.delegate?.didReadData(self.pendingReadData, withTag: tag, from: self)
-                self.pendingReadData = NSMutableData()
+
+                if let readLength = self.readLength {
+                    if self.pendingReadData.length >= readLength {
+                        let returnData = self.pendingReadData.subdataWithRange(NSRange(location: 0, length: readLength))
+                        self.pendingReadData = NSMutableData(data: self.pendingReadData.subdataWithRange(NSRange(location: readLength, length: self.pendingReadData.length - readLength)))
+
+                        self.readLength = nil
+                        self.delegate?.didReadData(returnData, withTag: tag, from: self)
+                        self.readTag = nil
+                    }
+                } else if let scanner = self.scanner {
+                    guard let (match, rest) = scanner.addAndScan(self.pendingReadData) else {
+                        return
+                    }
+
+                    self.scanner = nil
+                    self.readTag = nil
+
+                    guard let matchData = match else {
+                        // do not find match in the given length, stop now
+                        return
+                    }
+
+                    self.pendingReadData = NSMutableData(data: rest)
+                    self.delegate?.didReadData(matchData, withTag: tag, from: self)
+                } else {
+                    self.readTag = nil
+                    self.delegate?.didReadData(self.pendingReadData, withTag: tag, from: self)
+                    self.pendingReadData = NSMutableData()
+                }
             }
         }
     }
