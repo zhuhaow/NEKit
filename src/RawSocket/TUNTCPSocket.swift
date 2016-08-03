@@ -119,9 +119,24 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter data: The pattern.
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+    - warning: Not implemented yet.
+     */
+    func readDataToData(data: NSData, withTag tag: Int) {
+        readDataToData(data, withTag: tag, maxLength: 0)
+    }
+
+    /**
+     Read data until a specific pattern (including the pattern).
+
+     - parameter data: The pattern.
+     - parameter tag:  The tag identifying the data in the callback delegate method.
+     - parameter maxLength: Ignored since `GCDAsyncSocket` does not support this. The max length of data to scan for the pattern.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      - warning: Not implemented yet.
      */
-    func readDataToData(data: NSData, withTag tag: Int) {}
+    func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
+
+    }
 
     private func queueCall(block: ()->()) {
         dispatch_async(queue, block)

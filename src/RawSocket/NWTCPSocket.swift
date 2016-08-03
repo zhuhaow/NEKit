@@ -143,6 +143,17 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         }
     }
 
+    /**
+     Read data until a specific pattern (including the pattern).
+
+     - parameter data: The pattern.
+     - parameter tag:  The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+     */
+    func readDataToData(data: NSData, withTag tag: Int) {
+        readDataToData(data, withTag: tag, maxLength: 0)
+    }
+
     // Actually, this method is available as `- (void)readToPattern:(id)arg1 maximumLength:(unsigned int)arg2 completionHandler:(id /* block */)arg3;`
     // which is sadly not available in public header for some reason I don't know.
     // I don't want to do it myself since This method is not trival to implement and I don't like reinventing the wheel.
@@ -152,10 +163,15 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
      - parameter data: The pattern.
      - parameter tag:  The tag identifying the data in the callback delegate method.
+     - parameter maxLength: The max length of data to scan for the pattern.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToData(data: NSData, withTag tag: Int) {
-        scanner = StreamScanner(pattern: data, maximumLength: Opt.MAXNWTCPScanLength)
+    func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
+        var maxLength = maxLength
+        if maxLength == 0 {
+            maxLength = Opt.MAXNWTCPScanLength
+        }
+        scanner = StreamScanner(pattern: data, maximumLength: maxLength)
         scannerTag = tag
         readDataWithTag(NWTCPSocket.ScannerReadTag)
     }

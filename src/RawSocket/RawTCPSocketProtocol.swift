@@ -90,6 +90,16 @@ protocol RawTCPSocketProtocol : class {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     func readDataToData(data: NSData, withTag tag: Int)
+
+    /**
+     Read data until a specific pattern (including the pattern).
+
+     - parameter data: The pattern.
+     - parameter tag:  The tag identifying the data in the callback delegate method.
+     - parameter maxLength: The max length of data to scan for the pattern.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+     */
+    func readDataToData(data: NSData, withTag tag: Int, maxLength: Int)
 }
 
 /// The delegate protocol to handle the events from a raw TCP socket.
