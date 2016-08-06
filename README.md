@@ -89,16 +89,16 @@ There is also `Parser` to load rules from a Yaml config file. But that is not re
 
 
 ### Proxy server
-Now we can start a proxy server locally.
+Now we can start a HTTP/SOCKS5 proxy server locally.
 
 ```swift
-let server = GCDSOCKS5ProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: 9090)
+let server = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: 9090)
 // There can be multiple proxies running at the same time, but one of them must be set as the `mainProxy` to handle TCP socket from IP stack.
 ProxyServer.mainProxy = server
 try! ProxyServer.mainProxy.start()
 ```
 
-Now there is a SOCKS5 proxy server running on `127.0.0.1:9090` which will forward requests based on rules defined in `RuleManager.currentManager`.
+Now there is a HTTP proxy server running on `127.0.0.1:9090` which will forward requests based on rules defined in `RuleManager.currentManager`.
 
 If you do not want to handle IP packets, then that's it, just set the proxy to `127.0.0.1:9090` in System Preferences and you are good to go.
 
@@ -207,7 +207,7 @@ The structure of the proxy server is given as follows:
 
 When a new socket is accepted from the listening socket of the proxy server, it is wrapped in some implemention of `RawSocketProtocol` as a raw socket which just reads and writes data. 
 
-Then it is wrapped in a subclass of `ProxySocket` which encapsulates the proxy logic. Currently, only `DirectProxySocket` (for sockets from `TCPStack`) and `SOCKS5ProxySocket` (for SOCKS5 proxy server) are implemented. If there is ever need for a HTTP proxy (Do you really need that? It's complicated, error-prone and full of edge cases which probably will never be implemented correctly. The real world does love non-standard implemention of HTTP.), then a `HTTPProxySocket` should be implemented and a proxy server called `GCDHTTPProxyServer` subclassing `GCDProxyServer` should wrap every accepted `RawSocketProtocol` in  `HTTPProxySocket`.
+Then it is wrapped in a subclass of `ProxySocket` which encapsulates the proxy logic. 
 
 The `TCPStack` wraps the reassembled TCP flow (`TUNTCPSocket`) in `DirectProxySocket` then send it to the `mainProxy` server.
 
