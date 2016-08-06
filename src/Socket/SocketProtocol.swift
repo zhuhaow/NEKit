@@ -76,7 +76,7 @@ extension SocketProtocol {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataWithTag(tag: Int = 0) {
+    func readDataWithTag(tag: Int = SocketTag.Forward) {
         socket.readDataWithTag(tag)
     }
 

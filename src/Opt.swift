@@ -11,4 +11,6 @@ struct Opt {
     static let UDPSocketActiveTimeout = 300
 
     static let UDPSocketActiveCheckInterval = 60
+
+    static let MAXHTTPContentBlockLength = 10240
 }
