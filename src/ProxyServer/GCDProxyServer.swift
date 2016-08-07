@@ -62,7 +62,7 @@ public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
 
      - warning: Do not call this method. This should be marked  private but have to be marked public since the `GCDAsyncSocketDelegate` is public.
      */
-    public func socket(sock: GCDAsyncSocket!, didAcceptNewSocket newSocket: GCDAsyncSocket!) {
+    public func socket(sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
         DDLogVerbose("\(self) accepted new socket.")
         let gcdTCPSocket = GCDTCPSocket(socket: newSocket)
         DDLogDebug("\(self) accepted a new socket from \(gcdTCPSocket.sourceIPAddress):\(gcdTCPSocket.sourcePort)")
