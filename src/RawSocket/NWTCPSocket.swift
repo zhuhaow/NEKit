@@ -185,8 +185,6 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             return
         }
 
-        DDLogDebug("The state of NSTCPSocket (\(self.connection.endpoint)) changed to \(connection.state.rawValue)")
-
         switch connection.state {
         case .Connected:
             queueCall {
@@ -206,8 +204,6 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     }
 
     private func readCallback(data: NSData?, tag: Int) {
-        DDLogDebug("Did read data (\(data?.length ?? 0) bytes) from \(self.connection.endpoint) with tag \(tag).")
-
         queueCall {
             guard let data = self.consumeReadData(data) else {
                 // remote read is closed, but this is okay, nothing need to be done, if this socket is read again, then error occurs.
