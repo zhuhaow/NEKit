@@ -7,6 +7,8 @@ public class TUNInterface {
     private weak var packetFlow: NEPacketTunnelFlow!
     private var stacks: [IPStackProtocol] = []
 
+    private var reading = true
+
     /**
      Initialize TUN interface with a packet flow.
 
@@ -21,6 +23,10 @@ public class TUNInterface {
      */
     public func start() {
         readPackets()
+    }
+
+    public func stop() {
+        reading = false
     }
 
     /**
@@ -44,7 +50,9 @@ public class TUNInterface {
                     }
                 }
             }
-            self.readPackets()
+            if self.reading {
+                self.readPackets()
+            }
         }
     }
 
