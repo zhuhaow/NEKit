@@ -39,8 +39,8 @@ public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
         listenSocket?.setDelegate(nil, delegateQueue: nil)
         listenSocket?.disconnect()
         listenSocket = nil
-        DDLogInfo("Successfully stopped \(self).")
         super.stop()
+        DDLogInfo("Successfully stopped \(self).")
     }
 
     /**

@@ -300,11 +300,11 @@
 		3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapterFactory.swift; sourceTree = "<group>"; };
 		3664F0B91CE21A60008BA6D8 /* Sodium.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sodium.framework; path = Carthage/Build/Mac/Sodium.framework; sourceTree = "<group>"; };
 		3664F0BD1CE3069F008BA6D8 /* Opt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Opt.swift; sourceTree = "<group>"; };
-		3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StreamScanner.swift; path = ../StreamScanner.swift; sourceTree = "<group>"; };
+		3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamScanner.swift; sourceTree = "<group>"; };
 		3664F0C61CE37763008BA6D8 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
 		366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAdapter.swift; sourceTree = "<group>"; };
 		366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureHTTPAdapter.swift; sourceTree = "<group>"; };
-		366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HTTPAuthentication.swift; path = ../HTTPAuthentication.swift; sourceTree = "<group>"; };
+		366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAuthentication.swift; sourceTree = "<group>"; };
 		366EB5B21CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationServerAdapterFactory.swift; sourceTree = "<group>"; };
 		366EB5B31CDE150C00E0E942 /* HTTPAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPAdapterFactory.swift; sourceTree = "<group>"; };
 		366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureHTTPAdapterFactory.swift; sourceTree = "<group>"; };
@@ -373,7 +373,7 @@
 		36C63DE61CFECD6200A00CA2 /* LibresolvWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibresolvWrapper.m; sourceTree = "<group>"; };
 		36C63DF51CFFDCAF00A00CA2 /* NWUDPSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NWUDPSocket.swift; sourceTree = "<group>"; };
 		36C63DF81D001FDA00A00CA2 /* IPPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPPacket.swift; sourceTree = "<group>"; };
-		36C63DFB1D00797D00A00CA2 /* Checksum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Checksum.swift; path = ../Packet/Checksum.swift; sourceTree = "<group>"; };
+		36C63DFB1D00797D00A00CA2 /* Checksum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checksum.swift; sourceTree = "<group>"; };
 		36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPStackProtocol.swift; sourceTree = "<group>"; };
 		36C63E031D02C0B700A00CA2 /* TCPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPStack.swift; sourceTree = "<group>"; };
 		36CB0D321D51C68700DB7AF5 /* HTTPProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPProxySocket.swift; sourceTree = "<group>"; };
@@ -433,13 +433,10 @@
 		36164A291CE41AF200BAC90A /* Packet */ = {
 			isa = PBXGroup;
 			children = (
-				3636DA5D1CE87C08007F9787 /* IPAddress.swift */,
 				36164A2A1CE41C3300BAC90A /* IPMutablePacket.swift */,
 				36C63DF81D001FDA00A00CA2 /* IPPacket.swift */,
-				3636DA611CE892EF007F9787 /* Port.swift */,
-				36164A2E1CE7099300BAC90A /* Router.swift */,
-				36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */,
 				36411A7F1D214D32005F4108 /* PacketProtocolParser.swift */,
+				36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */,
 			);
 			path = Packet;
 			sourceTree = "<group>";
@@ -447,8 +444,8 @@
 		36411A671D1A3A71005F4108 /* ProxySocket */ = {
 			isa = PBXGroup;
 			children = (
-				36CB0D321D51C68700DB7AF5 /* HTTPProxySocket.swift */,
 				36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */,
+				36CB0D321D51C68700DB7AF5 /* HTTPProxySocket.swift */,
 				36B1621C1CDDA0EA00F24C97 /* ProxySocket.swift */,
 				36B162211CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift */,
 			);
@@ -509,13 +506,11 @@
 		36463A321CDCD5EB0040579C /* src */ = {
 			isa = PBXGroup;
 			children = (
-				3650FAE01D27B9F300444E79 /* Crypto */,
 				366EB5BE1CDE32BF00E0E942 /* Config */,
-				36C48DA71CF9D6250071804F /* DNS */,
+				3650FAE01D27B9F300444E79 /* Crypto */,
 				36B162431CDDA0FB00F24C97 /* GeoIP */,
 				36C63DFF1D02BDC700A00CA2 /* IPStack */,
 				36B162661CDDD00B00F24C97 /* Messages */,
-				36164A291CE41AF200BAC90A /* Packet */,
 				36B162631CDDCDFC00F24C97 /* ProxyServer */,
 				36B162121CDDA0EA00F24C97 /* RawSocket */,
 				36B1620B1CDDA0E000F24C97 /* Rule */,
@@ -540,15 +535,15 @@
 		3650FAE01D27B9F300444E79 /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				3650FAE11D27BA0900444E79 /* StreamCryptoProtocol.swift */,
-				3650FAE41D27BA5300444E79 /* SodiumStreamCrypto.swift */,
-				3650FAE71D27BE8800444E79 /* Libsodium.swift */,
 				3650FAED1D27C8A900444E79 /* CCCrypto.swift */,
 				3650FAF01D27C8CB00444E79 /* CryptoEnum.swift */,
 				3650FAF31D27CD8400444E79 /* CryptoHelper.swift */,
+				3650FAE71D27BE8800444E79 /* Libsodium.swift */,
 				3650FAF61D27D64500444E79 /* MD5Hash.swift */,
+				3650FAE41D27BA5300444E79 /* SodiumStreamCrypto.swift */,
+				3650FAE11D27BA0900444E79 /* StreamCryptoProtocol.swift */,
 			);
-			name = Crypto;
+			path = Crypto;
 			sourceTree = "<group>";
 		};
 		366EB5BE1CDE32BF00E0E942 /* Config */ = {
@@ -660,8 +655,8 @@
 		36B162631CDDCDFC00F24C97 /* ProxyServer */ = {
 			isa = PBXGroup;
 			children = (
-				36B162581CDDA31B00F24C97 /* GCDProxyServer.swift */,
 				36411A581D13988A005F4108 /* GCDHTTPProxyServer.swift */,
+				36B162581CDDA31B00F24C97 /* GCDProxyServer.swift */,
 				362990C21D55890C00D11EBA /* GCDSOCKS5ProxyServer.swift */,
 				36B162571CDDA31B00F24C97 /* ProxyServer.swift */,
 			);
@@ -671,8 +666,8 @@
 		36B162661CDDD00B00F24C97 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				36B162161CDDA0EA00F24C97 /* ConnectResponse.swift */,
 				36411A7B1D1FE696005F4108 /* ConnectRequest.swift */,
+				36B162161CDDA0EA00F24C97 /* ConnectResponse.swift */,
 				36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */,
 			);
 			path = Messages;
@@ -730,13 +725,15 @@
 		36C63DC61CFD252400A00CA2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				36C63DFB1D00797D00A00CA2 /* Checksum.swift */,
 				36411A541D12C123005F4108 /* Atomic.swift */,
 				36C63DC71CFD254100A00CA2 /* BinaryDataScanner.swift */,
-				36411A721D1FBFB0005F4108 /* IPv4Pool.swift */,
-				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
+				36C63DFB1D00797D00A00CA2 /* Checksum.swift */,
 				366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */,
 				36B212331D54C30600C8AC0A /* HTTPStreamScanner.swift */,
+				3636DA5D1CE87C08007F9787 /* IPAddress.swift */,
+				36411A721D1FBFB0005F4108 /* IPv4Pool.swift */,
+				3636DA611CE892EF007F9787 /* Port.swift */,
+				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -744,7 +741,10 @@
 		36C63DFF1D02BDC700A00CA2 /* IPStack */ = {
 			isa = PBXGroup;
 			children = (
+				36C48DA71CF9D6250071804F /* DNS */,
+				36164A291CE41AF200BAC90A /* Packet */,
 				36C63E001D02BDEC00A00CA2 /* IPStackProtocol.swift */,
+				36164A2E1CE7099300BAC90A /* Router.swift */,
 				36C63E031D02C0B700A00CA2 /* TCPStack.swift */,
 				36E44A011CF2ED4800185DBF /* TUNInterface.swift */,
 				36411A781D1FC224005F4108 /* UDPDirectStack.swift */,

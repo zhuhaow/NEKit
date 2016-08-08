@@ -61,6 +61,15 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
         return false
     }
 
+    public func stop() {
+        dispatch_async(queue) {
+            for socket in self.activeSockets.values {
+                socket.disconnect()
+            }
+            self.activeSockets = [:]
+        }
+    }
+
     private func input(packetData: NSData) {
         guard let packet = IPPacket(packetData: packetData) else {
             return
@@ -118,7 +127,10 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
             return nil
         }
 
-        let udpSocket = NWUDPSocket(host: request.host, port: request.port)
+        guard let udpSocket = NWUDPSocket(host: request.host, port: request.port) else {
+            return nil
+        }
+
         udpSocket.delegate = self
 
         dispatch_sync(queue) {

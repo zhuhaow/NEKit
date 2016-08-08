@@ -32,6 +32,14 @@ class Tunnel: NSObject, SocketDelegate {
         return proxySocket.isDisconnected && (adapterSocket?.isDisconnected ?? true)
     }
 
+    override var description: String {
+        if proxySocket.request != nil {
+            return "Tunnel connecting to \(proxySocket.request!.host)"
+        } else {
+            return "Tunnel"
+        }
+    }
+
     init(proxySocket: ProxySocket) {
         self.proxySocket = proxySocket
         self.proxySocket.queue = queue
@@ -50,12 +58,27 @@ class Tunnel: NSObject, SocketDelegate {
      Close the tunnel.
      */
     func close() {
-        if !proxySocket.isDisconnected {
-            proxySocket.disconnect()
+        dispatch_async(queue) {
+            if !self.proxySocket.isDisconnected {
+                self.proxySocket.disconnect()
+            }
+            if let adapterSocket = self.adapterSocket {
+                if !adapterSocket.isDisconnected {
+                    adapterSocket.disconnect()
+                }
+            }
         }
-        if let adapterSocket = adapterSocket {
-            if !adapterSocket.isDisconnected {
-                adapterSocket.disconnect()
+    }
+
+    func forceClose() {
+        dispatch_async(queue) {
+            if !self.proxySocket.isDisconnected {
+                self.proxySocket.forceDisconnect()
+            }
+            if let adapterSocket = self.adapterSocket {
+                if !adapterSocket.isDisconnected {
+                    adapterSocket.forceDisconnect()
+                }
             }
         }
     }

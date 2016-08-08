@@ -18,4 +18,15 @@ public protocol IPStackProtocol: class {
     ///
     /// - note: This block is thread-safe.
     var outputFunc: (([NSData], [NSNumber]) -> ())! { get set }
+
+    /**
+     Stop the stack from running.
+
+     This is called when the interface this stack is registered to stop to processing packets and will be released soon.
+     */
+    func stop()
+}
+
+extension IPStackProtocol {
+    public func stop() {}
 }

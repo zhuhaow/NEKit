@@ -5,7 +5,14 @@ import CocoaLumberjackSwift
 /// This class wraps around tun2socks to build a TCP only IP stack.
 public class TCPStack: TSIPStackDelegate, IPStackProtocol {
     /// The `TCPStack` singleton instance.
-    public static let stack: TCPStack = TCPStack()
+    public static var stack: TCPStack {
+        TSIPStack.stack.delegate = _stack
+        defer {
+            TSIPStack.stack.resumeTimer()
+        }
+        return _stack
+    }
+    private static let _stack: TCPStack = TCPStack()
 
     /// This is set automatically when the stack is registered to some interface.
     public var outputFunc: (([NSData], [NSNumber]) -> ())! {
@@ -20,8 +27,7 @@ public class TCPStack: TSIPStackDelegate, IPStackProtocol {
     /**
      Inistailize a new TCP stack.
      */
-    init() {
-        TSIPStack.stack.delegate = self
+    private init() {
     }
 
     /**
@@ -48,11 +54,21 @@ public class TCPStack: TSIPStackDelegate, IPStackProtocol {
         return false
     }
 
+    /**
+     Stop the TCP stack.
+
+     After calling this, this stack should never be referenced. Use `TCPStack.stack` to get a new reference of the singleton.
+     */
+    public func stop() {
+        TSIPStack.stack.delegate = nil
+        TSIPStack.stack.suspendTimer()
+    }
+
     // MARK: TSIPStackDelegate Implemention
     public func didAcceptTCPSocket(sock: TSTCPSocket) {
         DDLogDebug("Accepted a new socket from IP stack.")
         let tunSocket = TUNTCPSocket(socket: sock)
         let proxySocket = DirectProxySocket(socket: tunSocket)
-        ProxyServer.mainProxy.didAcceptNewSocket(proxySocket)
+        ProxyServer.mainProxy?.didAcceptNewSocket(proxySocket)
     }
 }

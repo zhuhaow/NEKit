@@ -3,6 +3,7 @@ import Foundation
 public protocol DNSResolverProtocol: class {
     weak var delegate: DNSResolverDelegate? { get set }
     func resolve(session: DNSSession)
+    func stop()
 }
 
 public protocol DNSResolverDelegate: class {
@@ -14,12 +15,16 @@ public class UDPDNSResolver: DNSResolverProtocol, NWUDPSocketDelegate {
     public weak var delegate: DNSResolverDelegate?
 
     public init(address: IPv4Address, port: Port) {
-        socket = NWUDPSocket(host: address.presentation, port: port.intValue)
+        socket = NWUDPSocket(host: address.presentation, port: port.intValue)!
         socket.delegate = self
     }
 
     public func resolve(session: DNSSession) {
         socket.writeData(session.requestMessage.payload)
+    }
+
+    public func stop() {
+        socket.disconnect()
     }
 
     func didReceiveData(data: NSData, from: NWUDPSocket) {

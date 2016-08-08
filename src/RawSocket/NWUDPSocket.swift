@@ -36,10 +36,19 @@ public class NWUDPSocket {
      - parameter host: The host.
      - parameter port: The port.
      */
-    init(host: String, port: Int) {
-        session = RawSocketFactory.TunnelProvider.createUDPSessionToEndpoint(NWHostEndpoint(hostname: host, port: "\(port)"), fromEndpoint: nil)
-        session.setReadHandler({ [ unowned self ] dataArray, error in
-            self.updateActivityTimer()
+    init?(host: String, port: Int) {
+        guard let udpsession = RawSocketFactory.TunnelProvider?.createUDPSessionToEndpoint(NWHostEndpoint(hostname: host, port: "\(port)"), fromEndpoint: nil) else {
+            return nil
+        }
+
+        session = udpsession
+
+        session.setReadHandler({ [ weak self ] dataArray, error in
+            guard let sSelf = self else {
+                return
+            }
+
+            sSelf.updateActivityTimer()
 
             guard error == nil else {
                 DDLogError("Error when reading from remote server. \(error)")
@@ -47,7 +56,7 @@ public class NWUDPSocket {
             }
 
             for data in dataArray! {
-                self.delegate?.didReceiveData(data, from: self)
+                sSelf.delegate?.didReceiveData(data, from: sSelf)
             }
             }, maxDatagrams: 32)
     }
@@ -61,6 +70,12 @@ public class NWUDPSocket {
         dispatch_async(queue) {
             self.pendingWriteData.append(data)
             self.checkWrite()
+        }
+    }
+
+    func disconnect() {
+        dispatch_async(queue) {
+            self.session.cancel()
         }
     }
 

@@ -76,7 +76,12 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             tlsParameters.setValuesForKeysWithDictionary(tlsSettings)
         }
 
-        connection = RawSocketFactory.TunnelProvider.createTCPConnectionToEndpoint(endpoint, enableTLS: enableTLS, TLSParameters: tlsParameters, delegate: nil)
+        guard let connection = RawSocketFactory.TunnelProvider?.createTCPConnectionToEndpoint(endpoint, enableTLS: enableTLS, TLSParameters: tlsParameters, delegate: nil) else {
+            // This should only happen when the extension is already stoped and `RawSocketFactory.TunnelProvider` is set to `nil`.
+            return
+        }
+
+        self.connection = connection
         connection.addObserver(self, forKeyPath: "state", options: [.Initial, .New], context: nil)
     }
 

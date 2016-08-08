@@ -31,7 +31,7 @@ public class DNSSession {
             return nil
         }
 
-        self.requestMessage = message
+        requestMessage = message
     }
 
     convenience init?(packet: IPPacket) {

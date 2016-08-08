@@ -46,8 +46,9 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
      */
     private func cleanUp(address: IPv4Address, after delay: Int) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay) * Int64(NSEC_PER_SEC)), queue) {
-            self.fakeSessions.removeValueForKey(address)
-            self.pool?.releaseIP(address)
+            [weak self] in
+            self?.fakeSessions.removeValueForKey(address)
+            self?.pool?.releaseIP(address)
         }
     }
 
@@ -114,6 +115,15 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
             self.lookup(session)
         }
         return true
+    }
+
+    public func stop() {
+        for resolver in resolvers {
+            resolver.stop()
+        }
+        resolvers = []
+
+        // The blocks scheduled with `dispatch_after` are ignored since they are hard to cancel. But there should be no consequence, everything will be released except for a few `IPAddress`es and the `queue` which will be released later.
     }
 
     private func outputSession(session: DNSSession) {

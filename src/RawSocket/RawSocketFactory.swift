@@ -15,8 +15,8 @@ public enum SocketBaseType {
 public class RawSocketFactory {
     /// Current active `NETunnelProvider` which creates `NWTCPConnection` instance.
     ///
-    /// - note: Must set before any connection is created if `NWTCPSocket` is used.
-    public static weak var TunnelProvider: NETunnelProvider!
+    /// - note: Must set before any connection is created if `NWTCPSocket` or `NWUDPSocket` is used.
+    public static weak var TunnelProvider: NETunnelProvider?
 
     /**
      Return `RawTCPSocket` instance.

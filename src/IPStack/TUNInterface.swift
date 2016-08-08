@@ -4,10 +4,8 @@ import CocoaLumberjackSwift
 
 /// TUN interface provide a scheme to register a set of IP Stacks (implementing `IPStackProtocol`) to process IP packets from a virtual TUN interface.
 public class TUNInterface {
-    private weak var packetFlow: NEPacketTunnelFlow!
+    private weak var packetFlow: NEPacketTunnelFlow?
     private var stacks: [IPStackProtocol] = []
-
-    private var reading = true
 
     /**
      Initialize TUN interface with a packet flow.
@@ -20,13 +18,23 @@ public class TUNInterface {
 
     /**
      Start processing packets, this should be called after registering all IP stacks.
+
+     A stopped interface should never start again. Create a new interface instead.
      */
     public func start() {
         readPackets()
     }
 
+    /**
+     Stop processing packets, this should be called before releasing the interface.
+     */
     public func stop() {
-        reading = false
+        packetFlow = nil
+
+        for stack in stacks {
+            stack.stop()
+        }
+        stacks = []
     }
 
     /**
@@ -50,16 +58,14 @@ public class TUNInterface {
                     }
                 }
             }
-            if self.reading {
-                self.readPackets()
-            }
+            self.readPackets()
         }
     }
 
 
     private func generateOutputBlock() -> ([NSData], [NSNumber]) -> () {
-        return { packets, versions in
-            self.packetFlow?.writePackets(packets, withProtocols: versions)
+        return { [weak self] packets, versions in
+            self?.packetFlow?.writePackets(packets, withProtocols: versions)
         }
     }
 }

@@ -48,7 +48,14 @@ public class ProxyServer: NSObject, TunnelDelegate {
      Stop the proxy server.
      */
     public func stop() {
-        tunnels.value.removeAll(keepCapacity: true)
+        // Note it is not possible to close tunnel here since the tunnel dispatch queue is not available.
+        // But just removing all of them is sufficient.
+        tunnels.withBox {
+            for tunnel in $0.value {
+                tunnel.forceClose()
+            }
+//            $0.value.removeAll()
+        }
     }
 
     /**
