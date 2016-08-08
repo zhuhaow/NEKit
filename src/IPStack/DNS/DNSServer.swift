@@ -215,13 +215,7 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
 
             session.realResponseMessage = message
 
-            // TODO: check return code.
-            guard let resolvedAddress = message.resolvedIPv4Address else {
-                session.matchResult = .Real
-                self.outputSession(session)
-                return
-            }
-            session.realIP = resolvedAddress
+            session.realIP = message.resolvedIPv4Address
 
             if session.matchResult != .Fake && session.matchResult != .Real {
                 RuleManager.currentManager.matchDNS(session, type: .IP)

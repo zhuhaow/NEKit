@@ -31,6 +31,8 @@ struct RuleParser {
             return parseAllRule(config, adapterFactoryManager: adapterFactoryManager)
         case "list":
             return parseListRule(config, adapterFactoryManager: adapterFactoryManager)
+        case "dnsfail":
+            return parseDNSFailRule(config, adapterFactoryManager: adapterFactoryManager)
         default:
             DDLogError("Unknown rule type.")
             return nil
@@ -106,5 +108,19 @@ struct RuleParser {
             DDLogError("\(error)")
             return nil
         }
+    }
+
+    static func parseDNSFailRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) -> DNSFailRule? {
+        guard let adapter_id = config["adapter"].string else {
+            DDLogError("An adapter id is required.")
+            return nil
+        }
+
+        guard let adapter = adapterFactoryManager[adapter_id] else {
+            DDLogError("Unknown adapter id.")
+            return nil
+        }
+
+        return DNSFailRule(adapterFactory: adapter)
     }
 }

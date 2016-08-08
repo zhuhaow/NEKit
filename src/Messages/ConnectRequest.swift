@@ -50,7 +50,7 @@ public class ConnectRequest {
                 return ip
             }
 
-            return session.realIP!.presentation
+            return session.realIP?.presentation ?? ""
         }
         }()
 
@@ -100,7 +100,7 @@ public class ConnectRequest {
         }
 
         host = session.requestMessage.queries[0].name
-        ipAddress = session.realIP!.presentation
+        ipAddress = session.realIP?.presentation ?? ""
         matchedRule = session.matchedRule
 
         if session.countryCode != nil {
