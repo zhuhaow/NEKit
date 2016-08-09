@@ -14,7 +14,7 @@ gem install jazzy
 jazzy --config docs/.jazzy.yaml
 
 # remove all redundant files
-find . -not -name "docs" -not -name ".git" -maxdepth 1 | xargs -0 rm --
+find . -not -name "docs" -not -name ".git" -maxdepth 1 -print0 | xargs -0 rm --
 # copy docs files to root
 cp -r docs/. .
 rm -rf docs
