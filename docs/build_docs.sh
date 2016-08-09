@@ -10,7 +10,7 @@ fi
 
 
 # build docs now
-gem install jazzy
+gem install jazzy --no-ri --no-rdoc
 jazzy --config docs/.jazzy.yaml
 
 # remove all redundant files
