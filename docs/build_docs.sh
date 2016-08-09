@@ -14,12 +14,13 @@ gem install jazzy
 jazzy --config docs/.jazzy.yaml
 
 # remove all redundant files
-find . -not -name "docs" -not -name ".git" -maxdepth 1 -print0 | xargs -0 rm --
+find . -not -name "docs" -not -name ".git" -maxdepth 1 -print0 | xargs -0 rm -rf --
 # copy docs files to root
 cp -r docs/. .
 rm -rf docs
 
 # push update
+git checkout --orphan gh-pages
 git add .
 git -c user.name="Travis CI" commit -m "Update docs"
 git push --force --quiet https://$GITHUB_API_KEY@github.com/zhuhaow/NEKit.git gh-pages > /dev/null 2>&1
