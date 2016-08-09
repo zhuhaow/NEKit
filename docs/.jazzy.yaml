@@ -20,28 +20,33 @@ custom_categories:
   - name: Socket
     children:
       - Tunnel
+      - TunnelDelegate
       - SocketProtocol
+      - SocketDelegate
       - ProxySocket
-      - DiretProxySocket
+      - DirectProxySocket
       - HTTPProxySocket
       - SOCKS5ProxySocket
       - AdapterSocket
       - DirectAdapter
       - HTTPAdapter
-      - SecuredHTTPAdapter
+      - SecureHTTPAdapter
       - ShadowsocksAdapter
-      - SpeedAdater
+      - SpeedAdapter
+      - SocketStatus
 
   - name: AdapterSocketFactory
     children:
       - AdapterFactoryManager
       - AdapterFactory
+      - DirectAdapterFactory
       - ServerAdapterFactory
       - AuthenticationServerAdapterFactory
       - HTTPAdapterFactory
-      - SecuredHTTPAdapterFactory
+      - HTTPAuthenticationAdapterFactory
+      - SecureHTTPAdapterFactory
       - ShadowsocksAdapterFactory
-      - SpeedAdaterFactory
+      - SpeedAdapterFactory
 
   - name: Raw Socket
     children:
@@ -80,8 +85,18 @@ custom_categories:
   - name: DNS
     children:
       - DNSEnum
+      - DNSClass
+      - DNSMessageType
+      - DNSReturnStatus
+      - DNSType
       - DNSMessage
+      - DNSNameConverter
+      - DNSQuery
+      - DNSResource
+      - DNSResolverProtocol
       - DNSResolver
+      - DNSResolverDelegate
+      - UDPDNSResolver
       - DNSServer
       - DNSSession
       - DNSSessionMatchResult
