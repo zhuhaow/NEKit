@@ -1,0 +1,44 @@
+output: docs/
+source_directory: NEKit/
+swift_version: 2.2
+author: Zhuhao Wang
+readme: NEKit/README.md
+github_url: https://github.com/zhuhaow/NEKit
+min_acl: private
+module: NEKit
+
+theme: fullwidth
+
+custom_categories:
+  - name: Socket
+    children:
+      - SocketProtocol
+      - ProxySocket
+      - DiretProxySocket
+      - HTTPProxySocket
+      - SOCKS5ProxySocket
+      - AdapterSocket
+      - DirectAdapter
+      - HTTPAdapter
+      - SecuredHTTPAdapter
+      - ShadowsocksAdapter
+      - SpeedAdater
+
+  - name: AdapterSocketFactory
+    children:
+      - AdapterFactoryManager
+      - AdapterFactory
+      - ServerAdapterFactory
+      - AuthenticationServerAdapterFactory
+      - HTTPAdapterFactory
+      - SecuredHTTPAdapterFactory
+      - ShadowsocksAdapterFactory
+      - SpeedAdaterFactory
+
+  - name: Raw Socket
+    children:
+      - SocketBaseType
+      - RawSocketFactory
+      - RawTCPSocketProtocol
+      - RawTCPSocketDelegate
+
