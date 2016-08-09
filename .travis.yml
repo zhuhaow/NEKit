@@ -6,7 +6,6 @@ cache:
     - Carthage
 
 install:
-  - brew update && brew install swiftlint
   - bin/bootstrap-if-needed
   
 script:
@@ -15,5 +14,5 @@ script:
   - xctool -project NEKit.xcodeproj -scheme "NEKitDemo" -sdk macosx10.11 -arch x86_64 build
 
 after_success:
-  - ./scripts/build_docs.sh
+  - ./docs/build_docs.sh
 
