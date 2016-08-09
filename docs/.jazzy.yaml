@@ -10,8 +10,16 @@ module: NEKit
 theme: fullwidth
 
 custom_categories:
+  - name: Proxy Server
+    children:
+      - ProxyServer
+      - GCDProxyServer
+      - GCDSOCKS5ProxyServer
+      - GCDHTTPProxyServer
+
   - name: Socket
     children:
+      - Tunnel
       - SocketProtocol
       - ProxySocket
       - DiretProxySocket
@@ -41,4 +49,73 @@ custom_categories:
       - RawSocketFactory
       - RawTCPSocketProtocol
       - RawTCPSocketDelegate
+      - GCDTCPSocket
+      - NWTCPSocket
+      - TUNTCPSocket
+      - NWUDPSocket
+  
+  - name: Rule
+    children:
+       - RuleManager
+       - Rule
+       - DirectRule
+       - AllRule
+       - CountryRule
+       - ListRule
+       - DNSFailRule
+
+  - name: Connect Message
+    children:
+      - ConnectRequest
+      - ConnectResponse
+      - HTTPHeader
+
+  - name: IP Stack
+    children:
+      - TUNInterface
+      - IPStackProtocol
+      - TCPStack
+      - UDPDirectStack
+
+  - name: DNS
+    children:
+      - DNSEnum
+      - DNSMessage
+      - DNSResolver
+      - DNSServer
+      - DNSSession
+      - DNSSessionMatchResult
+      - DNSSessionMatchType
+
+  - name: IP Packet
+    children:
+      - IPVersion
+      - TransportProtocol
+      - IPPacket
+      - TransportProtocolParserProtocol
+      - UDPProtocolParser
+
+  - name: Configuration Parser
+    children:
+      - Configuration
+      - AdapterFactoryParser
+      - RuleParser
+
+  - name: Utilities
+    children:
+      - Atomic
+      - Box
+      - BinaryReadable
+      - BinaryDataScanner
+      - Checksum
+      - HTTPAuthentication
+      - HTTPStreamScanner
+      - IPAddress
+      - IPv4Address
+      - IPv4Pool
+      - Port
+      - StreamScanner
+      - Utils
+
+
 
