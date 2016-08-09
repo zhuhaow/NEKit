@@ -13,11 +13,6 @@ fi
 gem install jazzy
 jazzy --config docs/.jazzy.yaml
 
-
-git remote set-branches --add origin $DOC_BRANCH
-git fetch
-git checkout $DOC_BRANCH
-
 # remove all redundant files
 find . -not -name "docs" -not -name ".git" -maxdepth 1 | xargs -0 rm --
 # copy docs files to root

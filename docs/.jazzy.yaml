@@ -1,8 +1,8 @@
-output: docs/
-source_directory: NEKit/
+output: "."
+source_directory: ../
 swift_version: 2.2
 author: Zhuhao Wang
-readme: NEKit/README.md
+readme: ../README.md
 github_url: https://github.com/zhuhaow/NEKit
 min_acl: private
 module: NEKit
