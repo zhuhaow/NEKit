@@ -75,6 +75,7 @@
 		36A718E31D5AE37C00DC35F5 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E01D5AE37C00DC35F5 /* .gitignore */; };
 		36A718E41D5AE37C00DC35F5 /* .jazzy.yaml in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E11D5AE37C00DC35F5 /* .jazzy.yaml */; };
 		36A718E51D5AE37C00DC35F5 /* build_docs.sh in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E21D5AE37C00DC35F5 /* build_docs.sh */; };
+		36A718E71D5AF2C100DC35F5 /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C48CFB1CF88D9C0071804F /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36B161FB1CDCDF3A00F24C97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */; };
 		36B161FD1CDCDF3B00F24C97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */; };
 		36B162001CDCDF3B00F24C97 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FE1CDCDF3B00F24C97 /* MainMenu.xib */; };
@@ -248,6 +249,16 @@
 			dstSubfolderSpec = 10;
 			files = (
 				36A503F71CF5AC6300D1FC78 /* tun2socks.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		36A718E61D5AF2AF00DC35F5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				36A718E71D5AF2C100DC35F5 /* tun2socks.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -847,6 +858,7 @@
 				36C48D4B1CF88DED0071804F /* Resources */,
 				B596614759D8E2954DE5A031 /* Warn for TODO and FIXME comments */,
 				54BD0DA398CF0C5B9E0B9491 /* Set version number */,
+				36A718E61D5AF2AF00DC35F5 /* CopyFiles */,
 			);
 			buildRules = (
 			);
