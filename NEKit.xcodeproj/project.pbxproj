@@ -69,10 +69,11 @@
 		366EB5CB1CE061F200E0E942 /* AdapterFactoryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CA1CE061F200E0E942 /* AdapterFactoryParser.swift */; };
 		366EB5CD1CE06B5E00E0E942 /* RawSocketFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */; };
 		366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */; };
-		369E75761CF4281400D52D3C /* tun2socks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; };
-		36A503F71CF5AC6300D1FC78 /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */; };
-		36A718E71D5AF2C100DC35F5 /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C48CFB1CF88D9C0071804F /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		36A718E91D5AF82B00DC35F5 /* tun2socks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A718E81D5AF82B00DC35F5 /* tun2socks.framework */; };
+		36A718EB1D5AF84400DC35F5 /* tun2socks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A718EA1D5AF84400DC35F5 /* tun2socks.framework */; };
+		36A719421D5B231100DC35F5 /* lwip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A719411D5B231100DC35F5 /* lwip.framework */; };
+		36A719451D5B25EF00DC35F5 /* lwip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A719441D5B25EF00DC35F5 /* lwip.framework */; };
 		36B1620F1CDDA0E000F24C97 /* CountryRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620C1CDDA0E000F24C97 /* CountryRule.swift */; };
 		36B162101CDDA0E000F24C97 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620D1CDDA0E000F24C97 /* Rule.swift */; };
 		36B162111CDDA0E000F24C97 /* RuleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620E1CDDA0E000F24C97 /* RuleManager.swift */; };
@@ -146,7 +147,6 @@
 		36C48D851CF88EE60071804F /* StreamScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */; };
 		36C48D861CF88EE60071804F /* Tunnel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162231CDDA0EA00F24C97 /* Tunnel.swift */; };
 		36C48D871CF88EE60071804F /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162241CDDA0EA00F24C97 /* Utils.swift */; };
-		36C48D8A1CF8960A0071804F /* tun2socks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48CFB1CF88D9C0071804F /* tun2socks.framework */; };
 		36C48D931CF896A70071804F /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D8B1CF896A70071804F /* CocoaAsyncSocket.framework */; };
 		36C48D941CF896A70071804F /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D8C1CF896A70071804F /* CocoaLumberjack.framework */; };
 		36C48D951CF896A70071804F /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D8D1CF896A70071804F /* CocoaLumberjackSwift.framework */; };
@@ -181,37 +181,6 @@
 		36E44A021CF2ED4800185DBF /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		369E75741CF4279E00D52D3C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3642C9FE1CEDCC60001E0AAF;
-			remoteInfo = tun2socks;
-		};
-		369E75771CF42AEC00D52D3C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 3642C9FD1CEDCC60001E0AAF;
-			remoteInfo = tun2socks;
-		};
-		36C48CFA1CF88D9C0071804F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 36C48CA21CF8701A0071804F;
-			remoteInfo = "iOS Framework";
-		};
-		36C48D881CF88EF90071804F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 36C48CA11CF8701A0071804F;
-			remoteInfo = "iOS Framework";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		36A503F61CF5AC5800D1FC78 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -219,7 +188,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				36A503F71CF5AC6300D1FC78 /* tun2socks.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,7 +197,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				36A718E71D5AF2C100DC35F5 /* tun2socks.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,11 +252,14 @@
 		366EB5CA1CE061F200E0E942 /* AdapterFactoryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdapterFactoryParser.swift; sourceTree = "<group>"; };
 		366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RawSocketFactory.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapter.swift; sourceTree = "<group>"; };
-		369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = tun2socks.xcodeproj; path = tun2socks/tun2socks.xcodeproj; sourceTree = "<group>"; };
 		36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectProxySocket.swift; sourceTree = "<group>"; };
 		36A718E01D5AE37C00DC35F5 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		36A718E11D5AE37C00DC35F5 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .jazzy.yaml; sourceTree = "<group>"; };
 		36A718E21D5AE37C00DC35F5 /* build_docs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_docs.sh; sourceTree = "<group>"; };
+		36A718E81D5AF82B00DC35F5 /* tun2socks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = tun2socks.framework; path = Carthage/Build/Mac/tun2socks.framework; sourceTree = "<group>"; };
+		36A718EA1D5AF84400DC35F5 /* tun2socks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = tun2socks.framework; path = Carthage/Build/iOS/tun2socks.framework; sourceTree = "<group>"; };
+		36A719411D5B231100DC35F5 /* lwip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = lwip.framework; path = Carthage/Build/Mac/lwip.framework; sourceTree = "<group>"; };
+		36A719441D5B25EF00DC35F5 /* lwip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = lwip.framework; path = Carthage/Build/iOS/lwip.framework; sourceTree = "<group>"; };
 		36B1620C1CDDA0E000F24C97 /* CountryRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryRule.swift; sourceTree = "<group>"; };
 		36B1620D1CDDA0E000F24C97 /* Rule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		36B1620E1CDDA0E000F24C97 /* RuleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleManager.swift; sourceTree = "<group>"; };
@@ -348,7 +318,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				369E75761CF4281400D52D3C /* tun2socks.framework in Frameworks */,
+				36A719421D5B231100DC35F5 /* lwip.framework in Frameworks */,
+				36A718E91D5AF82B00DC35F5 /* tun2socks.framework in Frameworks */,
 				36B1624E1CDDA26600F24C97 /* CocoaAsyncSocket.framework in Frameworks */,
 				36B1624F1CDDA26600F24C97 /* CocoaLumberjack.framework in Frameworks */,
 				36B162501CDDA26600F24C97 /* CocoaLumberjackSwift.framework in Frameworks */,
@@ -363,6 +334,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36A719451D5B25EF00DC35F5 /* lwip.framework in Frameworks */,
+				36A718EB1D5AF84400DC35F5 /* tun2socks.framework in Frameworks */,
 				36C48D931CF896A70071804F /* CocoaAsyncSocket.framework in Frameworks */,
 				36C48D941CF896A70071804F /* CocoaLumberjack.framework in Frameworks */,
 				36C48D951CF896A70071804F /* CocoaLumberjackSwift.framework in Frameworks */,
@@ -370,7 +343,6 @@
 				36C48D981CF896A70071804F /* MMDB.framework in Frameworks */,
 				36C48D991CF896A70071804F /* Sodium.framework in Frameworks */,
 				36C48D9A1CF896A70071804F /* Yaml.framework in Frameworks */,
-				36C48D8A1CF8960A0071804F /* tun2socks.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,15 +385,13 @@
 			isa = PBXGroup;
 			children = (
 				36A718DF1D5AE37C00DC35F5 /* docs */,
-				36C48D9C1CF948500071804F /* Carthage Framework OSX */,
-				36C48D9B1CF9483F0071804F /* Carthage Framework iOS */,
+				36A719431D5B234500DC35F5 /* Carthage */,
 				36C48D4E1CF88DED0071804F /* NEKit-iOS */,
 				368225B91D12484D00E7B495 /* NEKit-macOS */,
 				36463A311CDCD5EB0040579C /* Products */,
 				36463A321CDCD5EB0040579C /* src */,
 				3664F0C61CE37763008BA6D8 /* .swiftlint.yml */,
 				36B1624A1CDDA13500F24C97 /* Cartfile */,
-				369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */,
 			);
 			indentWidth = 4;
 			sourceTree = "<group>";
@@ -490,15 +460,6 @@
 			path = "NEKit-macOS";
 			sourceTree = "<group>";
 		};
-		369E75711CF4279E00D52D3C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				369E75751CF4279E00D52D3C /* tun2socks.framework */,
-				36C48CFB1CF88D9C0071804F /* tun2socks.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		36A718DF1D5AE37C00DC35F5 /* docs */ = {
 			isa = PBXGroup;
 			children = (
@@ -507,6 +468,15 @@
 				36A718E21D5AE37C00DC35F5 /* build_docs.sh */,
 			);
 			path = docs;
+			sourceTree = "<group>";
+		};
+		36A719431D5B234500DC35F5 /* Carthage */ = {
+			isa = PBXGroup;
+			children = (
+				36C48D9B1CF9483F0071804F /* Framework iOS */,
+				36C48D9C1CF948500071804F /* Framework macOS */,
+			);
+			name = Carthage;
 			sourceTree = "<group>";
 		};
 		36B1620B1CDDA0E000F24C97 /* Rule */ = {
@@ -606,9 +576,11 @@
 			path = "NEKit-iOS";
 			sourceTree = "<group>";
 		};
-		36C48D9B1CF9483F0071804F /* Carthage Framework iOS */ = {
+		36C48D9B1CF9483F0071804F /* Framework iOS */ = {
 			isa = PBXGroup;
 			children = (
+				36A719441D5B25EF00DC35F5 /* lwip.framework */,
+				36A718EA1D5AF84400DC35F5 /* tun2socks.framework */,
 				36C48D8B1CF896A70071804F /* CocoaAsyncSocket.framework */,
 				36C48D8C1CF896A70071804F /* CocoaLumberjack.framework */,
 				36C48D8D1CF896A70071804F /* CocoaLumberjackSwift.framework */,
@@ -617,12 +589,14 @@
 				36C48D911CF896A70071804F /* Sodium.framework */,
 				36C48D921CF896A70071804F /* Yaml.framework */,
 			);
-			name = "Carthage Framework iOS";
+			name = "Framework iOS";
 			sourceTree = "<group>";
 		};
-		36C48D9C1CF948500071804F /* Carthage Framework OSX */ = {
+		36C48D9C1CF948500071804F /* Framework macOS */ = {
 			isa = PBXGroup;
 			children = (
+				36A719411D5B231100DC35F5 /* lwip.framework */,
+				36A718E81D5AF82B00DC35F5 /* tun2socks.framework */,
 				36B1624B1CDDA26600F24C97 /* CocoaAsyncSocket.framework */,
 				36B1624C1CDDA26600F24C97 /* CocoaLumberjack.framework */,
 				36B1624D1CDDA26600F24C97 /* CocoaLumberjackSwift.framework */,
@@ -631,7 +605,7 @@
 				3664F0B91CE21A60008BA6D8 /* Sodium.framework */,
 				366EB5BA1CDE328F00E0E942 /* Yaml.framework */,
 			);
-			name = "Carthage Framework OSX";
+			name = "Framework macOS";
 			sourceTree = "<group>";
 		};
 		36C48DA71CF9D6250071804F /* DNS */ = {
@@ -714,7 +688,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				369E75781CF42AEC00D52D3C /* PBXTargetDependency */,
 			);
 			name = "NEKit-macOS";
 			productName = NEKit;
@@ -736,7 +709,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				36C48D891CF88EF90071804F /* PBXTargetDependency */,
 			);
 			name = "NEKit-iOS";
 			productName = "iOS Framework";
@@ -773,12 +745,6 @@
 			mainGroup = 36463A261CDCD5EB0040579C;
 			productRefGroup = 36463A311CDCD5EB0040579C /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 369E75711CF4279E00D52D3C /* Products */;
-					ProjectRef = 369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				36463A2F1CDCD5EB0040579C /* NEKit-macOS */,
@@ -786,23 +752,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		369E75751CF4279E00D52D3C /* tun2socks.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = tun2socks.framework;
-			remoteRef = 369E75741CF4279E00D52D3C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		36C48CFB1CF88D9C0071804F /* tun2socks.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = tun2socks.framework;
-			remoteRef = 36C48CFA1CF88D9C0071804F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		36463A2E1CDCD5EB0040579C /* Resources */ = {
@@ -1061,19 +1010,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		369E75781CF42AEC00D52D3C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = tun2socks;
-			targetProxy = 369E75771CF42AEC00D52D3C /* PBXContainerItemProxy */;
-		};
-		36C48D891CF88EF90071804F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "iOS Framework";
-			targetProxy = 36C48D881CF88EF90071804F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		36463A421CDCD5EB0040579C /* Debug */ = {
