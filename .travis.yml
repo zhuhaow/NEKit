@@ -3,15 +3,30 @@ osx_image: xcode7.3
 
 cache:
   directories:
-    - Carthage
+  - Carthage
 
 install:
-  - bin/bootstrap-if-needed
-  
+- bin/bootstrap-if-needed
+
 script:
-  - xctool -project NEKit.xcodeproj -scheme "NEKit-macOS" -sdk macosx10.11 -arch x86_64 build
-  - xctool -project NEKit.xcodeproj -scheme "NEKit-iOS" -sdk iphoneos9.3 -arch arm64 build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-
+- xctool -project NEKit.xcodeproj -scheme "NEKit-macOS" -sdk macosx10.11 -arch x86_64
+  build
+- xctool -project NEKit.xcodeproj -scheme "NEKit-iOS" -sdk iphoneos9.3 -arch arm64
+  build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+  
 after_success:
-  - ./docs/build_docs.sh
+- "./docs/build_docs.sh"
 
+before_deploy:
+- carthage build --no-skip-current
+- carthage archive NEKit
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: DZC5vAZl8nbvPsVnYTf3zmh9/x7Y8hl3b2gSMklVtmwg2RkQ+OlaiJmpIzwiCY1iUkEBZ4X/5vRj/Ed07s648atJMkp8Y0WXNKzsLAZXmHNd+2h99IVx7PC112mj8qQTmoihUle5+vANthHZoG1jti59siHeFgpLb4BEQl1iCRESy4tl6XQZcgRwphTeEwyNWuveBToBdIx2piCAavwlw++YPsD3+NFgyqy8gZsiueins2sX7hpcZDNKjfDKSO7Lfi3YSqvEXF6xYrmwG7TO25Jf6iCurQho/Gc74n0RwjJgBgfGm5SIdzmK+Est061xW1iQQzEUF1RN/kB6kKtqVjxxdGNg7GhTEpXBII0GyCdsoIlPSxC40xz+3QAR6xHkcEEygle39QSIIza9hBX3weKYABZFjnCQz2i/hGnN+KBurgNLeBJeOUbNN9Dzct3WPV72yebiOMLl+lnPuK88NB5mRR5Gq9ZFtBp86JBNmStWb041Dd8jY6tTqsLd253phosVFmClvndauQayuYUVLAKx9csKNwhyrVtpjdsniiRSzHn8E+zzi4jvC7KEXDUym5Jq8qvJMb0c1itv4A+yzBc4C7jxBsPz5AiUWbFoWJv+lYtQlOCjagNjFDCMz3XqDIJvyDmxNgsgCUbnJsz6NQLCydnwcsHvk+v8iOZjMUs=
+  file: NEKit.framework.zip
+  on:
+    repo: zhuhaow/NEKit
+    tags: true
