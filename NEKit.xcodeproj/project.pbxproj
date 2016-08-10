@@ -72,9 +72,6 @@
 		369E75761CF4281400D52D3C /* tun2socks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; };
 		36A503F71CF5AC6300D1FC78 /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */; };
-		36A718E31D5AE37C00DC35F5 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E01D5AE37C00DC35F5 /* .gitignore */; };
-		36A718E41D5AE37C00DC35F5 /* .jazzy.yaml in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E11D5AE37C00DC35F5 /* .jazzy.yaml */; };
-		36A718E51D5AE37C00DC35F5 /* build_docs.sh in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E21D5AE37C00DC35F5 /* build_docs.sh */; };
 		36A718E71D5AF2C100DC35F5 /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C48CFB1CF88D9C0071804F /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36B161FB1CDCDF3A00F24C97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */; };
 		36B161FD1CDCDF3B00F24C97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */; };
@@ -941,9 +938,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36A718E41D5AE37C00DC35F5 /* .jazzy.yaml in Resources */,
-				36A718E51D5AE37C00DC35F5 /* build_docs.sh in Resources */,
-				36A718E31D5AE37C00DC35F5 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
