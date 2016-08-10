@@ -61,7 +61,7 @@
 		366EB5B81CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */; };
 		366EB5B91CDE150C00E0E942 /* ServerAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5B51CDE150C00E0E942 /* ServerAdapterFactory.swift */; };
 		366EB5BB1CDE328F00E0E942 /* Yaml.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 366EB5BA1CDE328F00E0E942 /* Yaml.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		366EB5C01CDE32CD00E0E942 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5BF1CDE32CD00E0E942 /* Parser.swift */; };
+		366EB5C01CDE32CD00E0E942 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5BF1CDE32CD00E0E942 /* Configuration.swift */; };
 		366EB5C31CDF375B00E0E942 /* SpeedAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5C21CDF375B00E0E942 /* SpeedAdapter.swift */; };
 		366EB5C51CDF3FA700E0E942 /* SpeedAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5C41CDF3FA700E0E942 /* SpeedAdapterFactory.swift */; };
 		366EB5C71CE033FB00E0E942 /* ListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5C61CE033FB00E0E942 /* ListRule.swift */; };
@@ -72,6 +72,9 @@
 		369E75761CF4281400D52D3C /* tun2socks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; };
 		36A503F71CF5AC6300D1FC78 /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 369E75751CF4279E00D52D3C /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */; };
+		36A718E31D5AE37C00DC35F5 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E01D5AE37C00DC35F5 /* .gitignore */; };
+		36A718E41D5AE37C00DC35F5 /* .jazzy.yaml in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E11D5AE37C00DC35F5 /* .jazzy.yaml */; };
+		36A718E51D5AE37C00DC35F5 /* build_docs.sh in Resources */ = {isa = PBXBuildFile; fileRef = 36A718E21D5AE37C00DC35F5 /* build_docs.sh */; };
 		36B161FB1CDCDF3A00F24C97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */; };
 		36B161FD1CDCDF3B00F24C97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */; };
 		36B162001CDCDF3B00F24C97 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36B161FE1CDCDF3B00F24C97 /* MainMenu.xib */; };
@@ -119,7 +122,7 @@
 		36C48D621CF88EB60071804F /* ShadowsocksAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */; };
 		36C48D631CF88EB60071804F /* SpeedAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5C21CDF375B00E0E942 /* SpeedAdapter.swift */; };
 		36C48D651CF88EBC0071804F /* AdapterFactoryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CA1CE061F200E0E942 /* AdapterFactoryParser.swift */; };
-		36C48D661CF88EBC0071804F /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5BF1CDE32CD00E0E942 /* Parser.swift */; };
+		36C48D661CF88EBC0071804F /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5BF1CDE32CD00E0E942 /* Configuration.swift */; };
 		36C48D671CF88EBC0071804F /* RuleParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5C81CE061C500E0E942 /* RuleParser.swift */; };
 		36C48D681CF88EC10071804F /* GeoIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162611CDDADC100F24C97 /* GeoIP.swift */; };
 		36C48D691CF88EC50071804F /* ConnectResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162161CDDA0EA00F24C97 /* ConnectResponse.swift */; };
@@ -312,7 +315,7 @@
 		366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureHTTPAdapterFactory.swift; sourceTree = "<group>"; };
 		366EB5B51CDE150C00E0E942 /* ServerAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAdapterFactory.swift; sourceTree = "<group>"; };
 		366EB5BA1CDE328F00E0E942 /* Yaml.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Yaml.framework; path = Carthage/Build/Mac/Yaml.framework; sourceTree = "<group>"; };
-		366EB5BF1CDE32CD00E0E942 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		366EB5BF1CDE32CD00E0E942 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		366EB5C11CDF102F00E0E942 /* config.example.yaml */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.example.yaml; sourceTree = "<group>"; };
 		366EB5C21CDF375B00E0E942 /* SpeedAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedAdapter.swift; sourceTree = "<group>"; };
 		366EB5C41CDF3FA700E0E942 /* SpeedAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedAdapterFactory.swift; sourceTree = "<group>"; };
@@ -323,6 +326,9 @@
 		366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapter.swift; sourceTree = "<group>"; };
 		369E75701CF4279E00D52D3C /* tun2socks.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = tun2socks.xcodeproj; path = tun2socks/tun2socks.xcodeproj; sourceTree = "<group>"; };
 		36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectProxySocket.swift; sourceTree = "<group>"; };
+		36A718E01D5AE37C00DC35F5 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		36A718E11D5AE37C00DC35F5 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .jazzy.yaml; sourceTree = "<group>"; };
+		36A718E21D5AE37C00DC35F5 /* build_docs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build_docs.sh; sourceTree = "<group>"; };
 		36B161F81CDCDF3A00F24C97 /* NEKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NEKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36B161FA1CDCDF3A00F24C97 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		36B161FC1CDCDF3B00F24C97 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -477,6 +483,7 @@
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
+				36A718DF1D5AE37C00DC35F5 /* docs */,
 				36C48D9C1CF948500071804F /* Carthage Framework OSX */,
 				36C48D9B1CF9483F0071804F /* Carthage Framework iOS */,
 				36411A751D1FC181005F4108 /* Demo */,
@@ -553,7 +560,7 @@
 			isa = PBXGroup;
 			children = (
 				366EB5CA1CE061F200E0E942 /* AdapterFactoryParser.swift */,
-				366EB5BF1CDE32CD00E0E942 /* Parser.swift */,
+				366EB5BF1CDE32CD00E0E942 /* Configuration.swift */,
 				366EB5C81CE061C500E0E942 /* RuleParser.swift */,
 			);
 			path = Config;
@@ -575,6 +582,16 @@
 				36C48CFB1CF88D9C0071804F /* tun2socks.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		36A718DF1D5AE37C00DC35F5 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				36A718E01D5AE37C00DC35F5 /* .gitignore */,
+				36A718E11D5AE37C00DC35F5 /* .jazzy.yaml */,
+				36A718E21D5AE37C00DC35F5 /* build_docs.sh */,
+			);
+			path = docs;
 			sourceTree = "<group>";
 		};
 		36B161F91CDCDF3A00F24C97 /* NEKitDemo */ = {
@@ -912,6 +929,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36A718E41D5AE37C00DC35F5 /* .jazzy.yaml in Resources */,
+				36A718E51D5AE37C00DC35F5 /* build_docs.sh in Resources */,
+				36A718E31D5AE37C00DC35F5 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1023,7 +1043,7 @@
 				36C63E041D02C0B700A00CA2 /* TCPStack.swift in Sources */,
 				36411A731D1FBFB0005F4108 /* IPv4Pool.swift in Sources */,
 				36B162251CDDA0EA00F24C97 /* AdapterSocket.swift in Sources */,
-				366EB5C01CDE32CD00E0E942 /* Parser.swift in Sources */,
+				366EB5C01CDE32CD00E0E942 /* Configuration.swift in Sources */,
 				3650FAE51D27BA5300444E79 /* SodiumStreamCrypto.swift in Sources */,
 				36411A801D214D32005F4108 /* PacketProtocolParser.swift in Sources */,
 				366EB5B91CDE150C00E0E942 /* ServerAdapterFactory.swift in Sources */,
@@ -1120,7 +1140,7 @@
 				36C48D571CF88EB60071804F /* AdapterFactory.swift in Sources */,
 				36C63DFA1D001FDA00A00CA2 /* IPPacket.swift in Sources */,
 				36C48DAD1CF9D6580071804F /* DNSEnums.swift in Sources */,
-				36C48D661CF88EBC0071804F /* Parser.swift in Sources */,
+				36C48D661CF88EBC0071804F /* Configuration.swift in Sources */,
 				36411A5A1D13988A005F4108 /* GCDHTTPProxyServer.swift in Sources */,
 				36C48D701CF88ECB0071804F /* TUNInterface.swift in Sources */,
 				36C48D771CF88ED40071804F /* SocketTag.swift in Sources */,

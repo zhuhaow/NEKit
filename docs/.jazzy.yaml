@@ -115,6 +115,7 @@ custom_categories:
       - Configuration
       - AdapterFactoryParser
       - RuleParser
+      - ConfigurationParserError
 
   - name: Utilities
     children:
