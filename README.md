@@ -1,6 +1,6 @@
 # NEKit
 
-[![Join the chat at https://gitter.im/zhuhaow/NEKit](https://badges.gitter.im/zhuhaow/NEKit.svg)](https://gitter.im/zhuhaow/NEKit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/zhuhaow/NEKit.svg?branch=master)](https://travis-ci.org/zhuhaow/NEKit) [![GitHub release](https://img.shields.io/github/release/zhuhaow/NEKit.svg?maxAge=2592000)](https://github.com/zhuhaow/NEKit/releases) [![Code Climate](https://codeclimate.com/github/zhuhaow/NEKit/badges/gpa.svg)](https://codeclimate.com/github/zhuhaow/NEKit) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![GitHub license](https://img.shields.io/badge/license-BSD_3--Clause-blue.svg)](https://raw.githubusercontent.com/zhuhaow/NEKit/master/LICENSE.md)
+[![Join the chat at https://gitter.im/zhuhaow/NEKit](https://badges.gitter.im/zhuhaow/NEKit.svg)](https://gitter.im/zhuhaow/NEKit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/zhuhaow/NEKit.svg?branch=master)](https://travis-ci.org/zhuhaow/NEKit) [![GitHub release](https://img.shields.io/github/release/zhuhaow/NEKit.svg)](https://github.com/zhuhaow/NEKit/releases) [![Code Climate](https://codeclimate.com/github/zhuhaow/NEKit/badges/gpa.svg)](https://codeclimate.com/github/zhuhaow/NEKit) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![GitHub license](https://img.shields.io/badge/license-BSD_3--Clause-blue.svg)](LICENSE.md)
 
 A toolkit for Network Extension Framework.
 
@@ -8,7 +8,9 @@ NEKit is the successor of [Soca](https://github.com/zhuhaow/soca-ios). The main 
 
 **NEKit does not depend on Network Extension framework. You can use NEKit without Network Extension entitlement to build a rule based proxy in a few lines.**
 
-The `NEKitDemo` target builds a rule based proxy in ten lines and you can uses it on your Mac without any entitlement.
+There are two demos that you should check out.
+
+[SpechtLite](https://github.com/zhuhaow/SpechtLite) does not require Network Extension and anyone can use it.
 
 [Specht](https://github.com/zhuhaow/Specht) is another demo that requires Network Extension entitlement.
 
@@ -20,11 +22,11 @@ Currently, NEKit supports:
 - Some tools to build IP packets.
 - ...
 
-Check document [here](https://zhuhaow.github.io/NEKit), which is not finished yet.
+Check document [here](https://zhuhaow.github.io/NEKit).
 
-Also, you may be more interested in [Potatso](https://github.com/shadowsocks/Potatso-iOS) if you just need a working app with GUI supporting shadowsocks.
+Also, you may be more interested in [Potatso](https://github.com/shadowsocks/Potatso-iOS) if you just need a working iOS app with GUI supporting shadowsocks.
 
-If you have any questions (not bug report), please join Gitter, **do not open an issue**.
+If you have any questions (not bug report), **please join Gitter instead of opening an issue**.
 
 ## Principle
 
