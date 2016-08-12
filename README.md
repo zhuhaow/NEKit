@@ -34,7 +34,7 @@ NEKit tries to be as flexible and non-opionated as possible.
 
 However, it is not always as modular as you may think if you want to reproduce transport layer from network layer.
 
-NEKit follows one fundamental principle to keep the best network performance: The host connecting to target server resolves the domain. 
+NEKit follows one fundamental principle to keep the best network performance: The device connecting to target server directly resolves the domain. 
 
 This should not be a problem if the applications on your device connect to the local proxy server directly, where we can get the request domain information then send that to remote proxy server if needed.
 
