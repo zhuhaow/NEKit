@@ -11,7 +11,7 @@ struct AdapterFactoryParser {
         }
 
         for adapterConfig in adapterConfigs {
-            guard let id = adapterConfig["id"].string else {
+            guard let id = adapterConfig["id"].stringOrIntString else {
                 throw ConfigurationParserError.AdapterIDMissing
             }
 
@@ -46,10 +46,10 @@ struct AdapterFactoryParser {
         var authentication: HTTPAuthentication? = nil
         if let auth = config["auth"].bool {
             if auth {
-                guard let username = config["username"].string else {
+                guard let username = config["username"].stringOrIntString else {
                     throw ConfigurationParserError.AdapterParsingError(errorInfo: "Username (username) is required.")
                 }
-                guard let password = config["password"].string else {
+                guard let password = config["password"].stringOrIntString else {
                     throw ConfigurationParserError.AdapterParsingError(errorInfo: "Password (password) is required.")
                 }
                 authentication = HTTPAuthentication(username: username, password: password)
@@ -71,7 +71,7 @@ struct AdapterFactoryParser {
             throw ConfigurationParserError.AdapterParsingError(errorInfo: "Encryption method (method) is required.")
         }
 
-        guard let password = config["password"].string else {
+        guard let password = config["password"].stringOrIntString else {
             throw ConfigurationParserError.AdapterParsingError(errorInfo: "Password (password) is required.")
         }
 

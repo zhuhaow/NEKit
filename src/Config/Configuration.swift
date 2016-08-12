@@ -38,3 +38,9 @@ public class Configuration {
     }
 
 }
+
+extension Yaml {
+    var stringOrIntString: Swift.String? {
+        return string ?? int?.description
+    }
+}

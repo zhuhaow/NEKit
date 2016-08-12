@@ -39,7 +39,7 @@ struct RuleParser {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "Country code (country) is required for country rule .")
         }
 
-        guard let adapter_id = config["adapter"].string else {
+        guard let adapter_id = config["adapter"].stringOrIntString else {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "An adapter id (adapter_id) is required.")
         }
 
@@ -55,7 +55,7 @@ struct RuleParser {
     }
 
     static func parseAllRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) throws -> AllRule {
-        guard let adapter_id = config["adapter"].string else {
+        guard let adapter_id = config["adapter"].stringOrIntString else {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "An adapter id (adapter_id) is required.")
         }
 
@@ -67,7 +67,7 @@ struct RuleParser {
     }
 
     static func parseListRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) throws -> ListRule {
-        guard let adapter_id = config["adapter"].string else {
+        guard let adapter_id = config["adapter"].stringOrIntString else {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "An adapter id (adapter_id) is required.")
         }
 
@@ -75,7 +75,7 @@ struct RuleParser {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "Unknown adapter id.")
         }
 
-        guard var filepath = config["file"].string else {
+        guard var filepath = config["file"].stringOrIntString else {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "Must provide a file (file) containing rules in list.")
         }
 
@@ -96,7 +96,7 @@ struct RuleParser {
     }
 
     static func parseDNSFailRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) throws -> DNSFailRule {
-        guard let adapter_id = config["adapter"].string else {
+        guard let adapter_id = config["adapter"].stringOrIntString else {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "An adapter id (adapter_id) is required.")
         }
 
