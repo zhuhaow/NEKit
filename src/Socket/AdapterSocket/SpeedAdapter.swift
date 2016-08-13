@@ -29,7 +29,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    func disconnect() {
+    override func disconnect() {
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
@@ -40,7 +40,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    func forceDisconnect() {
+    override func forceDisconnect() {
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
@@ -88,4 +88,5 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
     func didWriteData(data: NSData?, withTag: Int, from: SocketProtocol) {}
     func didReadData(data: NSData, withTag: Int, from: SocketProtocol) {}
     func updateAdapter(newAdapter: AdapterSocket) {}
+    func didReceiveRequest(request: ConnectRequest, from: ProxySocket) {}
 }

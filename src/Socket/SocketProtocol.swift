@@ -43,13 +43,17 @@ protocol SocketProtocol: class {
 
     /// The current connection status of the socket.
     var state: SocketStatus { get set }
-}
 
-extension SocketProtocol {
     /// If the socket is disconnected.
-    var isDisconnected: Bool {
-        return state == .Closed || state == .Invalid
-    }
+    var isDisconnected: Bool { get }
+
+    /**
+     Read data from the socket.
+
+     - parameter tag: The tag identifying the data in the callback delegate method.
+     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
+     */
+    func readDataWithTag(tag: Int)
 
     /**
      Send data to remote.
@@ -58,43 +62,17 @@ extension SocketProtocol {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    func writeData(data: NSData, withTag tag: Int = 0) {
-        socket.writeData(data, withTag: tag)
-    }
-
-//    func readDataToLength(length: Int, withTag tag: Int) {
-//        socket.readDataToLength(length, withTag: tag)
-//    }
-//
-//    func readDataToData(data: NSData, withTag tag: Int) {
-//        socket.readDataToData(data, withTag: tag)
-//    }
-
-    /**
-     Read data from the socket.
-
-     - parameter tag: The tag identifying the data in the callback delegate method.
-     - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
-     */
-    func readDataWithTag(tag: Int = SocketTag.Forward) {
-        socket.readDataWithTag(tag)
-    }
+    func writeData(data: NSData, withTag tag: Int)
 
     /**
      Disconnect the socket elegantly.
      */
-    func disconnect() {
-        state = .Disconnecting
-        socket.disconnect()
-    }
+    func disconnect()
 
     /**
      Disconnect the socket immediately.
      */
-    func forceDisconnect() {
-        state = .Disconnecting
-        socket.forceDisconnect()
-    }
+    func forceDisconnect()
 }
 
 /// The delegate protocol to handle the events from a socket.
@@ -154,10 +132,4 @@ protocol SocketDelegate : class {
      - parameter newAdapter: The new `AdapterSocket` to replace the old one.
      */
     func updateAdapter(newAdapter: AdapterSocket)
-}
-
-extension SocketDelegate {
-    func didReceiveRequest(request: ConnectRequest, from: ProxySocket) {}
-
-    func didConnect(adapterSocket: AdapterSocket, withResponse: ConnectResponse) {}
 }

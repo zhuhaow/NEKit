@@ -91,37 +91,39 @@ class ShadowsocksAdapter: AdapterSocket {
         super.writeData(data, withTag: tag)
     }
 
-    func readDataWithTag(tag: Int) {
+    override func readDataWithTag(tag: Int) {
         if readIV == nil && !readingIV {
             readingIV = true
-            socket.readDataToLength(ivLength, withTag: ShadowsocksTag.InitialVector.rawValue)
             nextReadTag = tag
+            socket.readDataToLength(ivLength, withTag: ShadowsocksTag.InitialVector.rawValue)
         } else {
             super.readDataWithTag(tag)
         }
     }
 
-    func writeData(data: NSData, withTag tag: Int) {
+    override func writeData(data: NSData, withTag tag: Int) {
         writeRawData(encryptData(data), withTag: tag)
     }
 
     override func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
-        super.didReadData(decryptData(data), withTag: tag, from: socket)
         if tag == ShadowsocksTag.InitialVector.rawValue {
             readIV = data
             readingIV = false
+            super.didReadData(data, withTag: tag, from: socket)
             super.readDataWithTag(nextReadTag)
         } else {
-            delegate?.didReadData(decryptData(data), withTag: tag, from: self)
+            let readData = decryptData(data)
+            super.didReadData(readData, withTag: tag, from: socket)
+            delegate?.didReadData(readData, withTag: tag, from: self)
         }
     }
 
     override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
-        super.didWriteData(data, withTag: tag, from: socket)
+        super.didWriteData(nil, withTag: tag, from: socket)
         if tag == ShadowsocksTag.Connect.rawValue {
             delegate?.readyToForward(self)
         } else {
-            delegate?.didWriteData(data, withTag: tag, from: self)
+            delegate?.didWriteData(nil, withTag: tag, from: self)
         }
     }
 
