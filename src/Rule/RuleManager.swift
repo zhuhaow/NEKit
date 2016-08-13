@@ -17,7 +17,7 @@ public class RuleManager {
      - parameter rules:        The rules.
      - parameter appendDirect: Whether to append a `DirectRule` at the end of the list so any request does not match with any rule go directly.
      */
-    init(fromRules rules: [Rule], appendDirect: Bool = false) {
+    public init(fromRules rules: [Rule], appendDirect: Bool = false) {
         self.rules = rules
 
         if appendDirect || self.rules.count == 0 {
