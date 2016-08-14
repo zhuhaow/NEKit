@@ -60,7 +60,7 @@ to you `Cartfile`.
 
 Use 
 ```carthage update --no-use-binaries --platform mac,ios```
-to install all framework. Do not use pre-compiled binaries since some of them might be buggy.
+to install all frameworks. Do not use pre-compiled binaries since some of them might be buggy.
 
 ### Overview
 NEKit basically consists of two parts, a proxy server forwarding socket data based on user defined rules and an IP stack reassembling IP packets back to TCP flow as a socket.
