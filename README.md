@@ -99,9 +99,7 @@ Now we can start a HTTP/SOCKS5 proxy server locally.
 
 ```swift
 let server = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: 9090)
-// There can be multiple proxies running at the same time, but one of them must be set as the `mainProxy` to handle TCP socket from IP stack.
-ProxyServer.mainProxy = server
-try! ProxyServer.mainProxy.start()
+try! server.start()
 ```
 
 Now there is a HTTP proxy server running on `127.0.0.1:9090` which will forward requests based on rules defined in `RuleManager.currentManager`.
@@ -139,7 +137,7 @@ Then we need to register ip stacks implementing `IPStackProtocol` to process IP 
 NEKit provides several stacks.
 
 #### TCPStack
-`TCPStack` process TCP packets and reassembles them back into TCP flows then send them to the `ProxyServer.mainProxy` server (Do not worry about the type of the proxy server, they will be handled as direct connection).
+`TCPStack` process TCP packets and reassembles them back into TCP flows then send them to the proxy server specified by `proxyServer` variable. You have to set `proxyServer` before registering `TCPStack` to `TUNInterface`.
 
 #### DNSServer
 DNS server is implemented as an IP stack processing UDP packets send to it.

@@ -10,13 +10,6 @@ import CocoaLumberjackSwift
 public class ProxyServer: NSObject, TunnelDelegate {
     typealias TunnelArray = Atomic<[Tunnel]>
 
-    /// The main proxy.
-    ///
-    /// There can be arbitrary number of proxies running at the same time. However, it is assumed that there is a main proxy server that handles connections that do not target any proxies but still should be proxied.
-    ///
-    /// - warning: This must be set before any connection is created.
-    public static var mainProxy: ProxyServer!
-
     /// The port of proxy server.
     public let port: Port
 

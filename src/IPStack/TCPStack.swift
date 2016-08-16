@@ -14,6 +14,11 @@ public class TCPStack: TSIPStackDelegate, IPStackProtocol {
     }
     private static let _stack: TCPStack = TCPStack()
 
+    /// The proxy server that handles connections accepted from this stack.
+    ///
+    /// - warning: This must be set before `TCPStack` is registered to `TUNInterface`.
+    public weak var proxyServer: ProxyServer?
+
     /// This is set automatically when the stack is registered to some interface.
     public var outputFunc: (([NSData], [NSNumber]) -> ())! {
         get {
@@ -62,6 +67,7 @@ public class TCPStack: TSIPStackDelegate, IPStackProtocol {
     public func stop() {
         TSIPStack.stack.delegate = nil
         TSIPStack.stack.suspendTimer()
+        proxyServer = nil
     }
 
     // MARK: TSIPStackDelegate Implemention
@@ -69,6 +75,6 @@ public class TCPStack: TSIPStackDelegate, IPStackProtocol {
         DDLogDebug("Accepted a new socket from IP stack.")
         let tunSocket = TUNTCPSocket(socket: sock)
         let proxySocket = DirectProxySocket(socket: tunSocket)
-        ProxyServer.mainProxy?.didAcceptNewSocket(proxySocket)
+        proxyServer!.didAcceptNewSocket(proxySocket)
     }
 }

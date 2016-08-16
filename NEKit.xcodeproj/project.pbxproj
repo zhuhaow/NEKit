@@ -97,6 +97,7 @@
 		36A719B61D5EEB5900DC35F5 /* Yaml.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 366EB5BA1CDE328F00E0E942 /* Yaml.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36A719B71D5EEB5900DC35F5 /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
 		36A719B81D5EEB5900DC35F5 /* NEKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		36A719EF1D63411E00DC35F5 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 36A719EE1D63411E00DC35F5 /* README.md */; };
 		36B1620F1CDDA0E000F24C97 /* CountryRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620C1CDDA0E000F24C97 /* CountryRule.swift */; };
 		36B162101CDDA0E000F24C97 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620D1CDDA0E000F24C97 /* Rule.swift */; };
 		36B162111CDDA0E000F24C97 /* RuleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620E1CDDA0E000F24C97 /* RuleManager.swift */; };
@@ -319,6 +320,7 @@
 		36A7199F1D5EEB4900DC35F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		36A719A11D5EEB4900DC35F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		36A719ED1D63310400DC35F5 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		36A719EE1D63411E00DC35F5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		36B1620C1CDDA0E000F24C97 /* CountryRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryRule.swift; sourceTree = "<group>"; };
 		36B1620D1CDDA0E000F24C97 /* Rule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		36B1620E1CDDA0E000F24C97 /* RuleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleManager.swift; sourceTree = "<group>"; };
@@ -461,6 +463,7 @@
 			isa = PBXGroup;
 			children = (
 				36A719ED1D63310400DC35F5 /* CHANGELOG.md */,
+				36A719EE1D63411E00DC35F5 /* README.md */,
 				36A718DF1D5AE37C00DC35F5 /* docs */,
 				36A719431D5B234500DC35F5 /* Carthage */,
 				36C48D4E1CF88DED0071804F /* NEKit-iOS */,
@@ -999,6 +1002,7 @@
 				36411A651D167AF2005F4108 /* DirectRule.swift in Sources */,
 				366EB5C31CDF375B00E0E942 /* SpeedAdapter.swift in Sources */,
 				366EB5C91CE061C500E0E942 /* RuleParser.swift in Sources */,
+				36A719EF1D63411E00DC35F5 /* README.md in Sources */,
 				36B1622E1CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift in Sources */,
 				36411A621D167AE0005F4108 /* AllRule.swift in Sources */,
 				36B162301CDDA0EA00F24C97 /* Utils.swift in Sources */,
