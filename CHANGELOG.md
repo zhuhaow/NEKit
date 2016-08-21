@@ -9,3 +9,6 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 
 ### Added
 - The proxy server, adapter socket, proxy socket and tunnel trigger events now.
+
+### Fixed
+- Chacha20 and Salsa20 encryption are fixed.
