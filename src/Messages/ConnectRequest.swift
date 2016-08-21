@@ -1,32 +1,32 @@
 import Foundation
 
 /// The request containing information to connect to remote.
-public class ConnectRequest {
+public final class ConnectRequest {
     /// The requested host.
     ///
     /// This is the host received in the request. May be a domain, a real IP or a fake IP.
-    let requestedHost: String
+    public let requestedHost: String
 
     /// The real host for this request.
     ///
     /// If the request is initailized with a host domain, then `host == requestedHost`.
     /// Otherwise, the requested IP address is looked up in the DNS server to see if it corresponds to a domain if `fakeIPEnabled` is `true`.
     /// Unless there is a good reason not to, any socket shoule connect based on this directly.
-    var host: String
+    public var host: String
 
     /// The requested port.
-    let port: Int
+    public let port: Int
 
     /// The rule to use to connect to remote.
-    var matchedRule: Rule?
+    public var matchedRule: Rule?
 
     /// Whether If the `requestedHost` is an IP address.
-    let fakeIPEnabled: Bool
+    public let fakeIPEnabled: Bool
 
     /// The resolved IP address.
     ///
     /// - note: This will always be real IP address.
-    lazy var ipAddress: String = {
+    public lazy var ipAddress: String = {
         [unowned self] in
         if self.isIP() {
             return self.host
@@ -55,12 +55,12 @@ public class ConnectRequest {
         }()
 
     /// The location of the host.
-    lazy var country: String = {
+    public lazy var country: String = {
         [unowned self] in
         Utils.GeoIPLookup.Lookup(self.ipAddress)
         }()
 
-    init?(host: String, port: Int, fakeIPEnabled: Bool = true) {
+    public init?(host: String, port: Int, fakeIPEnabled: Bool = true) {
         self.requestedHost = host
         self.port = port
 
@@ -74,7 +74,7 @@ public class ConnectRequest {
         }
     }
 
-    convenience init?(ipAddress: IPv4Address, port: Port, fakeIPEnabled: Bool = true) {
+    public convenience init?(ipAddress: IPv4Address, port: Port, fakeIPEnabled: Bool = true) {
         self.init(host: ipAddress.presentation, port: port.intValue, fakeIPEnabled: fakeIPEnabled)
     }
 
@@ -109,15 +109,15 @@ public class ConnectRequest {
         return true
     }
 
-    func isIPv4() -> Bool {
+    public func isIPv4() -> Bool {
         return Utils.IP.isIPv4(host)
     }
 
-    func isIPv6() -> Bool {
+    public func isIPv6() -> Bool {
         return Utils.IP.isIPv6(host)
     }
 
-    func isIP() -> Bool {
+    public func isIP() -> Bool {
         return isIPv4() || isIPv6()
     }
 }
