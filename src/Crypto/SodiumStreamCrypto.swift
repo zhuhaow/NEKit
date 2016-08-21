@@ -22,27 +22,32 @@ class SodiumStreamCrypto: StreamCryptoProtocol {
     }
 
     func update(data: NSData) -> NSData {
-        let len = data.length % blockSize
+        let padding = counter % blockSize
 
-        var outputData: NSMutableData
-        if len != 0 {
-            outputData = NSMutableData(length: data.length + len)!
-            outputData.replaceBytesInRange(NSRange(location: len, length: data.length), withBytes: data.bytes)
+        var inputData: NSData
+        if padding == 0 {
+            inputData = data
         } else {
-            outputData = NSMutableData(data: data)
+            let _data = NSMutableData(length: data.length + padding)!
+            _data.replaceBytesInRange(NSRange(location: padding, length: data.length), withBytes: data.bytes)
+            inputData = _data
         }
+
+        let outputData = NSMutableData(length: padding + data.length)!
 
         switch algorithm {
         case .Chacha20:
-            crypto_stream_chacha20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(outputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
+            crypto_stream_chacha20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(inputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
         case .Salsa20:
-            crypto_stream_salsa20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(outputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
+            crypto_stream_salsa20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(inputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
         }
 
-        if len == 0 {
+        counter += data.length
+
+        if padding == 0 {
             return outputData
         } else {
-            return outputData.subdataWithRange(NSRange(location: len, length: data.length))
+            return outputData.subdataWithRange(NSRange(location: padding, length: data.length))
         }
     }
 }
