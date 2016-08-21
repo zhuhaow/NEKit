@@ -1,6 +1,5 @@
 import Foundation
 import CocoaAsyncSocket
-import CocoaLumberjackSwift
 
 /**
  The base proxy server class.
@@ -16,6 +15,18 @@ public class ProxyServer: NSObject, TunnelDelegate {
     /// The address of proxy server.
     public let address: IPv4Address
 
+    /// The type of the proxy server.
+    ///
+    /// This can be set to anything describing the proxy server.
+    public var type = "Unspecific"
+
+    /// The description of proxy server.
+    public override var description: String {
+        return "<\(type) proxy server (address: \(address); port: \(port))>"
+    }
+
+    public var observer: Observer<ProxyServerEvent>?
+
     private var tunnels: TunnelArray = Atomic([])
 
     /**
@@ -27,6 +38,10 @@ public class ProxyServer: NSObject, TunnelDelegate {
     public init(address: IPv4Address, port: Port) {
         self.address = address
         self.port = port
+
+        super.init()
+
+        self.observer = ObserverFactory.currentFactory?.getObserverForProxyServer(self)
     }
 
     /**
@@ -35,6 +50,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
      - throws: The error occured when starting the proxy server.
      */
     public func start() throws {
+        observer?.signal(.Started(self))
     }
 
     /**
@@ -49,6 +65,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
             }
 //            $0.value.removeAll()
         }
+        observer?.signal(.Stopped(self))
     }
 
     /**
@@ -59,6 +76,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
      - parameter socket: The accepted proxy socket.
      */
     func didAcceptNewSocket(socket: ProxySocket) {
+        observer?.signal(.NewSocketAccepted(socket, onServer: self))
         let tunnel = Tunnel(proxySocket: socket)
         tunnel.delegate = self
         tunnels.value.append(tunnel)
@@ -73,15 +91,13 @@ public class ProxyServer: NSObject, TunnelDelegate {
      - parameter tunnel: The closed tunnel.
      */
     func tunnelDidClose(tunnel: Tunnel) {
+        observer?.signal(.TunnelClosed(tunnel, onServer: self))
         tunnels.withBox { tunnels in
             guard let index = tunnels.value.indexOf(tunnel) else {
                 // things went strange
-                DDLogError("Encountered an unknown tunnel \(tunnel) when tries to remove it.")
                 return
             }
             tunnels.value.removeAtIndex(index)
-            DDLogVerbose("Removed a closed tunnel, now there are \(tunnels.value.count) tunnels active.")
-            DDLogDebug("Current active tunnels: \(tunnels.value)")
         }
     }
 }

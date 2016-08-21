@@ -1,8 +1,21 @@
 import Foundation
-import CocoaLumberjackSwift
+
+public enum HTTPAdapterError: ErrorType, CustomStringConvertible {
+    case InvalidURL, SerailizationFailure
+
+    public var description: String {
+        switch self {
+        case .InvalidURL:
+            return "Invalid url when connecting through proxy"
+        case .SerailizationFailure:
+            return "Failed to serialize HTTP CONNECT header"
+        }
+    }
+
+}
 
 /// This adapter connects to remote host through a HTTP proxy.
-class HTTPAdapter: AdapterSocket {
+public class HTTPAdapter: AdapterSocket {
     /// The host domain of the HTTP proxy.
     let serverHost: String
 
@@ -37,12 +50,12 @@ class HTTPAdapter: AdapterSocket {
         } catch {}
     }
 
-    override func didConnect(socket: RawTCPSocketProtocol) {
+    override public func didConnect(socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
 
         guard let url = NSURL(string: "\(request.host):\(request.port)") else {
-            DDLogError("Invalid url when connecting through HTTP(S) proxy: \(request.host):\(request.port)")
-            delegate?.didDisconnect(self)
+            observer?.signal(.ErrorOccured(HTTPAdapterError.InvalidURL, on: self))
+            disconnect()
             return
         }
         let message = CFHTTPMessageCreateRequest(kCFAllocatorDefault, "CONNECT", url, kCFHTTPVersion1_1).takeRetainedValue()
@@ -53,8 +66,8 @@ class HTTPAdapter: AdapterSocket {
         CFHTTPMessageSetHeaderFieldValue(message, "Content-Length", "0")
 
         guard let requestData = CFHTTPMessageCopySerializedMessage(message)?.takeRetainedValue() else {
-            DDLogError("Failed to serialize HTTP CONNECT header when connecting to \(request.host):\(request.port)")
-            delegate?.didDisconnect(self)
+            observer?.signal(.ErrorOccured(HTTPAdapterError.SerailizationFailure, on: self))
+            disconnect()
             return
         }
 
@@ -62,16 +75,17 @@ class HTTPAdapter: AdapterSocket {
         socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: ReadTag.ConnectResponse.rawValue)
     }
 
-    override func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
+    override public func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
         super.didReadData(data, withTag: tag, from: socket)
         if tag == ReadTag.ConnectResponse.rawValue {
+            observer?.signal(.ReadyForForward(self))
             delegate?.readyToForward(self)
         } else {
             delegate?.didReadData(data, withTag: tag, from: self)
         }
     }
 
-    override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
+    override public func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
         super.didWriteData(data, withTag: tag, from: socket)
         if tag != WriteTag.Connect.rawValue {
             delegate?.didWriteData(data, withTag: tag, from: self)

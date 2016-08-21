@@ -1,12 +1,11 @@
 import Foundation
-import CocoaLumberjackSwift
 
-class HTTPProxySocket: ProxySocket {
+public class HTTPProxySocket: ProxySocket {
     /// The remote host to connect to.
-    var destinationHost: String!
+    public var destinationHost: String!
 
     /// The remote port to connect to.
-    var destinationPort: Int!
+    public var destinationPort: Int!
 
     private var firstHeader: Bool = true
 
@@ -26,7 +25,7 @@ class HTTPProxySocket: ProxySocket {
         socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: SocketTag.HTTP.Header)
     }
 
-    override func readDataWithTag(tag: Int = SocketTag.Forward) {
+    override public func readDataWithTag(tag: Int = SocketTag.Forward) {
         currentReadTag = tag
 
         if firstHeader {
@@ -61,7 +60,7 @@ class HTTPProxySocket: ProxySocket {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    override func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
+    override public func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
         super.didReadData(data, withTag: tag, from: from)
 
         switch tag {
@@ -81,6 +80,7 @@ class HTTPProxySocket: ProxySocket {
                 isConnect = currentHeader.isConnect
 
                 request = ConnectRequest(host: destinationHost!, port: destinationPort!)
+                observer?.signal(.ReceivedRequest(request!, on: self))
                 delegate?.didReceiveRequest(request!, from: self)
             } else {
                 delegate?.didReadData(header.toData(), withTag: currentReadTag, from: self)
@@ -93,7 +93,6 @@ class HTTPProxySocket: ProxySocket {
 
             delegate?.didReadData(content, withTag: currentReadTag, from: self)
         default:
-            DDLogError("HTTPProxySocket recieved some data with unknown data tag: \(tag)")
             break
         }
     }
@@ -105,21 +104,25 @@ class HTTPProxySocket: ProxySocket {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    override func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
+    override public func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
         super.didWriteData(data, withTag: tag, from: from)
 
         if tag >= 0 {
             delegate?.didWriteData(data, withTag: tag, from: self)
         }
         if tag == SocketTag.HTTP.ConnectResponse {
+            observer?.signal(.ReadyForForward(self))
             delegate?.readyToForward(self)
         }
     }
 
     override func respondToResponse(response: ConnectResponse) {
+        super.respondToResponse(response)
+
         if isConnect {
             writeData(Utils.HTTPData.ConnectSuccessResponse, withTag: SocketTag.HTTP.ConnectResponse)
         } else {
+            observer?.signal(.ReadyForForward(self))
             delegate?.readyToForward(self)
         }
     }

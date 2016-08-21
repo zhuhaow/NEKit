@@ -1,22 +1,22 @@
 import Foundation
 import CocoaLumberjackSwift
 
-class DNSMessage {
+public class DNSMessage {
     //    var sourceAddress: IPv4Address?
     //    var sourcePort: Port?
     //    var destinationAddress: IPv4Address?
     //    var destinationPort: Port?
-    var transactionID: UInt16 = 0
-    var messageType: DNSMessageType = .Query
-    var authoritative: Bool = false
-    var truncation: Bool = false
-    var recursionDesired: Bool = false
-    var recursionAvailable: Bool = false
-    var status: DNSReturnStatus = .Success
-    var queries: [DNSQuery] = []
-    var answers: [DNSResource] = []
-    var nameservers: [DNSResource] = []
-    var addtionals: [DNSResource] = []
+    public var transactionID: UInt16 = 0
+    public var messageType: DNSMessageType = .Query
+    public var authoritative: Bool = false
+    public var truncation: Bool = false
+    public var recursionDesired: Bool = false
+    public var recursionAvailable: Bool = false
+    public var status: DNSReturnStatus = .Success
+    public var queries: [DNSQuery] = []
+    public var answers: [DNSResource] = []
+    public var nameservers: [DNSResource] = []
+    public var addtionals: [DNSResource] = []
 
     var payload: NSData!
 
@@ -221,10 +221,10 @@ class DNSMessage {
     }
 }
 
-class DNSQuery {
-    let name: String
-    let type: DNSType
-    let klass: DNSClass
+public class DNSQuery {
+    public let name: String
+    public let type: DNSType
+    public let klass: DNSClass
     let nameBytesLength: Int
 
     init(name: String, type: DNSType = .A, klass: DNSClass = .Internet) {
@@ -260,13 +260,13 @@ class DNSQuery {
     }
 }
 
-class DNSResource {
-    let name: String
-    let type: DNSType
-    let klass: DNSClass
-    let TTL: UInt32
+public class DNSResource {
+    public let name: String
+    public let type: DNSType
+    public let klass: DNSClass
+    public let TTL: UInt32
     let dataLength: UInt16
-    let data: NSData
+    public let data: NSData
 
     let nameBytesLength: Int
 

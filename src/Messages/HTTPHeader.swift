@@ -1,6 +1,6 @@
 import Foundation
 
-class HTTPHeader {
+public class HTTPHeader {
     var HTTPVersion: String
     var method: String
     var isConnect: Bool = false

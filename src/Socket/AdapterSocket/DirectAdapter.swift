@@ -1,8 +1,7 @@
 import Foundation
-import CocoaLumberjackSwift
 
 /// This adapter connects to remote directly.
-class DirectAdapter: AdapterSocket {
+public class DirectAdapter: AdapterSocket {
     /// If this is set to `false`, then the IP address will be resolved by system.
     var resolveHost = false
 
@@ -14,19 +13,12 @@ class DirectAdapter: AdapterSocket {
     override func openSocketWithRequest(request: ConnectRequest) {
         super.openSocketWithRequest(request)
 
-        let host: String
-        if resolveHost {
-            host = request.ipAddress
-            if host == "" {
-                DDLogError("DNS look up failed for direct connect to \(request.host), disconnect now.")
-                delegate?.didDisconnect(self)
-            }
-        } else {
-            host = request.host
-        }
         do {
-            try socket.connectTo(host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
-        } catch {}
+            try socket.connectTo(request.host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
+        } catch let error {
+            observer?.signal(.ErrorOccured(error, on: self))
+            disconnect()
+        }
     }
 
     /**
@@ -34,17 +26,18 @@ class DirectAdapter: AdapterSocket {
 
      - parameter socket: The connected socket.
      */
-    override func didConnect(socket: RawTCPSocketProtocol) {
+    override public func didConnect(socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
+        observer?.signal(.ReadyForForward(self))
         delegate?.readyToForward(self)
     }
 
-    override func didReadData(data: NSData, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
+    override public func didReadData(data: NSData, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
         super.didReadData(data, withTag: tag, from: rawSocket)
         delegate?.didReadData(data, withTag: tag, from: self)
     }
 
-    override func didWriteData(data: NSData?, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
+    override public func didWriteData(data: NSData?, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
         super.didWriteData(data, withTag: tag, from: rawSocket)
         delegate?.didWriteData(data, withTag: tag, from: self)
     }

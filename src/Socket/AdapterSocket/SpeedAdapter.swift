@@ -1,14 +1,15 @@
 import Foundation
 
 /// This adpater selects the fastest proxy automatically from a set of proxies.
-class SpeedAdapter: AdapterSocket, SocketDelegate {
+// TODO: Event support
+public class SpeedAdapter: AdapterSocket, SocketDelegate {
     var adapters: [(AdapterSocket, Int)]!
     var connectingCount = 0
     var pendingCount = 0
 
     private var _shouldConnect: Bool = true
 
-    override var queue: dispatch_queue_t! {
+    override public var queue: dispatch_queue_t! {
         didSet {
             for (adapter, _) in adapters {
                 adapter.queue = queue
@@ -29,7 +30,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    override func disconnect() {
+    override public func disconnect() {
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
@@ -40,7 +41,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    override func forceDisconnect() {
+    override public func forceDisconnect() {
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
@@ -51,9 +52,9 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {}
+    public func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {}
 
-    func readyToForward(socket: SocketProtocol) {
+    public func readyToForward(socket: SocketProtocol) {
         guard let adapterSocket = socket as? AdapterSocket else {
             return
         }
@@ -76,7 +77,7 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
         delegate = nil
     }
 
-    func didDisconnect(socket: SocketProtocol) {
+    public func didDisconnect(socket: SocketProtocol) {
         connectingCount -= 1
         if connectingCount == 0 && pendingCount == 0 {
             // failed to connect
@@ -85,8 +86,8 @@ class SpeedAdapter: AdapterSocket, SocketDelegate {
     }
 
 
-    func didWriteData(data: NSData?, withTag: Int, from: SocketProtocol) {}
-    func didReadData(data: NSData, withTag: Int, from: SocketProtocol) {}
-    func updateAdapter(newAdapter: AdapterSocket) {}
-    func didReceiveRequest(request: ConnectRequest, from: ProxySocket) {}
+    public func didWriteData(data: NSData?, withTag: Int, from: SocketProtocol) {}
+    public func didReadData(data: NSData, withTag: Int, from: SocketProtocol) {}
+    public func updateAdapter(newAdapter: AdapterSocket) {}
+    public func didReceiveRequest(request: ConnectRequest, from: ProxySocket) {}
 }

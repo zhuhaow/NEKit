@@ -1,5 +1,6 @@
 import Cocoa
 import NEKit
+import CocoaLumberjackSwift
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -8,6 +9,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var proxy: GCDHTTPProxyServer?
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
+        DDLog.removeAllLoggers()
+        DDLog.addLogger(DDTTYLogger.sharedInstance(), withLevel: .Info)
+
+        ObserverFactory.currentFactory = DebugObserverFactory()
+
         let config = Configuration()
         let filepath = (NSHomeDirectory() as NSString).stringByAppendingPathComponent(".NEKit_demo.yaml")
         // swiftlint:disable force_try

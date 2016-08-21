@@ -6,7 +6,7 @@ protocol TunnelDelegate : class {
 }
 
 /// The tunnel forwards data from local to remote and back.
-class Tunnel: NSObject, SocketDelegate {
+public class Tunnel: NSObject, SocketDelegate {
     /// The proxy socket on local.
     var proxySocket: ProxySocket
 
@@ -15,6 +15,8 @@ class Tunnel: NSObject, SocketDelegate {
 
     /// The delegate instance.
     weak var delegate: TunnelDelegate?
+
+    weak var observer: Observer<TunnelEvent>?
 
     /// Every method call and variable access will be called on this queue.
     var queue = dispatch_queue_create("NEKit.TunnelQueue", DISPATCH_QUEUE_SERIAL) {
@@ -32,7 +34,7 @@ class Tunnel: NSObject, SocketDelegate {
         return proxySocket.isDisconnected && (adapterSocket?.isDisconnected ?? true)
     }
 
-    override var description: String {
+    override public var description: String {
         if proxySocket.request != nil {
             return "Tunnel connecting to \(proxySocket.request!.host)"
         } else {
@@ -45,19 +47,24 @@ class Tunnel: NSObject, SocketDelegate {
         self.proxySocket.queue = queue
         super.init()
         self.proxySocket.delegate = self
+
+        self.observer = ObserverFactory.currentFactory?.getObserverForTunnel(self)
     }
 
     /**
      Start running the tunnel.
      */
     func openTunnel() {
+        observer?.signal(.Opened(self))
         proxySocket.openSocket()
+        observer?.signal(.Opened(self))
     }
 
     /**
      Close the tunnel.
      */
     func close() {
+        observer?.signal(.CloseCalled(self))
         dispatch_async(queue) {
             if !self.proxySocket.isDisconnected {
                 self.proxySocket.disconnect()
@@ -71,6 +78,7 @@ class Tunnel: NSObject, SocketDelegate {
     }
 
     func forceClose() {
+        observer?.signal(.ForceCloseCalled(self))
         dispatch_async(queue) {
             if !self.proxySocket.isDisconnected {
                 self.proxySocket.forceDisconnect()
@@ -83,7 +91,8 @@ class Tunnel: NSObject, SocketDelegate {
         }
     }
 
-    func didReceiveRequest(request: ConnectRequest, from: ProxySocket) {
+    public func didReceiveRequest(request: ConnectRequest, from: ProxySocket) {
+        observer?.signal(.ReceivedRequest(request, from: from, on: self))
         let manager = RuleManager.currentManager
         let factory = manager.match(request)
         adapterSocket = factory.getAdapter(request)
@@ -92,41 +101,48 @@ class Tunnel: NSObject, SocketDelegate {
         adapterSocket!.openSocketWithRequest(request)
     }
 
-    func readyToForward(socket: SocketProtocol) {
+    public func readyToForward(socket: SocketProtocol) {
         readySignal += 1
+        observer?.signal(.ReceivedReadySignal(socket, currentReady: readySignal, on: self))
         if readySignal == 2 {
             proxySocket.readDataWithTag(SocketTag.Forward)
             adapterSocket?.readDataWithTag(SocketTag.Forward)
         }
     }
 
-    func didDisconnect(socket: SocketProtocol) {
+    public func didDisconnect(socket: SocketProtocol) {
         close()
         checkStatus()
     }
 
-    func didReadData(data: NSData, withTag tag: Int, from socket: SocketProtocol) {
-        if let _ = socket as? ProxySocket {
+    public func didReadData(data: NSData, withTag tag: Int, from socket: SocketProtocol) {
+        if let socket = socket as? ProxySocket {
+            observer?.signal(.ProxySocketReadData(data, tag: tag, from: socket, on: self))
             adapterSocket!.writeData(data, withTag: tag)
-        } else {
+        } else if let socket = socket as? AdapterSocket {
+            observer?.signal(.AdapterSocketReadData(data, tag: tag, from: socket, on: self))
             proxySocket.writeData(data, withTag: tag)
         }
     }
 
-    func didWriteData(data: NSData?, withTag: Int, from socket: SocketProtocol) {
-        if let _ = socket as? ProxySocket {
+    public func didWriteData(data: NSData?, withTag: Int, from socket: SocketProtocol) {
+        if let socket = socket as? ProxySocket {
+            observer?.signal(.ProxySocketWroteData(data, tag: withTag, from: socket, on: self))
             adapterSocket?.readDataWithTag(SocketTag.Forward)
-        } else {
+        } else if let socket = socket as? AdapterSocket {
+            observer?.signal(.AdapterSocketWroteData(data, tag: withTag, from: socket, on: self))
             proxySocket.readDataWithTag(SocketTag.Forward)
-
         }
     }
 
-    func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {
+    public func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {
+        observer?.signal(.ConnectedToRemote(adapterSocket, withResponse: response, on: self))
         proxySocket.respondToResponse(response)
     }
 
-    func updateAdapter(newAdapter: AdapterSocket) {
+    public func updateAdapter(newAdapter: AdapterSocket) {
+        observer?.signal(.UpdatingAdapterSocket(from: adapterSocket!, to: newAdapter, on: self))
+
         adapterSocket = newAdapter
         adapterSocket?.delegate = self
         adapterSocket?.queue = queue
@@ -134,6 +150,7 @@ class Tunnel: NSObject, SocketDelegate {
 
     private func checkStatus() {
         if isClosed {
+            observer?.signal(.Closed(self))
             delegate?.tunnelDidClose(self)
             delegate = nil
         }

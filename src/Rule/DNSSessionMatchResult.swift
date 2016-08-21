@@ -8,6 +8,6 @@ import Foundation
  - Unknown: The match type is `DNSSessionMatchType.Domain` but rule needs the resolved IP address.
  - Pass:    This rule does not match the request.
  */
-enum DNSSessionMatchResult {
+public enum DNSSessionMatchResult {
     case Real, Fake, Unknown, Pass
 }

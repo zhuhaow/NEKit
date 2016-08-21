@@ -9,7 +9,7 @@ import Foundation
  - Disconnecting: The socket is disconnecting.
  - Closed:        The socket is closed.
  */
-enum SocketStatus {
+public enum SocketStatus {
     /// The socket is just created but never connects.
     case Invalid,
 
@@ -31,7 +31,7 @@ enum SocketStatus {
 /// Any concrete implemention does not need to be thread-safe.
 ///
 /// - warning: It is expected that the instance is accessed on the `queue` only.
-protocol SocketProtocol: class {
+public protocol SocketProtocol: class {
     /// The underlying TCP socket transmitting data.
     var socket: RawTCPSocketProtocol! { get }
 
@@ -76,7 +76,7 @@ protocol SocketProtocol: class {
 }
 
 /// The delegate protocol to handle the events from a socket.
-protocol SocketDelegate : class {
+public protocol SocketDelegate : class {
     /**
      The socket did connect to remote.
 

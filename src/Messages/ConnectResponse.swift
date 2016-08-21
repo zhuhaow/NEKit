@@ -1,4 +1,4 @@
 import Foundation
 
 
-class ConnectResponse {}
+public class ConnectResponse {}

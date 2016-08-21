@@ -2,12 +2,12 @@ import Foundation
 import CommonCrypto
 
 /// This adapter connects to remote through Shadowsocks proxy.
-class ShadowsocksAdapter: AdapterSocket {
+public class ShadowsocksAdapter: AdapterSocket {
     var readIV: NSData!
     let key: NSData
-    let encryptAlgorithm: CryptoAlgorithm
-    let host: String
-    let port: Int
+    public let encryptAlgorithm: CryptoAlgorithm
+    public let host: String
+    public let port: Int
 
     var readingIV: Bool = false
     var nextReadTag: Int = 0
@@ -49,13 +49,17 @@ class ShadowsocksAdapter: AdapterSocket {
 
     override func openSocketWithRequest(request: ConnectRequest) {
         super.openSocketWithRequest(request)
+
         do {
             try socket.connectTo(host, port: port, enableTLS: false, tlsSettings: nil)
-        } catch {}
+        } catch let error {
+            observer?.signal(.ErrorOccured(error, on: self))
+            disconnect()
+        }
     }
 
 
-    override func didConnect(socket: RawTCPSocketProtocol) {
+    override public func didConnect(socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
 
         let helloData = NSMutableData(data: writeIV)
@@ -91,7 +95,7 @@ class ShadowsocksAdapter: AdapterSocket {
         super.writeData(data, withTag: tag)
     }
 
-    override func readDataWithTag(tag: Int) {
+    override public func readDataWithTag(tag: Int) {
         if readIV == nil && !readingIV {
             readingIV = true
             nextReadTag = tag
@@ -101,26 +105,28 @@ class ShadowsocksAdapter: AdapterSocket {
         }
     }
 
-    override func writeData(data: NSData, withTag tag: Int) {
+    override public func writeData(data: NSData, withTag tag: Int) {
         writeRawData(encryptData(data), withTag: tag)
     }
 
-    override func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
+    override public func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
+        super.didReadData(data, withTag: tag, from: socket)
+
         if tag == ShadowsocksTag.InitialVector.rawValue {
             readIV = data
             readingIV = false
-            super.didReadData(data, withTag: tag, from: socket)
             super.readDataWithTag(nextReadTag)
         } else {
             let readData = decryptData(data)
-            super.didReadData(readData, withTag: tag, from: socket)
             delegate?.didReadData(readData, withTag: tag, from: self)
         }
     }
 
-    override func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
+    override public func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
         super.didWriteData(nil, withTag: tag, from: socket)
+
         if tag == ShadowsocksTag.Connect.rawValue {
+            observer?.signal(.ReadyForForward(self))
             delegate?.readyToForward(self)
         } else {
             delegate?.didWriteData(nil, withTag: tag, from: self)

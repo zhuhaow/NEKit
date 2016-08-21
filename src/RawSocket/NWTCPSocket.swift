@@ -91,15 +91,23 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
     func disconnect() {
-        closeAfterWriting = true
-        checkStatus()
+        if connection.state == .Cancelled {
+            delegate?.didDisconnect(self)
+        } else {
+            closeAfterWriting = true
+            checkStatus()
+        }
     }
 
     /**
      Disconnect the socket immediately.
      */
     func forceDisconnect() {
-        cancel()
+        if connection.state == .Cancelled {
+            delegate?.didDisconnect(self)
+        } else {
+            cancel()
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 import Foundation
 import CommonCrypto
 
-enum CryptoOperation {
+public enum CryptoOperation {
     case Encrypt, Decrypt
 
     func toCCOperation() -> CCOperation {
@@ -12,4 +12,8 @@ enum CryptoOperation {
             return CCOperation(kCCDecrypt)
         }
     }
+}
+
+public enum CryptoAlgorithm: String {
+    case AES128CFB = "AES-128-CFB", AES192CFB = "AES-192-CFB", AES256CFB = "AES-256-CFB", CHACHA20 = "chacha20", SALSA20 = "salsa20", RC4MD5 = "rc4-md5"
 }

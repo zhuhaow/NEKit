@@ -2,14 +2,14 @@ import Foundation
 import CocoaLumberjackSwift
 
 public class DNSSession {
-    let requestMessage: DNSMessage
+    public let requestMessage: DNSMessage
     var requestIPPacket: IPPacket?
-    var realIP: IPv4Address?
-    var fakeIP: IPv4Address?
-    var realResponseMessage: DNSMessage?
+    public var realIP: IPv4Address?
+    public var fakeIP: IPv4Address?
+    public var realResponseMessage: DNSMessage?
     var realResponseIPPacket: IPPacket?
-    var matchedRule: Rule?
-    var matchResult: DNSSessionMatchResult?
+    public var matchedRule: Rule?
+    public var matchResult: DNSSessionMatchResult?
     var indexToMatch = 0
     var expireAt: NSDate?
     lazy var countryCode: String? = {

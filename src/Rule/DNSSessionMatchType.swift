@@ -8,6 +8,6 @@ import Foundation
  - Domain: Only domain information is available.
  - IP:     The IP address is resolved.
  */
-enum DNSSessionMatchType {
+public enum DNSSessionMatchType {
     case Domain, IP
 }

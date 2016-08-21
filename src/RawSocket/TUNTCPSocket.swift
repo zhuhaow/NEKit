@@ -72,15 +72,23 @@ class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
     func disconnect() {
-        closeAfterWriting = true
-        checkStatus()
+        if !isConnected {
+            delegate?.didDisconnect(self)
+        } else {
+            closeAfterWriting = true
+            checkStatus()
+        }
     }
 
     /**
      Disconnect the socket immediately.
      */
     func forceDisconnect() {
-        tsSocket.close()
+        if !isConnected {
+            delegate?.didDisconnect(self)
+        } else {
+            tsSocket.close()
+        }
     }
 
     /**

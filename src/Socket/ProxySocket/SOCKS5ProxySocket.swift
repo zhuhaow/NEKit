@@ -1,12 +1,11 @@
 import Foundation
-import CocoaLumberjackSwift
 
-class SOCKS5ProxySocket: ProxySocket {
+public class SOCKS5ProxySocket: ProxySocket {
     /// The remote host to connect to.
-    var destinationHost: String!
+    public var destinationHost: String!
 
     /// The remote port to connect to.
-    var destinationPort: Int!
+    public var destinationPort: Int!
 
     /**
      Begin reading and processing data from the socket.
@@ -25,7 +24,7 @@ class SOCKS5ProxySocket: ProxySocket {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    override func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
+    override public func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
         super.didReadData(data, withTag: tag, from: from)
 
         switch tag {
@@ -68,16 +67,14 @@ class SOCKS5ProxySocket: ProxySocket {
             var rawPort: UInt16 = 0
             data.getBytes(&rawPort, length: sizeof(UInt16))
             destinationPort = Int(NSSwapBigShortToHost(rawPort))
-            DDLogInfo("Recieved request to \(destinationHost):\(destinationPort)")
             request = ConnectRequest(host: destinationHost!, port: destinationPort!)
+            observer?.signal(.ReceivedRequest(request!, on: self))
             delegate?.didReceiveRequest(request!, from: self)
         case _ where tag >= 0:
             delegate?.didReadData(data, withTag: tag, from: self)
         default:
-            DDLogError("SOCKS5ProxySocket recieved some data with unknown data tag: \(tag)")
             break
         }
-
     }
 
     /**
@@ -87,13 +84,14 @@ class SOCKS5ProxySocket: ProxySocket {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    override func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
+    override public func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
         super.didWriteData(data, withTag: tag, from: from)
 
         if tag >= 0 {
             delegate?.didWriteData(data, withTag: tag, from: self)
         }
         if tag == SocketTag.SOCKS5.ConnectResponse {
+            observer?.signal(.ReadyForForward(self))
             delegate?.readyToForward(self)
         }
     }
@@ -104,6 +102,8 @@ class SOCKS5ProxySocket: ProxySocket {
      - parameter response: The `ConnectResponse`.
      */
     override func respondToResponse(response: ConnectResponse) {
+        super.respondToResponse(response)
+
         var responseBytes = [UInt8](count: 11, repeatedValue: 0)
         responseBytes[0...3] = [0x05, 0x00, 0x00, 0x01]
         responseBytes[4...7] = [0x7f, 0x00, 0x00, 0x01]

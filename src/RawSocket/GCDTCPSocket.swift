@@ -221,7 +221,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     }
 
     // MARK: Delegate methods for GCDAsyncSocket
-    func socket(sock: GCDAsyncSocket!, didWriteDataWithTag tag: Int) {
+    func socket(sock: GCDAsyncSocket, didWriteDataWithTag tag: Int) {
         delegate?.didWriteData(nil, withTag: tag, from: self)
     }
 
@@ -229,19 +229,19 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
         delegate?.didReadData(data, withTag: tag, from: self)
     }
 
-    func socketDidDisconnect(socket: GCDAsyncSocket!, withError err: NSError?) {
+    func socketDidDisconnect(socket: GCDAsyncSocket, withError err: NSError?) {
         delegate?.didDisconnect(self)
         delegate = nil
         socket.setDelegate(nil, delegateQueue: nil)
     }
 
-    func socket(sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
+    func socket(sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         if !enableTLS {
             delegate?.didConnect(self)
         }
     }
 
-    func socketDidSecure(sock: GCDAsyncSocket!) {
+    func socketDidSecure(sock: GCDAsyncSocket) {
         if enableTLS {
             delegate?.didConnect(self)
         }
