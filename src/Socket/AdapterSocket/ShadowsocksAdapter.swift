@@ -123,7 +123,7 @@ public class ShadowsocksAdapter: AdapterSocket {
     }
 
     override public func didWriteData(data: NSData?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
-        super.didWriteData(nil, withTag: tag, from: socket)
+        super.didWriteData(data, withTag: tag, from: socket)
 
         if tag == ShadowsocksTag.Connect.rawValue {
             observer?.signal(.ReadyForForward(self))
