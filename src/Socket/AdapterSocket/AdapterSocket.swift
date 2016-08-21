@@ -6,15 +6,21 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     public var observer: Observer<AdapterSocketEvent>?
 
+    var type: String = ""
+
+    public override var description: String {
+        return "<\(type) adapter socket (connecting to \(request.host):\(request.port))>"
+    }
+
     /**
      Connect to remote according to the `ConnectRequest`.
 
      - parameter request: The connect request.
      */
     func openSocketWithRequest(request: ConnectRequest) {
+        self.request = request
         observer?.signal(.SocketOpened(self, withRequest: request))
 
-        self.request = request
         socket.delegate = self
         socket.queue = queue
         state = .Connecting
