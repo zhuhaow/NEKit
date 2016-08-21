@@ -1,19 +1,19 @@
 import Foundation
 
 public class HTTPHeader {
-    var HTTPVersion: String
-    var method: String
-    var isConnect: Bool = false
-    var path: String
-    var host: String
-    var port: Int
+    public var HTTPVersion: String
+    public var method: String
+    public var isConnect: Bool = false
+    public var path: String
+    public var host: String
+    public var port: Int
     // just assume that `Content-Length` is given as of now.
     // Chunk is not supported yet.
-    var contentLength: Int = 0
-    var headers: [(String, String)] = []
-    var rawHeader: NSData?
+    public var contentLength: Int = 0
+    public var headers: [(String, String)] = []
+    public var rawHeader: NSData?
 
-    init?(headerString: String) {
+    public init?(headerString: String) {
         let lines = headerString.componentsSeparatedByString("\r\n")
         guard lines.count > 3 else {
             return nil
@@ -89,7 +89,7 @@ public class HTTPHeader {
         }
     }
 
-    convenience init?(headerData: NSData) {
+    public convenience init?(headerData: NSData) {
         guard let headerString = NSString(data: headerData, encoding: NSASCIIStringEncoding) as? String else {
             return nil
         }
@@ -98,7 +98,7 @@ public class HTTPHeader {
         rawHeader = headerData
     }
 
-    subscript(index: String) -> String? {
+    public subscript(index: String) -> String? {
         get {
             for (key, value) in headers {
                 if index.caseInsensitiveCompare(key) == .OrderedSame {
@@ -110,11 +110,11 @@ public class HTTPHeader {
     }
 
 
-    func toData() -> NSData {
+    public func toData() -> NSData {
         return toString().dataUsingEncoding(NSUTF8StringEncoding)!
     }
 
-    func toString() -> String {
+    public func toString() -> String {
         var strRep = "\(method) \(path) \(HTTPVersion)\r\n"
         for (key, value) in headers {
             strRep += "\(key): \(value)\r\n"
@@ -123,11 +123,11 @@ public class HTTPHeader {
         return strRep
     }
 
-    func addHeader(key: String, value: String) {
+    public func addHeader(key: String, value: String) {
         headers.append(key, value)
     }
 
-    func rewriteToRelativePath() {
+    public func rewriteToRelativePath() {
         if path[path.startIndex] != "/" {
             guard let rewrotePath = URL.matchRelativePath(path) else {
                 return
@@ -136,7 +136,7 @@ public class HTTPHeader {
         }
     }
 
-    func removeHeader(key: String) -> String? {
+    public func removeHeader(key: String) -> String? {
         for i in 0..<headers.count {
             if headers[i].0.caseInsensitiveCompare(key) == .OrderedSame {
                 let (_, value) = headers.removeAtIndex(i)
@@ -146,7 +146,7 @@ public class HTTPHeader {
         return nil
     }
 
-    func removeProxyHeader() {
+    public func removeProxyHeader() {
         let ProxyHeader = ["Proxy-Authenticate", "Proxy-Authorization", "Proxy-Connection"]
         for header in ProxyHeader {
             removeHeader(header)
