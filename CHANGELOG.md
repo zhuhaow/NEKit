@@ -8,7 +8,8 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 - Many things are now `public` instead of `internal`.
 
 ### Added
-- The proxy server, adapter socket, proxy socket and tunnel trigger events now.
+- The proxy server, adapter socket, proxy socket and tunnel now trigger events.
+- A build-in debug observer to help with debugging.
 
 ### Fixed
 - Chacha20 and Salsa20 encryption are fixed.
