@@ -24,22 +24,19 @@ class SodiumStreamCrypto: StreamCryptoProtocol {
     func update(data: NSData) -> NSData {
         let padding = counter % blockSize
 
-        var inputData: NSData
+        var outputData: NSMutableData
         if padding == 0 {
-            inputData = data
+            outputData = NSMutableData(data: data)
         } else {
-            let _data = NSMutableData(length: data.length + padding)!
-            _data.replaceBytesInRange(NSRange(location: padding, length: data.length), withBytes: data.bytes)
-            inputData = _data
+            outputData = NSMutableData(length: data.length + padding)!
+            outputData.replaceBytesInRange(NSRange(location: padding, length: data.length), withBytes: data.bytes)
         }
-
-        let outputData = NSMutableData(length: padding + data.length)!
 
         switch algorithm {
         case .Chacha20:
-            crypto_stream_chacha20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(inputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
+            crypto_stream_chacha20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(outputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
         case .Salsa20:
-            crypto_stream_salsa20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(inputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
+            crypto_stream_salsa20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(outputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
         }
 
         counter += data.length
