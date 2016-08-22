@@ -1,3 +1,4 @@
+
 output: "."
 source_directory: ../
 swift_version: 2.2
@@ -109,6 +110,26 @@ custom_categories:
       - IPPacket
       - TransportProtocolParserProtocol
       - UDPProtocolParser
+
+  - name: Event
+    children:
+      - EventType
+      - ProxyServerEvent
+      - TunnelEvent
+      - AdapterSocketEvent
+      - ProxySocketEvent
+      - RuleMatchEvent
+      - Observer
+      - ObserverFactory
+
+  - name: Observer for Debug
+    children:
+      - DebugObserverFactory
+      - DebugTunnelObserver
+      - DebugProxySocketObserver
+      - DebugAdapterSocketObserver
+      - DebugProxyServerObserver
+      - DebugRuleManagerObserver
 
   - name: Configuration Parser
     children:
