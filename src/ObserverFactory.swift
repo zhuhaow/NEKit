@@ -18,4 +18,8 @@ public class ObserverFactory {
     public func getObserverForProxyServer(server: ProxyServer) -> Observer<ProxyServerEvent>? {
         return nil
     }
+
+    public func getObserverForRuleManager(manager: RuleManager) -> Observer<RuleMatchEvent>? {
+        return nil
+    }
 }

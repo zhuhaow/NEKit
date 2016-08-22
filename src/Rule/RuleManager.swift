@@ -1,5 +1,4 @@
 import Foundation
-import CocoaLumberjackSwift
 
 /// The class managing rules.
 public class RuleManager {
@@ -10,6 +9,8 @@ public class RuleManager {
 
     /// The rule list.
     var rules: [Rule] = []
+
+    public var observer: Observer<RuleMatchEvent>?
 
     /**
      Create a new `RuleManager` from the given rules.
@@ -23,6 +24,8 @@ public class RuleManager {
         if appendDirect || self.rules.count == 0 {
             self.rules.append(DirectRule())
         }
+
+        observer = ObserverFactory.currentFactory?.getObserverForRuleManager(self)
     }
 
     /**
@@ -34,6 +37,9 @@ public class RuleManager {
     func matchDNS(session: DNSSession, type: DNSSessionMatchType) {
         for (i, rule) in rules[session.indexToMatch..<rules.count].enumerate() {
             let result = rule.matchDNS(session, type: type)
+
+            observer?.signal(.DNSRuleMatched(session, rule: rule, type: type, result: result))
+
             switch result {
             case .Fake, .Real, .Unknown:
                 session.matchedRule = rule
@@ -55,15 +61,18 @@ public class RuleManager {
      */
     func match(request: ConnectRequest) -> AdapterFactory! {
         if request.matchedRule != nil {
+            observer?.signal(.RuleMatched(request, rule: request.matchedRule!))
             return request.matchedRule!.match(request)
         }
 
         for rule in rules {
             if let adapterFactory = rule.match(request) {
-                DDLogVerbose("Rule \(rule) matches request: \(request)")
+                observer?.signal(.RuleMatched(request, rule: rule))
+
+                request.matchedRule = rule
                 return adapterFactory
             } else {
-                DDLogVerbose("Rule \(rule) does not match request: \(request)")
+                observer?.signal(.RuleDidNotMatch(request, rule: rule))
             }
         }
         return nil // this should never happens

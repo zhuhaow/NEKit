@@ -21,6 +21,10 @@ public class DebugObserverFactory: ObserverFactory {
     override public func getObserverForAdapterSocket(socket: AdapterSocket) -> Observer<AdapterSocketEvent>? {
         return DebugAdapterSocketObserver()
     }
+
+    public override func getObserverForRuleManager(manager: RuleManager) -> Observer<RuleMatchEvent>? {
+        return DebugRuleManagerObserver()
+    }
 }
 
 public class DebugTunnelObserver: Observer<TunnelEvent> {
@@ -95,6 +99,17 @@ public class DebugProxyServerObserver: Observer<ProxyServerEvent> {
         case .NewSocketAccepted,
              .TunnelClosed:
             DDLogVerbose("\(event)")
+        }
+    }
+}
+
+public class DebugRuleManagerObserver: Observer<RuleMatchEvent> {
+    public override func signal(event: RuleMatchEvent) {
+        switch event {
+        case .RuleDidNotMatch, .DNSRuleMatched:
+            DDLogVerbose("\(event)")
+        case .RuleMatched:
+            DDLogInfo("\(event)")
         }
     }
 }

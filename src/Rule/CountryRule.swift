@@ -11,6 +11,10 @@ public class CountryRule: Rule {
     /// The rule should match the request which matches the country or not.
     public let match: Bool
 
+    public override var description: String {
+        return "<CountryRule countryCode:\(countryCode) match:\(match)>"
+    }
+
     /**
      Create a new `CountryRule` instance.
 

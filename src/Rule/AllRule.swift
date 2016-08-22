@@ -4,6 +4,10 @@ import Foundation
 public class AllRule: Rule {
     private let adapterFactory: AdapterFactory
 
+    public override var description: String {
+        return "<AllRule>"
+    }
+
     /**
      Create a new `AllRule` instance.
 

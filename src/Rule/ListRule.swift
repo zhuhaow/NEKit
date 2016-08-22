@@ -4,6 +4,10 @@ import Foundation
 public class ListRule: Rule {
     private let adapterFactory: AdapterFactory
 
+    public override var description: String {
+        return "<ListRule>"
+    }
+
     /// The list of regular expressions to match to.
     public var urls: [NSRegularExpression] = []
 

@@ -1,15 +1,15 @@
 import Foundation
 
 /// The rule defines what to do for DNS requests and connect requests.
-public class Rule {
-    /// The name of this rule.
-    let name: String?
+public class Rule: CustomStringConvertible {
+    public var description: String {
+        return "<Rule>"
+    }
 
     /**
      Create a new rule.
      */
     public init() {
-        name = nil
     }
 
     /**

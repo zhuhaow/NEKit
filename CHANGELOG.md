@@ -7,6 +7,9 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 - Many things in `HTTPHeader` and `ConnectRequest` become `public`.
 - Refined `description` of many classes.
 
+### Added
+- The `RuleManager` now triggers events.
+
 
 ## [0.2.4]
 ### Changed

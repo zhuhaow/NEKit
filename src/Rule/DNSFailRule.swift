@@ -4,6 +4,10 @@ import Foundation
 public class DNSFailRule: Rule {
     private let adapterFactory: AdapterFactory
 
+    public override var description: String {
+        return "<DNSFailRule>"
+    }
+
     /**
      Create a new `DNSFailRule` instance.
 

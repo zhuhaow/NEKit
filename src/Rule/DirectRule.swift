@@ -4,6 +4,9 @@ import Foundation
 ///
 /// This is equivalent to create an `AllRule` with a `DirectAdapterFactory`.
 public class DirectRule: AllRule {
+    public override var description: String {
+        return "<DirectRule>"
+    }
     /**
      Create a new `DirectRule` instance.
      */
