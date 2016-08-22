@@ -47,6 +47,9 @@ public protocol SocketProtocol: class {
     /// If the socket is disconnected.
     var isDisconnected: Bool { get }
 
+    /// The type of the socket.
+    var type: String { get }
+
     /**
      Read data from the socket.
 

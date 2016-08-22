@@ -18,11 +18,11 @@ public class ProxyServer: NSObject, TunnelDelegate {
     /// The type of the proxy server.
     ///
     /// This can be set to anything describing the proxy server.
-    public var type = "Unspecific"
+    public let type: String
 
     /// The description of proxy server.
     public override var description: String {
-        return "<\(type) proxy server (address: \(address); port: \(port))>"
+        return "<\(type) address:\(address) port:\(port)>"
     }
 
     public var observer: Observer<ProxyServerEvent>?
@@ -38,6 +38,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
     public init(address: IPv4Address, port: Port) {
         self.address = address
         self.port = port
+        type = "\(self.dynamicType)"
 
         super.init()
 

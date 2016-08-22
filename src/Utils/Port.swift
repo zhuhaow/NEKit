@@ -16,7 +16,7 @@ public class Port: CustomStringConvertible, Hashable {
     }
 
     public var description: String {
-        return "Port: \(value)"
+        return "<Port \(value)>"
     }
 
     var value: UInt16 {

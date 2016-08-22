@@ -35,10 +35,10 @@ public class Tunnel: NSObject, SocketDelegate {
     }
 
     override public var description: String {
-        if proxySocket.request != nil {
-            return "Tunnel connecting to \(proxySocket.request!.host)"
+        if let adapterSocket = adapterSocket {
+            return "<Tunnel proxySocket:\(proxySocket) adapterSocket:\(adapterSocket)>"
         } else {
-            return "Tunnel"
+            return "<Tunnel proxySocket:\(proxySocket)>"
         }
     }
 

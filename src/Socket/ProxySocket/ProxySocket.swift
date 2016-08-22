@@ -12,6 +12,16 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         return state == .Closed || state == .Invalid
     }
 
+    public override var description: String {
+        if let request = request {
+            return "<\(type) host:\(request.host) port: \(request.port))>"
+        } else {
+            return "<\(type)>"
+        }
+    }
+
+    public let type: String
+
     /**
      Init a `ProxySocket` with a raw TCP socket.
 
@@ -19,10 +29,12 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      */
     init(socket: RawTCPSocketProtocol) {
         self.socket = socket
-        super.init()
-        self.socket.delegate = self
+        type = "\(self.dynamicType)"
 
-        self.observer = ObserverFactory.currentFactory?.getObserverForProxySocket(self)
+        super.init()
+
+        self.socket.delegate = self
+        observer = ObserverFactory.currentFactory?.getObserverForProxySocket(self)
     }
 
     /**

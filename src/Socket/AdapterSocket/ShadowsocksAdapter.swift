@@ -45,8 +45,6 @@ public class ShadowsocksAdapter: AdapterSocket {
         self.host = host
         self.port = port
         super.init()
-
-        type = "Shadowsocks"
     }
 
     override func openSocketWithRequest(request: ConnectRequest) {

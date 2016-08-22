@@ -41,7 +41,6 @@ public class HTTPAdapter: AdapterSocket {
         self.auth = auth
         secured = false
         super.init()
-        type = "HTTP"
     }
 
     override func openSocketWithRequest(request: ConnectRequest) {

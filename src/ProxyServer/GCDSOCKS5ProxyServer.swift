@@ -10,7 +10,6 @@ public final class GCDSOCKS5ProxyServer: GCDProxyServer {
      */
     override public init(address: IPv4Address, port: Port) {
         super.init(address: address, port: port)
-        type = "SOCKS5"
     }
 
     /**

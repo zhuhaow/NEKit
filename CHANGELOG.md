@@ -5,6 +5,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ## [Unreleased]
 ### Changed
 - Many things in `HTTPHeader` and `ConnectRequest` become `public`.
+- Refined `description` of many classes.
 
 
 ## [0.2.4]

@@ -6,10 +6,10 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     public var observer: Observer<AdapterSocketEvent>?
 
-    var type: String = ""
+    public let type: String
 
     public override var description: String {
-        return "<\(type) adapter socket (connecting to \(request.host):\(request.port))>"
+        return "<\(type) host:\(request.host) port:\(request.port))>"
     }
 
     /**
@@ -50,6 +50,7 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     }
 
     override init() {
+        type = "\(self.dynamicType)"
         super.init()
 
         observer = ObserverFactory.currentFactory?.getObserverForAdapterSocket(self)

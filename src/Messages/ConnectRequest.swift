@@ -124,6 +124,10 @@ public final class ConnectRequest {
 
 extension ConnectRequest: CustomStringConvertible {
     public var description: String {
-        return "Request to: \(host):\(port) (\(requestedHost):\(port))"
+        if requestedHost != host {
+        return "<\(self.dynamicType) host:\(host) port:\(port) requestedHost:\(requestedHost)>"
+        } else {
+            return "<\(self.dynamicType) host:\(host) port:\(port)>"
+        }
     }
 }

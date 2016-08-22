@@ -5,6 +5,5 @@ public class SecureHTTPAdapter: HTTPAdapter {
     override init(serverHost: String, serverPort: Int, auth: HTTPAuthentication?) {
         super.init(serverHost: serverHost, serverPort: serverPort, auth: auth)
         secured = true
-        type = "Secure HTTP"
     }
 }

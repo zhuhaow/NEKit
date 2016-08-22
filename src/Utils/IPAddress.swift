@@ -47,7 +47,7 @@ public class IPv4Address: IPAddress, Hashable {
     }
 
     public var description: String {
-        return "IPv4 address: \(presentation)"
+        return "<IPv4Address \(presentation)>"
     }
 
     public var hashValue: Int {
