@@ -1,6 +1,5 @@
 import Foundation
 import CocoaAsyncSocket
-import CocoaLumberjackSwift
 
 /// The TCP socket build upon `GCDAsyncSocket`.
 ///

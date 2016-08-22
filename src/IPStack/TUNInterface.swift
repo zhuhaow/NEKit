@@ -1,6 +1,5 @@
 import Foundation
 import NetworkExtension
-import CocoaLumberjackSwift
 
 /// TUN interface provide a scheme to register a set of IP Stacks (implementing `IPStackProtocol`) to process IP packets from a virtual TUN interface.
 public class TUNInterface {

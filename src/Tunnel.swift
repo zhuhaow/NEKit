@@ -1,5 +1,4 @@
 import Foundation
-import CocoaLumberjackSwift
 
 protocol TunnelDelegate : class {
     func tunnelDidClose(tunnel: Tunnel)

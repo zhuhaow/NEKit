@@ -1,5 +1,4 @@
 import Foundation
-import CocoaLumberjackSwift
 
 /// The raw socket protocol which represents a TCP socket.
 ///
