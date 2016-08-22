@@ -178,6 +178,10 @@ interface.registerStack(TCPStack.stack)
 
 When everything is set up, you should start processing packets by calling `interface.start()` in the completion handler of `setTunnelNetworkSettings`.
 
+## Event
+
+You can use `Observer<T>` to observe the events in proxy servers and sockets. Check out observers in `DebugObserver.swift` as an example.
+
 ## Dive in
 
 ### Framework overview
