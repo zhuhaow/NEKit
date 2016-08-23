@@ -1,59 +1,63 @@
 import Foundation
 
+public enum IPRangeError: ErrorType {
+    case InvalidCIDRFormat, InvalidRangeFormat, RangeIsTooLarge, InvalidFormat
+}
+
 public class IPRange {
     let baseIP: IPv4Address
     let range: UInt32
 
-    init?(baseIP: IPv4Address, range: UInt32) {
+    init(baseIP: IPv4Address, range: UInt32) throws {
         guard baseIP.UInt32InHostOrder &+ range > range else {
-            return nil
+            throw IPRangeError.RangeIsTooLarge
         }
 
         self.baseIP = baseIP
         self.range = range
     }
 
-    convenience init?(withCIDRString rep: String) {
+    convenience init(withCIDRString rep: String) throws {
         let info = rep.componentsSeparatedByString("/")
         guard info.count == 2 else {
-            return nil
+            throw IPRangeError.InvalidCIDRFormat
         }
 
         guard let ip = IPv4Address(fromString: info[0]), mask = UInt32(info[1]) else {
-            return nil
+            throw IPRangeError.InvalidCIDRFormat
         }
 
         guard mask <= 32 else {
-            return nil
+            throw IPRangeError.InvalidCIDRFormat
         }
 
-        self.init(baseIP: ip, range: UInt32.max >> mask)
+        try self.init(baseIP: ip, range: UInt32.max >> mask)
     }
 
-    convenience init?(withRangeString rep: String) {
+    convenience init(withRangeString rep: String) throws {
         let info = rep.componentsSeparatedByString("+")
         guard info.count == 2 else {
-            return nil
+            throw IPRangeError.InvalidRangeFormat
         }
 
         guard let ip = IPv4Address(fromString: info[0]), range = UInt32(info[1]) else {
-            return nil
+            throw IPRangeError.InvalidRangeFormat
         }
 
-        self.init(baseIP: ip, range: range)
+        try self.init(baseIP: ip, range: range)
     }
 
-    convenience init?(withString rep: String) {
+    convenience init(withString rep: String) throws {
         if rep.containsString("/") {
-            self.init(withCIDRString: rep)
+            try self.init(withCIDRString: rep)
         } else if rep.containsString("+") {
-            self.init(withRangeString: rep)
+            try self.init(withRangeString: rep)
         } else {
             guard let ip = IPv4Address(fromString: rep) else {
-                return nil
+                throw IPRangeError.InvalidFormat
             }
 
-            self.init(baseIP: ip, range: 0)
+            try self.init(baseIP: ip, range: 0)
         }
     }
 
