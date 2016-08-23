@@ -1,11 +1,11 @@
 import Foundation
 
 /// The rule matches the host domain to a list of predefined regular expressions.
-public class ListRule: Rule {
+public class DomainListRule: Rule {
     private let adapterFactory: AdapterFactory
 
     public override var description: String {
-        return "<ListRule>"
+        return "<DomainListRule>"
     }
 
     /// The list of regular expressions to match to.

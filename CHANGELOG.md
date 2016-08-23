@@ -6,6 +6,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ### Changed
 - Proxy server can listen on port without specific IP address.
 - IPv4Address will return `nil` when initialize with an invalid IP address string.
+- `ListRule` is renamed to `DomainListRule`.
 
 ### Fixed
 - DNS server will only process A queries and return others intact.
