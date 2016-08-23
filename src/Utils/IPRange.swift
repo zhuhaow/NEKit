@@ -9,7 +9,7 @@ public class IPRange {
     let range: UInt32
 
     init(baseIP: IPv4Address, range: UInt32) throws {
-        guard baseIP.UInt32InHostOrder &+ range > range else {
+        guard baseIP.UInt32InHostOrder &+ range >= baseIP.UInt32InHostOrder else {
             throw IPRangeError.RangeIsTooLarge
         }
 
