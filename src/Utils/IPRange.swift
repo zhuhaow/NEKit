@@ -43,6 +43,20 @@ class IPRange {
         self.init(baseIP: ip, range: range)
     }
 
+    convenience init?(withString rep: String) {
+        if rep.containsString("/") {
+            self.init(withCIDRString: rep)
+        } else if rep.containsString("+") {
+            self.init(withRangeString: rep)
+        } else {
+            guard let ip = IPv4Address(fromString: rep) else {
+                return nil
+            }
+
+            self.init(baseIP: ip, range: 0)
+        }
+    }
+
     func inRange(ip: IPv4Address) -> Bool {
         return ip.UInt32InHostOrder >= baseIP.UInt32InHostOrder && ip.UInt32InHostOrder <= baseIP.UInt32InHostOrder + range
     }
