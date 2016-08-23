@@ -11,6 +11,9 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ### Fixed
 - DNS server will only process A queries and return others intact.
 
+### Added
+- Support for IP range list matching rule.
+
 ## [0.2.5]
 ### Changed
 - Many things in `HTTPHeader` and `ConnectRequest` become `public`.

@@ -203,6 +203,8 @@
 		36CB0D391D51E06700DB7AF5 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */; };
 		36D591BE1D6C40F2003E92B2 /* IPRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591BD1D6C40F2003E92B2 /* IPRange.swift */; };
 		36D591BF1D6C40F2003E92B2 /* IPRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591BD1D6C40F2003E92B2 /* IPRange.swift */; };
+		36D591C11D6C4895003E92B2 /* IPRangeListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */; };
+		36D591C21D6C4895003E92B2 /* IPRangeListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */; };
 		36E44A021CF2ED4800185DBF /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
 /* End PBXBuildFile section */
 
@@ -373,6 +375,7 @@
 		36CB0D321D51C68700DB7AF5 /* HTTPProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPProxySocket.swift; sourceTree = "<group>"; };
 		36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
 		36D591BD1D6C40F2003E92B2 /* IPRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRange.swift; sourceTree = "<group>"; };
+		36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRangeListRule.swift; sourceTree = "<group>"; };
 		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -602,6 +605,7 @@
 				366EB5C61CE033FB00E0E942 /* DomainListRule.swift */,
 				36B1620D1CDDA0E000F24C97 /* Rule.swift */,
 				36B1620E1CDDA0E000F24C97 /* RuleManager.swift */,
+				36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */,
 			);
 			path = Rule;
 			sourceTree = "<group>";
@@ -1047,6 +1051,7 @@
 				36C63DF61CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */,
 				3650FAF71D27D64500444E79 /* MD5Hash.swift in Sources */,
 				36D591BE1D6C40F2003E92B2 /* IPRange.swift in Sources */,
+				36D591C11D6C4895003E92B2 /* IPRangeListRule.swift in Sources */,
 				3650FAF11D27C8CB00444E79 /* CryptoEnum.swift in Sources */,
 				36411A5F1D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */,
 				36B1622B1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift in Sources */,
@@ -1148,6 +1153,7 @@
 				36C63DF71CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */,
 				3650FAF81D27D64500444E79 /* MD5Hash.swift in Sources */,
 				36D591BF1D6C40F2003E92B2 /* IPRange.swift in Sources */,
+				36D591C21D6C4895003E92B2 /* IPRangeListRule.swift in Sources */,
 				3650FAF21D27C8CB00444E79 /* CryptoEnum.swift in Sources */,
 				36411A601D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */,
 				36C48D801CF88EDE0071804F /* SocketProtocol.swift in Sources */,
