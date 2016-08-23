@@ -50,6 +50,10 @@ public class DNSMessage {
         return nil
     }
 
+    var type: DNSType? {
+        return queries.first?.type
+    }
+
     init() {}
 
     init?(payload: NSData) {

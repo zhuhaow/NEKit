@@ -25,6 +25,9 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
 
     public var outputFunc: (([NSData], [NSNumber]) -> ())!
 
+    // Only match A record as of now, all other records should be passed directly.
+    private let matchedType = [DNSType.A]
+
     /**
      Initailize a DNS server.
 
@@ -53,6 +56,12 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
     }
 
     private func lookup(session: DNSSession) {
+        guard shouldMatch(session) else {
+            session.matchResult = .Real
+            lookupRemotely(session)
+            return
+        }
+
         RuleManager.currentManager.matchDNS(session, type: .Domain)
 
         switch session.matchResult! {
@@ -143,6 +152,7 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
             response.transactionID = session.requestMessage.transactionID
             response.messageType = .Response
             response.recursionAvailable = true
+            // since we only support ipv4 as of now, it must be an answer of type A
             response.answers.append(DNSResource.ARecord(session.requestMessage.queries[0].name, TTL: UInt32(Opt.DNSFakeIPTTL), address: session.fakeIP!))
             session.expireAt = NSDate().dateByAddingTimeInterval(Double(Opt.DNSFakeIPTTL))
             guard response.buildMessage() else {
@@ -162,6 +172,10 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
         ipPacket.buildPacket()
 
         outputFunc([ipPacket.packetData], [NSNumber(int: AF_INET)])
+    }
+
+    private func shouldMatch(session: DNSSession) -> Bool {
+        return matchedType.contains(session.requestMessage.type!)
     }
 
     func isFakeIP(ipAddress: IPv4Address) -> Bool {
