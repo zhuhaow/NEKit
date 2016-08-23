@@ -201,6 +201,8 @@
 		36CB0D341D51C68700DB7AF5 /* HTTPProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB0D321D51C68700DB7AF5 /* HTTPProxySocket.swift */; };
 		36CB0D381D51E06700DB7AF5 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */; };
 		36CB0D391D51E06700DB7AF5 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */; };
+		36D591BE1D6C40F2003E92B2 /* IPRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591BD1D6C40F2003E92B2 /* IPRange.swift */; };
+		36D591BF1D6C40F2003E92B2 /* IPRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591BD1D6C40F2003E92B2 /* IPRange.swift */; };
 		36E44A021CF2ED4800185DBF /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
 /* End PBXBuildFile section */
 
@@ -370,6 +372,7 @@
 		36C63E031D02C0B700A00CA2 /* TCPStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPStack.swift; sourceTree = "<group>"; };
 		36CB0D321D51C68700DB7AF5 /* HTTPProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPProxySocket.swift; sourceTree = "<group>"; };
 		36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
+		36D591BD1D6C40F2003E92B2 /* IPRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRange.swift; sourceTree = "<group>"; };
 		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -740,6 +743,7 @@
 				36411A721D1FBFB0005F4108 /* IPv4Pool.swift */,
 				3636DA611CE892EF007F9787 /* Port.swift */,
 				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
+				36D591BD1D6C40F2003E92B2 /* IPRange.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1042,6 +1046,7 @@
 				362950481D6AE2E6001A30F6 /* ProxyServerEvent.swift in Sources */,
 				36C63DF61CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */,
 				3650FAF71D27D64500444E79 /* MD5Hash.swift in Sources */,
+				36D591BE1D6C40F2003E92B2 /* IPRange.swift in Sources */,
 				3650FAF11D27C8CB00444E79 /* CryptoEnum.swift in Sources */,
 				36411A5F1D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */,
 				36B1622B1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift in Sources */,
@@ -1142,6 +1147,7 @@
 				362950491D6AE2E6001A30F6 /* ProxyServerEvent.swift in Sources */,
 				36C63DF71CFFDCAF00A00CA2 /* NWUDPSocket.swift in Sources */,
 				3650FAF81D27D64500444E79 /* MD5Hash.swift in Sources */,
+				36D591BF1D6C40F2003E92B2 /* IPRange.swift in Sources */,
 				3650FAF21D27C8CB00444E79 /* CryptoEnum.swift in Sources */,
 				36411A601D167AC3005F4108 /* DNSSessionMatchType.swift in Sources */,
 				36C48D801CF88EDE0071804F /* SocketProtocol.swift in Sources */,
