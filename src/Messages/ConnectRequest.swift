@@ -41,7 +41,10 @@ public final class ConnectRequest {
                 return ip
             }
 
-            let address = IPv4Address(fromString: ip)!
+            guard let address = IPv4Address(fromString: ip) else {
+                return ip
+            }
+
             guard dnsServer.isFakeIP(address) else {
                 return ip
             }
