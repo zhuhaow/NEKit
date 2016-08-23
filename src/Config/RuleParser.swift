@@ -25,8 +25,8 @@ struct RuleParser {
             return try parseCountryRule(config, adapterFactoryManager: adapterFactoryManager)
         case "all":
             return try parseAllRule(config, adapterFactoryManager: adapterFactoryManager)
-        case "list":
-            return try parseListRule(config, adapterFactoryManager: adapterFactoryManager)
+        case "list", "domainlist":
+            return try parseDomainListRule(config, adapterFactoryManager: adapterFactoryManager)
         case "dnsfail":
             return try parseDNSFailRule(config, adapterFactoryManager: adapterFactoryManager)
         default:
@@ -36,7 +36,7 @@ struct RuleParser {
 
     static func parseCountryRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) throws -> CountryRule {
         guard let country = config["country"].string else {
-            throw ConfigurationParserError.RuleParsingError(errorInfo: "Country code (country) is required for country rule .")
+            throw ConfigurationParserError.RuleParsingError(errorInfo: "Country code (country) is required for country rule.")
         }
 
         guard let adapter_id = config["adapter"].stringOrIntString else {
@@ -66,7 +66,7 @@ struct RuleParser {
         return AllRule(adapterFactory: adapter)
     }
 
-    static func parseListRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) throws -> ListRule {
+    static func parseDomainListRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) throws -> DomainListRule {
         guard let adapter_id = config["adapter"].stringOrIntString else {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "An adapter id (adapter_id) is required.")
         }
@@ -76,7 +76,7 @@ struct RuleParser {
         }
 
         guard var filepath = config["file"].stringOrIntString else {
-            throw ConfigurationParserError.RuleParsingError(errorInfo: "Must provide a file (file) containing rules in list.")
+            throw ConfigurationParserError.RuleParsingError(errorInfo: "Must provide a file (file) containing domain rules in list.")
         }
 
         filepath = (filepath as NSString).stringByExpandingTildeInPath
@@ -89,7 +89,7 @@ struct RuleParser {
                 urls.removeLast()
             }
         }
-        return try ListRule(adapterFactory: adapter, urls: urls)
+        return try DomainListRule(adapterFactory: adapter, urls: urls)
         } catch let error {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "Encounter error when parse rule list file. \(error)")
         }
