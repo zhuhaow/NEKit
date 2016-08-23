@@ -1,6 +1,6 @@
 import Foundation
 
-class IPRange {
+public class IPRange {
     let baseIP: IPv4Address
     let range: UInt32
 
