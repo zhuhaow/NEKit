@@ -47,11 +47,24 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
      - parameter address: The fake IP address.
      - parameter delay:   How long should the fake IP be valid.
      */
-    private func cleanUp(address: IPv4Address, after delay: Int) {
+    private func cleanUpFakeIP(address: IPv4Address, after delay: Int) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay) * Int64(NSEC_PER_SEC)), queue) {
             [weak self] in
             self?.fakeSessions.removeValueForKey(address)
             self?.pool?.releaseIP(address)
+        }
+    }
+
+    /**
+     Clean up pending session.
+
+     - parameter session: The pending session.
+     - parameter delay:   How long before the pending session be cleaned up.
+     */
+    private func cleanUpPendingSession(session: DNSSession, after delay: Int) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay) * Int64(NSEC_PER_SEC)), queue) {
+            [weak self] in
+            self?.pendingSessions.removeValueForKey(session.requestMessage.transactionID)
         }
     }
 
@@ -82,6 +95,7 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
 
     private func lookupRemotely(session: DNSSession) {
         pendingSessions[session.requestMessage.transactionID] = session
+        cleanUpPendingSession(session, after: Opt.DNSPendingSessionLifeTime)
         sendQueryToRemote(session)
     }
 
@@ -210,7 +224,7 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
         fakeSessions[fakeIP] = session
         session.expireAt = NSDate().dateByAddingTimeInterval(NSTimeInterval(Opt.DNSFakeIPTTL))
         // keep the fake session for 2 TTL
-        cleanUp(fakeIP, after: Opt.DNSFakeIPTTL * 2)
+        cleanUpFakeIP(fakeIP, after: Opt.DNSFakeIPTTL * 2)
         return true
     }
 

@@ -8,6 +8,8 @@ struct Opt {
 
     static let DNSFakeIPTTL = 300
 
+    static let DNSPendingSessionLifeTime = 10
+
     static let UDPSocketActiveTimeout = 300
 
     static let UDPSocketActiveCheckInterval = 60
