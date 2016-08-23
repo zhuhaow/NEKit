@@ -12,7 +12,7 @@ public class DomainListRule: Rule {
     public var urls: [NSRegularExpression] = []
 
     /**
-     Create a new `ListRule` instance.
+     Create a new `DomainListRule` instance.
 
      - parameter adapterFactory: The factory which builds a corresponding adapter when needed.
      - parameter urls:           The list of regular expressions to match. The regular expression is parsed by `NSRegularExpression(pattern: url, options: .CaseInsensitive)`.
