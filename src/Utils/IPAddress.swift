@@ -1,7 +1,7 @@
 import Foundation
 
 protocol IPAddress: CustomStringConvertible {
-    init(fromString: String)
+    init?(fromString: String)
     init(fromBytesInNetworkOrder: [UInt8])
     init(fromBytesInNetworkOrder: UnsafePointer<Void>)
 
@@ -23,10 +23,15 @@ public class IPv4Address: IPAddress, Hashable {
         _in_addr = UnsafePointer<in_addr>(fromBytesInNetworkOrder).memory
     }
 
-    required public init(fromString: String) {
+    required public init?(fromString: String) {
         var addr: in_addr = in_addr()
+        var result: Int32 = 0
         fromString.withCString {
-            inet_pton(AF_INET, $0, &addr)
+            result = inet_pton(AF_INET, $0, &addr)
+        }
+
+        guard result == 1 else {
+            return nil
         }
         _in_addr = addr
     }

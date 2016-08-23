@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## [Unreleased]
+### Changed
+- Proxy server can listen on port without specific IP address.
+- IPv4Address will return `nil` when initialize with an invalid IP address string.
+
+### Fixed
+- DNS server will only process A queries and return others intact.
+
 ## [0.2.5]
 ### Changed
 - Many things in `HTTPHeader` and `ConnectRequest` become `public`.

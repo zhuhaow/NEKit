@@ -41,7 +41,7 @@ public final class ConnectRequest {
                 return ip
             }
 
-            let address = IPv4Address(fromString: ip)
+            let address = IPv4Address(fromString: ip)!
             guard dnsServer.isFakeIP(address) else {
                 return ip
             }
@@ -89,7 +89,7 @@ public final class ConnectRequest {
             return true
         }
 
-        let address = IPv4Address(fromString: requestedHost)
+        let address = IPv4Address(fromString: requestedHost)!
         guard dnsServer.isFakeIP(address) else {
             return true
         }
