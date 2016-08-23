@@ -15,7 +15,7 @@ public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
      */
     override public func start() throws {
         listenSocket = GCDAsyncSocket(delegate: self, delegateQueue: listenQueue)
-        try listenSocket.acceptOnInterface(address.presentation, port: port.value)
+        try listenSocket.acceptOnInterface(address?.presentation, port: port.value)
         try super.start()
     }
 

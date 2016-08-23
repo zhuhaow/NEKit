@@ -8,7 +8,7 @@ public final class GCDHTTPProxyServer: GCDProxyServer {
      - parameter address: The address of proxy server.
      - parameter port:    The port of proxy server.
      */
-    override public init(address: IPv4Address, port: Port) {
+    override public init(address: IPv4Address?, port: Port) {
         super.init(address: address, port: port)
     }
 
