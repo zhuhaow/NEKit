@@ -27,7 +27,7 @@ struct RuleParser {
             return try parseAllRule(config, adapterFactoryManager: adapterFactoryManager)
         case "list", "domainlist":
             return try parseDomainListRule(config, adapterFactoryManager: adapterFactoryManager)
-        case "iprange":
+        case "iplist":
             return try parseIPRangeListRule(config, adapterFactoryManager: adapterFactoryManager)
         case "dnsfail":
             return try parseDNSFailRule(config, adapterFactoryManager: adapterFactoryManager)
