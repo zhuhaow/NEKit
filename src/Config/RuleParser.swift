@@ -10,7 +10,7 @@ struct RuleParser {
         var rules: [Rule] = []
 
         for ruleConfig in ruleConfigs {
-                rules.append(try parseRule(ruleConfig, adapterFactoryManager: adapterFactoryManager))
+            rules.append(try parseRule(ruleConfig, adapterFactoryManager: adapterFactoryManager))
         }
         return RuleManager(fromRules: rules, appendDirect: true)
     }
@@ -27,6 +27,8 @@ struct RuleParser {
             return try parseAllRule(config, adapterFactoryManager: adapterFactoryManager)
         case "list", "domainlist":
             return try parseDomainListRule(config, adapterFactoryManager: adapterFactoryManager)
+        case "iprange":
+            return try parseIPRangeListRule(config, adapterFactoryManager: adapterFactoryManager)
         case "dnsfail":
             return try parseDNSFailRule(config, adapterFactoryManager: adapterFactoryManager)
         default:
@@ -82,16 +84,45 @@ struct RuleParser {
         filepath = (filepath as NSString).stringByExpandingTildeInPath
 
         do {
-        let content = try String(contentsOfFile: filepath)
-        var urls = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
-        if let url = urls.last {
-            if url == "" {
-                urls.removeLast()
+            let content = try String(contentsOfFile: filepath)
+            var urls = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
+            if let url = urls.last {
+                if url == "" {
+                    urls.removeLast()
+                }
             }
-        }
-        return try DomainListRule(adapterFactory: adapter, urls: urls)
+            return try DomainListRule(adapterFactory: adapter, urls: urls)
         } catch let error {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "Encounter error when parse rule list file. \(error)")
+        }
+    }
+
+    static func parseIPRangeListRule(config: Yaml, adapterFactoryManager: AdapterFactoryManager) throws -> IPRangeListRule {
+        guard let adapter_id = config["adapter"].stringOrIntString else {
+            throw ConfigurationParserError.RuleParsingError(errorInfo: "An adapter id (adapter_id) is required.")
+        }
+
+        guard let adapter = adapterFactoryManager[adapter_id] else {
+            throw ConfigurationParserError.RuleParsingError(errorInfo: "Unknown adapter id.")
+        }
+
+        guard var filepath = config["file"].stringOrIntString else {
+            throw ConfigurationParserError.RuleParsingError(errorInfo: "Must provide a file (file) containing IP range rules in list.")
+        }
+
+        filepath = (filepath as NSString).stringByExpandingTildeInPath
+
+        do {
+            let content = try String(contentsOfFile: filepath)
+            var ranges = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
+            if let range = ranges.last {
+                if range == "" {
+                    ranges.removeLast()
+                }
+            }
+            return try IPRangeListRule(adapterFactory: adapter, ranges: ranges)
+        } catch let error {
+            throw ConfigurationParserError.RuleParsingError(errorInfo: "Encounter error when parse IP range rule list file. \(error)")
         }
     }
 
