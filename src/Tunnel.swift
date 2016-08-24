@@ -1,4 +1,5 @@
 import Foundation
+import CocoaLumberjackSwift
 
 protocol TunnelDelegate : class {
     func tunnelDidClose(tunnel: Tunnel)
@@ -98,6 +99,9 @@ public class Tunnel: NSObject, SocketDelegate {
         adapterSocket!.queue = queue
         adapterSocket!.delegate = self
         adapterSocket!.openSocketWithRequest(request)
+        if let rule = request.matchedRule {
+            DDLogInfo("\(rule)  \(request.host)")
+        }
     }
 
     public func readyToForward(socket: SocketProtocol) {
