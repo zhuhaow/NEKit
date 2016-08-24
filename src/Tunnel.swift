@@ -100,7 +100,7 @@ public class Tunnel: NSObject, SocketDelegate {
         adapterSocket!.delegate = self
         adapterSocket!.openSocketWithRequest(request)
         if let rule = request.matchedRule {
-            DDLogInfo("\(rule)  \(request.host)")
+            DDLogInfo("Request: \(request.host), Type: \(adapterSocket!.type), Rule: \(rule)")
         }
     }
 
