@@ -28,4 +28,7 @@ public class AdapterFactory {
 /// Factory building direct adapters.
 ///
 /// - note: This is needed since we need to identify direct adapter factory.
-public class DirectAdapterFactory: AdapterFactory {}
+public class DirectAdapterFactory: AdapterFactory {
+    public override init(){
+    }
+}
