@@ -24,6 +24,8 @@ struct AdapterFactoryParser {
                 factoryDict[id] = try parseServerAdapterFactory(adapterConfig, type: SecureHTTPAdapterFactory.self)
             case .Some("ss"):
                 factoryDict[id] = try parseShadowsocksAdapterFactory(adapterConfig)
+            case .Some("reject"):
+                factoryDict[id] = try parseRejectAdapterFactory(adapterConfig)
             case nil:
                 throw ConfigurationParserError.AdapterTypeMissing
             default:
@@ -99,5 +101,14 @@ struct AdapterFactoryParser {
         let adapter = SpeedAdapterFactory()
         adapter.adapterFactories = factories
         return adapter
+    }
+
+    static func parseRejectAdapterFactory(config: Yaml) throws -> RejectAdapterFactory {
+
+        guard let delay = config["delay"].int else {
+            throw ConfigurationParserError.AdapterParsingError(errorInfo: "Reject adapter must specify a delay in millisecond.")
+        }
+
+        return RejectAdapterFactory(delay: delay)
     }
 }

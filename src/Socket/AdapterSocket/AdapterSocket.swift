@@ -21,8 +21,8 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         self.request = request
         observer?.signal(.SocketOpened(self, withRequest: request))
 
-        socket.delegate = self
-        socket.queue = queue
+        socket?.delegate = self
+        socket?.queue = queue
         state = .Connecting
     }
 
@@ -63,7 +63,7 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     public func readDataWithTag(tag: Int) {
-        socket.readDataWithTag(tag)
+        socket?.readDataWithTag(tag)
     }
 
     /**
@@ -74,7 +74,7 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
     public func writeData(data: NSData, withTag tag: Int) {
-        socket.writeData(data, withTag: tag)
+        socket?.writeData(data, withTag: tag)
     }
 
     //    func readDataToLength(length: Int, withTag tag: Int) {
@@ -91,7 +91,7 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     public func disconnect() {
         state = .Disconnecting
         observer?.signal(.DisconnectCalled(self))
-        socket.disconnect()
+        socket?.disconnect()
     }
 
     /**
@@ -100,7 +100,7 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     public func forceDisconnect() {
         state = .Disconnecting
         observer?.signal(.ForceDisconnectCalled(self))
-        socket.forceDisconnect()
+        socket?.forceDisconnect()
     }
 
     // MARK: RawTCPSocketDelegate Protocol Implemention
