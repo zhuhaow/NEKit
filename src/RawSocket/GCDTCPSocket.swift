@@ -4,7 +4,7 @@ import CocoaAsyncSocket
 /// The TCP socket build upon `GCDAsyncSocket`.
 ///
 /// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
-class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
+public class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     private let socket: GCDAsyncSocket
     private var enableTLS: Bool = false
 
@@ -13,7 +13,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
 
      - parameter socket: The socket object to work with. If this is `nil`, then a new `GCDAsyncSocket` instance is created.
      */
-    init(socket: GCDAsyncSocket? = nil) {
+    public init(socket: GCDAsyncSocket? = nil) {
         if let socket = socket {
             self.socket = socket
         } else {
@@ -25,24 +25,24 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     // MARK: RawTCPSocketProtocol implemention
 
     /// The `RawTCPSocketDelegate` instance.
-    weak var delegate: RawTCPSocketDelegate?
+    weak public var delegate: RawTCPSocketDelegate?
 
     /// Every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
     ///
     /// - warning: This should be set as soon as the instance is initialized.
-    var queue: dispatch_queue_t! = nil {
+    public var queue: dispatch_queue_t! = nil {
         didSet {
             socket.setDelegate(self, delegateQueue: queue)
         }
     }
 
     /// If the socket is connected.
-    var isConnected: Bool {
+    public var isConnected: Bool {
         return !socket.isDisconnected
     }
 
     /// The source address.
-    var sourceIPAddress: IPv4Address? {
+    public var sourceIPAddress: IPv4Address? {
         guard let localHost = socket.localHost else {
             return nil
         }
@@ -50,21 +50,21 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     }
 
     /// The source port.
-    var sourcePort: Port? {
+    public var sourcePort: Port? {
         return Port(port: socket.localPort)
     }
 
     /// The destination address.
     ///
     /// - note: Always returns `nil`.
-    var destinationIPAddress: IPv4Address? {
+    public var destinationIPAddress: IPv4Address? {
         return nil
     }
 
     /// The destination port.
     ///
     /// - note: Always returns `nil`.
-    var destinationPort: Port? {
+    public var destinationPort: Port? {
         return nil
     }
 
@@ -78,7 +78,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
 
      - throws: The error occured when connecting to host.
      */
-    func connectTo(host: String, port: Int, enableTLS: Bool = false, tlsSettings: [NSObject : AnyObject]? = nil) throws {
+    public func connectTo(host: String, port: Int, enableTLS: Bool = false, tlsSettings: [NSObject : AnyObject]? = nil) throws {
         try connectToHost(host, withPort: port)
         self.enableTLS = enableTLS
         if enableTLS {
@@ -91,14 +91,14 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
 
      The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
-    func disconnect() {
+    public func disconnect() {
         socket.disconnectAfterWriting()
     }
 
     /**
      Disconnect the socket immediately.
      */
-    func forceDisconnect() {
+    public func forceDisconnect() {
         socket.disconnect()
     }
 
@@ -109,7 +109,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    func writeData(data: NSData, withTag tag: Int) {
+    public func writeData(data: NSData, withTag tag: Int) {
         writeData(data, withTimeout: -1, withTag: tag)
     }
 
@@ -119,7 +119,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataWithTag(tag: Int) {
+    public func readDataWithTag(tag: Int) {
         socket.readDataWithTimeout(-1, tag: tag)
     }
 
@@ -130,7 +130,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
      - parameter tag:    The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToLength(length: Int, withTag tag: Int) {
+    public func readDataToLength(length: Int, withTag tag: Int) {
         readDataToLength(length, withTimeout: -1, withTag: tag)
     }
 
@@ -141,7 +141,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToData(data: NSData, withTag tag: Int) {
+    public func readDataToData(data: NSData, withTag tag: Int) {
         readDataToData(data, withTag: tag, maxLength: 0)
     }
 
@@ -153,7 +153,7 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
      - parameter maxLength: Ignored since `GCDAsyncSocket` does not support this. The max length of data to scan for the pattern.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
+    public func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
         readDataToData(data, withTimeout: -1, withTag: tag)
     }
 
@@ -220,27 +220,27 @@ class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     }
 
     // MARK: Delegate methods for GCDAsyncSocket
-    func socket(sock: GCDAsyncSocket, didWriteDataWithTag tag: Int) {
+    public func socket(sock: GCDAsyncSocket, didWriteDataWithTag tag: Int) {
         delegate?.didWriteData(nil, withTag: tag, from: self)
     }
 
-    func socket(sock: GCDAsyncSocket, didReadData data: NSData, withTag tag: Int) {
+    public func socket(sock: GCDAsyncSocket, didReadData data: NSData, withTag tag: Int) {
         delegate?.didReadData(data, withTag: tag, from: self)
     }
 
-    func socketDidDisconnect(socket: GCDAsyncSocket, withError err: NSError?) {
+    public func socketDidDisconnect(socket: GCDAsyncSocket, withError err: NSError?) {
         delegate?.didDisconnect(self)
         delegate = nil
         socket.setDelegate(nil, delegateQueue: nil)
     }
 
-    func socket(sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
+    public func socket(sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         if !enableTLS {
             delegate?.didConnect(self)
         }
     }
 
-    func socketDidSecure(sock: GCDAsyncSocket) {
+    public func socketDidSecure(sock: GCDAsyncSocket) {
         if enableTLS {
             delegate?.didConnect(self)
         }

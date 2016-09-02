@@ -27,7 +27,7 @@ public class UDPDNSResolver: DNSResolverProtocol, NWUDPSocketDelegate {
         socket.disconnect()
     }
 
-    func didReceiveData(data: NSData, from: NWUDPSocket) {
+    public func didReceiveData(data: NSData, from: NWUDPSocket) {
         delegate?.didReceiveResponse(data)
     }
 }

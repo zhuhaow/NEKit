@@ -1,6 +1,6 @@
 import Foundation
 
-class StreamScanner {
+public class StreamScanner {
     var receivedData: NSMutableData = NSMutableData()
     let pattern: NSData
     let maximumLength: Int
@@ -10,13 +10,13 @@ class StreamScanner {
         return receivedData.length
     }
 
-    init(pattern: NSData, maximumLength: Int) {
+    public init(pattern: NSData, maximumLength: Int) {
         self.pattern = pattern
         self.maximumLength = maximumLength
     }
 
     // I know this is not the most effcient algorithm if there is a large number of NSDatas, but since we only need to find the CRLF in http header (as of now), and it should be ready in the first readData call, there is no need to implement a complicate algorithm which is very likely to be slower in such case.
-    func addAndScan(data: NSData) -> (NSData?, NSData)? {
+    public func addAndScan(data: NSData) -> (NSData?, NSData)? {
         guard finished == false else {
             return nil
         }

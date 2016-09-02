@@ -5,10 +5,10 @@ public enum IPRangeError: ErrorType {
 }
 
 public class IPRange {
-    let baseIP: IPv4Address
-    let range: UInt32
+    public let baseIP: IPv4Address
+    public let range: UInt32
 
-    init(baseIP: IPv4Address, range: UInt32) throws {
+    public init(baseIP: IPv4Address, range: UInt32) throws {
         guard baseIP.UInt32InHostOrder &+ range >= baseIP.UInt32InHostOrder else {
             throw IPRangeError.RangeIsTooLarge
         }
@@ -17,7 +17,7 @@ public class IPRange {
         self.range = range
     }
 
-    convenience init(withCIDRString rep: String) throws {
+    public convenience init(withCIDRString rep: String) throws {
         let info = rep.componentsSeparatedByString("/")
         guard info.count == 2 else {
             throw IPRangeError.InvalidCIDRFormat
@@ -34,7 +34,7 @@ public class IPRange {
         try self.init(baseIP: ip, range: UInt32.max >> mask)
     }
 
-    convenience init(withRangeString rep: String) throws {
+    public convenience init(withRangeString rep: String) throws {
         let info = rep.componentsSeparatedByString("+")
         guard info.count == 2 else {
             throw IPRangeError.InvalidRangeFormat
@@ -47,7 +47,7 @@ public class IPRange {
         try self.init(baseIP: ip, range: range)
     }
 
-    convenience init(withString rep: String) throws {
+    public convenience init(withString rep: String) throws {
         if rep.containsString("/") {
             try self.init(withCIDRString: rep)
         } else if rep.containsString("+") {
@@ -61,7 +61,7 @@ public class IPRange {
         }
     }
 
-    func inRange(ip: IPv4Address) -> Bool {
+    public func inRange(ip: IPv4Address) -> Bool {
         return ip.UInt32InHostOrder >= baseIP.UInt32InHostOrder && ip.UInt32InHostOrder <= baseIP.UInt32InHostOrder + range
     }
 }

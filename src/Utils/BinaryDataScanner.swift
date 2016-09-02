@@ -20,14 +20,14 @@ And it would be nice to have an extension to
 NSFileHandle too that does much the same.
 */
 
-protocol BinaryReadable {
+public protocol BinaryReadable {
     var littleEndian: Self { get }
     var bigEndian: Self { get }
 }
 
 extension UInt8: BinaryReadable {
-    var littleEndian: UInt8 { return self }
-    var bigEndian: UInt8 { return self }
+    public var littleEndian: UInt8 { return self }
+    public var bigEndian: UInt8 { return self }
 }
 
 extension UInt16: BinaryReadable {}
@@ -36,7 +36,7 @@ extension UInt32: BinaryReadable {}
 
 extension UInt64: BinaryReadable {}
 
-class BinaryDataScanner {
+public class BinaryDataScanner {
     let data: NSData
     let littleEndian: Bool
 //    let encoding: NSStringEncoding
@@ -49,7 +49,7 @@ class BinaryDataScanner {
         }
     }
 
-    init(data: NSData, littleEndian: Bool) {
+    public init(data: NSData, littleEndian: Bool) {
         self.data = data
         self.littleEndian = littleEndian
 //        self.encoding = encoding
@@ -58,7 +58,7 @@ class BinaryDataScanner {
         self.remaining = self.data.length
     }
 
-    func read<T: BinaryReadable>() -> T? {
+    public func read<T: BinaryReadable>() -> T? {
         if remaining < sizeof(T) {
             return nil
         }
@@ -71,31 +71,31 @@ class BinaryDataScanner {
     }
 
     // swiftlint:disable variable_name
-    func skipTo(n: Int) {
+    public func skipTo(n: Int) {
         remaining = data.length - n
         current = data.bytes.advancedBy(n)
     }
 
-    func advanceBy(n: Int) {
+    public func advanceBy(n: Int) {
         remaining -= n
         current = current.advancedBy(n)
     }
 
     /* convenience read funcs */
 
-    func readByte() -> UInt8? {
+    public func readByte() -> UInt8? {
         return read()
     }
 
-    func read16() -> UInt16? {
+    public func read16() -> UInt16? {
         return read()
     }
 
-    func read32() -> UInt32? {
+    public func read32() -> UInt32? {
         return read()
     }
 
-    func read64() -> UInt64? {
+    public func read64() -> UInt64? {
         return read()
     }
 }

@@ -1,11 +1,11 @@
 import Foundation
 import CommonCrypto
 
-class CCCrypto: StreamCryptoProtocol {
-    enum Algorithm {
+public class CCCrypto: StreamCryptoProtocol {
+    public enum Algorithm {
         case AES, CAST, RC4
 
-        func toCCAlgorithm() -> CCAlgorithm {
+        public func toCCAlgorithm() -> CCAlgorithm {
             switch self {
             case .AES:
                 return CCAlgorithm(kCCAlgorithmAES)
@@ -17,10 +17,10 @@ class CCCrypto: StreamCryptoProtocol {
         }
     }
 
-    enum Mode {
+    public enum Mode {
         case CFB, RC4
 
-        func toCCMode() -> CCMode {
+        public func toCCMode() -> CCMode {
             switch self {
             case .CFB:
                 return CCMode(kCCModeCFB)
@@ -32,13 +32,13 @@ class CCCrypto: StreamCryptoProtocol {
 
     let cryptor: CCCryptorRef
 
-    init(operation: CryptoOperation, mode: Mode, algorithm: Algorithm, initialVector: NSData?, key: NSData) {
+    public init(operation: CryptoOperation, mode: Mode, algorithm: Algorithm, initialVector: NSData?, key: NSData) {
         let cryptor = UnsafeMutablePointer<CCCryptorRef>.alloc(1)
         CCCryptorCreateWithMode(operation.toCCOperation(), mode.toCCMode(), algorithm.toCCAlgorithm(), CCPadding(ccNoPadding), initialVector?.bytes ?? nil, key.bytes, key.length, nil, 0, 0, 0, cryptor)
         self.cryptor = cryptor.memory
     }
 
-    func update(data: NSData) -> NSData {
+    public func update(data: NSData) -> NSData {
         let outData = NSMutableData(length: data.length)!
         CCCryptorUpdate(cryptor, data.bytes, data.length, outData.mutableBytes, outData.length, nil)
         return NSData(data: outData)

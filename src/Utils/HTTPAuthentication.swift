@@ -1,15 +1,20 @@
 import Foundation
 
 public struct HTTPAuthentication {
-    let username: String
-    let password: String
+    public let username: String
+    public let password: String
 
-    func encoding() -> String? {
+    public init(username: String, password: String) {
+        self.username = username
+        self.password = password
+    }
+
+    public func encoding() -> String? {
         let auth = "\(username):\(password)"
         return auth.dataUsingEncoding(NSUTF8StringEncoding)?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
     }
 
-    func authString() -> String {
+    public func authString() -> String {
         return "Basic \(encoding()!)"
     }
 }

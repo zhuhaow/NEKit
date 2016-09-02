@@ -1,5 +1,5 @@
 import Foundation
 
-protocol StreamCryptoProtocol {
+public protocol StreamCryptoProtocol {
     func update(data: NSData) -> NSData
 }

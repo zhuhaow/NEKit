@@ -1,17 +1,17 @@
 import Foundation
 
-class Checksum {
+public class Checksum {
 
-    static func computeChecksum(data: NSData, from start: Int = 0, to end: Int? = nil, withPseudoHeaderChecksum initChecksum: UInt32 = 0) -> UInt16 {
+    public static func computeChecksum(data: NSData, from start: Int = 0, to end: Int? = nil, withPseudoHeaderChecksum initChecksum: UInt32 = 0) -> UInt16 {
         return toChecksum(computeChecksumUnfold(data, from: start, to: end, withPseudoHeaderChecksum: initChecksum))
     }
 
-    static func validateChecksum(payload: NSData, from start: Int = 0, to end: Int? = nil) -> Bool {
+    public static func validateChecksum(payload: NSData, from start: Int = 0, to end: Int? = nil) -> Bool {
         let cs = computeChecksumUnfold(payload, from: start, to: end)
         return toChecksum(cs) == 0
     }
 
-    static func computeChecksumUnfold(data: NSData, from start: Int = 0, to end: Int? = nil, withPseudoHeaderChecksum initChecksum: UInt32 = 0) -> UInt32 {
+    public static func computeChecksumUnfold(data: NSData, from start: Int = 0, to end: Int? = nil, withPseudoHeaderChecksum initChecksum: UInt32 = 0) -> UInt32 {
         let scanner = BinaryDataScanner(data: data, littleEndian: true)
         scanner.skipTo(start)
         var result: UInt32 = initChecksum
@@ -35,7 +35,7 @@ class Checksum {
     }
 
 
-    static func toChecksum(checksum: UInt32) -> UInt16 {
+    public static func toChecksum(checksum: UInt32) -> UInt16 {
         var result = checksum
         while (result) >> 16 != 0 {
             result = result >> 16 + result & 0xFFFF

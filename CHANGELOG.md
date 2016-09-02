@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## [Unreleased]
+### Changed
+- Many things are now exposed as `public`.
+- Some meta-parameters can be set in `Opt`.
+
+### Added
+- Support to reject request.
+
 ## [0.3.1]
 ### Fixed
 - A potential memory leakage if DNS response is lost in transmission.
