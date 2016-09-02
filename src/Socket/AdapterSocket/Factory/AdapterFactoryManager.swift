@@ -3,10 +3,10 @@ import Foundation
 /// This is a very simple wrapper of a dict of type `[String: AdapterFactory]`.
 ///
 /// Use it as a normal dict.
-class AdapterFactoryManager {
+public class AdapterFactoryManager {
     private var factoryDict: [String: AdapterFactory]
 
-    subscript(index: String) -> AdapterFactory? {
+    public subscript(index: String) -> AdapterFactory? {
         get {
             if index == "direct" {
                 return DirectAdapterFactory()
