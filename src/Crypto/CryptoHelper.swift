@@ -1,7 +1,7 @@
 import Foundation
 
-struct CryptoHelper {
-    static let infoDictionary: [CryptoAlgorithm:(Int, Int)] = [
+public struct CryptoHelper {
+    public static let infoDictionary: [CryptoAlgorithm:(Int, Int)] = [
         .AES128CFB: (16, 16),
         .AES192CFB: (24, 16),
         .AES256CFB: (32, 16),
@@ -10,21 +10,21 @@ struct CryptoHelper {
         .RC4MD5: (16, 16)
         ]
 
-    static func getKeyLength(methodType: CryptoAlgorithm) -> Int {
+    public static func getKeyLength(methodType: CryptoAlgorithm) -> Int {
         return infoDictionary[methodType]!.0
     }
 
-    static func getIVLength(methodType: CryptoAlgorithm) -> Int {
+    public static func getIVLength(methodType: CryptoAlgorithm) -> Int {
         return infoDictionary[methodType]!.1
     }
 
-    static func getIV(methodType: CryptoAlgorithm) -> NSData {
+    public static func getIV(methodType: CryptoAlgorithm) -> NSData {
         let IV = NSMutableData(length: getIVLength(methodType))!
         SecRandomCopyBytes(kSecRandomDefault, IV.length, UnsafeMutablePointer<UInt8>(IV.mutableBytes))
         return IV
     }
 
-    static func getKey(password: String, methodType: CryptoAlgorithm) -> NSData {
+    public static func getKey(password: String, methodType: CryptoAlgorithm) -> NSData {
         let result = NSMutableData(length: getIVLength(methodType) + getKeyLength(methodType))!
         let passwordData = password.dataUsingEncoding(NSUTF8StringEncoding)!
         var md5result = MD5Hash.final(password)

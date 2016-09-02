@@ -1,20 +1,20 @@
 import Foundation
 
-struct Utils {
-    struct HTTPData {
-        static let DoubleCRLF = "\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
-        static let CRLF = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
-        static let ConnectSuccessResponse = "HTTP/1.1 200 Connection Established\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
+public struct Utils {
+    public struct HTTPData {
+        public static let DoubleCRLF = "\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
+        public static let CRLF = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
+        public static let ConnectSuccessResponse = "HTTP/1.1 200 Connection Established\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
     }
 
-    struct DNS {
+    public struct DNS {
         // swiftlint:disable:next nesting
-        enum QueryType {
+        public enum QueryType {
             // swiftlint:disable:next type_name
             case A, AAAA, UNSPEC
         }
 
-        static func resolve(name: String, type: QueryType = .UNSPEC) -> String {
+        public static func resolve(name: String, type: QueryType = .UNSPEC) -> String {
             let remoteHostEnt = gethostbyname2((name as NSString).UTF8String, AF_INET)
 
             if remoteHostEnt == nil {
@@ -29,8 +29,8 @@ struct Utils {
     }
 
     // swiftlint:disable:next type_name
-    struct IP {
-        static func isIPv4(ipAddress: String) -> Bool {
+    public struct IP {
+        public static func isIPv4(ipAddress: String) -> Bool {
             if IPv4ToInt(ipAddress) != nil {
                 return true
             } else {
@@ -38,17 +38,17 @@ struct Utils {
             }
         }
 
-        static func isIPv6(ipAddress: String) -> Bool {
+        public static func isIPv6(ipAddress: String) -> Bool {
             let utf8Str = (ipAddress as NSString).UTF8String
             var dst = [UInt8](count: 16, repeatedValue: 0)
             return inet_pton(AF_INET6, utf8Str, &dst) == 1
         }
 
-        static func isIP(ipAddress: String) -> Bool {
+        public static func isIP(ipAddress: String) -> Bool {
             return isIPv4(ipAddress) || isIPv6(ipAddress)
         }
 
-        static func IPv4ToInt(ipAddress: String) -> UInt32? {
+        public static func IPv4ToInt(ipAddress: String) -> UInt32? {
             let utf8Str = (ipAddress as NSString).UTF8String
             var dst = in_addr(s_addr: 0)
             if inet_pton(AF_INET, utf8Str, &(dst.s_addr)) == 1 {
@@ -58,7 +58,7 @@ struct Utils {
             }
         }
 
-        static func IPv4ToBytes(ipAddress: String) -> [UInt8]? {
+        public static func IPv4ToBytes(ipAddress: String) -> [UInt8]? {
             if let ipv4int = IPv4ToInt(ipAddress) {
                 return Utils.toByteArray(ipv4int).reverse()
             } else {
@@ -66,7 +66,7 @@ struct Utils {
             }
         }
 
-        static func IPv6ToBytes(ipAddress: String) -> [UInt8]? {
+        public static func IPv6ToBytes(ipAddress: String) -> [UInt8]? {
             let utf8Str = (ipAddress as NSString).UTF8String
             var dst = [UInt8](count: 16, repeatedValue: 0)
             if inet_pton(AF_INET6, utf8Str, &dst) == 1 {

@@ -4,7 +4,7 @@ import CommonCrypto
 public enum CryptoOperation {
     case Encrypt, Decrypt
 
-    func toCCOperation() -> CCOperation {
+    public func toCCOperation() -> CCOperation {
         switch self {
         case .Encrypt:
             return CCOperation(kCCEncrypt)

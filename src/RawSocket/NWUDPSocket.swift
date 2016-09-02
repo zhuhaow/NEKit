@@ -3,7 +3,7 @@ import NetworkExtension
 import CocoaLumberjackSwift
 
 /// The delegate protocol of `NWUDPSocket`.
-protocol NWUDPSocketDelegate: class {
+public protocol NWUDPSocketDelegate: class {
     /**
      Socket did receive data from remote.
 
@@ -23,7 +23,7 @@ public class NWUDPSocket {
     private let queue: dispatch_queue_t = dispatch_queue_create("NWUDPSocket.queue", DISPATCH_QUEUE_SERIAL)
 
     /// The delegate instance.
-    weak var delegate: NWUDPSocketDelegate?
+    public weak var delegate: NWUDPSocketDelegate?
 
     /// The time when the last activity happens.
     ///

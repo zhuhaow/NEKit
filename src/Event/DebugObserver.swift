@@ -2,9 +2,7 @@ import Foundation
 import CocoaLumberjackSwift
 
 public class DebugObserverFactory: ObserverFactory {
-    public override init() {
-
-    }
+    public override init() {}
 
     override public func getObserverForTunnel(tunnel: Tunnel) -> Observer<TunnelEvent>? {
         return DebugTunnelObserver()

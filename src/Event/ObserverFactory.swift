@@ -3,6 +3,8 @@ import Foundation
 public class ObserverFactory {
     public static var currentFactory: ObserverFactory?
 
+    public init() {}
+
     public func getObserverForTunnel(tunnel: Tunnel) -> Observer<TunnelEvent>? {
         return nil
     }

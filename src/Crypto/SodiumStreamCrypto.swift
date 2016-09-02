@@ -1,27 +1,27 @@
 import Foundation
 import Sodium
 
-class SodiumStreamCrypto: StreamCryptoProtocol {
-    enum Alogrithm {
+public class SodiumStreamCrypto: StreamCryptoProtocol {
+    public enum Alogrithm {
         case Chacha20, Salsa20
     }
 
-    let key: NSData
-    let iv: NSData
-    let algorithm: Alogrithm
+    public let key: NSData
+    public let iv: NSData
+    public let algorithm: Alogrithm
 
     var counter = 0
 
     let blockSize = 64
 
-    init(key: NSData, iv: NSData, algorithm: Alogrithm) {
+    public init(key: NSData, iv: NSData, algorithm: Alogrithm) {
         Libsodium.initialized
         self.key = key
         self.iv = iv
         self.algorithm = algorithm
     }
 
-    func update(data: NSData) -> NSData {
+    public func update(data: NSData) -> NSData {
         let padding = counter % blockSize
 
         var outputData: NSMutableData

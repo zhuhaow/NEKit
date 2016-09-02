@@ -1,6 +1,6 @@
 import Foundation
 
-protocol IPAddress: CustomStringConvertible {
+public protocol IPAddress: CustomStringConvertible {
     init?(fromString: String)
     init(fromBytesInNetworkOrder: [UInt8])
     init(fromBytesInNetworkOrder: UnsafePointer<Void>)
@@ -73,7 +73,7 @@ public class IPv4Address: IPAddress, Hashable {
         }
     }
 
-    var dataInNetworkOrder: NSData {
+    public var dataInNetworkOrder: NSData {
         var data: NSData! = nil
         withBytesInNetworkOrder {
             data = NSData(bytes: $0, length: sizeofValue(self._in_addr))

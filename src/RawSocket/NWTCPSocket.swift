@@ -5,7 +5,7 @@ import CocoaLumberjackSwift
 /// The TCP socket build upon `NWTCPConnection`.
 ///
 /// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
-class NWTCPSocket: NSObject, RawTCPSocketProtocol {
+public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     static let ScannerReadTag = 10000
     private var connection: NWTCPConnection!
 
@@ -19,43 +19,43 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     // MARK: RawTCPSocketProtocol implemention
 
     /// The `RawTCPSocketDelegate` instance.
-    weak var delegate: RawTCPSocketDelegate?
+    weak public var delegate: RawTCPSocketDelegate?
 
     /// Every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
     ///
     /// - warning: This should be set as soon as the instance is initialized.
-    var queue: dispatch_queue_t!
+    public var queue: dispatch_queue_t!
 
     /// If the socket is connected.
-    var isConnected: Bool {
+    public var isConnected: Bool {
         return connection.state == .Connected
     }
 
     /// The source address.
     ///
     /// - note: Always returns `nil`.
-    var sourceIPAddress: IPv4Address? {
+    public var sourceIPAddress: IPv4Address? {
         return nil
     }
 
     /// The source port.
     ///
     /// - note: Always returns `nil`.
-    var sourcePort: Port? {
+    public var sourcePort: Port? {
         return nil
     }
 
     /// The destination address.
     ///
     /// - note: Always returns `nil`.
-    var destinationIPAddress: IPv4Address? {
+    public var destinationIPAddress: IPv4Address? {
         return nil
     }
 
     /// The destination port.
     ///
     /// - note: Always returns `nil`.
-    var destinationPort: Port? {
+    public var destinationPort: Port? {
         return nil
     }
 
@@ -69,7 +69,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
      - throws: Never throws.
      */
-    func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?) throws {
+    public func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?) throws {
         let endpoint = NWHostEndpoint(hostname: host, port: "\(port)")
         let tlsParameters = NWTLSParameters()
         if let tlsSettings = tlsSettings as? [String: AnyObject] {
@@ -90,7 +90,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
      The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
-    func disconnect() {
+    public func disconnect() {
         if connection.state == .Cancelled {
             delegate?.didDisconnect(self)
         } else {
@@ -102,7 +102,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     /**
      Disconnect the socket immediately.
      */
-    func forceDisconnect() {
+    public func forceDisconnect() {
         if connection.state == .Cancelled {
             delegate?.didDisconnect(self)
         } else {
@@ -117,7 +117,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    func writeData(data: NSData, withTag tag: Int) {
+    public func writeData(data: NSData, withTag tag: Int) {
         sendData(data, withTag: tag)
     }
 
@@ -127,7 +127,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataWithTag(tag: Int) {
+    public func readDataWithTag(tag: Int) {
         connection.readMinimumLength(0, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
@@ -145,7 +145,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter tag:    The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToLength(length: Int, withTag tag: Int) {
+    public func readDataToLength(length: Int, withTag tag: Int) {
         connection.readLength(length) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
@@ -163,7 +163,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToData(data: NSData, withTag tag: Int) {
+    public func readDataToData(data: NSData, withTag tag: Int) {
         readDataToData(data, withTag: tag, maxLength: 0)
     }
 
@@ -179,7 +179,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter maxLength: The max length of data to scan for the pattern.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
+    public func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
         var maxLength = maxLength
         if maxLength == 0 {
             maxLength = Opt.MAXNWTCPScanLength
@@ -193,7 +193,7 @@ class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         dispatch_async(queue, block)
     }
 
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         guard keyPath == "state" else {
             return
         }

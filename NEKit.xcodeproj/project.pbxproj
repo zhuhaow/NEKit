@@ -78,6 +78,10 @@
 		366EB5CB1CE061F200E0E942 /* AdapterFactoryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CA1CE061F200E0E942 /* AdapterFactoryParser.swift */; };
 		366EB5CD1CE06B5E00E0E942 /* RawSocketFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */; };
 		366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */; };
+		368CBDA31D7911D4003CEA62 /* RejectAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CBDA21D7911D4003CEA62 /* RejectAdapterFactory.swift */; };
+		368CBDA41D7911D4003CEA62 /* RejectAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CBDA21D7911D4003CEA62 /* RejectAdapterFactory.swift */; };
+		368CBDA61D7911FA003CEA62 /* RejectAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CBDA51D7911FA003CEA62 /* RejectAdapter.swift */; };
+		368CBDA71D7911FA003CEA62 /* RejectAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CBDA51D7911FA003CEA62 /* RejectAdapter.swift */; };
 		36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */; };
 		36A7199B1D5EEB4900DC35F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A7199A1D5EEB4900DC35F5 /* AppDelegate.swift */; };
 		36A7199D1D5EEB4900DC35F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36A7199C1D5EEB4900DC35F5 /* Assets.xcassets */; };
@@ -330,6 +334,8 @@
 		366EB5CA1CE061F200E0E942 /* AdapterFactoryParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdapterFactoryParser.swift; sourceTree = "<group>"; };
 		366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RawSocketFactory.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowsocksAdapter.swift; sourceTree = "<group>"; };
+		368CBDA21D7911D4003CEA62 /* RejectAdapterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RejectAdapterFactory.swift; sourceTree = "<group>"; };
+		368CBDA51D7911FA003CEA62 /* RejectAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RejectAdapter.swift; sourceTree = "<group>"; };
 		36A503F81CF5D27E00D1FC78 /* DirectProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectProxySocket.swift; sourceTree = "<group>"; };
 		36A718E01D5AE37C00DC35F5 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		36A718E11D5AE37C00DC35F5 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .jazzy.yaml; sourceTree = "<group>"; };
@@ -639,9 +645,9 @@
 				36411A5E1D167AC3005F4108 /* DNSSessionMatchType.swift */,
 				36411A641D167AF2005F4108 /* DirectRule.swift */,
 				366EB5C61CE033FB00E0E942 /* DomainListRule.swift */,
+				36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */,
 				36B1620D1CDDA0E000F24C97 /* Rule.swift */,
 				36B1620E1CDDA0E000F24C97 /* RuleManager.swift */,
-				36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */,
 			);
 			path = Rule;
 			sourceTree = "<group>";
@@ -667,6 +673,7 @@
 				36B162151CDDA0EA00F24C97 /* AdapterSocket.swift */,
 				36B162321CDDA0F300F24C97 /* DirectAdapter.swift */,
 				366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */,
+				368CBDA51D7911FA003CEA62 /* RejectAdapter.swift */,
 				366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */,
 				366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */,
 				366EB5C21CDF375B00E0E942 /* SpeedAdapter.swift */,
@@ -681,6 +688,7 @@
 				36B162351CDDA0F300F24C97 /* AdapterFactoryManager.swift */,
 				366EB5B21CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift */,
 				366EB5B31CDE150C00E0E942 /* HTTPAdapterFactory.swift */,
+				368CBDA21D7911D4003CEA62 /* RejectAdapterFactory.swift */,
 				366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */,
 				366EB5B51CDE150C00E0E942 /* ServerAdapterFactory.swift */,
 				3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */,
@@ -780,10 +788,10 @@
 				366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */,
 				36B212331D54C30600C8AC0A /* HTTPStreamScanner.swift */,
 				3636DA5D1CE87C08007F9787 /* IPAddress.swift */,
+				36D591BD1D6C40F2003E92B2 /* IPRange.swift */,
 				36411A721D1FBFB0005F4108 /* IPv4Pool.swift */,
 				3636DA611CE892EF007F9787 /* Port.swift */,
 				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
-				36D591BD1D6C40F2003E92B2 /* IPRange.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1063,6 +1071,7 @@
 				36411A651D167AF2005F4108 /* DirectRule.swift in Sources */,
 				366EB5C31CDF375B00E0E942 /* SpeedAdapter.swift in Sources */,
 				366EB5C91CE061C500E0E942 /* RuleParser.swift in Sources */,
+				368CBDA61D7911FA003CEA62 /* RejectAdapter.swift in Sources */,
 				36B1622E1CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift in Sources */,
 				36411A621D167AE0005F4108 /* AllRule.swift in Sources */,
 				36B162301CDDA0EA00F24C97 /* Utils.swift in Sources */,
@@ -1097,6 +1106,7 @@
 				36B162621CDDADC100F24C97 /* GeoIP.swift in Sources */,
 				36B162281CDDA0EA00F24C97 /* NWTCPSocket.swift in Sources */,
 				362990C31D55890C00D11EBA /* GCDSOCKS5ProxyServer.swift in Sources */,
+				368CBDA31D7911D4003CEA62 /* RejectAdapterFactory.swift in Sources */,
 				366EB5B61CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift in Sources */,
 				36B1625A1CDDA31B00F24C97 /* GCDProxyServer.swift in Sources */,
 				366EB5CF1CE0742F00E0E942 /* ShadowsocksAdapter.swift in Sources */,
@@ -1165,6 +1175,7 @@
 				36C48D7A1CF88EDA0071804F /* DomainListRule.swift in Sources */,
 				36C48D621CF88EB60071804F /* ShadowsocksAdapter.swift in Sources */,
 				36411A631D167AE0005F4108 /* AllRule.swift in Sources */,
+				368CBDA71D7911FA003CEA62 /* RejectAdapter.swift in Sources */,
 				36C48D5F1CF88EB60071804F /* DirectAdapter.swift in Sources */,
 				36C48D781CF88ED40071804F /* TUNTCPSocket.swift in Sources */,
 				36C63E021D02BDEC00A00CA2 /* IPStackProtocol.swift in Sources */,
@@ -1199,6 +1210,7 @@
 				36C48D761CF88ED40071804F /* RawTCPSocketProtocol.swift in Sources */,
 				36C48D5B1CF88EB60071804F /* SecureHTTPAdapterFactory.swift in Sources */,
 				362990C41D55890C00D11EBA /* GCDSOCKS5ProxyServer.swift in Sources */,
+				368CBDA41D7911D4003CEA62 /* RejectAdapterFactory.swift in Sources */,
 				36C48D631CF88EB60071804F /* SpeedAdapter.swift in Sources */,
 				36C48D581CF88EB60071804F /* AuthenticationServerAdapterFactory.swift in Sources */,
 				36C48D561CF88EB60071804F /* AdapterFactoryManager.swift in Sources */,
