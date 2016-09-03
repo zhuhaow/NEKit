@@ -7,6 +7,9 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 - `ShadowsocksAdapter` works correctly with IP-based request now.
 - `HTTPHeader` parses header incorrectly when the header is non-CONNECT with a non default(80) port.
 
+### Changed
+- Now all encryption methods are represented in uppercase.
+
 ## [0.4.0]
 ### Changed
 - Many things are now exposed as `public`.
