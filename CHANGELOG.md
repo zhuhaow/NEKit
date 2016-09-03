@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
-## [Unreleased]
+## [0.4.1]
 ### Fixed
 - `ShadowsocksAdapter` works correctly with IP-based request now.
 - `HTTPHeader` parses header incorrectly when the header is non-CONNECT with a non default(80) port.
