@@ -79,14 +79,14 @@ public struct Utils {
 
     struct GeoIPLookup {
 
-        static func Lookup(ipAddress: String) -> String {
+        static func Lookup(ipAddress: String) -> String? {
             if Utils.IP.isIPv4(ipAddress) {
                 guard let result = GeoIP.LookUp(ipAddress) else {
                     return "--"
                 }
                 return result.isoCode
             } else {
-                return "--"
+                return nil
             }
         }
     }

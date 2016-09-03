@@ -58,7 +58,7 @@ public final class ConnectRequest {
         }()
 
     /// The location of the host.
-    public lazy var country: String = {
+    public lazy var country: String? = {
         [unowned self] in
         Utils.GeoIPLookup.Lookup(self.ipAddress)
         }()
