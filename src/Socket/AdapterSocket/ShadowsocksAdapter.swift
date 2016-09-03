@@ -15,19 +15,19 @@ public class ShadowsocksAdapter: AdapterSocket {
     lazy var writeIV: NSData = {
         [unowned self] in
         CryptoHelper.getIV(self.encryptAlgorithm)
-    }()
+        }()
     lazy var ivLength: Int = {
         [unowned self] in
         CryptoHelper.getIVLength(self.encryptAlgorithm)
-    }()
+        }()
     lazy var encryptor: StreamCryptoProtocol = {
         [unowned self] in
         self.getCrypto(.Encrypt)
-    }()
+        }()
     lazy var decryptor: StreamCryptoProtocol = {
         [unowned self] in
         self.getCrypto(.Decrypt)
-    }()
+        }()
 
     enum EncryptMethod: String {
         case AES128CFB = "AES-128-CFB", AES192CFB = "AES-192-CFB", AES256CFB = "AES-256-CFB"
@@ -63,28 +63,14 @@ public class ShadowsocksAdapter: AdapterSocket {
         super.didConnect(socket)
 
         let helloData = NSMutableData(data: writeIV)
-        if request.isIPv4() {
-            var response: [UInt8] = [0x01]
-            response += Utils.IP.IPv4ToBytes(request.host)!
-            var responseData = NSData(bytes: response, length: response.count)
-            responseData = encryptData(responseData)
-            helloData.appendData(responseData)
-        } else if request.isIPv6() {
-            var response: [UInt8] = [0x04]
-            response += Utils.IP.IPv6ToBytes(request.host)!
-            var responseData = NSData(bytes: response, length: response.count)
-            responseData = encryptData(responseData)
-            helloData.appendData(responseData)
-        } else {
-            var response: [UInt8] = [0x03]
-            response.append(UInt8(request.host.utf8.count))
-            response += [UInt8](request.host.utf8)
-            var responseData = NSData(bytes: response, length: response.count)
-            responseData = encryptData(responseData)
-            helloData.appendData(responseData)
-        }
+        var response: [UInt8] = [0x03]
+        response.append(UInt8(request.host.utf8.count))
+        response += [UInt8](request.host.utf8)
+        var responseData = NSData(bytes: response, length: response.count)
+        responseData = encryptData(responseData)
+        helloData.appendData(responseData)
         let portBytes = [UInt8](Utils.toByteArray(UInt16(request.port)).reverse())
-        var responseData = NSData(bytes: portBytes, length: portBytes.count)
+        responseData = NSData(bytes: portBytes, length: portBytes.count)
         responseData = encryptData(responseData)
         helloData.appendData(responseData)
 
