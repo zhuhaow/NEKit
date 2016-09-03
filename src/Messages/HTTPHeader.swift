@@ -63,7 +63,7 @@ public class HTTPHeader {
             }
 
             let urlInfo = url.componentsSeparatedByString(":")
-            guard urlInfo.count <= 1 else {
+            guard urlInfo.count <= 2 else {
                 return nil
             }
             if urlInfo.count == 2 {

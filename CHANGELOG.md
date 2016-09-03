@@ -4,7 +4,8 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 
 ## [Unreleased]
 ### Fixed
-- ShadowsocksAdapter works correctly with IP-based request now.
+- `ShadowsocksAdapter` works correctly with IP-based request now.
+- `HTTPHeader` parses header incorrectly when the header is non-CONNECT with a non default(80) port.
 
 ## [0.4.0]
 ### Changed
