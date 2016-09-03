@@ -12,7 +12,7 @@ public class ShadowsocksAdapterFactory: ServerAdapterFactory {
     }
 
     public convenience init?(serverHost: String, serverPort: Int, encryptAlgorithm: String, password: String) {
-        guard let encryptAlgorithm = CryptoAlgorithm(rawValue: encryptAlgorithm) else {
+        guard let encryptAlgorithm = CryptoAlgorithm(rawValue: encryptAlgorithm.uppercaseString) else {
             return nil
         }
 
