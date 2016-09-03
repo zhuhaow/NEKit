@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## [0.4.2]
+### Fixed
+- GeoIP now returns `nil` if input is not a valid IP address, so it is distinguishable from a failed search. 
+
 ## [0.4.1]
 ### Fixed
 - `ShadowsocksAdapter` works correctly with IP-based request now.
