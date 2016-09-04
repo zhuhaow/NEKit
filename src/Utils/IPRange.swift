@@ -31,7 +31,7 @@ public class IPRange {
             throw IPRangeError.InvalidCIDRFormat
         }
 
-        try self.init(baseIP: ip, range: UInt32.max >> mask)
+        try self.init(baseIP: ip, range: (1 << (32 - mask)) - 1 )
     }
 
     public convenience init(withRangeString rep: String) throws {
