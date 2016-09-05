@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		362347161D7D44E700A047DE /* NEKitTest_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362347151D7D44E700A047DE /* NEKitTest_macOS.swift */; };
+		362347181D7D44E700A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
+		362347251D7D458E00A047DE /* NEKitTests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362347241D7D458E00A047DE /* NEKitTests_iOS.swift */; };
+		362347271D7D458E00A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D4D1CF88DED0071804F /* NEKit.framework */; };
 		362950451D6AE2D0001A30F6 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950441D6AE2D0001A30F6 /* EventType.swift */; };
 		362950461D6AE2D0001A30F6 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950441D6AE2D0001A30F6 /* EventType.swift */; };
 		362950481D6AE2E6001A30F6 /* ProxyServerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950471D6AE2E6001A30F6 /* ProxyServerEvent.swift */; };
@@ -231,6 +235,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		362347191D7D44E700A047DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 36463A271CDCD5EB0040579C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 36463A2F1CDCD5EB0040579C;
+			remoteInfo = "NEKit-macOS";
+		};
+		362347281D7D458E00A047DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 36463A271CDCD5EB0040579C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 36C48D4C1CF88DED0071804F;
+			remoteInfo = "NEKit-iOS";
+		};
 		36A719B91D5EEB5900DC35F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 36463A271CDCD5EB0040579C /* Project object */;
@@ -285,6 +303,12 @@
 		36164A2A1CE41C3300BAC90A /* IPMutablePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPMutablePacket.swift; sourceTree = "<group>"; };
 		36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPMutablePacket.swift; sourceTree = "<group>"; };
 		36164A2E1CE7099300BAC90A /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		362347131D7D44E700A047DE /* NEKitTest-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NEKitTest-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		362347151D7D44E700A047DE /* NEKitTest_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NEKitTest_macOS.swift; sourceTree = "<group>"; };
+		362347171D7D44E700A047DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		362347221D7D458E00A047DE /* NEKitTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NEKitTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		362347241D7D458E00A047DE /* NEKitTests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NEKitTests_iOS.swift; sourceTree = "<group>"; };
+		362347261D7D458E00A047DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		362950441D6AE2D0001A30F6 /* EventType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventType.swift; sourceTree = "<group>"; };
 		362950471D6AE2E6001A30F6 /* ProxyServerEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxyServerEvent.swift; sourceTree = "<group>"; };
 		3629504A1D6AE30C001A30F6 /* ProxySocketEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxySocketEvent.swift; sourceTree = "<group>"; };
@@ -413,6 +437,22 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		362347101D7D44E700A047DE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				362347181D7D44E700A047DE /* NEKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3623471F1D7D458E00A047DE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				362347271D7D458E00A047DE /* NEKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		36463A2C1CDCD5EB0040579C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -476,6 +516,31 @@
 			path = Packet;
 			sourceTree = "<group>";
 		};
+		362347141D7D44E700A047DE /* NEKitTest-macOS */ = {
+			isa = PBXGroup;
+			children = (
+				362347151D7D44E700A047DE /* NEKitTest_macOS.swift */,
+				362347171D7D44E700A047DE /* Info.plist */,
+			);
+			path = "NEKitTest-macOS";
+			sourceTree = "<group>";
+		};
+		362347231D7D458E00A047DE /* NEKitTests-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				362347241D7D458E00A047DE /* NEKitTests_iOS.swift */,
+				362347261D7D458E00A047DE /* Info.plist */,
+			);
+			path = "NEKitTests-iOS";
+			sourceTree = "<group>";
+		};
+		3623472D1D7D45FD00A047DE /* test */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = test;
+			sourceTree = "<group>";
+		};
 		362950431D6AE2BC001A30F6 /* Event */ = {
 			isa = PBXGroup;
 			children = (
@@ -513,10 +578,13 @@
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
+				3623472D1D7D45FD00A047DE /* test */,
 				36A719431D5B234500DC35F5 /* Carthage */,
 				36C48D4E1CF88DED0071804F /* NEKit-iOS */,
 				368225B91D12484D00E7B495 /* NEKit-macOS */,
 				36A719991D5EEB4900DC35F5 /* NEKitDemo */,
+				362347141D7D44E700A047DE /* NEKitTest-macOS */,
+				362347231D7D458E00A047DE /* NEKitTests-iOS */,
 				36463A311CDCD5EB0040579C /* Products */,
 				36A718DF1D5AE37C00DC35F5 /* docs */,
 				36463A321CDCD5EB0040579C /* src */,
@@ -536,6 +604,8 @@
 				36463A301CDCD5EB0040579C /* NEKit.framework */,
 				36C48D4D1CF88DED0071804F /* NEKit.framework */,
 				36A719981D5EEB4900DC35F5 /* NEKitDemo.app */,
+				362347131D7D44E700A047DE /* NEKitTest-macOS.xctest */,
+				362347221D7D458E00A047DE /* NEKitTests-iOS.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -832,6 +902,42 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		362347121D7D44E700A047DE /* NEKitTest-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3623471D1D7D44E700A047DE /* Build configuration list for PBXNativeTarget "NEKitTest-macOS" */;
+			buildPhases = (
+				3623470F1D7D44E700A047DE /* Sources */,
+				362347101D7D44E700A047DE /* Frameworks */,
+				362347111D7D44E700A047DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3623471A1D7D44E700A047DE /* PBXTargetDependency */,
+			);
+			name = "NEKitTest-macOS";
+			productName = "NEKitTest-macOS";
+			productReference = 362347131D7D44E700A047DE /* NEKitTest-macOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		362347211D7D458E00A047DE /* NEKitTests-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3623472A1D7D458E00A047DE /* Build configuration list for PBXNativeTarget "NEKitTests-iOS" */;
+			buildPhases = (
+				3623471E1D7D458E00A047DE /* Sources */,
+				3623471F1D7D458E00A047DE /* Frameworks */,
+				362347201D7D458E00A047DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				362347291D7D458E00A047DE /* PBXTargetDependency */,
+			);
+			name = "NEKitTests-iOS";
+			productName = "NEKitTests-iOS";
+			productReference = 362347221D7D458E00A047DE /* NEKitTests-iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		36463A2F1CDCD5EB0040579C /* NEKit-macOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 36463A441CDCD5EB0040579C /* Build configuration list for PBXNativeTarget "NEKit-macOS" */;
@@ -904,6 +1010,12 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Zhuhao Wang";
 				TargetAttributes = {
+					362347121D7D44E700A047DE = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					362347211D7D458E00A047DE = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 					36463A2F1CDCD5EB0040579C = {
 						CreatedOnToolsVersion = 7.3;
 					};
@@ -931,11 +1043,27 @@
 				36463A2F1CDCD5EB0040579C /* NEKit-macOS */,
 				36C48D4C1CF88DED0071804F /* NEKit-iOS */,
 				36A719971D5EEB4900DC35F5 /* NEKitDemo */,
+				362347121D7D44E700A047DE /* NEKitTest-macOS */,
+				362347211D7D458E00A047DE /* NEKitTests-iOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		362347111D7D44E700A047DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		362347201D7D458E00A047DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		36463A2E1CDCD5EB0040579C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1034,6 +1162,22 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3623470F1D7D44E700A047DE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				362347161D7D44E700A047DE /* NEKitTest_macOS.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3623471E1D7D458E00A047DE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				362347251D7D458E00A047DE /* NEKitTests_iOS.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		36463A2B1CDCD5EB0040579C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1237,6 +1381,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3623471A1D7D44E700A047DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 36463A2F1CDCD5EB0040579C /* NEKit-macOS */;
+			targetProxy = 362347191D7D44E700A047DE /* PBXContainerItemProxy */;
+		};
+		362347291D7D458E00A047DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 36C48D4C1CF88DED0071804F /* NEKit-iOS */;
+			targetProxy = 362347281D7D458E00A047DE /* PBXContainerItemProxy */;
+		};
 		36A719BA1D5EEB5900DC35F5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 36463A2F1CDCD5EB0040579C /* NEKit-macOS */;
@@ -1257,6 +1411,59 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3623471B1D7D44E700A047DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = "NEKitTest-macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.NEKit.Test;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3623471C1D7D44E700A047DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = "NEKitTest-macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.NEKit.Test;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3623472B1D7D458E00A047DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = "NEKitTests-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.NEKit.Test;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		3623472C1D7D458E00A047DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				INFOPLIST_FILE = "NEKitTests-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.NEKit.Test;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		36463A421CDCD5EB0040579C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1529,6 +1736,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3623471D1D7D44E700A047DE /* Build configuration list for PBXNativeTarget "NEKitTest-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3623471B1D7D44E700A047DE /* Debug */,
+				3623471C1D7D44E700A047DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3623472A1D7D458E00A047DE /* Build configuration list for PBXNativeTarget "NEKitTests-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3623472B1D7D458E00A047DE /* Debug */,
+				3623472C1D7D458E00A047DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		36463A2A1CDCD5EB0040579C /* Build configuration list for PBXProject "NEKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
