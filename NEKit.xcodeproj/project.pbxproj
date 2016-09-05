@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		362347161D7D44E700A047DE /* NEKitTest_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362347151D7D44E700A047DE /* NEKitTest_macOS.swift */; };
 		362347181D7D44E700A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
-		362347251D7D458E00A047DE /* NEKitTests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362347241D7D458E00A047DE /* NEKitTests_iOS.swift */; };
 		362347271D7D458E00A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D4D1CF88DED0071804F /* NEKit.framework */; };
 		362950451D6AE2D0001A30F6 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950441D6AE2D0001A30F6 /* EventType.swift */; };
 		362950461D6AE2D0001A30F6 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950441D6AE2D0001A30F6 /* EventType.swift */; };
@@ -304,10 +302,8 @@
 		36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPMutablePacket.swift; sourceTree = "<group>"; };
 		36164A2E1CE7099300BAC90A /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		362347131D7D44E700A047DE /* NEKitTest-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NEKitTest-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		362347151D7D44E700A047DE /* NEKitTest_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NEKitTest_macOS.swift; sourceTree = "<group>"; };
 		362347171D7D44E700A047DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		362347221D7D458E00A047DE /* NEKitTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NEKitTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		362347241D7D458E00A047DE /* NEKitTests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NEKitTests_iOS.swift; sourceTree = "<group>"; };
 		362347261D7D458E00A047DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		362950441D6AE2D0001A30F6 /* EventType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventType.swift; sourceTree = "<group>"; };
 		362950471D6AE2E6001A30F6 /* ProxyServerEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxyServerEvent.swift; sourceTree = "<group>"; };
@@ -519,7 +515,6 @@
 		362347141D7D44E700A047DE /* NEKitTest-macOS */ = {
 			isa = PBXGroup;
 			children = (
-				362347151D7D44E700A047DE /* NEKitTest_macOS.swift */,
 				362347171D7D44E700A047DE /* Info.plist */,
 			);
 			path = "NEKitTest-macOS";
@@ -528,7 +523,6 @@
 		362347231D7D458E00A047DE /* NEKitTests-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				362347241D7D458E00A047DE /* NEKitTests_iOS.swift */,
 				362347261D7D458E00A047DE /* Info.plist */,
 			);
 			path = "NEKitTests-iOS";
@@ -1166,7 +1160,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				362347161D7D44E700A047DE /* NEKitTest_macOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1174,7 +1167,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				362347251D7D458E00A047DE /* NEKitTests_iOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
