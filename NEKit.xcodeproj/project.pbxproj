@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		362347181D7D44E700A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
 		362347271D7D458E00A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D4D1CF88DED0071804F /* NEKit.framework */; };
+		362347331D7D475100A047DE /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 3623472F1D7D475100A047DE /* bootstrap */; };
+		362347341D7D475100A047DE /* bootstrap-if-needed in Resources */ = {isa = PBXBuildFile; fileRef = 362347301D7D475100A047DE /* bootstrap-if-needed */; };
+		362347351D7D475100A047DE /* Cartfile.resolved in Resources */ = {isa = PBXBuildFile; fileRef = 362347311D7D475100A047DE /* Cartfile.resolved */; };
+		362347361D7D475100A047DE /* LICENSE.md in Sources */ = {isa = PBXBuildFile; fileRef = 362347321D7D475100A047DE /* LICENSE.md */; };
 		362950451D6AE2D0001A30F6 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950441D6AE2D0001A30F6 /* EventType.swift */; };
 		362950461D6AE2D0001A30F6 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950441D6AE2D0001A30F6 /* EventType.swift */; };
 		362950481D6AE2E6001A30F6 /* ProxyServerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950471D6AE2E6001A30F6 /* ProxyServerEvent.swift */; };
@@ -305,6 +309,10 @@
 		362347171D7D44E700A047DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		362347221D7D458E00A047DE /* NEKitTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NEKitTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		362347261D7D458E00A047DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3623472F1D7D475100A047DE /* bootstrap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = bootstrap; sourceTree = "<group>"; };
+		362347301D7D475100A047DE /* bootstrap-if-needed */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "bootstrap-if-needed"; sourceTree = "<group>"; };
+		362347311D7D475100A047DE /* Cartfile.resolved */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
+		362347321D7D475100A047DE /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		362950441D6AE2D0001A30F6 /* EventType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventType.swift; sourceTree = "<group>"; };
 		362950471D6AE2E6001A30F6 /* ProxyServerEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxyServerEvent.swift; sourceTree = "<group>"; };
 		3629504A1D6AE30C001A30F6 /* ProxySocketEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxySocketEvent.swift; sourceTree = "<group>"; };
@@ -532,7 +540,16 @@
 			isa = PBXGroup;
 			children = (
 			);
-			name = test;
+			path = test;
+			sourceTree = "<group>";
+		};
+		3623472E1D7D475100A047DE /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				3623472F1D7D475100A047DE /* bootstrap */,
+				362347301D7D475100A047DE /* bootstrap-if-needed */,
+			);
+			path = bin;
 			sourceTree = "<group>";
 		};
 		362950431D6AE2BC001A30F6 /* Event */ = {
@@ -572,7 +589,6 @@
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
-				3623472D1D7D45FD00A047DE /* test */,
 				36A719431D5B234500DC35F5 /* Carthage */,
 				36C48D4E1CF88DED0071804F /* NEKit-iOS */,
 				368225B91D12484D00E7B495 /* NEKit-macOS */,
@@ -580,11 +596,15 @@
 				362347141D7D44E700A047DE /* NEKitTest-macOS */,
 				362347231D7D458E00A047DE /* NEKitTests-iOS */,
 				36463A311CDCD5EB0040579C /* Products */,
+				3623472E1D7D475100A047DE /* bin */,
 				36A718DF1D5AE37C00DC35F5 /* docs */,
 				36463A321CDCD5EB0040579C /* src */,
+				3623472D1D7D45FD00A047DE /* test */,
 				3664F0C61CE37763008BA6D8 /* .swiftlint.yml */,
 				36A719ED1D63310400DC35F5 /* CHANGELOG.md */,
 				36B1624A1CDDA13500F24C97 /* Cartfile */,
+				362347311D7D475100A047DE /* Cartfile.resolved */,
+				362347321D7D475100A047DE /* LICENSE.md */,
 				36A719EE1D63411E00DC35F5 /* README.md */,
 			);
 			indentWidth = 4;
@@ -1062,6 +1082,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				362347331D7D475100A047DE /* bootstrap in Resources */,
+				362347351D7D475100A047DE /* Cartfile.resolved in Resources */,
+				362347341D7D475100A047DE /* bootstrap-if-needed in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1184,6 +1207,7 @@
 				36411A551D12C123005F4108 /* Atomic.swift in Sources */,
 				36C63DCE1CFD70C100A00CA2 /* DNSServer.swift in Sources */,
 				3636DA621CE892EF007F9787 /* Port.swift in Sources */,
+				362347361D7D475100A047DE /* LICENSE.md in Sources */,
 				36C63E041D02C0B700A00CA2 /* TCPStack.swift in Sources */,
 				36411A731D1FBFB0005F4108 /* IPv4Pool.swift in Sources */,
 				362950541D6AE3B6001A30F6 /* RuleMatchEvent.swift in Sources */,
@@ -1735,6 +1759,7 @@
 				3623471C1D7D44E700A047DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3623472A1D7D458E00A047DE /* Build configuration list for PBXNativeTarget "NEKitTests-iOS" */ = {
 			isa = XCConfigurationList;
@@ -1743,6 +1768,7 @@
 				3623472C1D7D458E00A047DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		36463A2A1CDCD5EB0040579C /* Build configuration list for PBXProject "NEKit" */ = {
 			isa = XCConfigurationList;
