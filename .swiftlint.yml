@@ -5,3 +5,4 @@ disabled_rules:
 excluded:
   - Carthage
   - tun2socks
+  - test
