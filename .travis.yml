@@ -10,8 +10,8 @@ install:
 - gem install scan
 
 script:
-  - scan --scheme NEKit-macOS
-  - scan --scheme NEKit-iOS
+  - scan --scheme NEKit-macOS -code_coverage true
+  - scan --scheme NEKit-iOS -code_coverage true
   
 after_success:
 - "./docs/build_docs.sh"
