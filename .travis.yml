@@ -10,12 +10,12 @@ install:
 - gem install scan
 
 script:
-  - scan --scheme NEKit-macOS --code_coverage true
-  - scan --scheme NEKit-iOS --code_coverage true
+  - scan --scheme NEKit-macOS
+  - scan --scheme NEKit-iOS
   
 after_success:
-- "./docs/build_docs.sh"
 - bash <(curl -s https://codecov.io/bash)
+- ./docs/build_docs.sh
 
 before_deploy:
 - carthage build --no-skip-current
