@@ -15,6 +15,7 @@ script:
   
 after_success:
 - "./docs/build_docs.sh"
+- bash <(curl -s https://codecov.io/bash)
 
 before_deploy:
 - carthage build --no-skip-current
