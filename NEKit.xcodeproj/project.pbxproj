@@ -11,8 +11,6 @@
 		362347271D7D458E00A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D4D1CF88DED0071804F /* NEKit.framework */; };
 		362347331D7D475100A047DE /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 3623472F1D7D475100A047DE /* bootstrap */; };
 		362347341D7D475100A047DE /* bootstrap-if-needed in Resources */ = {isa = PBXBuildFile; fileRef = 362347301D7D475100A047DE /* bootstrap-if-needed */; };
-		362347351D7D475100A047DE /* Cartfile.resolved in Resources */ = {isa = PBXBuildFile; fileRef = 362347311D7D475100A047DE /* Cartfile.resolved */; };
-		362347361D7D475100A047DE /* LICENSE.md in Sources */ = {isa = PBXBuildFile; fileRef = 362347321D7D475100A047DE /* LICENSE.md */; };
 		362347391D7E6F3D00A047DE /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 362347371D7E6F3D00A047DE /* Nimble.framework */; };
 		3623473A1D7E6F3D00A047DE /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 362347381D7E6F3D00A047DE /* Quick.framework */; };
 		3623473D1D7E6F7300A047DE /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3623473B1D7E6F7300A047DE /* Nimble.framework */; };
@@ -1177,7 +1175,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				362347331D7D475100A047DE /* bootstrap in Resources */,
-				362347351D7D475100A047DE /* Cartfile.resolved in Resources */,
 				362347341D7D475100A047DE /* bootstrap-if-needed in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1303,7 +1300,6 @@
 				36411A551D12C123005F4108 /* Atomic.swift in Sources */,
 				36C63DCE1CFD70C100A00CA2 /* DNSServer.swift in Sources */,
 				3636DA621CE892EF007F9787 /* Port.swift in Sources */,
-				362347361D7D475100A047DE /* LICENSE.md in Sources */,
 				36C63E041D02C0B700A00CA2 /* TCPStack.swift in Sources */,
 				36411A731D1FBFB0005F4108 /* IPv4Pool.swift in Sources */,
 				362950541D6AE3B6001A30F6 /* RuleMatchEvent.swift in Sources */,
