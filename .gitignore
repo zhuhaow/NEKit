@@ -136,3 +136,6 @@ Carthage/
 # App Code
 .idea/
 text_graph/*
+
+
+test_output/*

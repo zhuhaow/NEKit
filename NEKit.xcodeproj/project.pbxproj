@@ -30,6 +30,17 @@
 		362347901D7EA65400A047DE /* Sodium.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7E11D6C517600F2BDCD /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		362347911D7EA65400A047DE /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7E21D6C517600F2BDCD /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		362347921D7EA65400A047DE /* Yaml.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7E31D6C517600F2BDCD /* Yaml.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		362347941D7FC5CA00A047DE /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3623473B1D7E6F7300A047DE /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		362347951D7FC5CA00A047DE /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3623473C1D7E6F7300A047DE /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		362347961D7FC5CA00A047DE /* CocoaAsyncSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7C91D6C508100F2BDCD /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		362347971D7FC5CA00A047DE /* CocoaLumberjack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7CA1D6C508100F2BDCD /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		362347981D7FC5CA00A047DE /* CocoaLumberjackSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7CB1D6C508100F2BDCD /* CocoaLumberjackSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		362347991D7FC5CA00A047DE /* CommonCrypto.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7CC1D6C508100F2BDCD /* CommonCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3623479A1D7FC5CA00A047DE /* lwip.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7CD1D6C508100F2BDCD /* lwip.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3623479B1D7FC5CA00A047DE /* MMDB.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7CE1D6C508100F2BDCD /* MMDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3623479C1D7FC5CA00A047DE /* Sodium.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7CF1D6C508100F2BDCD /* Sodium.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3623479D1D7FC5CA00A047DE /* tun2socks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7D01D6C508100F2BDCD /* tun2socks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3623479E1D7FC5CA00A047DE /* Yaml.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 36C4B7D11D6C508100F2BDCD /* Yaml.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		362950451D6AE2D0001A30F6 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950441D6AE2D0001A30F6 /* EventType.swift */; };
 		362950461D6AE2D0001A30F6 /* EventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950441D6AE2D0001A30F6 /* EventType.swift */; };
 		362950481D6AE2E6001A30F6 /* ProxyServerEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362950471D6AE2E6001A30F6 /* ProxyServerEvent.swift */; };
@@ -295,6 +306,26 @@
 				362347901D7EA65400A047DE /* Sodium.framework in CopyFiles */,
 				362347911D7EA65400A047DE /* tun2socks.framework in CopyFiles */,
 				362347921D7EA65400A047DE /* Yaml.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		362347931D7FC5BF00A047DE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				362347941D7FC5CA00A047DE /* Nimble.framework in CopyFiles */,
+				362347951D7FC5CA00A047DE /* Quick.framework in CopyFiles */,
+				362347961D7FC5CA00A047DE /* CocoaAsyncSocket.framework in CopyFiles */,
+				362347971D7FC5CA00A047DE /* CocoaLumberjack.framework in CopyFiles */,
+				362347981D7FC5CA00A047DE /* CocoaLumberjackSwift.framework in CopyFiles */,
+				362347991D7FC5CA00A047DE /* CommonCrypto.framework in CopyFiles */,
+				3623479A1D7FC5CA00A047DE /* lwip.framework in CopyFiles */,
+				3623479B1D7FC5CA00A047DE /* MMDB.framework in CopyFiles */,
+				3623479C1D7FC5CA00A047DE /* Sodium.framework in CopyFiles */,
+				3623479D1D7FC5CA00A047DE /* tun2socks.framework in CopyFiles */,
+				3623479E1D7FC5CA00A047DE /* Yaml.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1003,6 +1034,7 @@
 				3623471E1D7D458E00A047DE /* Sources */,
 				3623471F1D7D458E00A047DE /* Frameworks */,
 				362347201D7D458E00A047DE /* Resources */,
+				362347931D7FC5BF00A047DE /* CopyFiles */,
 			);
 			buildRules = (
 			);

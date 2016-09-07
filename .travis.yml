@@ -7,12 +7,11 @@ cache:
 
 install:
 - bin/bootstrap-if-needed
+- gem install scan
 
 script:
-- xctool -project NEKit.xcodeproj -scheme "NEKit-macOS" -sdk macosx10.11 -arch x86_64
-  build
-- xctool -project NEKit.xcodeproj -scheme "NEKit-iOS" -sdk iphoneos9.3 -arch arm64
-  build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+  - scan --scheme NEKit-macOS
+  - scan --scheme NEKit-iOS
   
 after_success:
 - "./docs/build_docs.sh"
