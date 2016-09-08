@@ -7,3 +7,6 @@ engines:
 ratings:
   paths:
     - "**.swift"
+
+exclude_paths:
+  - "NEKit.xcodeproj"
