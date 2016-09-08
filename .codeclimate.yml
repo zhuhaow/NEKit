@@ -1,0 +1,9 @@
+engines:
+  fixme:
+    enabled: true
+  taylor:
+    enabled: true
+
+ratings:
+  paths:
+    - "**.swift"
