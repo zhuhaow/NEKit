@@ -1,7 +1,7 @@
 engines:
   fixme:
     enabled: true
-  taylor:
+  tailor:
     enabled: true
 
 ratings:
