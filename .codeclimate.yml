@@ -9,4 +9,5 @@ ratings:
     - "**.swift"
 
 exclude_paths:
-  - "NEKit.xcodeproj"
+  - "NEKit.xcodeproj/"
+  - "README.md"
