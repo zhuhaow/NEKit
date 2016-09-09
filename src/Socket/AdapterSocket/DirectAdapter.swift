@@ -5,6 +5,10 @@ public class DirectAdapter: AdapterSocket {
     /// If this is set to `false`, then the IP address will be resolved by system.
     var resolveHost = false
 
+    public override init() {
+        super.init()
+    }
+
     /**
      Connect to remote according to the `ConnectRequest`.
 

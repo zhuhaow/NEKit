@@ -17,6 +17,10 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
+    public override init() {
+        super.init()
+    }
+
     override func openSocketWithRequest(request: ConnectRequest) {
         pendingCount = adapters.count
         for (adapter, delay) in adapters {
