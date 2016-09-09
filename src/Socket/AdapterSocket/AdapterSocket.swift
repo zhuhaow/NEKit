@@ -49,7 +49,7 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         return state == .Closed || state == .Invalid
     }
 
-    override init() {
+    override public init() {
         type = "\(self.dynamicType)"
         super.init()
 

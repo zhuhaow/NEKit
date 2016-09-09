@@ -39,7 +39,7 @@ public class ShadowsocksAdapter: AdapterSocket {
         case InitialVector = 25000, Connect
     }
 
-    init(host: String, port: Int, encryptAlgorithm: CryptoAlgorithm, password: String) {
+    public init(host: String, port: Int, encryptAlgorithm: CryptoAlgorithm, password: String) {
         self.encryptAlgorithm = encryptAlgorithm
         self.key = CryptoHelper.getKey(password, methodType: encryptAlgorithm)
         self.host = host

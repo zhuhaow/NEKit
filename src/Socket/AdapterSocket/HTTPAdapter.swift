@@ -35,7 +35,7 @@ public class HTTPAdapter: AdapterSocket {
         case Connect = 40000, HEADER
     }
 
-    init(serverHost: String, serverPort: Int, auth: HTTPAuthentication?) {
+    public init(serverHost: String, serverPort: Int, auth: HTTPAuthentication?) {
         self.serverHost = serverHost
         self.serverPort = serverPort
         self.auth = auth
