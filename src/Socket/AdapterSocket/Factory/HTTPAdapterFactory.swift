@@ -2,6 +2,7 @@ import Foundation
 
 /// Factory building HTTP adapter.
 public class HTTPAdapterFactory: HTTPAuthenticationAdapterFactory {
+    public override init() {}
     /**
      Get a HTTP adapter.
 

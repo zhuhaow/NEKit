@@ -21,7 +21,7 @@ public class AdapterFactoryManager {
 
      - parameter factoryDict: The factory dict.
      */
-    init(factoryDict: [String: AdapterFactory]) {
+    public init(factoryDict: [String: AdapterFactory]) {
         self.factoryDict = factoryDict
     }
 }

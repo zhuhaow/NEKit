@@ -3,7 +3,7 @@ import Foundation
 /// This adpater selects the fastest proxy automatically from a set of proxies.
 // TODO: Event support
 public class SpeedAdapter: AdapterSocket, SocketDelegate {
-    var adapters: [(AdapterSocket, Int)]!
+    public var adapters: [(AdapterSocket, Int)]!
     var connectingCount = 0
     var pendingCount = 0
 

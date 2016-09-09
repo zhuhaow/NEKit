@@ -5,7 +5,7 @@ public class ShadowsocksAdapterFactory: ServerAdapterFactory {
     let encryptAlgorithm: CryptoAlgorithm
     let password: String
 
-    init(serverHost: String, serverPort: Int, encryptAlgorithm: CryptoAlgorithm, password: String) {
+    public init(serverHost: String, serverPort: Int, encryptAlgorithm: CryptoAlgorithm, password: String) {
         self.encryptAlgorithm = encryptAlgorithm
         self.password = password
         super.init(serverHost: serverHost, serverPort: serverPort)

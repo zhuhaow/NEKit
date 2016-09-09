@@ -5,7 +5,7 @@ public class ServerAdapterFactory: AdapterFactory {
     let serverHost: String
     let serverPort: Int
 
-    init(serverHost: String, serverPort: Int) {
+    public init(serverHost: String, serverPort: Int) {
         self.serverHost = serverHost
         self.serverPort = serverPort
     }

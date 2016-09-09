@@ -29,6 +29,5 @@ public class AdapterFactory {
 ///
 /// - note: This is needed since we need to identify direct adapter factory.
 public class DirectAdapterFactory: AdapterFactory {
-    public override init(){
-    }
+    public override init() {}
 }

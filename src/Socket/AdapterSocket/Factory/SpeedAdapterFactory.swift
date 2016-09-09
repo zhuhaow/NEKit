@@ -2,7 +2,9 @@ import Foundation
 
 /// Factory building speed adapter.
 public class SpeedAdapterFactory: AdapterFactory {
-    var adapterFactories: [(AdapterFactory, Int)]!
+    public var adapterFactories: [(AdapterFactory, Int)]!
+
+    public override init() {}
 
     /**
      Get a speed adapter.

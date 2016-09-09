@@ -2,6 +2,7 @@ import Foundation
 
 /// Factory building secured HTTP (HTTP with SSL) adapter.
 public class SecureHTTPAdapterFactory: HTTPAdapterFactory {
+    public override init() {}
     /**
      Get a secured HTTP adapter.
 
