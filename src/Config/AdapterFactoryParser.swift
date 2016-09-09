@@ -24,6 +24,8 @@ struct AdapterFactoryParser {
                 factoryDict[id] = try parseServerAdapterFactory(adapterConfig, type: SecureHTTPAdapterFactory.self)
             case .Some("ss"):
                 factoryDict[id] = try parseShadowsocksAdapterFactory(adapterConfig)
+            case .Some("socks5"):
+                factoryDict[id] = try parseSOCKS5AdapterFactory(adapterConfig)
             case .Some("reject"):
                 factoryDict[id] = try parseRejectAdapterFactory(adapterConfig)
             case nil:
@@ -58,6 +60,18 @@ struct AdapterFactoryParser {
             }
         }
         return type.init(serverHost: host, serverPort: port, auth: authentication)
+    }
+
+    static func parseSOCKS5AdapterFactory(config: Yaml) throws -> SOCKS5AdapterFactory {
+        guard let host = config["host"].string else {
+            throw ConfigurationParserError.AdapterParsingError(errorInfo: "Host (host) is required.")
+        }
+
+        guard let port = config["port"].int else {
+            throw ConfigurationParserError.AdapterParsingError(errorInfo: "Port (port) is required.")
+        }
+
+        return SOCKS5AdapterFactory(serverHost: host, serverPort: port)
     }
 
     static func parseShadowsocksAdapterFactory(config: Yaml) throws -> ShadowsocksAdapterFactory {

@@ -2,7 +2,10 @@ import Foundation
 
 /// Factory building secured HTTP (HTTP with SSL) adapter.
 public class SecureHTTPAdapterFactory: HTTPAdapterFactory {
-    public override init() {}
+    required public init(serverHost: String, serverPort: Int, auth: HTTPAuthentication?) {
+        super.init(serverHost: serverHost, serverPort: serverPort, auth: auth)
+    }
+
     /**
      Get a secured HTTP adapter.
 
