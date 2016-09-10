@@ -26,7 +26,7 @@ Check document [here](https://zhuhaow.github.io/NEKit).
 
 Also, you may be more interested in [Potatso](https://github.com/shadowsocks/Potatso-iOS) if you just need an open source iOS app with GUI supporting shadowsocks.
 
-**[Wingy](https://itunes.apple.com/cn/app/wingy-mian-fei-banvpn-ke-hu/id1148026741?mt=8) is a free app built with NEKit available on App Store for your iDevice.** Note Wingy is not create by or affiliated to me.
+**[Wingy](https://itunes.apple.com/cn/app/wingy-mian-fei-banvpn-ke-hu/id1148026741?mt=8) is a free app built with NEKit available on App Store for your iDevice.** Note Wingy is not created by or affiliated with me.
 
 If you have any questions (not bug report), **please join Gitter or Telegram instead of opening an issue**.
 
