@@ -7,7 +7,7 @@ public class SOCKS5Adapter: AdapterSocket {
     let helloData = NSData(bytes: ([0x05, 0x01, 0x00] as [UInt8]), length: 3)
 
     public enum ReadTag: Int {
-        case MethodResponse = -20000, ConnectResponse
+        case MethodResponse = -20000, ConnectResponseFirstPart, ConnectResponseSecondPart
     }
 
     public enum WriteTag: Int {
@@ -36,6 +36,7 @@ public class SOCKS5Adapter: AdapterSocket {
 
     public override func didReadData(data: NSData, withTag tag: Int, from socket: RawTCPSocketProtocol) {
         super.didReadData(data, withTag: tag, from: socket)
+
         switch tag {
         case ReadTag.MethodResponse.rawValue:
             if request.isIPv4() {
@@ -56,11 +57,24 @@ public class SOCKS5Adapter: AdapterSocket {
                 // here we send the domain length and the domain together
                 writeData(responseData, withTag: WriteTag.ConnectDomainLength.rawValue)
             }
-            var portBytes = Utils.toByteArray(UInt16(request.port)).reverse()
+            var portBytes = Array(Utils.toByteArray(UInt16(request.port)).reverse())
             let portData = NSData(bytes: &portBytes, length: portBytes.count)
             writeData(portData, withTag: WriteTag.ConnectPort.rawValue)
-            socket.readDataToLength(4, withTag: ReadTag.ConnectResponse.rawValue)
-        case ReadTag.ConnectResponse.rawValue:
+            socket.readDataToLength(5, withTag: ReadTag.ConnectResponseFirstPart.rawValue)
+        case ReadTag.ConnectResponseFirstPart.rawValue:
+            var readLength = 0
+            switch UnsafePointer<UInt8>(data.bytes.advancedBy(3)).memory {
+            case 1:
+                readLength = 3 + 2
+            case 3:
+                readLength = Int(UnsafePointer<UInt8>(data.bytes.advancedBy(4)).memory) + 2
+            case 4:
+                readLength = 15 + 2
+            default:
+                break
+            }
+            socket.readDataToLength(readLength, withTag: ReadTag.ConnectResponseSecondPart.rawValue)
+        case ReadTag.ConnectResponseSecondPart.rawValue:
             observer?.signal(.ReadyForForward(self))
             delegate?.readyToForward(self)
         default:
