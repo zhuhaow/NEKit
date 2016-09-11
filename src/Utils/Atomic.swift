@@ -44,7 +44,7 @@ public class Atomic<T> {
     }
 
     /**
-     The provides a scheme to access the underlying variable in a block.
+     The provides a scheme to access and change the underlying variable in a block.
 
      The variable can be accessed with `Box<T>.value` as:
 
