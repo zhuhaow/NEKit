@@ -57,8 +57,12 @@ class UDPProtocolParser: TransportProtocolParserProtocol {
     }
 
     func buildSegment(pseudoHeaderChecksum: UInt32) {
-        mutablePacketData.replaceBytesInRange(NSRange(location: offset, length: 2), withBytes: sourcePort.bytesInNetworkOrder)
-        mutablePacketData.replaceBytesInRange(NSRange(location: 2 + offset, length: 2), withBytes: destinationPort.bytesInNetworkOrder)
+        sourcePort.withUnsafeValuePointer {
+            self.mutablePacketData.replaceBytesInRange(NSRange(location: self.offset, length: 2), withBytes: $0)
+        }
+        destinationPort.withUnsafeValuePointer {
+            self.mutablePacketData.replaceBytesInRange(NSRange(location: 2 + self.offset, length: 2), withBytes: $0)
+        }
         var length = NSSwapHostShortToBig(UInt16(bytesLength))
         mutablePacketData.replaceBytesInRange(NSRange(location: 4 + offset, length: 2), withBytes: &length)
         mutablePacketData.replaceBytesInRange(NSRange(location: 8 + offset, length: payload.length), withBytes: payload.bytes)

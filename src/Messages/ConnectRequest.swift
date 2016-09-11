@@ -78,7 +78,7 @@ public final class ConnectRequest {
     }
 
     public convenience init?(ipAddress: IPv4Address, port: Port, fakeIPEnabled: Bool = true) {
-        self.init(host: ipAddress.presentation, port: port.intValue, fakeIPEnabled: fakeIPEnabled)
+        self.init(host: ipAddress.presentation, port: Int(port.value), fakeIPEnabled: fakeIPEnabled)
     }
 
     private func lookupRealIP() -> Bool {
