@@ -104,10 +104,8 @@ public class SOCKS5ProxySocket: ProxySocket {
     override func respondToResponse(response: ConnectResponse) {
         super.respondToResponse(response)
 
-        var responseBytes = [UInt8](count: 11, repeatedValue: 0)
+        var responseBytes = [UInt8](count: 10, repeatedValue: 0)
         responseBytes[0...3] = [0x05, 0x00, 0x00, 0x01]
-        responseBytes[4...7] = [0x7f, 0x00, 0x00, 0x01]
-        responseBytes[8...9] = [0x50, 0x66]
         let responseData = NSData(bytes: &responseBytes, length: 10)
         writeData(responseData, withTag: SocketTag.SOCKS5.ConnectResponse)
     }
