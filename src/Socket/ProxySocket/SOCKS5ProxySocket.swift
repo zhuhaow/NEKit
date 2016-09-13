@@ -12,7 +12,7 @@ public class SOCKS5ProxySocket: ProxySocket {
      */
     override func openSocket() {
         super.openSocket()
-        socket.readDataToLength(3, withTag: SocketTag.SOCKS5.Open)
+        socket.readDataToLength(2, withTag: SocketTag.SOCKS5.Open)
     }
 
     // swiftlint:disable function_body_length
@@ -29,6 +29,19 @@ public class SOCKS5ProxySocket: ProxySocket {
 
         switch tag {
         case SocketTag.SOCKS5.Open:
+            let pointer = UnsafePointer<UInt8>(data.bytes)
+
+            guard pointer.memory == 5 else {
+                // TODO: trigger error event
+                return
+            }
+
+            guard pointer.successor().memory > 0 else {
+                return
+            }
+
+            socket.readDataToLength(Int(pointer.successor().memory), withTag: SocketTag.SOCKS5.ConnectMethod)
+        case SocketTag.SOCKS5.ConnectMethod:
             let response = NSData(bytes: [0x05, 0x00] as [UInt8], length: 2 * sizeof(UInt8))
             // we would not be able to read anything before the data is written out, so no need to handle the dataWrote event.
             writeData(response, withTag: SocketTag.SOCKS5.MethodResponse)

@@ -22,9 +22,11 @@ public struct SocketTag {
     // -3000
     public struct SOCKS5 {
         /**
-        Client sends the hello information [0x05, 0x01, 0x00] to begin connect.
+        Client sends the hello information [0x05, 0x01] to begin connect.
         */
         public static let Open = -3000
+
+        public static let ConnectMethod = -3010
 
         /**
         Client sends the connet information
