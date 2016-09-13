@@ -6,7 +6,8 @@ import CocoaLumberjackSwift
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
-    var proxy: GCDHTTPProxyServer?
+    var httpProxy: GCDHTTPProxyServer?
+    var socks5Proxy: GCDSOCKS5ProxyServer?
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         DDLog.removeAllLoggers()
@@ -19,13 +20,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // swiftlint:disable force_try
         try! config.load(fromConfigFile: filepath)
         RuleManager.currentManager = config.ruleManager
-        proxy = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: UInt16(config.proxyPort!)))
+        httpProxy = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: UInt16(config.proxyPort!)))
         // swiftlint:disable force_try
-        try! proxy!.start()
+        try! httpProxy!.start()
+
+        socks5Proxy = GCDSOCKS5ProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: UInt16(config.proxyPort!+1)))
+        // swiftlint:disable force_try
+        try! socks5Proxy!.start()
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
-        proxy?.stop()
+        httpProxy?.stop()
+        socks5Proxy?.stop()
     }
 
 
