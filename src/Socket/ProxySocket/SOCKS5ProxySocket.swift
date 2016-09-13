@@ -67,7 +67,7 @@ public class SOCKS5ProxySocket: ProxySocket {
             socket.readDataToLength(2, withTag: SocketTag.SOCKS5.ConnectPort)
         case SocketTag.SOCKS5.ConnectIPv6:
             var address = [Int8](count: Int(INET6_ADDRSTRLEN), repeatedValue: 0)
-            inet_ntop(AF_INET, data.bytes, &address, socklen_t(INET6_ADDRSTRLEN))
+            inet_ntop(AF_INET6, data.bytes, &address, socklen_t(INET6_ADDRSTRLEN))
             destinationHost = NSString(CString: &address, encoding: NSUTF8StringEncoding)! as String
             socket.readDataToLength(2, withTag: SocketTag.SOCKS5.ConnectPort)
         case SocketTag.SOCKS5.ConnectDomainLength:
