@@ -2,12 +2,16 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
-## [Unreleased]
+## [0.5.1]
 ## Added
 - Now one can initailize a `Port` by an integer directly.
 
 ### Changed
 - The interface of `Port` is refined.
+- Now SOCKS5 proxy response with `BND.ADDR = 0x00, 0x00, 0x00, 0x00` and `BND.PORT = 0`.
+
+### Fixed
+- SOCKS5 proxy now handles client which supports more than one method.
 
 ## [0.5.0]
 ### Added
