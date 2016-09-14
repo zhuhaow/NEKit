@@ -21,10 +21,11 @@ public struct Utils {
                 return ""
             }
 
-            let remoteAddr = UnsafeMutablePointer<in_addr>(remoteHostEnt.memory.h_addr_list[0]).memory
+            let remoteAddr = UnsafeMutablePointer<Void>(remoteHostEnt.memory.h_addr_list[0])
 
-            let addr = inet_ntoa(remoteAddr)
-            return NSString(UTF8String: addr)! as String
+            var output = [Int8](count: Int(INET6_ADDRSTRLEN), repeatedValue: 0)
+            inet_ntop(AF_INET, remoteAddr, &output, socklen_t(INET6_ADDRSTRLEN))
+            return NSString(UTF8String: output)! as String
         }
     }
 
