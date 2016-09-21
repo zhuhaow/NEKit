@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## [0.6.0]
+### Changed
+- Updated to Swift 2.3.
+
 ## [0.5.4]
 ## Fixed
 - Fixed a very edge case where `inet_ntoa` does not support multi-thread.
