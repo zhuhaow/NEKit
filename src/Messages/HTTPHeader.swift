@@ -15,7 +15,7 @@ public class HTTPHeader {
 
     public init?(headerString: String) {
         let lines = headerString.componentsSeparatedByString("\r\n")
-        guard lines.count > 3 else {
+        guard lines.count >= 3 else {
             return nil
         }
 
