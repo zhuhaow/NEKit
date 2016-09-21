@@ -1132,9 +1132,11 @@
 					};
 					36463A2F1CDCD5EB0040579C = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 					36A719971D5EEB4900DC35F5 = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 					};
 					36C48D4C1CF88DED0071804F = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -1747,6 +1749,7 @@
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/tun2socks/tun2socks/lwip/";
 			};
 			name = Debug;
@@ -1774,6 +1777,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.NEKit;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/tun2socks/tun2socks/lwip/";
 			};
 			name = Release;
@@ -1793,6 +1797,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.osx.NEKitDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -1811,6 +1816,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.zhuhaow.osx.NEKitDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};

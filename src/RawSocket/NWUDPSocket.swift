@@ -55,7 +55,7 @@ public class NWUDPSocket {
                 return
             }
 
-            for data in dataArray! {
+            for data in dataArray {
                 sSelf.delegate?.didReceiveData(data, from: sSelf)
             }
             }, maxDatagrams: 32)
