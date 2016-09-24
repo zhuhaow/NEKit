@@ -27,7 +27,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
 
     public var observer: Observer<ProxyServerEvent>?
 
-    private var tunnels: TunnelArray = Atomic([])
+    var tunnels: TunnelArray = Atomic([])
 
     /**
      Create an instance of proxy server.

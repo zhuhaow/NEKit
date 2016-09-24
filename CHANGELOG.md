@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## [0.6.2]
+### Added
+- You can limit the number of active sockets in `GCDProxyServer` by setting `Opt.ProxyActiveSocketLimit`. But **DO USE WITH CAUTION**.
+
 ## [0.6.1]
 ### Fixed
 - Fixed a bug when the http request has no header fields the parsing of the header fails.
