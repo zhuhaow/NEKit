@@ -85,13 +85,14 @@ struct RuleParser {
 
         do {
             let content = try String(contentsOfFile: filepath)
-            var urls = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
-            if let url = urls.last {
-                if url == "" {
-                    urls.removeLast()
-                }
+            let regexs = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
+            var criteria: [DomainListRule.MatchCriterion] = []
+            for regex in regexs {
+                let re = try NSRegularExpression(pattern: regex, options: .CaseInsensitive)
+                criteria.append(DomainListRule.MatchCriterion.Regex(re))
             }
-            return try DomainListRule(adapterFactory: adapter, urls: urls)
+            
+            return DomainListRule(adapterFactory: adapter, criteria: criteria)
         } catch let error {
             throw ConfigurationParserError.RuleParsingError(errorInfo: "Encounter error when parse rule list file. \(error)")
         }

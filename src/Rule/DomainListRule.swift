@@ -1,29 +1,42 @@
 import Foundation
 
-/// The rule matches the host domain to a list of predefined regular expressions.
+/// The rule matches the host domain to a list of predefined criteria.
 public class DomainListRule: Rule {
+    public enum MatchCriterion {
+        case Regex(NSRegularExpression), Prefix(String), Suffix(String), Keyword(String)
+        
+        func match(domain: String) -> Bool {
+            switch self {
+            case .Regex(let regex):
+                return regex.firstMatchInString(domain, options: [], range: NSRange(location: 0, length: domain.utf8.count)) != nil
+            case .Prefix(let prefix):
+                return domain.hasPrefix(prefix)
+            case .Suffix(let suffix):
+                return domain.hasSuffix(suffix)
+            case .Keyword(let keyword):
+                return domain.containsString(keyword)
+            }
+        }
+    }
+    
     private let adapterFactory: AdapterFactory
 
     public override var description: String {
         return "<DomainListRule>"
     }
 
-    /// The list of regular expressions to match to.
-    public var urls: [NSRegularExpression] = []
+    /// The list of criteria to match to.
+    public var matchCriteria: [MatchCriterion] = []
 
     /**
      Create a new `DomainListRule` instance.
 
      - parameter adapterFactory: The factory which builds a corresponding adapter when needed.
-     - parameter urls:           The list of regular expressions to match. The regular expression is parsed by `NSRegularExpression(pattern: url, options: .CaseInsensitive)`.
-
-     - throws: The error when parsing the regualar expressions.
+     - parameter criteria:       The list of criteria to match.
      */
-    public init(adapterFactory: AdapterFactory, urls: [String]) throws {
+    public init(adapterFactory: AdapterFactory, criteria: [MatchCriterion]) {
         self.adapterFactory = adapterFactory
-        self.urls = try urls.map {
-            try NSRegularExpression(pattern: $0, options: .CaseInsensitive)
-        }
+        self.matchCriteria = criteria
     }
 
     /**
@@ -58,9 +71,9 @@ public class DomainListRule: Rule {
         return nil
     }
 
-    private func matchDomain(name: String) -> Bool {
-        for url in urls {
-            if let _ = url.firstMatchInString(name, options: [], range: NSRange(location: 0, length: name.utf16.count)) {
+    private func matchDomain(domain: String) -> Bool {
+        for criterion in matchCriteria {
+            if criterion.match(domain) {
                 return true
             }
         }
