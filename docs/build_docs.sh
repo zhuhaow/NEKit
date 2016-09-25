@@ -10,9 +10,8 @@ fi
 
 
 # build docs now
-gem update
-gem install jazzy --no-ri --no-rdoc
-jazzy --config docs/.jazzy.yaml
+bundle update
+bundle exec jazzy --config docs/.jazzy.yaml
 
 # remove all redundant files
 find . -not -name "docs" -not -name ".git" -maxdepth 1 -print0 | xargs -0 rm -rf --
