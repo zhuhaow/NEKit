@@ -6,6 +6,9 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ### Added
 - `DomainRuleList` can match domain based on prefix, suffix and keyword.
 
+### Fixed
+- Parse error when HTTP header contains non-ascii characters.
+
 ## [0.6.2]
 ### Added
 - You can limit the number of active sockets in `GCDProxyServer` by setting `Opt.ProxyActiveSocketLimit`. But **DO USE WITH CAUTION**.
