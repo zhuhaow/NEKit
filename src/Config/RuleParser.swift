@@ -88,7 +88,7 @@ struct RuleParser {
             let regexs = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
             var criteria: [DomainListRule.MatchCriterion] = []
             for regex in regexs {
-                if regex != "" {
+                if !regex.isEmpty {
                     let re = try NSRegularExpression(pattern: regex, options: .CaseInsensitive)
                     criteria.append(DomainListRule.MatchCriterion.Regex(re))
                 }
@@ -119,7 +119,7 @@ struct RuleParser {
             let content = try String(contentsOfFile: filepath)
             var ranges = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
             ranges = ranges.filter {
-                $0 != ""
+                !$0.isEmpty
             }
             return try IPRangeListRule(adapterFactory: adapter, ranges: ranges)
         } catch let error {
