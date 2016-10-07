@@ -17,6 +17,6 @@ public struct Opt {
     public static var MAXHTTPContentBlockLength = 10240
 
     public static var RejectAdapterDefaultDelay = 300
-    
+
     public static var ProxyActiveSocketLimit = -1
 }

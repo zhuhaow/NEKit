@@ -4,7 +4,7 @@ import Foundation
 public class DomainListRule: Rule {
     public enum MatchCriterion {
         case Regex(NSRegularExpression), Prefix(String), Suffix(String), Keyword(String)
-        
+
         func match(domain: String) -> Bool {
             switch self {
             case .Regex(let regex):
@@ -18,7 +18,7 @@ public class DomainListRule: Rule {
             }
         }
     }
-    
+
     private let adapterFactory: AdapterFactory
 
     public override var description: String {
