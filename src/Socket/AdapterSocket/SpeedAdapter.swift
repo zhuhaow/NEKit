@@ -22,6 +22,12 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
     }
 
     override func openSocketWithRequest(request: ConnectRequest) {
+        // Not supporting IPv6 as of now, disconnect.
+        if (request.isIPv6()) {
+            disconnect()
+            return
+        }
+        
         pendingCount = adapters.count
         for (adapter, delay) in adapters {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC) * Int64(delay)), queue) {

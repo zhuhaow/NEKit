@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## Unreleased
+### Changed
+- `DirectAdapterSocket` and `SpeedAdapter` will disconnect when the request host is IPv6 address.
+
 ## 0.7.2
 ### Fixed
 - HTTP server now gets host information from request url instead of Host field in header.
@@ -9,7 +13,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ## [0.7.1]
 ### Fixed
 - Correctly handle empty line in list files.
-
+ 
 ## [0.7.0]
 ### Added
 - `DomainRuleList` can match domain based on prefix, suffix and keyword.
