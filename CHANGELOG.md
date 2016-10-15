@@ -7,6 +7,9 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 - `DirectAdapterSocket` and `SpeedAdapter` will disconnect when the request host is IPv6 address.
 - GeoIP now also supports IPv6 address.
 
+### Fixed
+- `NWTCPSocket` will not crash if `disconnect` is called before `connectTo`.
+
 ## 0.7.2
 ### Fixed
 - HTTP server now gets host information from request url instead of Host field in header.

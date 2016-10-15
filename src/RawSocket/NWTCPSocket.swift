@@ -7,7 +7,7 @@ import CocoaLumberjackSwift
 /// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
 public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     static let ScannerReadTag = 10000
-    private var connection: NWTCPConnection!
+    private var connection: NWTCPConnection?
 
     private var writePending = false
     private var closeAfterWriting = false
@@ -28,7 +28,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
     /// If the socket is connected.
     public var isConnected: Bool {
-        return connection.state == .Connected
+        return connection != nil && connection!.state == .Connected
     }
 
     /// The source address.
@@ -91,7 +91,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
     public func disconnect() {
-        if connection.state == .Cancelled {
+        if connection == nil  || connection!.state == .Cancelled {
             delegate?.didDisconnect(self)
         } else {
             closeAfterWriting = true
@@ -103,7 +103,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      Disconnect the socket immediately.
      */
     public func forceDisconnect() {
-        if connection.state == .Cancelled {
+        if connection == nil  || connection!.state == .Cancelled {
             delegate?.didDisconnect(self)
         } else {
             cancel()
@@ -128,7 +128,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     public func readDataWithTag(tag: Int) {
-        connection.readMinimumLength(0, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
+        connection!.readMinimumLength(0, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
                 return
@@ -146,7 +146,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     public func readDataToLength(length: Int, withTag tag: Int) {
-        connection.readLength(length) { data, error in
+        connection!.readLength(length) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
                 return
@@ -198,7 +198,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             return
         }
 
-        switch connection.state {
+        switch connection!.state {
         case .Connected:
             queueCall {
                 self.delegate?.didConnect(self)
@@ -246,7 +246,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
     private func sendData(data: NSData, withTag tag: Int) {
         writePending = true
-        self.connection.write(data) { error in
+        self.connection!.write(data) { error in
             self.writePending = false
 
             guard error == nil else {
@@ -281,7 +281,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     }
 
     private func cancel() {
-        connection.cancel()
+        connection?.cancel()
     }
 
     private func checkStatus() {
