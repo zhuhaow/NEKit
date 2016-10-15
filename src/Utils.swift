@@ -81,7 +81,7 @@ public struct Utils {
     struct GeoIPLookup {
 
         static func Lookup(ipAddress: String) -> String? {
-            if Utils.IP.isIPv4(ipAddress) {
+            if Utils.IP.isIP(ipAddress) {
                 guard let result = GeoIP.LookUp(ipAddress) else {
                     return "--"
                 }

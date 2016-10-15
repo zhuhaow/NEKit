@@ -5,6 +5,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ## Unreleased
 ### Changed
 - `DirectAdapterSocket` and `SpeedAdapter` will disconnect when the request host is IPv6 address.
+- GeoIP now also supports IPv6 address.
 
 ## 0.7.2
 ### Fixed
