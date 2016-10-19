@@ -56,7 +56,7 @@ public class IPv4Address: IPAddress, Hashable {
     }
 
     public var hashValue: Int {
-        return Int(_in_addr.s_addr)
+        return _in_addr.s_addr.hashValue
     }
 
     public var UInt32InHostOrder: UInt32 {
