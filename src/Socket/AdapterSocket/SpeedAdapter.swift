@@ -22,7 +22,7 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
     }
 
     override func openSocketWithRequest(request: ConnectRequest) {
-        // Not supporting IPv6 as of now, disconnect.
+        // FIXME: This is a temporary workaround for wechat which uses a wrong way to detect ipv6 by itself.
         if (request.isIPv6()) {
             disconnect()
             return
