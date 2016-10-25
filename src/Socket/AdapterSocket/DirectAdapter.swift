@@ -17,12 +17,6 @@ public class DirectAdapter: AdapterSocket {
     override func openSocketWithRequest(request: ConnectRequest) {
         super.openSocketWithRequest(request)
         
-        // Not supporting IPv6 as of now, disconnect.
-        if (request.isIPv6()) {
-            disconnect()
-            return
-        }
-        
         do {
             try socket.connectTo(request.host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
         } catch let error {
