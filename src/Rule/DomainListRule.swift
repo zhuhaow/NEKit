@@ -3,7 +3,7 @@ import Foundation
 /// The rule matches the host domain to a list of predefined criteria.
 public class DomainListRule: Rule {
     public enum MatchCriterion {
-        case Regex(NSRegularExpression), Prefix(String), Suffix(String), Keyword(String)
+        case Regex(NSRegularExpression), Prefix(String), Suffix(String), Keyword(String), Complete(String)
 
         func match(domain: String) -> Bool {
             switch self {
@@ -15,6 +15,8 @@ public class DomainListRule: Rule {
                 return domain.hasSuffix(suffix)
             case .Keyword(let keyword):
                 return domain.containsString(keyword)
+            case .Complete(let match):
+                return domain == match
             }
         }
     }
