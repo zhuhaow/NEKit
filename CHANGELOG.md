@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
-## Unreleased
+## 0.7.3
 ### Changed
 - `DirectAdapterSocket` and `SpeedAdapter` will disconnect when the request host is IPv6 address.
 - GeoIP now also supports IPv6 address.
