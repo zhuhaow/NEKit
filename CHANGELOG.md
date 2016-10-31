@@ -11,6 +11,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ### Fixed
 - `NWTCPSocket` will not crash if `disconnect` is called before `connectTo`.
 - Hashing of `IPv4Address` might overflow on 32bit machines.
+- Error when parsing HTTP header with ":" in the value.
 
 ## 0.7.2
 ### Fixed
