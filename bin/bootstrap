@@ -1,4 +1,5 @@
 #!/bin/sh
 
+brew upgrade carthage
 carthage bootstrap --no-use-binaries --platform mac,ios
 cp Cartfile.resolved Carthage

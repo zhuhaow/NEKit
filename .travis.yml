@@ -8,7 +8,6 @@ cache:
   - Carthage
 
 install:
-- brew upgrade carthage
 - bin/bootstrap-if-needed
 - gem install scan
 
