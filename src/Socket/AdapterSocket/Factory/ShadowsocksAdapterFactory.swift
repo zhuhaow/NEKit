@@ -1,7 +1,7 @@
 import Foundation
 
 /// Factory building Shadowsocks adapter.
-public class ShadowsocksAdapterFactory: ServerAdapterFactory {
+open class ShadowsocksAdapterFactory: ServerAdapterFactory {
     let encryptAlgorithm: CryptoAlgorithm
     let password: String
 
@@ -12,7 +12,7 @@ public class ShadowsocksAdapterFactory: ServerAdapterFactory {
     }
 
     public convenience init?(serverHost: String, serverPort: Int, encryptAlgorithm: String, password: String) {
-        guard let encryptAlgorithm = CryptoAlgorithm(rawValue: encryptAlgorithm.uppercaseString) else {
+        guard let encryptAlgorithm = CryptoAlgorithm(rawValue: encryptAlgorithm.uppercased()) else {
             return nil
         }
 
@@ -26,7 +26,7 @@ public class ShadowsocksAdapterFactory: ServerAdapterFactory {
 
      - returns: The built adapter.
      */
-    override func getAdapter(request: ConnectRequest) -> AdapterSocket {
+    override func getAdapter(_ request: ConnectRequest) -> AdapterSocket {
         let adapter = ShadowsocksAdapter(host: serverHost, port: serverPort, encryptAlgorithm: encryptAlgorithm, password: password)
         adapter.socket = RawSocketFactory.getRawSocket()
         return adapter

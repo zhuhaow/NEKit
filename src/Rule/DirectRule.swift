@@ -3,8 +3,8 @@ import Foundation
 /// The rule matches every request and returns direct adapter.
 ///
 /// This is equivalent to create an `AllRule` with a `DirectAdapterFactory`.
-public class DirectRule: AllRule {
-    public override var description: String {
+open class DirectRule: AllRule {
+    open override var description: String {
         return "<DirectRule>"
     }
     /**

@@ -2,32 +2,32 @@ import Foundation
 
 public protocol DNSResolverProtocol: class {
     weak var delegate: DNSResolverDelegate? { get set }
-    func resolve(session: DNSSession)
+    func resolve(_ session: DNSSession)
     func stop()
 }
 
 public protocol DNSResolverDelegate: class {
-    func didReceiveResponse(rawResponse: NSData)
+    func didReceiveResponse(_ rawResponse: Data)
 }
 
-public class UDPDNSResolver: DNSResolverProtocol, NWUDPSocketDelegate {
+open class UDPDNSResolver: DNSResolverProtocol, NWUDPSocketDelegate {
     let socket: NWUDPSocket
-    public weak var delegate: DNSResolverDelegate?
+    open weak var delegate: DNSResolverDelegate?
 
     public init(address: IPv4Address, port: Port) {
         socket = NWUDPSocket(host: address.presentation, port: Int(port.value))!
         socket.delegate = self
     }
 
-    public func resolve(session: DNSSession) {
+    open func resolve(_ session: DNSSession) {
         socket.writeData(session.requestMessage.payload)
     }
 
-    public func stop() {
+    open func stop() {
         socket.disconnect()
     }
 
-    public func didReceiveData(data: NSData, from: NWUDPSocket) {
+    open func didReceiveData(_ data: Data, from: NWUDPSocket) {
         delegate?.didReceiveResponse(data)
     }
 }

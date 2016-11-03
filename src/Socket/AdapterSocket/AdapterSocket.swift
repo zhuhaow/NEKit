@@ -1,14 +1,14 @@
 import Foundation
 
-public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
-    public var request: ConnectRequest!
-    public var response: ConnectResponse = ConnectResponse()
+open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
+    open var request: ConnectRequest!
+    open var response: ConnectResponse = ConnectResponse()
 
-    public var observer: Observer<AdapterSocketEvent>?
+    open var observer: Observer<AdapterSocketEvent>?
 
-    public let type: String
+    open let type: String
 
-    public override var description: String {
+    open override var description: String {
         return "<\(type) host:\(request.host) port:\(request.port))>"
     }
 
@@ -17,40 +17,40 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter request: The connect request.
      */
-    func openSocketWithRequest(request: ConnectRequest) {
+    func openSocketWithRequest(_ request: ConnectRequest) {
         self.request = request
-        observer?.signal(.SocketOpened(self, withRequest: request))
+        observer?.signal(.socketOpened(self, withRequest: request))
 
         socket?.delegate = self
         socket?.queue = queue
-        state = .Connecting
+        state = .connecting
     }
 
     // MARK: SocketProtocol Implemention
 
     /// The underlying TCP socket transmitting data.
-    public var socket: RawTCPSocketProtocol!
+    open var socket: RawTCPSocketProtocol!
 
     /// The delegate instance.
-    weak public var delegate: SocketDelegate?
+    weak open var delegate: SocketDelegate?
 
     /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    public var queue: dispatch_queue_t! {
+    open var queue: DispatchQueue! {
         didSet {
             socket?.queue = queue
         }
     }
 
     /// The current connection status of the socket.
-    public var state: SocketStatus = .Invalid
+    open var state: SocketStatus = .invalid
 
     /// If the socket is disconnected.
-    public var isDisconnected: Bool {
-        return state == .Closed || state == .Invalid
+    open var isDisconnected: Bool {
+        return state == .closed || state == .invalid
     }
 
     override public init() {
-        type = "\(self.dynamicType)"
+        type = "\(type(of: self))"
         super.init()
 
         observer = ObserverFactory.currentFactory?.getObserverForAdapterSocket(self)
@@ -62,7 +62,7 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataWithTag(tag: Int) {
+    open func readDataWithTag(_ tag: Int) {
         socket?.readDataWithTag(tag)
     }
 
@@ -73,7 +73,7 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    public func writeData(data: NSData, withTag tag: Int) {
+    open func writeData(_ data: Data, withTag tag: Int) {
         socket?.writeData(data, withTag: tag)
     }
 
@@ -88,18 +88,18 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /**
      Disconnect the socket elegantly.
      */
-    public func disconnect() {
-        state = .Disconnecting
-        observer?.signal(.DisconnectCalled(self))
+    open func disconnect() {
+        state = .disconnecting
+        observer?.signal(.disconnectCalled(self))
         socket?.disconnect()
     }
 
     /**
      Disconnect the socket immediately.
      */
-    public func forceDisconnect() {
-        state = .Disconnecting
-        observer?.signal(.ForceDisconnectCalled(self))
+    open func forceDisconnect() {
+        state = .disconnecting
+        observer?.signal(.forceDisconnectCalled(self))
         socket?.forceDisconnect()
     }
 
@@ -110,9 +110,9 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The socket which did disconnect.
      */
-    public func didDisconnect(socket: RawTCPSocketProtocol) {
-        state = .Closed
-        observer?.signal(.Disconnected(self))
+    open func didDisconnect(_ socket: RawTCPSocketProtocol) {
+        state = .closed
+        observer?.signal(.disconnected(self))
         delegate?.didDisconnect(self)
     }
 
@@ -123,8 +123,8 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    public func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
-        observer?.signal(.ReadData(data, tag: tag, on: self))
+    open func didReadData(_ data: Data, withTag tag: Int, from: RawTCPSocketProtocol) {
+        observer?.signal(.readData(data, tag: tag, on: self))
     }
 
     /**
@@ -134,8 +134,8 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    public func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
-        observer?.signal(.WroteData(data, tag: tag, on: self))
+    open func didWriteData(_ data: Data?, withTag tag: Int, from: RawTCPSocketProtocol) {
+        observer?.signal(.wroteData(data, tag: tag, on: self))
     }
 
     /**
@@ -143,9 +143,9 @@ public class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The connected socket.
      */
-    public func didConnect(socket: RawTCPSocketProtocol) {
-        state = .Established
-        observer?.signal(.Connected(self, withResponse: response))
+    open func didConnect(_ socket: RawTCPSocketProtocol) {
+        state = .established
+        observer?.signal(.connected(self, withResponse: response))
         delegate?.didConnect(self, withResponse: response)
     }
 }

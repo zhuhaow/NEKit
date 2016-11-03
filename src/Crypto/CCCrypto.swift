@@ -1,30 +1,30 @@
 import Foundation
 import CommonCrypto
 
-public class CCCrypto: StreamCryptoProtocol {
+open class CCCrypto: StreamCryptoProtocol {
     public enum Algorithm {
-        case AES, CAST, RC4
+        case aes, cast, rc4
 
         public func toCCAlgorithm() -> CCAlgorithm {
             switch self {
-            case .AES:
+            case .aes:
                 return CCAlgorithm(kCCAlgorithmAES)
-            case .RC4:
+            case .rc4:
                 return CCAlgorithm(kCCAlgorithmRC4)
-            case .CAST:
+            case .cast:
                 return CCAlgorithm(kCCAlgorithmCAST)
             }
         }
     }
 
     public enum Mode {
-        case CFB, RC4
+        case cfb, rc4
 
         public func toCCMode() -> CCMode {
             switch self {
-            case .CFB:
+            case .cfb:
                 return CCMode(kCCModeCFB)
-            case .RC4:
+            case .rc4:
                 return CCMode(kCCModeRC4)
             }
         }
@@ -32,16 +32,24 @@ public class CCCrypto: StreamCryptoProtocol {
 
     let cryptor: CCCryptorRef
 
-    public init(operation: CryptoOperation, mode: Mode, algorithm: Algorithm, initialVector: NSData?, key: NSData) {
-        let cryptor = UnsafeMutablePointer<CCCryptorRef>.alloc(1)
-        CCCryptorCreateWithMode(operation.toCCOperation(), mode.toCCMode(), algorithm.toCCAlgorithm(), CCPadding(ccNoPadding), initialVector?.bytes ?? nil, key.bytes, key.length, nil, 0, 0, 0, cryptor)
-        self.cryptor = cryptor.memory
+    public init(operation: CryptoOperation, mode: Mode, algorithm: Algorithm, initialVector: Data?, key: Data) {
+        let cryptor = UnsafeMutablePointer<CCCryptorRef?>.allocate(capacity: 1)
+        _ = key.withUnsafeRawPointer { k in
+            if let initialVector = initialVector {
+                _ = initialVector.withUnsafeRawPointer { iv in
+                    CCCryptorCreateWithMode(operation.toCCOperation(), mode.toCCMode(), algorithm.toCCAlgorithm(), CCPadding(ccNoPadding), iv, k, key.count, nil, 0, 0, 0, cryptor)
+                }
+            } else {
+                CCCryptorCreateWithMode(operation.toCCOperation(), mode.toCCMode(), algorithm.toCCAlgorithm(), CCPadding(ccNoPadding), nil, k, key.count, nil, 0, 0, 0, cryptor)
+            }
+        }
+        self.cryptor = cryptor.pointee!
     }
 
-    public func update(data: NSData) -> NSData {
-        let outData = NSMutableData(length: data.length)!
-        CCCryptorUpdate(cryptor, data.bytes, data.length, outData.mutableBytes, outData.length, nil)
-        return NSData(data: outData)
+    open func update( _ data: inout Data) {
+        _ = data.withUnsafeMutableBytes {
+            CCCryptorUpdate(cryptor, $0, data.count, $0, data.count, nil)
+        }
     }
 
     deinit {

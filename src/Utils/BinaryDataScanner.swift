@@ -36,66 +36,60 @@ extension UInt32: BinaryReadable {}
 
 extension UInt64: BinaryReadable {}
 
-public class BinaryDataScanner {
-    let data: NSData
+open class BinaryDataScanner {
+    let data: Data
     let littleEndian: Bool
 //    let encoding: NSStringEncoding
 
-    var current: UnsafePointer<Void>
-    var remaining: Int
-    var position: Int {
+    var remaining: Int {
         get {
-            return data.length - remaining
+            return data.count - position
         }
     }
 
-    public init(data: NSData, littleEndian: Bool) {
+    var position: Int = 0
+
+    public init(data: Data, littleEndian: Bool) {
         self.data = data
         self.littleEndian = littleEndian
-//        self.encoding = encoding
-
-        self.current = self.data.bytes
-        self.remaining = self.data.length
     }
 
-    public func read<T: BinaryReadable>() -> T? {
-        if remaining < sizeof(T) {
+    open func read<T: BinaryReadable>() -> T? {
+        if remaining < MemoryLayout<T>.size {
             return nil
         }
 
-        let tCurrent = UnsafePointer<T>(current)
-        let v = tCurrent.memory
-        current = UnsafePointer<Void>(tCurrent.successor())
-        remaining -= sizeof(T)
+        let v = data.withUnsafeRawPointer {
+            $0.advanced(by: position).load(as: T.self)
+        }
+        position += MemoryLayout<T>.size
         return littleEndian ? v.littleEndian : v.bigEndian
     }
 
     // swiftlint:disable variable_name
-    public func skipTo(n: Int) {
-        remaining = data.length - n
-        current = data.bytes.advancedBy(n)
+    open func skip(to n: Int) {
+        position = n
     }
 
-    public func advanceBy(n: Int) {
-        remaining -= n
-        current = current.advancedBy(n)
+    open func advance(by n: Int) {
+        position += n
     }
 
     /* convenience read funcs */
 
-    public func readByte() -> UInt8? {
+    open func readByte() -> UInt8? {
         return read()
     }
 
-    public func read16() -> UInt16? {
+    open func read16() -> UInt16? {
         return read()
     }
 
-    public func read32() -> UInt32? {
+    open func read32() -> UInt32? {
         return read()
     }
 
-    public func read64() -> UInt64? {
+    open func read64() -> UInt64? {
         return read()
     }
 }

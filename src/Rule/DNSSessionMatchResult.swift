@@ -9,5 +9,5 @@ import Foundation
  - Pass:    This rule does not match the request.
  */
 public enum DNSSessionMatchResult {
-    case Real, Fake, Unknown, Pass
+    case real, fake, unknown, pass
 }

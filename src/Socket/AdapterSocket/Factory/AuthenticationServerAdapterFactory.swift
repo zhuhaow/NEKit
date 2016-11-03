@@ -1,7 +1,7 @@
 import Foundation
 
 /// Factory building server adapter which requires authentication.
-public class HTTPAuthenticationAdapterFactory: ServerAdapterFactory {
+open class HTTPAuthenticationAdapterFactory: ServerAdapterFactory {
     let auth: HTTPAuthentication?
 
     required public init(serverHost: String, serverPort: Int, auth: HTTPAuthentication?) {

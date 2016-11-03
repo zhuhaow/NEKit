@@ -4,13 +4,13 @@ import CocoaAsyncSocket
 /// Proxy server which listens on some port by GCDAsyncSocket.
 ///
 /// This shoule be the base class for any concrete implemention of proxy server (e.g., HTTP or SOCKS5) which needs to listen on some port.
-public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
-    private let listenQueue: dispatch_queue_t = dispatch_queue_create("NEKit.GCDProxyServer.listenQueue", DISPATCH_QUEUE_SERIAL)
-    private var listenSocket: GCDAsyncSocket!
+open class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
+    fileprivate let listenQueue: DispatchQueue = DispatchQueue(label: "NEKit.GCDProxyServer.listenQueue", attributes: [])
+    fileprivate var listenSocket: GCDAsyncSocket!
 
-    private var pendingSocket: [GCDTCPSocket] = []
+    fileprivate var pendingSocket: [GCDTCPSocket] = []
 
-    private var canHandleNewSocket: Bool {
+    fileprivate var canHandleNewSocket: Bool {
         return Opt.ProxyActiveSocketLimit <= 0 || tunnels.value.count < Opt.ProxyActiveSocketLimit
     }
 
@@ -19,17 +19,17 @@ public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
 
      - throws: The error occured when starting the proxy server.
      */
-    override public func start() throws {
+    override open func start() throws {
         listenSocket = GCDAsyncSocket(delegate: self, delegateQueue: listenQueue)
-        try listenSocket.acceptOnInterface(address?.presentation, port: port.value)
+        try listenSocket.accept(onInterface: address?.presentation, port: port.value)
         try super.start()
     }
 
     /**
      Stop the proxy server.
      */
-    override public func stop() {
-        dispatch_sync(listenQueue) {
+    override open func stop() {
+        listenQueue.sync {
             for socket in self.pendingSocket {
                 socket.disconnect()
             }
@@ -49,7 +49,7 @@ public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
 
      - parameter socket: The accepted socket.
      */
-    func handleNewGCDSocket(socket: GCDTCPSocket) {
+    func handleNewGCDSocket(_ socket: GCDTCPSocket) {
 
     }
 
@@ -61,7 +61,7 @@ public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
 
      - warning: Do not call this method. This should be marked private but have to be marked public since the `GCDAsyncSocketDelegate` is public.
      */
-    public func socket(sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
+    open func socket(_ sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
         let gcdTCPSocket = GCDTCPSocket(socket: newSocket)
 
         if canHandleNewSocket {
@@ -72,16 +72,16 @@ public class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
         }
     }
 
-    override func tunnelDidClose(tunnel: Tunnel) {
+    override func tunnelDidClose(_ tunnel: Tunnel) {
         super.tunnelDidClose(tunnel)
         processPendingSocket()
     }
 
     func processPendingSocket() {
-        dispatch_async(listenQueue) {
+        listenQueue.async {
             while self.pendingSocket.count > 0 && self.canHandleNewSocket {
                 let socket = self.pendingSocket.removeFirst()
-                if (socket.isConnected) {
+                if socket.isConnected {
                     self.handleNewGCDSocket(socket)
                 }
                 NSLog("Current Pending socket \(self.pendingSocket.count)")

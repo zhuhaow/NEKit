@@ -10,14 +10,14 @@ public protocol IPStackProtocol: class {
 
      - returns: If the stack takes in this packet. If the packet is taken in, then it won't be processed by other IP stacks.
      */
-    func inputPacket(packet: NSData, version: NSNumber?) -> Bool
+    func inputPacket(_ packet: Data, version: NSNumber?) -> Bool
 
     /// This is called when this stack decided to output some IP packet. This is set automatically when the stack is registered to some interface.
     ///
     /// The parameter is the safe as the `inputPacket`.
     ///
     /// - note: This block is thread-safe.
-    var outputFunc: (([NSData], [NSNumber]) -> ())! { get set }
+    var outputFunc: (([Data], [NSNumber]) -> ())! { get set }
 
     /**
      Stop the stack from running.

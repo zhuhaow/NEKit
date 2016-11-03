@@ -2,16 +2,16 @@ import Foundation
 import CocoaLumberjackSwift
 
 /// The rule matches the request based on the geographical location of the corresponding IP address.
-public class CountryRule: Rule {
-    private let adapterFactory: AdapterFactory
+open class CountryRule: Rule {
+    fileprivate let adapterFactory: AdapterFactory
 
     /// The ISO code of the country.
-    public let countryCode: String
+    open let countryCode: String
 
     /// The rule should match the request which matches the country or not.
-    public let match: Bool
+    open let match: Bool
 
-    public override var description: String {
+    open override var description: String {
         return "<CountryRule countryCode:\(countryCode) match:\(match)>"
     }
 
@@ -37,19 +37,19 @@ public class CountryRule: Rule {
 
      - returns: The result of match.
      */
-    override func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
-        guard type == .IP else {
-            return .Unknown
+    override func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+        guard type == .ip else {
+            return .unknown
         }
 
         if (session.countryCode != countryCode) != match {
             if let _ = adapterFactory as? DirectAdapterFactory {
-                return .Real
+                return .real
             } else {
-                return .Fake
+                return .fake
             }
         }
-        return .Pass
+        return .pass
     }
 
     /**
@@ -59,7 +59,7 @@ public class CountryRule: Rule {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(request: ConnectRequest) -> AdapterFactory? {
+    override func match(_ request: ConnectRequest) -> AdapterFactory? {
         if (request.country != countryCode) != match {
             return adapterFactory
         }

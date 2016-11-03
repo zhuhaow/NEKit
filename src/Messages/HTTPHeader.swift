@@ -1,51 +1,51 @@
 import Foundation
 
-public class HTTPHeader {
-    public var HTTPVersion: String
-    public var method: String
-    public var isConnect: Bool = false
-    public var path: String
-    public var pathURL: NSURL
-    public var host: String
-    public var port: Int
+open class HTTPHeader {
+    open var HTTPVersion: String
+    open var method: String
+    open var isConnect: Bool = false
+    open var path: String
+    open var pathURL: Foundation.URL
+    open var host: String
+    open var port: Int
     // just assume that `Content-Length` is given as of now.
     // Chunk is not supported yet.
-    public var contentLength: Int = 0
-    public var headers: [(String, String)] = []
-    public var rawHeader: NSData?
-    
+    open var contentLength: Int = 0
+    open var headers: [(String, String)] = []
+    open var rawHeader: Data?
+
     public init?(headerString: String) {
-        let lines = headerString.componentsSeparatedByString("\r\n")
+        let lines = headerString.components(separatedBy: "\r\n")
         guard lines.count >= 3 else {
             return nil
         }
-        
-        let request = lines[0].componentsSeparatedByString(" ")
+
+        let request = lines[0].components(separatedBy: " ")
         guard request.count == 3 else {
             return nil
         }
-        
+
         method = request[0]
         path = request[1]
         HTTPVersion = request[2]
-        
-        guard let _url = NSURL(string: path) else {
+
+        guard let _url = Foundation.URL(string: path) else {
             return nil
         }
         pathURL = _url
-        
+
         for line in lines[1..<lines.count-2] {
-            let header = line.characters.split(":", maxSplit: 1, allowEmptySlices: false)
+            let header = line.characters.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
             guard header.count == 2 else {
                 return nil
             }
-            headers.append((String(header[0]).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()), String(header[1]).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())))
+            headers.append((String(header[0]).trimmingCharacters(in: CharacterSet.whitespaces), String(header[1]).trimmingCharacters(in: CharacterSet.whitespaces)))
         }
-        
-        if method.uppercaseString == "CONNECT" {
+
+        if method.uppercased() == "CONNECT" {
             isConnect = true
-            
-            let urlInfo = path.componentsSeparatedByString(":")
+
+            let urlInfo = path.components(separatedBy: ":")
             guard urlInfo.count == 2 else {
                 return nil
             }
@@ -54,16 +54,16 @@ public class HTTPHeader {
                 return nil
             }
             self.port = port
-            
+
             self.contentLength = 0
         } else {
             if pathURL.host != nil {
                 host = pathURL.host!
-                port = pathURL.port?.integerValue ?? 80
+                port = pathURL.port ?? 80
             } else {
                 var url: String = ""
                 for (key, value) in headers {
-                    if "Host".caseInsensitiveCompare(key) == .OrderedSame {
+                    if "Host".caseInsensitiveCompare(key) == .orderedSame {
                         url = value
                         break
                     }
@@ -71,8 +71,8 @@ public class HTTPHeader {
                 guard url != "" else {
                     return nil
                 }
-                
-                let urlInfo = url.componentsSeparatedByString(":")
+
+                let urlInfo = url.components(separatedBy: ":")
                 guard urlInfo.count <= 2 else {
                     return nil
                 }
@@ -87,9 +87,9 @@ public class HTTPHeader {
                     port = 80
                 }
             }
-            
+
             for (key, value) in headers {
-                if "Content-Length".caseInsensitiveCompare(key) == .OrderedSame {
+                if "Content-Length".caseInsensitiveCompare(key) == .orderedSame {
                     guard let contentLength = Int(value) else {
                         return nil
                     }
@@ -99,33 +99,33 @@ public class HTTPHeader {
             }
         }
     }
-    
-    public convenience init?(headerData: NSData) {
-        guard let headerString = NSString(data: headerData, encoding: NSUTF8StringEncoding) as? String else {
+
+    public convenience init?(headerData: Data) {
+        guard let headerString = NSString(data: headerData, encoding: String.Encoding.utf8.rawValue) as? String else {
             return nil
         }
-        
+
         self.init(headerString: headerString)
         rawHeader = headerData
     }
-    
-    public subscript(index: String) -> String? {
+
+    open subscript(index: String) -> String? {
         get {
             for (key, value) in headers {
-                if index.caseInsensitiveCompare(key) == .OrderedSame {
+                if index.caseInsensitiveCompare(key) == .orderedSame {
                     return value
                 }
             }
             return nil
         }
     }
-    
-    
-    public func toData() -> NSData {
-        return toString().dataUsingEncoding(NSUTF8StringEncoding)!
+
+
+    open func toData() -> Data {
+        return toString().data(using: String.Encoding.utf8)!
     }
-    
-    public func toString() -> String {
+
+    open func toString() -> String {
         var strRep = "\(method) \(path) \(HTTPVersion)\r\n"
         for (key, value) in headers {
             strRep += "\(key): \(value)\r\n"
@@ -133,12 +133,12 @@ public class HTTPHeader {
         strRep += "\r\n"
         return strRep
     }
-    
-    public func addHeader(key: String, value: String) {
+
+    open func addHeader(_ key: String, value: String) {
         headers.append(key, value)
     }
-    
-    public func rewriteToRelativePath() {
+
+    open func rewriteToRelativePath() {
         if path[path.startIndex] != "/" {
             guard let rewrotePath = URL.matchRelativePath(path) else {
                 return
@@ -146,32 +146,32 @@ public class HTTPHeader {
             path = rewrotePath
         }
     }
-    
-    public func removeHeader(key: String) -> String? {
+
+    open func removeHeader(_ key: String) -> String? {
         for i in 0..<headers.count {
-            if headers[i].0.caseInsensitiveCompare(key) == .OrderedSame {
-                let (_, value) = headers.removeAtIndex(i)
+            if headers[i].0.caseInsensitiveCompare(key) == .orderedSame {
+                let (_, value) = headers.remove(at: i)
                 return value
             }
         }
         return nil
     }
-    
-    public func removeProxyHeader() {
+
+    open func removeProxyHeader() {
         let ProxyHeader = ["Proxy-Authenticate", "Proxy-Authorization", "Proxy-Connection"]
         for header in ProxyHeader {
-            removeHeader(header)
+            _ = removeHeader(header)
         }
     }
-    
+
     struct URL {
         // swiftlint:disable:next force_try
-        static let relativePathRegex = try! NSRegularExpression(pattern: "http.?:\\/\\/.*?(\\/.*)", options: NSRegularExpressionOptions.CaseInsensitive)
-        
-        static func matchRelativePath(url: String) -> String? {
-            if let result = relativePathRegex.firstMatchInString(url, options: NSMatchingOptions(), range: NSRange(location: 0, length: url.characters.count)) {
-                
-                return (url as NSString).substringWithRange(result.rangeAtIndex(1))
+        static let relativePathRegex = try! NSRegularExpression(pattern: "http.?:\\/\\/.*?(\\/.*)", options: NSRegularExpression.Options.caseInsensitive)
+
+        static func matchRelativePath(_ url: String) -> String? {
+            if let result = relativePathRegex.firstMatch(in: url, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: url.characters.count)) {
+
+                return (url as NSString).substring(with: result.rangeAt(1))
             } else {
                 return nil
             }

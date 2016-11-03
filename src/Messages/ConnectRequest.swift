@@ -58,10 +58,13 @@ public final class ConnectRequest {
         }()
 
     /// The location of the host.
-    public lazy var country: String? = {
+    public lazy var country: String = {
         [unowned self] in
-        Utils.GeoIPLookup.Lookup(self.ipAddress)
-        }()
+        guard let c = Utils.GeoIPLookup.Lookup(self.ipAddress) else {
+            return "--"
+        }
+        return c
+    }()
 
     public init?(host: String, port: Int, fakeIPEnabled: Bool = true) {
         self.requestedHost = host
@@ -81,7 +84,7 @@ public final class ConnectRequest {
         self.init(host: ipAddress.presentation, port: Int(port.value), fakeIPEnabled: fakeIPEnabled)
     }
 
-    private func lookupRealIP() -> Bool {
+    fileprivate func lookupRealIP() -> Bool {
         /// If custom DNS server is set up.
         guard let dnsServer = DNSServer.currentServer else {
             return true
@@ -128,9 +131,9 @@ public final class ConnectRequest {
 extension ConnectRequest: CustomStringConvertible {
     public var description: String {
         if requestedHost != host {
-        return "<\(self.dynamicType) host:\(host) port:\(port) requestedHost:\(requestedHost)>"
+        return "<\(type(of: self)) host:\(host) port:\(port) requestedHost:\(requestedHost)>"
         } else {
-            return "<\(self.dynamicType) host:\(host) port:\(port)>"
+            return "<\(type(of: self)) host:\(host) port:\(port)>"
         }
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 
 /// The base class of adapter factory.
-public class AdapterFactory {
+open class AdapterFactory {
     /**
      Build an adapter.
 
@@ -9,7 +9,7 @@ public class AdapterFactory {
 
      - returns: The built adapter.
      */
-    func getAdapter(request: ConnectRequest) -> AdapterSocket {
+    func getAdapter(_ request: ConnectRequest) -> AdapterSocket {
         return getDirectAdapter()
     }
 

@@ -1,17 +1,17 @@
 import Foundation
 import CocoaLumberjackSwift
 
-public class DNSSession {
-    public let requestMessage: DNSMessage
+open class DNSSession {
+    open let requestMessage: DNSMessage
     var requestIPPacket: IPPacket?
-    public var realIP: IPv4Address?
-    public var fakeIP: IPv4Address?
-    public var realResponseMessage: DNSMessage?
+    open var realIP: IPv4Address?
+    open var fakeIP: IPv4Address?
+    open var realResponseMessage: DNSMessage?
     var realResponseIPPacket: IPPacket?
-    public var matchedRule: Rule?
-    public var matchResult: DNSSessionMatchResult?
+    open var matchedRule: Rule?
+    open var matchResult: DNSSessionMatchResult?
     var indexToMatch = 0
-    var expireAt: NSDate?
+    var expireAt: Date?
     lazy var countryCode: String? = {
         [unowned self] in
         guard self.realIP != nil else {
@@ -21,7 +21,7 @@ public class DNSSession {
     }()
 
     init?(message: DNSMessage) {
-        guard message.messageType == .Query else {
+        guard message.messageType == .query else {
             DDLogError("DNSSession can only be initailized by a DNS query.")
             return nil
         }

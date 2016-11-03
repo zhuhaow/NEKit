@@ -2,17 +2,17 @@ import Foundation
 
 public enum DNSType: UInt16 {
     // swiftlint:disable:next type_name
-    case INVALID = 0, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, NULL, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, NSAP, NSAPPTR, SIG, KEY, PX, GPOS, AAAA, LOC, NXT, EID, NIMLOC, SRV, ATMA, NAPTR, KX, CERT, A6, DNAME, SINK, OPT, APL, DS, SSHFP, RRSIG = 46, NSEC, DNSKEY, TKEY = 249, TSIG, IXFR, AXFR, MAILB, MAILA, ANY
+    case invalid = 0, a, ns, md, mf, cname, soa, mb, mg, mr, null, wks, ptr, hinfo, minfo, mx, txt, rp, afsdb, x25, isdn, rt, nsap, nsapptr, sig, key, px, gpos, aaaa, loc, nxt, eid, nimloc, srv, atma, naptr, kx, cert, a6, dname, sink, opt, apl, ds, sshfp, rrsig = 46, nsec, dnskey, tkey = 249, tsig, ixfr, axfr, mailb, maila, any
 }
 
 public enum DNSMessageType: UInt8 {
-    case Query, Response
+    case query, response
 }
 
 public enum DNSReturnStatus: UInt8 {
-    case Success = 0, FormatError, ServerFailure, NameError, NotImplemented, Refused
+    case success = 0, formatError, serverFailure, nameError, notImplemented, refused
 }
 
 public enum DNSClass: UInt16 {
-    case Internet = 1
+    case internet = 1
 }

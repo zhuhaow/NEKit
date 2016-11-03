@@ -9,27 +9,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var httpProxy: GCDHTTPProxyServer?
     var socks5Proxy: GCDSOCKS5ProxyServer?
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
         DDLog.removeAllLoggers()
-        DDLog.addLogger(DDTTYLogger.sharedInstance(), withLevel: .Info)
+        DDLog.add(DDTTYLogger.sharedInstance(), with: .info)
 
         ObserverFactory.currentFactory = DebugObserverFactory()
 
         let config = Configuration()
-        let filepath = (NSHomeDirectory() as NSString).stringByAppendingPathComponent(".NEKit_demo.yaml")
+        let filepath = (NSHomeDirectory() as NSString).appendingPathComponent(".NEKit_demo.yaml")
         // swiftlint:disable force_try
         try! config.load(fromConfigFile: filepath)
         RuleManager.currentManager = config.ruleManager
-        httpProxy = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: UInt16(config.proxyPort!)))
+        httpProxy = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: NEKit.Port(port: UInt16(config.proxyPort!)))
         // swiftlint:disable force_try
         try! httpProxy!.start()
 
-        socks5Proxy = GCDSOCKS5ProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: UInt16(config.proxyPort!+1)))
+        let port = NEKit.Port(port: UInt16(config.proxyPort!+1))
+        socks5Proxy = GCDSOCKS5ProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: port)
         // swiftlint:disable force_try
         try! socks5Proxy!.start()
     }
 
-    func applicationWillTerminate(aNotification: NSNotification) {
+    func applicationWillTerminate(_ aNotification: Notification) {
         httpProxy?.stop()
         socks5Proxy?.stop()
     }

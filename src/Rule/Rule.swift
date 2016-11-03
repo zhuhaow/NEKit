@@ -1,8 +1,8 @@
 import Foundation
 
 /// The rule defines what to do for DNS requests and connect requests.
-public class Rule: CustomStringConvertible {
-    public var description: String {
+open class Rule: CustomStringConvertible {
+    open var description: String {
         return "<Rule>"
     }
 
@@ -20,8 +20,8 @@ public class Rule: CustomStringConvertible {
 
      - returns: The result of match.
      */
-    func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
-        return .Real
+    func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+        return .real
     }
 
     /**
@@ -31,7 +31,7 @@ public class Rule: CustomStringConvertible {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    func match(request: ConnectRequest) -> AdapterFactory? {
+    func match(_ request: ConnectRequest) -> AdapterFactory? {
         return nil
     }
 }

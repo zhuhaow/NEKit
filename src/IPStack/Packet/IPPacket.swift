@@ -2,17 +2,17 @@ import Foundation
 import CocoaLumberjackSwift
 
 public enum IPVersion: UInt8 {
-    case IPv4 = 4, IPv6 = 6
+    case iPv4 = 4, iPv6 = 6
 }
 
 public enum TransportProtocol: UInt8 {
-    case ICMP = 1, TCP = 6, UDP = 17
+    case icmp = 1, tcp = 6, udp = 17
 }
 
 /// The class to process and build IP packet.
 ///
 /// - note: Only IPv4 is supported as of now.
-public class IPPacket {
+open class IPPacket {
     /**
      Get the version of the IP Packet without parsing the whole packet.
 
@@ -20,12 +20,12 @@ public class IPPacket {
 
      - returns: The version of the packet. Returns `nil` if failed to parse the packet.
      */
-    public static func peekIPVersion(data: NSData) -> IPVersion? {
-        guard data.length >= 20 else {
+    open static func peekIPVersion(_ data: Data) -> IPVersion? {
+        guard data.count >= 20 else {
             return nil
         }
 
-        let version = UnsafePointer<UInt8>(data.bytes).memory >> 4
+        let version = (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count).pointee >> 4
         return IPVersion(rawValue: version)
     }
 
@@ -36,12 +36,12 @@ public class IPPacket {
 
      - returns: The protocol of the packet. Returns `nil` if failed to parse the packet.
      */
-    public static func peekProtocol(data: NSData) -> TransportProtocol? {
-        guard data.length >= 20 else {
+    open static func peekProtocol(_ data: Data) -> TransportProtocol? {
+        guard data.count >= 20 else {
             return nil
         }
 
-        return TransportProtocol(rawValue: UnsafePointer<UInt8>(data.bytes).advancedBy(9).memory)
+        return TransportProtocol(rawValue: (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count).advanced(by: 9).pointee)
     }
 
     /**
@@ -51,12 +51,12 @@ public class IPPacket {
 
      - returns: The source IP address of the packet. Returns `nil` if failed to parse the packet.
      */
-    public static func peekSourceAddress(data: NSData) -> IPv4Address? {
-        guard data.length >= 20 else {
+    open static func peekSourceAddress(_ data: Data) -> IPv4Address? {
+        guard data.count >= 20 else {
             return nil
         }
 
-        return IPv4Address(fromBytesInNetworkOrder: data.bytes.advancedBy(12))
+        return IPv4Address(fromBytesInNetworkOrder: (data as NSData).bytes.advanced(by: 12))
     }
 
     /**
@@ -66,12 +66,12 @@ public class IPPacket {
 
      - returns: The destination IP address of the packet. Returns `nil` if failed to parse the packet.
      */
-    public static func peekDestinationAddress(data: NSData) -> IPv4Address? {
-        guard data.length >= 20 else {
+    open static func peekDestinationAddress(_ data: Data) -> IPv4Address? {
+        guard data.count >= 20 else {
             return nil
         }
 
-        return IPv4Address(fromBytesInNetworkOrder: data.bytes.advancedBy(16))
+        return IPv4Address(fromBytesInNetworkOrder: (data as NSData).bytes.advanced(by: 16))
     }
 
     /**
@@ -83,23 +83,23 @@ public class IPPacket {
 
      - note: Only TCP and UDP packet has port field.
      */
-    public static func peekSourcePort(data: NSData) -> Port? {
+    open static func peekSourcePort(_ data: Data) -> Port? {
         guard let proto = peekProtocol(data) else {
             return nil
         }
 
-        guard proto == .TCP || proto == .UDP else {
+        guard proto == .tcp || proto == .udp else {
             return nil
         }
 
-        let headerLength = Int(UnsafePointer<UInt8>(data.bytes).memory & 0x0F * 4)
+        let headerLength = Int((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count).pointee & 0x0F * 4)
 
         // Make sure there are bytes for source and destination bytes.
-        guard data.length > headerLength + 4 else {
+        guard data.count > headerLength + 4 else {
             return nil
         }
 
-        return Port(bytesInNetworkOrder: data.bytes.advancedBy(headerLength))
+        return Port(bytesInNetworkOrder: (data as NSData).bytes.advanced(by: headerLength))
     }
 
     /**
@@ -111,42 +111,42 @@ public class IPPacket {
 
      - note: Only TCP and UDP packet has port field.
      */
-    public static func peekDestinationPort(data: NSData) -> Port? {
+    open static func peekDestinationPort(_ data: Data) -> Port? {
         guard let proto = peekProtocol(data) else {
             return nil
         }
 
-        guard proto == .TCP || proto == .UDP else {
+        guard proto == .tcp || proto == .udp else {
             return nil
         }
 
-        let headerLength = Int(UnsafePointer<UInt8>(data.bytes).memory & 0x0F * 4)
+        let headerLength = Int((data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count).pointee & 0x0F * 4)
 
         // Make sure there are bytes for source and destination bytes.
-        guard data.length > headerLength + 4 else {
+        guard data.count > headerLength + 4 else {
             return nil
         }
 
-        return Port(bytesInNetworkOrder: data.bytes.advancedBy(headerLength + 2))
+        return Port(bytesInNetworkOrder: (data as NSData).bytes.advanced(by: headerLength + 2))
     }
 
 
     /// The version of the current IP packet.
-    public var version: IPVersion = .IPv4
+    open var version: IPVersion = .iPv4
 
     /// The length of the IP packet header.
-    public var headerLength: UInt8 = 20
+    open var headerLength: UInt8 = 20
 
     /// This contains the DSCP and ECN of the IP packet.
     ///
     /// - note: Since we can not send custom IP packet out with NetworkExtension, this is useless and simply ignored.
-    public var tos: UInt8 = 0
+    open var tos: UInt8 = 0
 
     /// This should be the length of the datagram.
     /// This value is not read from header since NEPacketTunnelFlow has already taken care of it for us.
-    public var totalLength: UInt16 {
+    open var totalLength: UInt16 {
         get {
-            return UInt16(packetData.length)
+            return UInt16(packetData.count)
         }
     }
 
@@ -177,15 +177,7 @@ public class IPPacket {
     var protocolParser: TransportProtocolParserProtocol!
 
     /// The data representing the packet.
-    var packetData: NSData!
-
-    /// Helper to cast the `packetData` as mutable.
-    ///
-    /// - warning: Will error out if `packetData` is not an instance of `NSMutableData`.
-    var mutablePacketData: NSMutableData! {
-        // swiftlint:disable:next force_cast
-        return packetData as! NSMutableData
-    }
+    var packetData: Data!
 
     /**
      Initailize a new instance to build IP packet.
@@ -197,7 +189,7 @@ public class IPPacket {
 
      - parameter packetData: The data containing a whole packet.
      */
-    init?(packetData: NSData) {
+    init?(packetData: Data) {
         // no need to validate the packet.
 
         self.packetData = packetData
@@ -212,7 +204,7 @@ public class IPPacket {
         version = v
         headerLength = vhl & 0x0F * 4
 
-        guard packetData.length >= Int(headerLength) else {
+        guard packetData.count >= Int(headerLength) else {
             return nil
         }
 
@@ -237,7 +229,7 @@ public class IPPacket {
         _ = scanner.read16()!
 
         switch version {
-        case .IPv4:
+        case .iPv4:
             sourceAddress = IPv4Address(fromUInt32InHostOrder: scanner.read32()!)
             destinationAddress = IPv4Address(fromUInt32InHostOrder: scanner.read32()!)
         default:
@@ -247,7 +239,7 @@ public class IPPacket {
         }
 
         switch transportProtocol! {
-        case .UDP:
+        case .udp:
             guard let parser = UDPProtocolParser(packetData: packetData, offset: Int(headerLength)) else {
                 return nil
             }
@@ -272,7 +264,7 @@ public class IPPacket {
     }
 
     func buildPacket() {
-        packetData = NSMutableData(length: Int(headerLength) + protocolParser.bytesLength)
+        packetData = NSMutableData(length: Int(headerLength) + protocolParser.bytesLength) as Data!
 
         // set header
         setPayloadWithUInt8(headerLength / 4 + version.rawValue << 4, at: 0)
@@ -295,42 +287,47 @@ public class IPPacket {
         setPayloadWithUInt16(Checksum.computeChecksum(packetData, from: 0, to: Int(headerLength)), at: 10, swap: false)
     }
 
-    func setPayloadWithUInt8(value: UInt8, at: Int) {
+    func setPayloadWithUInt8(_ value: UInt8, at: Int) {
         var v = value
-        mutablePacketData.replaceBytesInRange(NSRange(location: at, length: 1), withBytes: &v)
+        withUnsafeBytes(of: &v) {
+            packetData.replaceSubrange(at..<at+1, with: $0)
+        }
     }
 
-    func setPayloadWithUInt16(value: UInt16, at: Int, swap: Bool = true) {
+    func setPayloadWithUInt16(_ value: UInt16, at: Int, swap: Bool = true) {
         var v: UInt16
         if swap {
             v = CFSwapInt16HostToBig(value)
         } else {
             v = value
         }
-        mutablePacketData.replaceBytesInRange(NSRange(location: at, length: 2), withBytes: &v)
+        withUnsafeBytes(of: &v) {
+            packetData.replaceSubrange(at..<at+2, with: $0)
+        }
     }
 
-    func setPayloadWithUInt32(value: UInt32, at: Int, swap: Bool = true) {
+    func setPayloadWithUInt32(_ value: UInt32, at: Int, swap: Bool = true) {
         var v: UInt32
         if swap {
             v = CFSwapInt32HostToBig(value)
         } else {
             v = value
         }
-        mutablePacketData.replaceBytesInRange(NSRange(location: at, length: 4), withBytes: &v)
+        withUnsafeBytes(of: &v) {
+            packetData.replaceSubrange(at..<at+4, with: $0)
+        }
     }
 
-    func setPayloadWithData(data: NSData, at: Int, length: Int? = nil, from: Int = 0) {
+    func setPayloadWithData(_ data: Data, at: Int, length: Int? = nil, from: Int = 0) {
         var length = length
         if length == nil {
-            length = data.length - from
+            length = data.count - from
         }
-        let pointer = data.bytes.advancedBy(from)
-        mutablePacketData.replaceBytesInRange(NSRange(location: at, length: length!), withBytes: pointer)
+        packetData.replaceSubrange(at..<at+length!, with: data)
     }
 
-    func resetPayloadAt(at: Int, length: Int) {
-        mutablePacketData.resetBytesInRange(NSRange(location: at, length: length))
+    func resetPayloadAt(_ at: Int, length: Int) {
+        packetData.resetBytes(in: at..<at+length)
     }
 
 }

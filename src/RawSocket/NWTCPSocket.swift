@@ -5,57 +5,57 @@ import CocoaLumberjackSwift
 /// The TCP socket build upon `NWTCPConnection`.
 ///
 /// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
-public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
+open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     static let ScannerReadTag = 10000
-    private var connection: NWTCPConnection?
+    fileprivate var connection: NWTCPConnection?
 
-    private var writePending = false
-    private var closeAfterWriting = false
+    fileprivate var writePending = false
+    fileprivate var closeAfterWriting = false
 
-    private var scanner: StreamScanner!
-    private var scannerTag: Int!
-    private var readDataPrefix: NSData?
+    fileprivate var scanner: StreamScanner!
+    fileprivate var scannerTag: Int!
+    fileprivate var readDataPrefix: Data?
 
     // MARK: RawTCPSocketProtocol implemention
 
     /// The `RawTCPSocketDelegate` instance.
-    weak public var delegate: RawTCPSocketDelegate?
+    weak open var delegate: RawTCPSocketDelegate?
 
     /// Every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
     ///
     /// - warning: This should be set as soon as the instance is initialized.
-    public var queue: dispatch_queue_t!
+    open var queue: DispatchQueue!
 
     /// If the socket is connected.
-    public var isConnected: Bool {
-        return connection != nil && connection!.state == .Connected
+    open var isConnected: Bool {
+        return connection != nil && connection!.state == .connected
     }
 
     /// The source address.
     ///
     /// - note: Always returns `nil`.
-    public var sourceIPAddress: IPv4Address? {
+    open var sourceIPAddress: IPv4Address? {
         return nil
     }
 
     /// The source port.
     ///
     /// - note: Always returns `nil`.
-    public var sourcePort: Port? {
+    open var sourcePort: Port? {
         return nil
     }
 
     /// The destination address.
     ///
     /// - note: Always returns `nil`.
-    public var destinationIPAddress: IPv4Address? {
+    open var destinationIPAddress: IPv4Address? {
         return nil
     }
 
     /// The destination port.
     ///
     /// - note: Always returns `nil`.
-    public var destinationPort: Port? {
+    open var destinationPort: Port? {
         return nil
     }
 
@@ -69,20 +69,20 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
      - throws: Never throws.
      */
-    public func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?) throws {
+    open func connectTo(_ host: String, port: Int, enableTLS: Bool, tlsSettings: [AnyHashable: Any]?) throws {
         let endpoint = NWHostEndpoint(hostname: host, port: "\(port)")
         let tlsParameters = NWTLSParameters()
         if let tlsSettings = tlsSettings as? [String: AnyObject] {
-            tlsParameters.setValuesForKeysWithDictionary(tlsSettings)
+            tlsParameters.setValuesForKeys(tlsSettings)
         }
 
-        guard let connection = RawSocketFactory.TunnelProvider?.createTCPConnectionToEndpoint(endpoint, enableTLS: enableTLS, TLSParameters: tlsParameters, delegate: nil) else {
+        guard let connection = RawSocketFactory.TunnelProvider?.createTCPConnection(to: endpoint, enableTLS: enableTLS, tlsParameters: tlsParameters, delegate: nil) else {
             // This should only happen when the extension is already stoped and `RawSocketFactory.TunnelProvider` is set to `nil`.
             return
         }
 
         self.connection = connection
-        connection.addObserver(self, forKeyPath: "state", options: [.Initial, .New], context: nil)
+        connection.addObserver(self, forKeyPath: "state", options: [.initial, .new], context: nil)
     }
 
     /**
@@ -90,8 +90,8 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
      The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
-    public func disconnect() {
-        if connection == nil  || connection!.state == .Cancelled {
+    open func disconnect() {
+        if connection == nil  || connection!.state == .cancelled {
             delegate?.didDisconnect(self)
         } else {
             closeAfterWriting = true
@@ -102,8 +102,8 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     /**
      Disconnect the socket immediately.
      */
-    public func forceDisconnect() {
-        if connection == nil  || connection!.state == .Cancelled {
+    open func forceDisconnect() {
+        if connection == nil  || connection!.state == .cancelled {
             delegate?.didDisconnect(self)
         } else {
             cancel()
@@ -117,7 +117,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    public func writeData(data: NSData, withTag tag: Int) {
+    open func writeData(_ data: Data, withTag tag: Int) {
         sendData(data, withTag: tag)
     }
 
@@ -127,7 +127,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataWithTag(tag: Int) {
+    open func readDataWithTag(_ tag: Int) {
         connection!.readMinimumLength(0, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
@@ -145,7 +145,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter tag:    The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataToLength(length: Int, withTag tag: Int) {
+    open func readDataToLength(_ length: Int, withTag tag: Int) {
         connection!.readLength(length) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
@@ -163,7 +163,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataToData(data: NSData, withTag tag: Int) {
+    open func readDataToData(_ data: Data, withTag tag: Int) {
         readDataToData(data, withTag: tag, maxLength: 0)
     }
 
@@ -179,7 +179,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - parameter maxLength: The max length of data to scan for the pattern.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
+    open func readDataToData(_ data: Data, withTag tag: Int, maxLength: Int) {
         var maxLength = maxLength
         if maxLength == 0 {
             maxLength = Opt.MAXNWTCPScanLength
@@ -189,23 +189,23 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         readDataWithTag(NWTCPSocket.ScannerReadTag)
     }
 
-    private func queueCall(block: ()->()) {
-        dispatch_async(queue, block)
+    fileprivate func queueCall(_ block: @escaping ()->()) {
+        queue.async(execute: block)
     }
 
-    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         guard keyPath == "state" else {
             return
         }
 
         switch connection!.state {
-        case .Connected:
+        case .connected:
             queueCall {
                 self.delegate?.didConnect(self)
             }
-        case .Disconnected:
+        case .disconnected:
             cancel()
-        case .Cancelled:
+        case .cancelled:
             queueCall {
                 let delegate = self.delegate
                 self.delegate = nil
@@ -216,7 +216,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         }
     }
 
-    private func readCallback(data: NSData?, tag: Int) {
+    fileprivate func readCallback(_ data: Data?, tag: Int) {
         queueCall {
             guard let data = self.consumeReadData(data) else {
                 // remote read is closed, but this is okay, nothing need to be done, if this socket is read again, then error occurs.
@@ -244,7 +244,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         }
     }
 
-    private func sendData(data: NSData, withTag tag: Int) {
+    fileprivate func sendData(_ data: Data, withTag tag: Int) {
         writePending = true
         self.connection!.write(data) { error in
             self.writePending = false
@@ -262,7 +262,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         }
     }
 
-    private func consumeReadData(data: NSData?) -> NSData? {
+    fileprivate func consumeReadData(_ data: Data?) -> Data? {
         defer {
             readDataPrefix = nil
         }
@@ -275,16 +275,16 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             return readDataPrefix
         }
 
-        let wholeData = NSMutableData(data: readDataPrefix!)
-        wholeData.appendData(data!)
-        return NSData(data: wholeData)
+        var wholeData = readDataPrefix!
+        wholeData.append(data!)
+        return wholeData
     }
 
-    private func cancel() {
+    fileprivate func cancel() {
         connection?.cancel()
     }
 
-    private func checkStatus() {
+    fileprivate func checkStatus() {
         if closeAfterWriting && !writePending {
             cancel()
         }

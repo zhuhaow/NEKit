@@ -1,16 +1,16 @@
 import Foundation
 
-public class RejectAdapter: AdapterSocket {
-    public let delay: Int
+open class RejectAdapter: AdapterSocket {
+    open let delay: Int
 
     public init(delay: Int) {
         self.delay = delay
     }
 
-    override func openSocketWithRequest(request: ConnectRequest) {
+    override func openSocketWithRequest(_ request: ConnectRequest) {
         super.openSocketWithRequest(request)
 
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC) * Int64(delay)), queue) {
+        queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(NSEC_PER_MSEC) * Int64(delay)) / Double(NSEC_PER_SEC)) {
             [weak self] in
             self?.disconnect()
         }
@@ -20,18 +20,18 @@ public class RejectAdapter: AdapterSocket {
     /**
      Disconnect the socket elegantly.
      */
-    public override func disconnect() {
-        observer?.signal(.DisconnectCalled(self))
-        state = .Closed
+    open override func disconnect() {
+        observer?.signal(.disconnectCalled(self))
+        state = .closed
         delegate?.didDisconnect(self)
     }
 
     /**
      Disconnect the socket immediately.
      */
-    public override func forceDisconnect() {
-        observer?.signal(.ForceDisconnectCalled(self))
-        state = .Closed
+    open override func forceDisconnect() {
+        observer?.signal(.forceDisconnectCalled(self))
+        state = .closed
         delegate?.didDisconnect(self)
     }
 

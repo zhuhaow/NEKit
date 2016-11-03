@@ -1,15 +1,15 @@
 import Foundation
 
 /// The rule matches the ip of the target hsot to a list of IP ranges.
-public class IPRangeListRule: Rule {
-    private let adapterFactory: AdapterFactory
+open class IPRangeListRule: Rule {
+    fileprivate let adapterFactory: AdapterFactory
 
-    public override var description: String {
+    open override var description: String {
         return "<IPRangeList>"
     }
 
     /// The list of regular expressions to match to.
-    public var ranges: [IPRange] = []
+    open var ranges: [IPRange] = []
 
     /**
      Create a new `IPRangeListRule` instance.
@@ -35,22 +35,22 @@ public class IPRangeListRule: Rule {
 
      - returns: The result of match.
      */
-    override func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
-        guard type == .IP else {
-            return .Unknown
+    override func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+        guard type == .ip else {
+            return .unknown
         }
 
         // Probably we should match all answers?
         guard let ip = session.realIP else {
-            return .Pass
+            return .pass
         }
 
         for range in ranges {
             if range.inRange(ip) {
-                return .Fake
+                return .fake
             }
         }
-        return .Pass
+        return .pass
     }
 
     /**
@@ -60,7 +60,7 @@ public class IPRangeListRule: Rule {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(request: ConnectRequest) -> AdapterFactory? {
+    override func match(_ request: ConnectRequest) -> AdapterFactory? {
         guard let ip = IPv4Address(fromString: request.ipAddress) else {
             return nil
         }

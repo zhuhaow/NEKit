@@ -2,14 +2,19 @@ import Foundation
 import CommonCrypto
 
 public struct MD5Hash {
-    public static func final(value: String) -> NSData {
-        let data = value.dataUsingEncoding(NSUTF8StringEncoding)!
+    public static func final(_ value: String) -> Data {
+        let data = value.data(using: String.Encoding.utf8)!
         return final(data)
     }
 
-    public static func final(value: NSData) -> NSData {
-        let result = NSMutableData(length: Int(CC_MD5_DIGEST_LENGTH))!
-        CC_MD5(value.bytes, CC_LONG(value.length), UnsafeMutablePointer<UInt8>(result.mutableBytes))
-        return NSData(data: result)
+    public static func final(_ value: Data) -> Data {
+        var result = Data(count: Int(CC_MD5_DIGEST_LENGTH))
+        _ = value.withUnsafeRawPointer { v in
+            result.withUnsafeMutableBytes { res in
+                CC_MD5(v, CC_LONG(value.count), res)
+            }
+        }
+
+        return result
     }
 }

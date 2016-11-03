@@ -1,10 +1,10 @@
 import Foundation
 import MMDB
 
-public class GeoIP {
-    public static let database = MMDB()
+open class GeoIP {
+    open static let database = MMDB()!
 
-    public static func LookUp(ipAddress: String) -> MMDBCountry? {
-        return GeoIP.database?.lookup(ipAddress)
+    open static func LookUp(_ ipAddress: String) -> MMDBCountry? {
+        return GeoIP.database.lookup(ipAddress)
     }
 }

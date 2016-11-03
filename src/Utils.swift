@@ -2,36 +2,36 @@ import Foundation
 
 public struct Utils {
     public struct HTTPData {
-        public static let DoubleCRLF = "\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
-        public static let CRLF = "\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
-        public static let ConnectSuccessResponse = "HTTP/1.1 200 Connection Established\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
+        public static let DoubleCRLF = "\r\n\r\n".data(using: String.Encoding.utf8)!
+        public static let CRLF = "\r\n".data(using: String.Encoding.utf8)!
+        public static let ConnectSuccessResponse = "HTTP/1.1 200 Connection Established\r\n\r\n".data(using: String.Encoding.utf8)!
     }
 
     public struct DNS {
         // swiftlint:disable:next nesting
         public enum QueryType {
             // swiftlint:disable:next type_name
-            case A, AAAA, UNSPEC
+            case a, aaaa, unspec
         }
 
-        public static func resolve(name: String, type: QueryType = .UNSPEC) -> String {
-            let remoteHostEnt = gethostbyname2((name as NSString).UTF8String, AF_INET)
+        public static func resolve(_ name: String, type: QueryType = .unspec) -> String {
+            let remoteHostEnt = gethostbyname2((name as NSString).utf8String, AF_INET)
 
             if remoteHostEnt == nil {
                 return ""
             }
 
-            let remoteAddr = UnsafeMutablePointer<Void>(remoteHostEnt.memory.h_addr_list[0])
+            let remoteAddr = UnsafeMutableRawPointer(remoteHostEnt?.pointee.h_addr_list[0])
 
-            var output = [Int8](count: Int(INET6_ADDRSTRLEN), repeatedValue: 0)
+            var output = [Int8](repeating: 0, count: Int(INET6_ADDRSTRLEN))
             inet_ntop(AF_INET, remoteAddr, &output, socklen_t(INET6_ADDRSTRLEN))
-            return NSString(UTF8String: output)! as String
+            return NSString(utf8String: output)! as String
         }
     }
 
     // swiftlint:disable:next type_name
     public struct IP {
-        public static func isIPv4(ipAddress: String) -> Bool {
+        public static func isIPv4(_ ipAddress: String) -> Bool {
             if IPv4ToInt(ipAddress) != nil {
                 return true
             } else {
@@ -39,18 +39,18 @@ public struct Utils {
             }
         }
 
-        public static func isIPv6(ipAddress: String) -> Bool {
-            let utf8Str = (ipAddress as NSString).UTF8String
-            var dst = [UInt8](count: 16, repeatedValue: 0)
+        public static func isIPv6(_ ipAddress: String) -> Bool {
+            let utf8Str = (ipAddress as NSString).utf8String
+            var dst = [UInt8](repeating: 0, count: 16)
             return inet_pton(AF_INET6, utf8Str, &dst) == 1
         }
 
-        public static func isIP(ipAddress: String) -> Bool {
+        public static func isIP(_ ipAddress: String) -> Bool {
             return isIPv4(ipAddress) || isIPv6(ipAddress)
         }
 
-        public static func IPv4ToInt(ipAddress: String) -> UInt32? {
-            let utf8Str = (ipAddress as NSString).UTF8String
+        public static func IPv4ToInt(_ ipAddress: String) -> UInt32? {
+            let utf8Str = (ipAddress as NSString).utf8String
             var dst = in_addr(s_addr: 0)
             if inet_pton(AF_INET, utf8Str, &(dst.s_addr)) == 1 {
                 return UInt32(dst.s_addr)
@@ -59,19 +59,19 @@ public struct Utils {
             }
         }
 
-        public static func IPv4ToBytes(ipAddress: String) -> [UInt8]? {
+        public static func IPv4ToBytes(_ ipAddress: String) -> [UInt8]? {
             if let ipv4int = IPv4ToInt(ipAddress) {
-                return Utils.toByteArray(ipv4int).reverse()
+                return Utils.toByteArray(ipv4int).reversed()
             } else {
                 return nil
             }
         }
 
-        public static func IPv6ToBytes(ipAddress: String) -> [UInt8]? {
-            let utf8Str = (ipAddress as NSString).UTF8String
-            var dst = [UInt8](count: 16, repeatedValue: 0)
+        public static func IPv6ToBytes(_ ipAddress: String) -> [UInt8]? {
+            let utf8Str = (ipAddress as NSString).utf8String
+            var dst = [UInt8](repeating: 0, count: 16)
             if inet_pton(AF_INET6, utf8Str, &dst) == 1 {
-                return Utils.toByteArray(dst).reverse()
+                return Utils.toByteArray(dst).reversed()
             } else {
                 return nil
             }
@@ -80,7 +80,7 @@ public struct Utils {
 
     struct GeoIPLookup {
 
-        static func Lookup(ipAddress: String) -> String? {
+        static func Lookup(_ ipAddress: String) -> String? {
             if Utils.IP.isIP(ipAddress) {
                 guard let result = GeoIP.LookUp(ipAddress) else {
                     return "--"
@@ -92,10 +92,10 @@ public struct Utils {
         }
     }
 
-    static func toByteArray<T>(value: T) -> [UInt8] {
+    static func toByteArray<T>(_ value: T) -> [UInt8] {
         var value = value
-        return withUnsafePointer(&value) {
-            Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>($0), count: sizeof(T)))
+        return withUnsafeBytes(of: &value) {
+            Array($0)
         }
     }
 }

@@ -1,29 +1,24 @@
 import Foundation
 import CocoaLumberjackSwift
 
-public class DNSMessage {
+open class DNSMessage {
     //    var sourceAddress: IPv4Address?
     //    var sourcePort: Port?
     //    var destinationAddress: IPv4Address?
     //    var destinationPort: Port?
-    public var transactionID: UInt16 = 0
-    public var messageType: DNSMessageType = .Query
-    public var authoritative: Bool = false
-    public var truncation: Bool = false
-    public var recursionDesired: Bool = false
-    public var recursionAvailable: Bool = false
-    public var status: DNSReturnStatus = .Success
-    public var queries: [DNSQuery] = []
-    public var answers: [DNSResource] = []
-    public var nameservers: [DNSResource] = []
-    public var addtionals: [DNSResource] = []
+    open var transactionID: UInt16 = 0
+    open var messageType: DNSMessageType = .query
+    open var authoritative: Bool = false
+    open var truncation: Bool = false
+    open var recursionDesired: Bool = false
+    open var recursionAvailable: Bool = false
+    open var status: DNSReturnStatus = .success
+    open var queries: [DNSQuery] = []
+    open var answers: [DNSResource] = []
+    open var nameservers: [DNSResource] = []
+    open var addtionals: [DNSResource] = []
 
-    var payload: NSData!
-
-    var mutablePayload: NSMutableData {
-        // swiftlint:disable:next force_cast
-        return payload as! NSMutableData
-    }
+    var payload: Data!
 
     var bytesLength: Int {
         var len = 12 + queries.reduce(0) {
@@ -56,7 +51,7 @@ public class DNSMessage {
 
     init() {}
 
-    init?(payload: NSData) {
+    init?(payload: Data) {
         self.payload = payload
         let scanner = BinaryDataScanner(data: payload, littleEndian: false)
 
@@ -64,9 +59,9 @@ public class DNSMessage {
 
         var bytes = scanner.readByte()!
         if bytes & 0x80 > 0 {
-            messageType = .Response
+            messageType = .response
         } else {
-            messageType = .Query
+            messageType = .query
         }
 
         // ignore OP code
@@ -81,7 +76,7 @@ public class DNSMessage {
             self.status = status
         } else {
             DDLogError("Received DNS response with unknown status: \(bytes & 0x0F).")
-            self.status = .ServerFailure
+            self.status = .serverFailure
         }
 
         let queryCount = scanner.read16()!
@@ -91,28 +86,28 @@ public class DNSMessage {
 
         for _ in 0..<queryCount {
             queries.append(DNSQuery(payload: payload, offset: scanner.position, base: 0)!)
-            scanner.advanceBy(queries.last!.bytesLength)
+            scanner.advance(by: queries.last!.bytesLength)
         }
 
         for _ in 0..<answerCount {
             answers.append(DNSResource(payload: payload, offset: scanner.position, base: 0)!)
-            scanner.advanceBy(answers.last!.bytesLength)
+            scanner.advance(by: answers.last!.bytesLength)
         }
 
         for _ in 0..<nameserverCount {
             nameservers.append(DNSResource(payload: payload, offset: scanner.position, base: 0)!)
-            scanner.advanceBy(nameservers.last!.bytesLength)
+            scanner.advance(by: nameservers.last!.bytesLength)
         }
 
         for _ in 0..<addtionalCount {
             addtionals.append(DNSResource(payload: payload, offset: scanner.position, base: 0)!)
-            scanner.advanceBy(addtionals.last!.bytesLength)
+            scanner.advance(by: addtionals.last!.bytesLength)
         }
 
     }
 
     func buildMessage() -> Bool {
-        payload = NSMutableData(length: bytesLength)
+        payload = Data(count: bytesLength)
         if transactionID == 0 {
             transactionID = UInt16(arc4random_uniform(UInt32(UInt16.max)))
         }
@@ -120,10 +115,10 @@ public class DNSMessage {
         var byte: UInt8 = 0
         byte += messageType.rawValue << 7
         if authoritative {
-            byte += 1 << 2
+            byte += 4
         }
         if truncation {
-            byte += 1 << 1
+            byte += 2
         }
         if recursionDesired {
             byte += 1
@@ -131,7 +126,7 @@ public class DNSMessage {
         setPayloadWithUInt8(byte, at: 2)
         byte = 0
         if recursionAvailable {
-            byte += 1 << 7
+            byte += 128
         }
 
         byte += status.rawValue
@@ -146,45 +141,53 @@ public class DNSMessage {
     }
 
     // swiftlint:disable variable_name
-    func setPayloadWithUInt8(value: UInt8, at: Int) {
+    func setPayloadWithUInt8(_ value: UInt8, at: Int) {
         var v = value
-        mutablePayload.replaceBytesInRange(NSRange(location: at, length: 1), withBytes: &v)
+        withUnsafeBytes(of: &v) {
+            payload.replaceSubrange(at..<at+1, with: $0)
+        }
     }
 
-    func setPayloadWithUInt16(value: UInt16, at: Int, swap: Bool = false) {
+    func setPayloadWithUInt16(_ value: UInt16, at: Int, swap: Bool = false) {
         var v: UInt16
         if swap {
             v = NSSwapHostShortToBig(value)
         } else {
             v = value
         }
-        mutablePayload.replaceBytesInRange(NSRange(location: at, length: 2), withBytes: &v)
+        withUnsafeBytes(of: &v) {
+            payload.replaceSubrange(at..<at+2, with: $0)
+        }
     }
 
-    func setPayloadWithUInt32(value: UInt32, at: Int, swap: Bool = false) {
+    func setPayloadWithUInt32(_ value: UInt32, at: Int, swap: Bool = false) {
         var v: UInt32
         if swap {
             v = NSSwapHostIntToBig(value)
         } else {
             v = value
         }
-        mutablePayload.replaceBytesInRange(NSRange(location: at, length: 4), withBytes: &v)
+        withUnsafeBytes(of: &v) {
+            payload.replaceSubrange(at..<at+4, with: $0)
+        }
     }
 
-    func setPayloadWithData(data: NSData, at: Int, length: Int? = nil, from: Int = 0) {
+    func setPayloadWithData(_ data: Data, at: Int, length: Int? = nil, from: Int = 0) {
         var length = length
         if length == nil {
-            length = data.length - from
+            length = data.count - from
         }
-        let pointer = data.bytes.advancedBy(from)
-        mutablePayload.replaceBytesInRange(NSRange(location: at, length: length!), withBytes: pointer)
+
+        payload.withUnsafeMutableBytes {
+            data.copyBytes(to: $0+at, from: from..<from+length!)
+        }
     }
 
-    func resetPayloadAt(at: Int, length: Int) {
-        mutablePayload.resetBytesInRange(NSRange(location: at, length: length))
+    func resetPayloadAt(_ at: Int, length: Int) {
+        payload.resetBytes(in: at..<at+length)
     }
 
-    private func writeAllRecordAt(at: Int) -> Bool {
+    fileprivate func writeAllRecordAt(_ at: Int) -> Bool {
         var position = at
         for query in queries {
             guard writeDNSQuery(query, at: position) else {
@@ -203,8 +206,8 @@ public class DNSMessage {
         return true
     }
 
-    private func writeDNSQuery(query: DNSQuery, at: Int) -> Bool {
-        guard DNSNameConverter.setName(query.name, toData: mutablePayload, at: at) else {
+    fileprivate func writeDNSQuery(_ query: DNSQuery, at: Int) -> Bool {
+        guard DNSNameConverter.setName(query.name, toData: &payload!, at: at) else {
             return false
         }
         setPayloadWithUInt16(query.type.rawValue, at: at + query.nameBytesLength, swap: true)
@@ -212,8 +215,8 @@ public class DNSMessage {
         return true
     }
 
-    private func writeDNSResource(resource: DNSResource, at: Int) -> Bool {
-        guard DNSNameConverter.setName(resource.name, toData: mutablePayload, at: at) else {
+    fileprivate func writeDNSResource(_ resource: DNSResource, at: Int) -> Bool {
+        guard DNSNameConverter.setName(resource.name, toData: &payload!, at: at) else {
             return false
         }
         setPayloadWithUInt16(resource.type.rawValue, at: at + resource.nameBytesLength, swap: true)
@@ -225,24 +228,24 @@ public class DNSMessage {
     }
 }
 
-public class DNSQuery {
-    public let name: String
-    public let type: DNSType
-    public let klass: DNSClass
+open class DNSQuery {
+    open let name: String
+    open let type: DNSType
+    open let klass: DNSClass
     let nameBytesLength: Int
 
-    init(name: String, type: DNSType = .A, klass: DNSClass = .Internet) {
-        self.name = name.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "."))
+    init(name: String, type: DNSType = .a, klass: DNSClass = .internet) {
+        self.name = name.trimmingCharacters(in: CharacterSet(charactersIn: "."))
         self.type = type
         self.klass = klass
         self.nameBytesLength = name.utf8.count + 2
     }
 
-    init?(payload: NSData, offset: Int, base: Int = 0) {
+    init?(payload: Data, offset: Int, base: Int = 0) {
         (self.name, self.nameBytesLength) = DNSNameConverter.getNamefromData(payload, offset: offset, base: base)
 
         let scanner = BinaryDataScanner(data: payload, littleEndian: false)
-        scanner.skipTo(offset + self.nameBytesLength)
+        scanner.skip(to: offset + self.nameBytesLength)
 
         guard let type = DNSType(rawValue: scanner.read16()!) else {
             DDLogError("Received DNS packet with unknown type.")
@@ -264,35 +267,35 @@ public class DNSQuery {
     }
 }
 
-public class DNSResource {
-    public let name: String
-    public let type: DNSType
-    public let klass: DNSClass
-    public let TTL: UInt32
+open class DNSResource {
+    open let name: String
+    open let type: DNSType
+    open let klass: DNSClass
+    open let TTL: UInt32
     let dataLength: UInt16
-    public let data: NSData
+    open let data: Data
 
     let nameBytesLength: Int
 
-    init(name: String, type: DNSType = .A, klass: DNSClass = .Internet, TTL: UInt32 = 300, data: NSData) {
+    init(name: String, type: DNSType = .a, klass: DNSClass = .internet, TTL: UInt32 = 300, data: Data) {
         self.name = name
         self.type = type
         self.klass = klass
         self.TTL = TTL
-        dataLength = UInt16(data.length)
+        dataLength = UInt16(data.count)
         self.data = data
         self.nameBytesLength = name.utf8.count + 2
     }
 
-    static func ARecord(name: String, TTL: UInt32 = 300, address: IPv4Address) -> DNSResource {
-        return DNSResource(name: name, type: .A, klass: .Internet, TTL: TTL, data: address.dataInNetworkOrder)
+    static func ARecord(_ name: String, TTL: UInt32 = 300, address: IPv4Address) -> DNSResource {
+        return DNSResource(name: name, type: .a, klass: .internet, TTL: TTL, data: address.dataInNetworkOrder)
     }
 
-    init?(payload: NSData, offset: Int, base: Int = 0) {
+    init?(payload: Data, offset: Int, base: Int = 0) {
         (self.name, self.nameBytesLength) = DNSNameConverter.getNamefromData(payload, offset: offset, base: base)
 
         let scanner = BinaryDataScanner(data: payload, littleEndian: false)
-        scanner.skipTo(offset + self.nameBytesLength)
+        scanner.skip(to: offset + self.nameBytesLength)
 
         guard let type = DNSType(rawValue: scanner.read16()!) else {
             DDLogError("Received DNS packet with unknown type.")
@@ -307,7 +310,7 @@ public class DNSResource {
         self.klass = klass
         self.TTL = scanner.read32()!
         dataLength = scanner.read16()!
-        self.data = payload.subdataWithRange(NSRange(location: scanner.position, length: Int(dataLength)))
+        self.data = payload.subdata(in: scanner.position..<scanner.position+Int(dataLength))
     }
 
     var bytesLength: Int {
@@ -315,39 +318,42 @@ public class DNSResource {
     }
 
     var ipv4Address: IPv4Address? {
-        guard type == .A else {
+        guard type == .a else {
             return nil
         }
-        return IPv4Address(fromBytesInNetworkOrder: data.bytes)
+        return IPv4Address(fromBytesInNetworkOrder: (data as NSData).bytes)
     }
 }
 
 class DNSNameConverter {
-    static func setName(name: String, toData data: NSMutableData, at: Int) -> Bool {
-        let labels = name.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "."))
+    static func setName(_ name: String, toData data: inout Data, at: Int) -> Bool {
+        let labels = name.components(separatedBy: CharacterSet(charactersIn: "."))
         var position = at
-        let headPointer = UnsafeMutablePointer<UInt8>(data.mutableBytes)
+
         for label in labels {
             let len = label.utf8.count
             guard len != 0 else {
                 // invalid domain name
                 return false
             }
-            headPointer.advancedBy(position).memory = UInt8(len)
-            position += 1
-            label.withCString {
-                // note the ending zero is ignored since the range does not contain it.
-                data.replaceBytesInRange(NSRange(location: position, length: len), withBytes: $0)
+            data.withUnsafeMutableBytes { (ptr: UnsafeMutablePointer<UInt8>) in
+                ptr.advanced(by: position).pointee = UInt8(len)
             }
+            position += 1
+
+
+            data.replaceSubrange(position..<position+len, with: label.data(using: .utf8)!)
             position += len
         }
-        headPointer.advancedBy(position).memory = 0
+        data.withUnsafeMutableBytes { (ptr: UnsafeMutablePointer<UInt8>) in
+            ptr.advanced(by: position).pointee = 0
+        }
         return true
     }
 
-    static func getNamefromData(data: NSData, offset: Int, base: Int = 0) -> (String, Int) {
+    static func getNamefromData(_ data: Data, offset: Int, base: Int = 0) -> (String, Int) {
         let scanner = BinaryDataScanner(data: data, littleEndian: false)
-        scanner.skipTo(offset)
+        scanner.skip(to: offset)
 
         var len: UInt8 = 0
         var name = ""
@@ -363,9 +369,9 @@ class DNSNameConverter {
                     nameBytesLength = 2 + currentReadBytes
                     jumped = true
                 }
-                scanner.skipTo(Int(length & 0x3FFF) + base)
+                scanner.skip(to: Int(length & 0x3FFF) + base)
             } else {
-                scanner.advanceBy(-2)
+                scanner.advance(by: -2)
             }
 
             len = scanner.readByte()!
@@ -375,18 +381,19 @@ class DNSNameConverter {
             }
 
             currentReadBytes += Int(len)
-            guard let label = NSString(bytes: scanner.current, length: Int(len), encoding: NSUTF8StringEncoding) else {
+
+            guard let label = String(bytes: scanner.data.subdata(in: scanner.position..<scanner.position+Int(len)), encoding: .utf8) else {
                 return ("", currentReadBytes)
             }
             // this is not efficient, but won't take much time, so maybe I'll optimize it later
-            name = name.stringByAppendingFormat(".%@", label)
-            scanner.advanceBy(Int(len))
+            name = name.appendingFormat(".%@", label)
+            scanner.advance(by: Int(len))
         } while true
 
         if !jumped {
             nameBytesLength = currentReadBytes
         }
 
-        return (name.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: ".")), nameBytesLength)
+        return (name.trimmingCharacters(in: CharacterSet(charactersIn: ".")), nameBytesLength)
     }
 }

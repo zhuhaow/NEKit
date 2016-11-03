@@ -10,7 +10,7 @@ public protocol RawTCPSocketProtocol : class {
     weak var delegate: RawTCPSocketDelegate? { get set }
 
     /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    var queue: dispatch_queue_t! { get set }
+    var queue: DispatchQueue! { get set }
 
     /// If the socket is connected.
     var isConnected: Bool { get }
@@ -37,7 +37,7 @@ public protocol RawTCPSocketProtocol : class {
 
      - throws: The error occured when connecting to host.
      */
-    func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?) throws
+    func connectTo(_ host: String, port: Int, enableTLS: Bool, tlsSettings: [AnyHashable: Any]?) throws
 
     /**
      Disconnect the socket.
@@ -62,7 +62,7 @@ public protocol RawTCPSocketProtocol : class {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    func writeData(data: NSData, withTag: Int)
+    func writeData(_ data: Data, withTag: Int)
 
     /**
      Read data from the socket.
@@ -70,7 +70,7 @@ public protocol RawTCPSocketProtocol : class {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataWithTag(tag: Int)
+    func readDataWithTag(_ tag: Int)
 
     /**
      Read specific length of data from the socket.
@@ -79,7 +79,7 @@ public protocol RawTCPSocketProtocol : class {
      - parameter tag:    The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToLength(length: Int, withTag tag: Int)
+    func readDataToLength(_ length: Int, withTag tag: Int)
 
     /**
      Read data until a specific pattern (including the pattern).
@@ -88,7 +88,7 @@ public protocol RawTCPSocketProtocol : class {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToData(data: NSData, withTag tag: Int)
+    func readDataToData(_ data: Data, withTag tag: Int)
 
     /**
      Read data until a specific pattern (including the pattern).
@@ -98,7 +98,7 @@ public protocol RawTCPSocketProtocol : class {
      - parameter maxLength: The max length of data to scan for the pattern.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataToData(data: NSData, withTag tag: Int, maxLength: Int)
+    func readDataToData(_ data: Data, withTag tag: Int, maxLength: Int)
 }
 
 /// The delegate protocol to handle the events from a raw TCP socket.
@@ -110,7 +110,7 @@ public protocol RawTCPSocketDelegate: class {
 
      - parameter socket: The socket which did disconnect.
      */
-    func didDisconnect(socket: RawTCPSocketProtocol)
+    func didDisconnect(_ socket: RawTCPSocketProtocol)
 
     /**
      The socket did read some data.
@@ -119,7 +119,7 @@ public protocol RawTCPSocketDelegate: class {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    func didReadData(data: NSData, withTag: Int, from: RawTCPSocketProtocol)
+    func didReadData(_ data: Data, withTag: Int, from: RawTCPSocketProtocol)
 
     /**
      The socket did send some data.
@@ -128,12 +128,12 @@ public protocol RawTCPSocketDelegate: class {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    func didWriteData(data: NSData?, withTag: Int, from: RawTCPSocketProtocol)
+    func didWriteData(_ data: Data?, withTag: Int, from: RawTCPSocketProtocol)
 
     /**
      The socket did connect to remote.
 
      - parameter socket: The connected socket.
      */
-    func didConnect(socket: RawTCPSocketProtocol)
+    func didConnect(_ socket: RawTCPSocketProtocol)
 }

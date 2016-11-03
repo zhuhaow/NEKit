@@ -17,7 +17,7 @@ public final class GCDSOCKS5ProxyServer: GCDProxyServer {
 
      - parameter socket: The accepted socket.
      */
-    override func handleNewGCDSocket(socket: GCDTCPSocket) {
+    override func handleNewGCDSocket(_ socket: GCDTCPSocket) {
         let proxySocket = SOCKS5ProxySocket(socket: socket)
         didAcceptNewSocket(proxySocket)
     }

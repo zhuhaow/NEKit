@@ -1,10 +1,10 @@
 import Foundation
 
 /// Represents the port number of IP protocol.
-public struct Port: CustomStringConvertible, Hashable, IntegerLiteralConvertible {
+public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiteral {
     public typealias IntegerLiteralType = UInt16
 
-    private var inport: UInt16
+    fileprivate var inport: UInt16
 
     /**
      Initialize a new instance with the port number in network byte order.
@@ -39,8 +39,8 @@ public struct Port: CustomStringConvertible, Hashable, IntegerLiteralConvertible
 
      - returns: The initailized port.
      */
-    public init(bytesInNetworkOrder: UnsafePointer<Void>) {
-        self.init(portInNetworkOrder: UnsafePointer<UInt16>(bytesInNetworkOrder).memory)
+    public init(bytesInNetworkOrder: UnsafeRawPointer) {
+        self.init(portInNetworkOrder: bytesInNetworkOrder.load(as: UInt16.self))
     }
 
     public var description: String {
@@ -68,8 +68,8 @@ public struct Port: CustomStringConvertible, Hashable, IntegerLiteralConvertible
 
      - returns: The value the block returns.
      */
-    public mutating func withUnsafeValuePointer<T>(block: (UnsafePointer<Void>) -> T) -> T {
-        return withUnsafePointer(&inport) {
+    public mutating func withUnsafeBufferPointer<T>(_ block: (UnsafeRawBufferPointer) -> T) -> T {
+        return withUnsafeBytes(of: &inport) {
             return block($0)
         }
     }

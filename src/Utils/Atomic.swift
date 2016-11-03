@@ -1,9 +1,9 @@
 import Foundation
 
 /// This is just a wrapper as a work around since there is no way to change a passed-in value in a block.
-public class Box<T> {
+open class Box<T> {
     /// The underlying value.
-    public var value: T
+    open var value: T
 
     /**
      Init the `Box`.
@@ -16,12 +16,12 @@ public class Box<T> {
 }
 
 /// Atomic provides thread-safety to access a variable.
-public class Atomic<T> {
-    private var _value: Box<T>
-    private let semaphore: dispatch_semaphore_t = dispatch_semaphore_create(1)
+open class Atomic<T> {
+    fileprivate var _value: Box<T>
+    fileprivate let semaphore: DispatchSemaphore = DispatchSemaphore(value: 1)
 
     /// The thread-safe variable.
-    public var value: T {
+    open var value: T {
         get {
             return withLock {
                 return self._value.value
@@ -60,17 +60,17 @@ public class Atomic<T> {
 
      - returns: Any value returned by the block.
      */
-    public func withBox<U>(block: (Box<T>) -> (U)) -> U {
+    open func withBox<U>(_ block: (Box<T>) -> (U)) -> U {
         return withLock {
             return block(self._value)
         }
     }
 
-    private func withLock<U>(block: () -> (U)) -> U {
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+    fileprivate func withLock<U>(_ block: () -> (U)) -> U {
+        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
 
         defer {
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
 
         return block()

@@ -1,34 +1,34 @@
 import Foundation
 
 /// The rule matches the host domain to a list of predefined criteria.
-public class DomainListRule: Rule {
+open class DomainListRule: Rule {
     public enum MatchCriterion {
-        case Regex(NSRegularExpression), Prefix(String), Suffix(String), Keyword(String), Complete(String)
+        case regex(NSRegularExpression), prefix(String), suffix(String), keyword(String), complete(String)
 
-        func match(domain: String) -> Bool {
+        func match(_ domain: String) -> Bool {
             switch self {
-            case .Regex(let regex):
-                return regex.firstMatchInString(domain, options: [], range: NSRange(location: 0, length: domain.utf8.count)) != nil
-            case .Prefix(let prefix):
+            case .regex(let regex):
+                return regex.firstMatch(in: domain, options: [], range: NSRange(location: 0, length: domain.utf8.count)) != nil
+            case .prefix(let prefix):
                 return domain.hasPrefix(prefix)
-            case .Suffix(let suffix):
+            case .suffix(let suffix):
                 return domain.hasSuffix(suffix)
-            case .Keyword(let keyword):
-                return domain.containsString(keyword)
-            case .Complete(let match):
+            case .keyword(let keyword):
+                return domain.contains(keyword)
+            case .complete(let match):
                 return domain == match
             }
         }
     }
 
-    private let adapterFactory: AdapterFactory
+    fileprivate let adapterFactory: AdapterFactory
 
-    public override var description: String {
+    open override var description: String {
         return "<DomainListRule>"
     }
 
     /// The list of criteria to match to.
-    public var matchCriteria: [MatchCriterion] = []
+    open var matchCriteria: [MatchCriterion] = []
 
     /**
      Create a new `DomainListRule` instance.
@@ -49,14 +49,14 @@ public class DomainListRule: Rule {
 
      - returns: The result of match.
      */
-    override func matchDNS(session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+    override func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
         if matchDomain(session.requestMessage.queries.first!.name) {
             if let _ = adapterFactory as? DirectAdapterFactory {
-                return .Real
+                return .real
             }
-            return .Fake
+            return .fake
         }
-        return .Pass
+        return .pass
     }
 
     /**
@@ -66,14 +66,14 @@ public class DomainListRule: Rule {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(request: ConnectRequest) -> AdapterFactory? {
+    override func match(_ request: ConnectRequest) -> AdapterFactory? {
         if matchDomain(request.host) {
             return adapterFactory
         }
         return nil
     }
 
-    private func matchDomain(domain: String) -> Bool {
+    fileprivate func matchDomain(_ domain: String) -> Bool {
         for criterion in matchCriteria {
             if criterion.match(domain) {
                 return true

@@ -1,8 +1,8 @@
 import Foundation
 
 
-public class ConnectResponse: CustomStringConvertible {
-    public var description: String {
-        return "<\(self.dynamicType)>"
+open class ConnectResponse: CustomStringConvertible {
+    open var description: String {
+        return "<\(type(of: self))>"
     }
 }

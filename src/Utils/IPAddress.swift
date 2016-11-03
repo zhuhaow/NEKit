@@ -3,13 +3,13 @@ import Foundation
 public protocol IPAddress: CustomStringConvertible {
     init?(fromString: String)
     init(fromBytesInNetworkOrder: [UInt8])
-    init(fromBytesInNetworkOrder: UnsafePointer<Void>)
+    init(fromBytesInNetworkOrder: UnsafeRawPointer)
 
-    var dataInNetworkOrder: NSData { get }
+    var dataInNetworkOrder: Data { get }
 }
 
-public class IPv4Address: IPAddress, Hashable {
-    private var _in_addr: in_addr
+open class IPv4Address: IPAddress, Hashable {
+    fileprivate var _in_addr: in_addr
 
     public init(fromInAddr: in_addr) {
         _in_addr = fromInAddr
@@ -19,8 +19,8 @@ public class IPv4Address: IPAddress, Hashable {
         _in_addr = in_addr(s_addr: NSSwapHostIntToBig(fromUInt32InHostOrder))
     }
 
-    required public init(fromBytesInNetworkOrder: UnsafePointer<Void>) {
-        _in_addr = UnsafePointer<in_addr>(fromBytesInNetworkOrder).memory
+    required public init(fromBytesInNetworkOrder: UnsafeRawPointer) {
+        _in_addr = fromBytesInNetworkOrder.load(as: in_addr.self)
     }
 
     required public init?(fromString: String) {
@@ -39,46 +39,42 @@ public class IPv4Address: IPAddress, Hashable {
     required public init(fromBytesInNetworkOrder: [UInt8]) {
         var inaddr: in_addr! = nil
         fromBytesInNetworkOrder.withUnsafeBufferPointer {
-            inaddr = UnsafePointer<in_addr>($0.baseAddress).memory
+            inaddr = UnsafeRawPointer($0.baseAddress!).load(as: in_addr.self)
         }
         _in_addr = inaddr
     }
 
     var presentation: String {
-        var buffer = [Int8](count: Int(INET_ADDRSTRLEN), repeatedValue: 0)
+        var buffer = [Int8](repeating: 0, count: Int(INET_ADDRSTRLEN))
         var addr = _in_addr
         let p = inet_ntop(AF_INET, &addr, &buffer, UInt32(INET_ADDRSTRLEN))
-        return String.fromCString(p)!
+        return String(cString: p!)
     }
 
-    public var description: String {
+    open var description: String {
         return "<IPv4Address \(presentation)>"
     }
 
-    public var hashValue: Int {
+    open var hashValue: Int {
         return _in_addr.s_addr.hashValue
     }
 
-    public var UInt32InHostOrder: UInt32 {
+    open var UInt32InHostOrder: UInt32 {
         return NSSwapBigIntToHost(_in_addr.s_addr)
     }
 
-    public var UInt32InNetworkOrder: UInt32 {
+    open var UInt32InNetworkOrder: UInt32 {
         return _in_addr.s_addr
     }
 
-    public func withBytesInNetworkOrder(block: (UnsafePointer<Void>) -> ()) {
-        withUnsafePointer(&_in_addr) {
+    open func withBytesInNetworkOrder(_ block: (UnsafeRawPointer) -> ()) {
+        withUnsafePointer(to: &_in_addr) {
             block($0)
         }
     }
 
-    public var dataInNetworkOrder: NSData {
-        var data: NSData! = nil
-        withBytesInNetworkOrder {
-            data = NSData(bytes: $0, length: sizeofValue(self._in_addr))
-        }
-        return data
+    open var dataInNetworkOrder: Data {
+        return Data(bytes: &_in_addr, count: MemoryLayout.size(ofValue: _in_addr))
     }
 }
 

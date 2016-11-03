@@ -1,27 +1,27 @@
 import Foundation
 
-public class ObserverFactory {
-    public static var currentFactory: ObserverFactory?
+open class ObserverFactory {
+    open static var currentFactory: ObserverFactory?
 
     public init() {}
 
-    public func getObserverForTunnel(tunnel: Tunnel) -> Observer<TunnelEvent>? {
+    open func getObserverForTunnel(_ tunnel: Tunnel) -> Observer<TunnelEvent>? {
         return nil
     }
 
-    public func getObserverForAdapterSocket(socket: AdapterSocket) -> Observer<AdapterSocketEvent>? {
+    open func getObserverForAdapterSocket(_ socket: AdapterSocket) -> Observer<AdapterSocketEvent>? {
         return nil
     }
 
-    public func getObserverForProxySocket(socket: ProxySocket) -> Observer<ProxySocketEvent>? {
+    open func getObserverForProxySocket(_ socket: ProxySocket) -> Observer<ProxySocketEvent>? {
         return nil
     }
 
-    public func getObserverForProxyServer(server: ProxyServer) -> Observer<ProxyServerEvent>? {
+    open func getObserverForProxyServer(_ server: ProxyServer) -> Observer<ProxyServerEvent>? {
         return nil
     }
 
-    public func getObserverForRuleManager(manager: RuleManager) -> Observer<RuleMatchEvent>? {
+    open func getObserverForRuleManager(_ manager: RuleManager) -> Observer<RuleMatchEvent>? {
         return nil
     }
 }

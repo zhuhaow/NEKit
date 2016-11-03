@@ -11,19 +11,19 @@ import Foundation
  */
 public enum SocketStatus {
     /// The socket is just created but never connects.
-    case Invalid,
+    case invalid,
 
     /// The socket is connecting.
-    Connecting,
+    connecting,
 
     /// The connection is established.
-    Established,
+    established,
 
     /// The socket is disconnecting.
-    Disconnecting,
+    disconnecting,
 
     /// The socket is closed.
-    Closed
+    closed
 }
 
 /// Protocol for socket with various functions.
@@ -39,7 +39,7 @@ public protocol SocketProtocol: class {
     var delegate: SocketDelegate? { get set }
 
     /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    var queue: dispatch_queue_t! { get set }
+    var queue: DispatchQueue! { get set }
 
     /// The current connection status of the socket.
     var state: SocketStatus { get set }
@@ -56,7 +56,7 @@ public protocol SocketProtocol: class {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataWithTag(tag: Int)
+    func readDataWithTag(_ tag: Int)
 
     /**
      Send data to remote.
@@ -65,7 +65,7 @@ public protocol SocketProtocol: class {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    func writeData(data: NSData, withTag tag: Int)
+    func writeData(_ data: Data, withTag tag: Int)
 
     /**
      Disconnect the socket elegantly.
@@ -85,7 +85,7 @@ public protocol SocketDelegate : class {
 
      - parameter socket: The connected socket.
      */
-    func didConnect(adapterSocket: AdapterSocket, withResponse: ConnectResponse)
+    func didConnect(_ adapterSocket: AdapterSocket, withResponse: ConnectResponse)
 
     /**
      The socket did disconnect.
@@ -94,7 +94,7 @@ public protocol SocketDelegate : class {
 
      - parameter socket: The socket which did disconnect.
      */
-    func didDisconnect(socket: SocketProtocol)
+    func didDisconnect(_ socket: SocketProtocol)
 
     /**
      The socket did read some data.
@@ -103,7 +103,7 @@ public protocol SocketDelegate : class {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    func didReadData(data: NSData, withTag: Int, from: SocketProtocol)
+    func didReadData(_ data: Data, withTag: Int, from: SocketProtocol)
 
     /**
      The socket did send some data.
@@ -112,14 +112,14 @@ public protocol SocketDelegate : class {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    func didWriteData(data: NSData?, withTag: Int, from: SocketProtocol)
+    func didWriteData(_ data: Data?, withTag: Int, from: SocketProtocol)
 
     /**
      The socket is ready to forward data back and forth.
 
      - parameter socket: The socket becomes ready to forward data.
      */
-    func readyToForward(socket: SocketProtocol)
+    func readyToForward(_ socket: SocketProtocol)
 
     /**
      Did receive a `ConnectRequest` from local that it is time to connect to remote.
@@ -127,12 +127,12 @@ public protocol SocketDelegate : class {
      - parameter request: The received `ConnectRequest`.
      - parameter from:    The socket where the `ConnectRequest` is received.
      */
-    func didReceiveRequest(request: ConnectRequest, from: ProxySocket)
+    func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket)
 
     /**
      The socket decided to use a new `AdapterSocket` to connect to remote.
 
      - parameter newAdapter: The new `AdapterSocket` to replace the old one.
      */
-    func updateAdapter(newAdapter: AdapterSocket)
+    func updateAdapter(_ newAdapter: AdapterSocket)
 }

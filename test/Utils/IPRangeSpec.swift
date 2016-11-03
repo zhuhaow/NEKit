@@ -5,11 +5,11 @@ import Nimble
 class IPRangeSpec: QuickSpec {
     override func spec() {
         let cidrWrongSamples = [
-            ("127.0.0.132", IPRangeError.InvalidCIDRFormat),
-            ("13.1242.1241.1/3", IPRangeError.InvalidCIDRFormat),
-            ("123.122.33.21/35", IPRangeError.InvalidCIDRFormat),
-            ("123.123.131.12/-1", IPRangeError.InvalidCIDRFormat),
-            ("123.123.131.12/", IPRangeError.InvalidCIDRFormat)
+            ("127.0.0.132", IPRangeError.invalidCIDRFormat),
+            ("13.1242.1241.1/3", IPRangeError.invalidCIDRFormat),
+            ("123.122.33.21/35", IPRangeError.invalidCIDRFormat),
+            ("123.123.131.12/-1", IPRangeError.invalidCIDRFormat),
+            ("123.123.131.12/", IPRangeError.invalidCIDRFormat)
         ]
 
         let cidrCorrectSamples = [
@@ -19,12 +19,12 @@ class IPRangeSpec: QuickSpec {
         ]
 
         let rangeWrongSamples = [
-            ("127.0.0.132", IPRangeError.InvalidRangeFormat),
-            ("13.1242.1241.1+3", IPRangeError.InvalidRangeFormat),
-            ("255.255.255.255+1", IPRangeError.RangeIsTooLarge),
-            ("0.0.0.1+4294967295", IPRangeError.RangeIsTooLarge),
-            ("123.123.131.12+", IPRangeError.InvalidRangeFormat),
-            ("12.124.51.23-1", IPRangeError.InvalidRangeFormat)
+            ("127.0.0.132", IPRangeError.invalidRangeFormat),
+            ("13.1242.1241.1+3", IPRangeError.invalidRangeFormat),
+            ("255.255.255.255+1", IPRangeError.rangeIsTooLarge),
+            ("0.0.0.1+4294967295", IPRangeError.rangeIsTooLarge),
+            ("123.123.131.12+", IPRangeError.invalidRangeFormat),
+            ("12.124.51.23-1", IPRangeError.invalidRangeFormat)
         ]
 
         let rangeCorrectSamples = [

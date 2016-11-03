@@ -1,5 +1,5 @@
 import Foundation
 
 public protocol StreamCryptoProtocol {
-    func update(data: NSData) -> NSData
+    func update(_ data: inout Data)
 }

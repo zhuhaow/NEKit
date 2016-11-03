@@ -2,14 +2,14 @@ import Foundation
 
 /// This adpater selects the fastest proxy automatically from a set of proxies.
 // TODO: Event support
-public class SpeedAdapter: AdapterSocket, SocketDelegate {
-    public var adapters: [(AdapterSocket, Int)]!
+open class SpeedAdapter: AdapterSocket, SocketDelegate {
+    open var adapters: [(AdapterSocket, Int)]!
     var connectingCount = 0
     var pendingCount = 0
 
-    private var _shouldConnect: Bool = true
+    fileprivate var _shouldConnect: Bool = true
 
-    override public var queue: dispatch_queue_t! {
+    override open var queue: DispatchQueue! {
         didSet {
             for (adapter, _) in adapters {
                 adapter.queue = queue
@@ -21,16 +21,16 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
         super.init()
     }
 
-    override func openSocketWithRequest(request: ConnectRequest) {
+    override func openSocketWithRequest(_ request: ConnectRequest) {
         // FIXME: This is a temporary workaround for wechat which uses a wrong way to detect ipv6 by itself.
-        if (request.isIPv6()) {
+        if request.isIPv6() {
             disconnect()
             return
         }
-        
+
         pendingCount = adapters.count
         for (adapter, delay) in adapters {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC) * Int64(delay)), queue) {
+            queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(NSEC_PER_MSEC) * Int64(delay)) / Double(NSEC_PER_SEC)) {
                 if self._shouldConnect {
                     adapter.delegate = self
                     adapter.openSocketWithRequest(request)
@@ -40,31 +40,31 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    override public func disconnect() {
+    override open func disconnect() {
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
             adapter.delegate = nil
-            if adapter.state != .Invalid {
+            if adapter.state != .invalid {
                 adapter.disconnect()
             }
         }
     }
 
-    override public func forceDisconnect() {
+    override open func forceDisconnect() {
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
             adapter.delegate = nil
-            if adapter.state != .Invalid {
+            if adapter.state != .invalid {
                 adapter.forceDisconnect()
             }
         }
     }
 
-    public func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {}
+    open func didConnect(_ adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {}
 
-    public func readyToForward(socket: SocketProtocol) {
+    open func readyToForward(_ socket: SocketProtocol) {
         guard let adapterSocket = socket as? AdapterSocket else {
             return
         }
@@ -75,7 +75,7 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
         for (adapter, _) in adapters {
             if adapter != adapterSocket {
                 adapter.delegate = nil
-                if adapter.state != .Invalid {
+                if adapter.state != .invalid {
                     adapter.forceDisconnect()
                 }
             }
@@ -87,7 +87,7 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
         delegate = nil
     }
 
-    public func didDisconnect(socket: SocketProtocol) {
+    open func didDisconnect(_ socket: SocketProtocol) {
         connectingCount -= 1
         if connectingCount == 0 && pendingCount == 0 {
             // failed to connect
@@ -96,8 +96,8 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
     }
 
 
-    public func didWriteData(data: NSData?, withTag: Int, from: SocketProtocol) {}
-    public func didReadData(data: NSData, withTag: Int, from: SocketProtocol) {}
-    public func updateAdapter(newAdapter: AdapterSocket) {}
-    public func didReceiveRequest(request: ConnectRequest, from: ProxySocket) {}
+    open func didWriteData(_ data: Data?, withTag: Int, from: SocketProtocol) {}
+    open func didReadData(_ data: Data, withTag: Int, from: SocketProtocol) {}
+    open func updateAdapter(_ newAdapter: AdapterSocket) {}
+    open func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket) {}
 }

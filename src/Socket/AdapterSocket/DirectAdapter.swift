@@ -1,7 +1,7 @@
 import Foundation
 
 /// This adapter connects to remote directly.
-public class DirectAdapter: AdapterSocket {
+open class DirectAdapter: AdapterSocket {
     /// If this is set to `false`, then the IP address will be resolved by system.
     var resolveHost = false
 
@@ -14,13 +14,13 @@ public class DirectAdapter: AdapterSocket {
 
      - parameter request: The connect request.
      */
-    override func openSocketWithRequest(request: ConnectRequest) {
+    override func openSocketWithRequest(_ request: ConnectRequest) {
         super.openSocketWithRequest(request)
-        
+
         do {
             try socket.connectTo(request.host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
         } catch let error {
-            observer?.signal(.ErrorOccured(error, on: self))
+            observer?.signal(.errorOccured(error, on: self))
             disconnect()
         }
     }
@@ -30,18 +30,18 @@ public class DirectAdapter: AdapterSocket {
 
      - parameter socket: The connected socket.
      */
-    override public func didConnect(socket: RawTCPSocketProtocol) {
+    override open func didConnect(_ socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
-        observer?.signal(.ReadyForForward(self))
+        observer?.signal(.readyForForward(self))
         delegate?.readyToForward(self)
     }
 
-    override public func didReadData(data: NSData, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
+    override open func didReadData(_ data: Data, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
         super.didReadData(data, withTag: tag, from: rawSocket)
         delegate?.didReadData(data, withTag: tag, from: self)
     }
 
-    override public func didWriteData(data: NSData?, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
+    override open func didWriteData(_ data: Data?, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
         super.didWriteData(data, withTag: tag, from: rawSocket)
         delegate?.didWriteData(data, withTag: tag, from: self)
     }

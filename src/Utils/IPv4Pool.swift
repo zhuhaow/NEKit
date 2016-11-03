@@ -20,8 +20,8 @@ public final class IPv4Pool {
         self.currentEnd = self.start
     }
 
-    private func enlargePool() -> Bool {
-        guard end - currentEnd > 0 else {
+    fileprivate func enlargePool() -> Bool {
+        guard end > currentEnd else {
             DDLogError("The Fake IP Pool is full and cannot be enlarged. Try to enlarge the size of fake ip pool in configuration.")
             return false
         }
@@ -47,11 +47,11 @@ public final class IPv4Pool {
         return IPv4Address(fromUInt32InHostOrder: pool.removeFirst())
     }
 
-    func releaseIP(ipAddress: IPv4Address) {
+    func releaseIP(_ ipAddress: IPv4Address) {
         pool.append(ipAddress.UInt32InHostOrder)
     }
 
-    func isInPool(ipAddress: IPv4Address) -> Bool {
+    func isInPool(_ ipAddress: IPv4Address) -> Bool {
         let addr = ipAddress.UInt32InHostOrder
         return addr >= start && addr < end
     }

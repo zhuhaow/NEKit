@@ -1,7 +1,7 @@
 import Foundation
 
 /// Factory building SOCKS5 adapter.
-public class SOCKS5AdapterFactory: ServerAdapterFactory {
+open class SOCKS5AdapterFactory: ServerAdapterFactory {
     override public init(serverHost: String, serverPort: Int) {
         super.init(serverHost: serverHost, serverPort: serverPort)
     }
@@ -13,7 +13,7 @@ public class SOCKS5AdapterFactory: ServerAdapterFactory {
 
      - returns: The built adapter.
      */
-    override func getAdapter(request: ConnectRequest) -> AdapterSocket {
+    override func getAdapter(_ request: ConnectRequest) -> AdapterSocket {
         let adapter = SOCKS5Adapter(serverHost: serverHost, serverPort: serverPort)
         adapter.socket = RawSocketFactory.getRawSocket()
         return adapter

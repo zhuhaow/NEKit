@@ -1,7 +1,7 @@
 import Foundation
 
 /// This class just forwards data directly. It is designed to work with tun2socks.
-public class DirectProxySocket: ProxySocket {
+open class DirectProxySocket: ProxySocket {
     /**
      Begin reading and processing data from the socket.
 
@@ -10,10 +10,10 @@ public class DirectProxySocket: ProxySocket {
     override func openSocket() {
         super.openSocket()
 
-        if let address = socket.destinationIPAddress, port = socket.destinationPort {
+        if let address = socket.destinationIPAddress, let port = socket.destinationPort {
             request = ConnectRequest(host: address.presentation, port: Int(port.value))
 
-            observer?.signal(.ReceivedRequest(request!, on: self))
+            observer?.signal(.receivedRequest(request!, on: self))
             delegate?.didReceiveRequest(request!, from: self)
         } else {
             forceDisconnect()
@@ -25,10 +25,10 @@ public class DirectProxySocket: ProxySocket {
 
      - parameter response: The response is ignored.
      */
-    override func respondToResponse(response: ConnectResponse) {
+    override func respondToResponse(_ response: ConnectResponse) {
         super.respondToResponse(response)
 
-        observer?.signal(ProxySocketEvent.ReadyForForward(self))
+        observer?.signal(ProxySocketEvent.readyForForward(self))
         delegate?.readyToForward(self)
     }
 
@@ -39,7 +39,7 @@ public class DirectProxySocket: ProxySocket {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    override public func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
+    override open func didReadData(_ data: Data, withTag tag: Int, from: RawTCPSocketProtocol) {
         super.didReadData(data, withTag: tag, from: from)
         delegate?.didReadData(data, withTag: tag, from: self)
     }
@@ -51,7 +51,7 @@ public class DirectProxySocket: ProxySocket {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    override public func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
+    override open func didWriteData(_ data: Data?, withTag tag: Int, from: RawTCPSocketProtocol) {
         super.didWriteData(data, withTag: tag, from: from)
         delegate?.didWriteData(data, withTag: tag, from: self)
     }

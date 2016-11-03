@@ -9,5 +9,5 @@ import Foundation
  - IP:     The IP address is resolved.
  */
 public enum DNSSessionMatchType {
-    case Domain, IP
+    case domain, ip
 }

@@ -10,25 +10,25 @@ public protocol NWUDPSocketDelegate: class {
      - parameter data: The data.
      - parameter from: The socket the data is read from.
      */
-    func didReceiveData(data: NSData, from: NWUDPSocket)
+    func didReceiveData(_ data: Data, from: NWUDPSocket)
 }
 
 /// The wrapper for NWUDPSession.
 ///
 /// - note: This class is thread-safe.
-public class NWUDPSocket {
-    private let session: NWUDPSession
-    private var pendingWriteData: [NSData] = []
-    private var writing = false
-    private let queue: dispatch_queue_t = dispatch_queue_create("NWUDPSocket.queue", DISPATCH_QUEUE_SERIAL)
+open class NWUDPSocket {
+    fileprivate let session: NWUDPSession
+    fileprivate var pendingWriteData: [Data] = []
+    fileprivate var writing = false
+    fileprivate let queue: DispatchQueue = DispatchQueue(label: "NWUDPSocket.queue", attributes: [])
 
     /// The delegate instance.
-    public weak var delegate: NWUDPSocketDelegate?
+    open weak var delegate: NWUDPSocketDelegate?
 
     /// The time when the last activity happens.
     ///
     /// Since UDP do not have a "close" semantic, this can be an indicator of timeout.
-    public var lastActive: NSDate = NSDate()
+    open var lastActive: Date = Date()
 
     /**
      Create a new UDP socket connecting to remote.
@@ -37,7 +37,7 @@ public class NWUDPSocket {
      - parameter port: The port.
      */
     init?(host: String, port: Int) {
-        guard let udpsession = RawSocketFactory.TunnelProvider?.createUDPSessionToEndpoint(NWHostEndpoint(hostname: host, port: "\(port)"), fromEndpoint: nil) else {
+        guard let udpsession = RawSocketFactory.TunnelProvider?.createUDPSession(to: NWHostEndpoint(hostname: host, port: "\(port)"), from: nil) else {
             return nil
         }
 
@@ -66,21 +66,21 @@ public class NWUDPSocket {
 
      - parameter data: The data to send.
      */
-    func writeData(data: NSData) {
-        dispatch_async(queue) {
+    func writeData(_ data: Data) {
+        queue.async {
             self.pendingWriteData.append(data)
             self.checkWrite()
         }
     }
 
     func disconnect() {
-        dispatch_async(queue) {
+        queue.async {
             self.session.cancel()
         }
     }
 
-    private func checkWrite() {
-        dispatch_async(queue) {
+    fileprivate func checkWrite() {
+        queue.async {
             self.updateActivityTimer()
 
             guard !self.writing else {
@@ -96,11 +96,11 @@ public class NWUDPSocket {
                 self.writing = false
                 self.checkWrite()
             }
-            self.pendingWriteData.removeAll(keepCapacity: true)
+            self.pendingWriteData.removeAll(keepingCapacity: true)
         }
     }
 
-    private func updateActivityTimer() {
-        lastActive = NSDate()
+    fileprivate func updateActivityTimer() {
+        lastActive = Date()
     }
 }

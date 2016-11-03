@@ -4,17 +4,17 @@ import tun2socks
 /// The TCP socket build upon `TSTCPSocket`.
 ///
 /// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
-public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
-    private let tsSocket: TSTCPSocket
-    private var readTag: Int?
-    private var pendingReadData: NSMutableData = NSMutableData()
-    private var writeTag: Int!
-    private var remainWriteLength: Int = 0
-    private var closeAfterWriting = false
+open class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
+    fileprivate let tsSocket: TSTCPSocket
+    fileprivate var readTag: Int?
+    fileprivate var pendingReadData: Data = Data()
+    fileprivate var writeTag: Int!
+    fileprivate var remainWriteLength: Int = 0
+    fileprivate var closeAfterWriting = false
 
-    private var scanner: StreamScanner?
+    fileprivate var scanner: StreamScanner?
 
-    private var readLength: Int?
+    fileprivate var readLength: Int?
 
     /**
      Initailize an instance with `TSTCPSocket`.
@@ -29,49 +29,49 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     // MARK: RawTCPSocketProtocol implemention
 
     /// The `RawTCPSocketDelegate` instance.
-    public weak var delegate: RawTCPSocketDelegate?
+    open weak var delegate: RawTCPSocketDelegate?
 
     /// Every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
     ///
     /// - warning: This should be set as soon as the instance is initialized.
-    public var queue: dispatch_queue_t!
+    open var queue: DispatchQueue!
 
     /// If the socket is connected.
-    public var isConnected: Bool {
+    open var isConnected: Bool {
         return tsSocket.isConnected
     }
 
     /// The source address.
-    public var sourceIPAddress: IPv4Address? {
+    open var sourceIPAddress: IPv4Address? {
         return IPv4Address(fromInAddr: tsSocket.sourceAddress)
     }
 
     /// The source port.
-    public var sourcePort: Port? {
+    open var sourcePort: Port? {
         return Port(port: tsSocket.sourcePort)
     }
 
     /// The destination address.
-    public var destinationIPAddress: IPv4Address? {
+    open var destinationIPAddress: IPv4Address? {
         return IPv4Address(fromInAddr: tsSocket.destinationAddress)
     }
 
     /// The destination port.
-    public var destinationPort: Port? {
+    open var destinationPort: Port? {
         return Port(port: tsSocket.destinationPort)
     }
 
     /**
      `TUNTCPSocket` cannot connect to anything actively, this is just a stub method.
      */
-    public func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [NSObject : AnyObject]?) throws {}
+    open func connectTo(_ host: String, port: Int, enableTLS: Bool, tlsSettings: [AnyHashable: Any]?) throws {}
 
     /**
      Disconnect the socket.
 
      The socket will disconnect elegantly after any queued writing data are successfully sent.
      */
-    public func disconnect() {
+    open func disconnect() {
         if !isConnected {
             delegate?.didDisconnect(self)
         } else {
@@ -83,7 +83,7 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     /**
      Disconnect the socket immediately.
      */
-    public func forceDisconnect() {
+    open func forceDisconnect() {
         if !isConnected {
             delegate?.didDisconnect(self)
         } else {
@@ -98,9 +98,9 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    public func writeData(data: NSData, withTag tag: Int) {
+    open func writeData(_ data: Data, withTag tag: Int) {
         writeTag = tag
-        remainWriteLength = data.length
+        remainWriteLength = data.count
         tsSocket.writeData(data)
     }
 
@@ -110,7 +110,7 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataWithTag(tag: Int) {
+    open func readDataWithTag(_ tag: Int) {
         readTag = tag
         checkReadData()
     }
@@ -122,7 +122,7 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter tag:    The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataToLength(length: Int, withTag tag: Int) {
+    open func readDataToLength(_ length: Int, withTag tag: Int) {
         readLength = length
         readTag = tag
         checkStatus()
@@ -135,7 +135,7 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataToData(data: NSData, withTag tag: Int) {
+    open func readDataToData(_ data: Data, withTag tag: Int) {
         readDataToData(data, withTag: tag, maxLength: 0)
     }
 
@@ -147,18 +147,18 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
      - parameter maxLength: Ignored since `GCDAsyncSocket` does not support this. The max length of data to scan for the pattern.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataToData(data: NSData, withTag tag: Int, maxLength: Int) {
+    open func readDataToData(_ data: Data, withTag tag: Int, maxLength: Int) {
         readTag = tag
         scanner = StreamScanner(pattern: data, maximumLength: maxLength)
         checkStatus()
     }
 
-    private func queueCall(block: ()->()) {
-        dispatch_async(queue, block)
+    fileprivate func queueCall(_ block: @escaping ()->()) {
+        queue.async(execute: block)
     }
 
-    private func checkReadData() {
-        if pendingReadData.length > 0 {
+    fileprivate func checkReadData() {
+        if pendingReadData.count > 0 {
             queueCall {
                 // the didReadData might change the `readTag`
                 guard let tag = self.readTag else {
@@ -167,9 +167,9 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
                 }
 
                 if let readLength = self.readLength {
-                    if self.pendingReadData.length >= readLength {
-                        let returnData = self.pendingReadData.subdataWithRange(NSRange(location: 0, length: readLength))
-                        self.pendingReadData = NSMutableData(data: self.pendingReadData.subdataWithRange(NSRange(location: readLength, length: self.pendingReadData.length - readLength)))
+                    if self.pendingReadData.count >= readLength {
+                        let returnData = self.pendingReadData.subdata(in: 0..<readLength)
+                        self.pendingReadData = self.pendingReadData.subdata(in: readLength..<self.pendingReadData.count)
 
                         self.readLength = nil
                         self.delegate?.didReadData(returnData, withTag: tag, from: self)
@@ -188,18 +188,18 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
                         return
                     }
 
-                    self.pendingReadData = NSMutableData(data: rest)
+                    self.pendingReadData = rest
                     self.delegate?.didReadData(matchData, withTag: tag, from: self)
                 } else {
                     self.readTag = nil
                     self.delegate?.didReadData(self.pendingReadData, withTag: tag, from: self)
-                    self.pendingReadData = NSMutableData()
+                    self.pendingReadData = Data()
                 }
             }
         }
     }
 
-    private func checkStatus() {
+    fileprivate func checkStatus() {
         if closeAfterWriting && remainWriteLength == 0 {
             forceDisconnect()
         }
@@ -209,33 +209,33 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     // The local stop sending anything.
     // Theoretically, the local may still be reading data from remote.
     // However, there is simply no way to know if the local is still open, so we can only assume that the local side close tx only when it decides that it does not need to read anymore.
-    public func localDidClose(socket: TSTCPSocket) {
+    open func localDidClose(_ socket: TSTCPSocket) {
         disconnect()
     }
 
-    public func socketDidReset(socket: TSTCPSocket) {
+    open func socketDidReset(_ socket: TSTCPSocket) {
         socketDidClose(socket)
     }
 
-    public func socketDidAbort(socket: TSTCPSocket) {
+    open func socketDidAbort(_ socket: TSTCPSocket) {
         socketDidClose(socket)
     }
 
-    public func socketDidClose(socket: TSTCPSocket) {
+    open func socketDidClose(_ socket: TSTCPSocket) {
         queueCall {
             self.delegate?.didDisconnect(self)
             self.delegate = nil
         }
     }
 
-    public func didReadData(data: NSData, from: TSTCPSocket) {
+    open func didReadData(_ data: Data, from: TSTCPSocket) {
         queueCall {
-            self.pendingReadData.appendData(data)
+            self.pendingReadData.append(data)
             self.checkReadData()
         }
     }
 
-    public func didWriteData(length: Int, from: TSTCPSocket) {
+    open func didWriteData(_ length: Int, from: TSTCPSocket) {
         queueCall {
             self.remainWriteLength -= length
             if self.remainWriteLength <= 0 {

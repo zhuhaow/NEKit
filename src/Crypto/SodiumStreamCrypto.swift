@@ -1,50 +1,63 @@
 import Foundation
 import Sodium
 
-public class SodiumStreamCrypto: StreamCryptoProtocol {
+open class SodiumStreamCrypto: StreamCryptoProtocol {
     public enum Alogrithm {
-        case Chacha20, Salsa20
+        case chacha20, salsa20
     }
 
-    public let key: NSData
-    public let iv: NSData
-    public let algorithm: Alogrithm
+    open let key: Data
+    open let iv: Data
+    open let algorithm: Alogrithm
 
     var counter = 0
 
     let blockSize = 64
 
-    public init(key: NSData, iv: NSData, algorithm: Alogrithm) {
-        Libsodium.initialized
+    public init(key: Data, iv: Data, algorithm: Alogrithm) {
+        _ = Libsodium.initialized
         self.key = key
         self.iv = iv
         self.algorithm = algorithm
     }
 
-    public func update(data: NSData) -> NSData {
+    open func update(_ data: inout Data) {
         let padding = counter % blockSize
 
-        var outputData: NSMutableData
+        var outputData: Data
         if padding == 0 {
-            outputData = NSMutableData(data: data)
+            outputData = data
         } else {
-            outputData = NSMutableData(length: data.length + padding)!
-            outputData.replaceBytesInRange(NSRange(location: padding, length: data.length), withBytes: data.bytes)
+            outputData = Data(count: data.count + padding)
+            outputData.replaceSubrange(padding..<padding + data.count, with: data)
         }
 
         switch algorithm {
-        case .Chacha20:
-            crypto_stream_chacha20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(outputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
-        case .Salsa20:
-            crypto_stream_salsa20_xor_ic(UnsafeMutablePointer<UInt8>(outputData.mutableBytes), UnsafePointer<UInt8>(outputData.bytes), UInt64(outputData.length), UnsafePointer<UInt8>(iv.bytes), UInt64(counter/blockSize), UnsafePointer<UInt8>(key.bytes))
+        case .chacha20:
+            _ = outputData.withUnsafeMutableBytes { outputPtr in
+                iv.withUnsafeBytes { ivPtr in
+                    key.withUnsafeBytes { keyPtr in
+                        crypto_stream_chacha20_xor_ic(outputPtr, outputPtr, UInt64(outputData.count), ivPtr, UInt64(counter/blockSize), keyPtr)
+                    }
+                }
+            }
+
+        case .salsa20:
+            _ = outputData.withUnsafeMutableBytes { outputPtr in
+                iv.withUnsafeBytes { ivPtr in
+                    key.withUnsafeBytes { keyPtr in
+                        crypto_stream_salsa20_xor_ic(outputPtr, outputPtr, UInt64(outputData.count), ivPtr, UInt64(counter/blockSize), keyPtr)
+                    }
+                }
+            }
         }
 
-        counter += data.length
+        counter += data.count
 
         if padding == 0 {
-            return outputData
+            data.replaceSubrange(0..<outputData.count, with: outputData)
         } else {
-            return outputData.subdataWithRange(NSRange(location: padding, length: data.length))
+            data.replaceSubrange(padding..<outputData.count, with: outputData)
         }
     }
 }

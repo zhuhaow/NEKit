@@ -1,21 +1,21 @@
 import Foundation
 
-public class HTTPProxySocket: ProxySocket {
+open class HTTPProxySocket: ProxySocket {
     /// The remote host to connect to.
-    public var destinationHost: String!
+    open var destinationHost: String!
 
     /// The remote port to connect to.
-    public var destinationPort: Int!
+    open var destinationPort: Int!
 
-    private var firstHeader: Bool = true
+    fileprivate var firstHeader: Bool = true
 
-    private var currentHeader: HTTPHeader!
+    fileprivate var currentHeader: HTTPHeader!
 
-    private var currentReadTag: Int!
+    fileprivate var currentReadTag: Int!
 
-    private let scanner: HTTPStreamScanner = HTTPStreamScanner()
+    fileprivate let scanner: HTTPStreamScanner = HTTPStreamScanner()
 
-    private var isConnect = false
+    fileprivate var isConnect = false
 
     /**
      Begin reading and processing data from the socket.
@@ -25,7 +25,7 @@ public class HTTPProxySocket: ProxySocket {
         socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: SocketTag.HTTP.Header)
     }
 
-    override public func readDataWithTag(tag: Int = SocketTag.Forward) {
+    override open func readDataWithTag(_ tag: Int = SocketTag.Forward) {
         currentReadTag = tag
 
         if firstHeader {
@@ -37,15 +37,15 @@ public class HTTPProxySocket: ProxySocket {
         }
 
         switch scanner.nextAction {
-        case .ReadContent(let length):
+        case .readContent(let length):
             if length > 0 {
                 socket.readDataToLength(length, withTag: SocketTag.HTTP.Content)
             } else {
                 socket.readDataWithTag(SocketTag.HTTP.Content)
             }
-        case .ReadHeader:
+        case .readHeader:
             socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: SocketTag.HTTP.Header)
-        case .Stop:
+        case .stop:
             disconnect()
         }
 
@@ -60,7 +60,7 @@ public class HTTPProxySocket: ProxySocket {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    override public func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
+    override open func didReadData(_ data: Data, withTag tag: Int, from: RawTCPSocketProtocol) {
         super.didReadData(data, withTag: tag, from: from)
 
         switch tag {
@@ -80,7 +80,7 @@ public class HTTPProxySocket: ProxySocket {
                 isConnect = currentHeader.isConnect
 
                 request = ConnectRequest(host: destinationHost!, port: destinationPort!)
-                observer?.signal(.ReceivedRequest(request!, on: self))
+                observer?.signal(.receivedRequest(request!, on: self))
                 delegate?.didReceiveRequest(request!, from: self)
             } else {
                 delegate?.didReadData(header.toData(), withTag: currentReadTag, from: self)
@@ -104,25 +104,25 @@ public class HTTPProxySocket: ProxySocket {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    override public func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
+    override open func didWriteData(_ data: Data?, withTag tag: Int, from: RawTCPSocketProtocol) {
         super.didWriteData(data, withTag: tag, from: from)
 
         if tag >= 0 {
             delegate?.didWriteData(data, withTag: tag, from: self)
         }
         if tag == SocketTag.HTTP.ConnectResponse {
-            observer?.signal(.ReadyForForward(self))
+            observer?.signal(.readyForForward(self))
             delegate?.readyToForward(self)
         }
     }
 
-    override func respondToResponse(response: ConnectResponse) {
+    override func respondToResponse(_ response: ConnectResponse) {
         super.respondToResponse(response)
 
         if isConnect {
             writeData(Utils.HTTPData.ConnectSuccessResponse, withTag: SocketTag.HTTP.ConnectResponse)
         } else {
-            observer?.signal(.ReadyForForward(self))
+            observer?.signal(.readyForForward(self))
             delegate?.readyToForward(self)
         }
     }

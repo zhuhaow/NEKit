@@ -10,34 +10,38 @@ public struct CryptoHelper {
         .RC4MD5: (16, 16)
         ]
 
-    public static func getKeyLength(methodType: CryptoAlgorithm) -> Int {
+    public static func getKeyLength(_ methodType: CryptoAlgorithm) -> Int {
         return infoDictionary[methodType]!.0
     }
 
-    public static func getIVLength(methodType: CryptoAlgorithm) -> Int {
+    public static func getIVLength(_ methodType: CryptoAlgorithm) -> Int {
         return infoDictionary[methodType]!.1
     }
 
-    public static func getIV(methodType: CryptoAlgorithm) -> NSData {
-        let IV = NSMutableData(length: getIVLength(methodType))!
-        SecRandomCopyBytes(kSecRandomDefault, IV.length, UnsafeMutablePointer<UInt8>(IV.mutableBytes))
+    public static func getIV(_ methodType: CryptoAlgorithm) -> Data {
+        var IV = Data(count: getIVLength(methodType))
+        _ = IV.withUnsafeMutableBytes {
+            SecRandomCopyBytes(kSecRandomDefault, IV.count, $0)
+        }
         return IV
     }
 
-    public static func getKey(password: String, methodType: CryptoAlgorithm) -> NSData {
-        let result = NSMutableData(length: getIVLength(methodType) + getKeyLength(methodType))!
-        let passwordData = password.dataUsingEncoding(NSUTF8StringEncoding)!
+    public static func getKey(_ password: String, methodType: CryptoAlgorithm) -> Data {
+        var result = Data(count: getIVLength(methodType) + getKeyLength(methodType))
+        let passwordData = password.data(using: String.Encoding.utf8)!
         var md5result = MD5Hash.final(password)
-        let extendPasswordData = NSMutableData(length: passwordData.length + md5result.length)!
-        passwordData.getBytes(extendPasswordData.mutableBytes + md5result.length, length: passwordData.length)
+        var extendPasswordData = Data(count: passwordData.count + md5result.count)
+
+        extendPasswordData.replaceSubrange(md5result.count..<extendPasswordData.count, with: passwordData)
+
         var length = 0
         repeat {
-            let copyLength = min(result.length - length, md5result.length)
-            md5result.getBytes(result.mutableBytes + length, length: copyLength)
-            extendPasswordData.replaceBytesInRange(NSRange(location: 0, length: md5result.length), withBytes: md5result.bytes)
+            let copyLength = min(result.count - length, md5result.count)
+            result.replaceSubrange(length..<length+copyLength, with: md5result)
+            extendPasswordData.replaceSubrange(0..<md5result.count, with: md5result)
             md5result = MD5Hash.final(extendPasswordData)
             length += copyLength
-        } while length < result.length
-        return result.subdataWithRange(NSRange(location: 0, length: getKeyLength(methodType)))
+        } while length < result.count
+        return result.subdata(in: 0..<getKeyLength(methodType))
     }
 }

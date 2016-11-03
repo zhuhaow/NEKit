@@ -2,13 +2,13 @@ import Foundation
 import CommonCrypto
 
 public enum CryptoOperation {
-    case Encrypt, Decrypt
+    case encrypt, decrypt
 
     public func toCCOperation() -> CCOperation {
         switch self {
-        case .Encrypt:
+        case .encrypt:
             return CCOperation(kCCEncrypt)
-        case .Decrypt:
+        case .decrypt:
             return CCOperation(kCCDecrypt)
         }
     }

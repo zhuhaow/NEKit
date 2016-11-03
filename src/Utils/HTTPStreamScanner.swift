@@ -2,10 +2,10 @@ import Foundation
 
 class HTTPStreamScanner {
     enum ReadAction {
-        case ReadHeader, ReadContent(Int), Stop
+        case readHeader, readContent(Int), stop
     }
 
-    var nextAction: ReadAction = .ReadHeader
+    var nextAction: ReadAction = .readHeader
 
     var remainContentLength: Int = 0
 
@@ -13,11 +13,11 @@ class HTTPStreamScanner {
 
     var isConnect: Bool = false
 
-    func input(data: NSData) -> (HTTPHeader?, NSData?) {
+    func input(_ data: Data) -> (HTTPHeader?, Data?) {
         switch nextAction {
-        case .ReadHeader:
+        case .readHeader:
             guard let header = HTTPHeader(headerData: data) else {
-                nextAction = .Stop
+                nextAction = .stop
                 return (nil, nil)
             }
 
@@ -38,29 +38,29 @@ class HTTPStreamScanner {
             setNextAction()
 
             return (header, nil)
-        case .ReadContent:
-            remainContentLength -= data.length
+        case .readContent:
+            remainContentLength -= data.count
             if !isConnect && remainContentLength < 0 {
-                nextAction = .Stop
+                nextAction = .stop
                 return (nil, nil)
             }
 
             setNextAction()
 
             return (nil, data)
-        case .Stop:
+        case .stop:
             return (nil, nil)
         }
     }
 
-    private func setNextAction() {
+    fileprivate func setNextAction() {
         switch remainContentLength {
         case 0:
-            nextAction = .ReadHeader
+            nextAction = .readHeader
         case -1:
-            nextAction = .ReadContent(-1)
+            nextAction = .readContent(-1)
         default:
-            nextAction = .ReadContent(min(remainContentLength, Opt.MAXHTTPContentBlockLength))
+            nextAction = .readContent(min(remainContentLength, Opt.MAXHTTPContentBlockLength))
         }
     }
 }

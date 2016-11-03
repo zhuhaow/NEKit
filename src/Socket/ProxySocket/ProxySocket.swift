@@ -1,18 +1,18 @@
 import Foundation
 
 /// The socket which encapsulates the logic to handle connection to proxies.
-public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
+open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /// Received `ConnectRequest`.
-    public var request: ConnectRequest?
+    open var request: ConnectRequest?
 
-    public var observer: Observer<ProxySocketEvent>?
+    open var observer: Observer<ProxySocketEvent>?
 
     /// If the socket is disconnected.
-    public var isDisconnected: Bool {
-        return state == .Closed || state == .Invalid
+    open var isDisconnected: Bool {
+        return state == .closed || state == .invalid
     }
 
-    public override var description: String {
+    open override var description: String {
         if let request = request {
             return "<\(type) host:\(request.host) port: \(request.port))>"
         } else {
@@ -20,7 +20,7 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         }
     }
 
-    public let type: String
+    open let type: String
 
     /**
      Init a `ProxySocket` with a raw TCP socket.
@@ -29,7 +29,7 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      */
     init(socket: RawTCPSocketProtocol) {
         self.socket = socket
-        type = "\(self.dynamicType)"
+        type = "\(type(of: self))"
 
         super.init()
 
@@ -41,7 +41,7 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Begin reading and processing data from the socket.
      */
     func openSocket() {
-        observer?.signal(.SocketOpened(self))
+        observer?.signal(.socketOpened(self))
     }
 
     /**
@@ -49,8 +49,8 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter response: The `ConnectResponse`.
      */
-    func respondToResponse(response: ConnectResponse) {
-        observer?.signal(.ReceivedResponse(response, on: self))
+    func respondToResponse(_ response: ConnectResponse) {
+        observer?.signal(.receivedResponse(response, on: self))
     }
 
     /**
@@ -59,7 +59,7 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    public func readDataWithTag(tag: Int) {
+    open func readDataWithTag(_ tag: Int) {
         socket.readDataWithTag(tag)
     }
 
@@ -70,7 +70,7 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    public func writeData(data: NSData, withTag tag: Int) {
+    open func writeData(_ data: Data, withTag tag: Int) {
         socket.writeData(data, withTag: tag)
     }
 
@@ -85,39 +85,39 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /**
      Disconnect the socket elegantly.
      */
-    public func disconnect() {
-        state = .Disconnecting
+    open func disconnect() {
+        state = .disconnecting
         socket.disconnect()
-        observer?.signal(.DisconnectCalled(self))
+        observer?.signal(.disconnectCalled(self))
     }
 
     /**
      Disconnect the socket immediately.
      */
-    public func forceDisconnect() {
-        state = .Disconnecting
+    open func forceDisconnect() {
+        state = .disconnecting
         socket.forceDisconnect()
-        observer?.signal(.ForceDisconnectCalled(self))
+        observer?.signal(.forceDisconnectCalled(self))
     }
 
 
     // MARK: SocketProtocol Implemention
 
     /// The underlying TCP socket transmitting data.
-    public var socket: RawTCPSocketProtocol!
+    open var socket: RawTCPSocketProtocol!
 
     /// The delegate instance.
-    weak public var delegate: SocketDelegate?
+    weak open var delegate: SocketDelegate?
 
     /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    public var queue: dispatch_queue_t! {
+    open var queue: DispatchQueue! {
         didSet {
             socket.queue = queue
         }
     }
 
     /// The current connection status of the socket.
-    public var state: SocketStatus = .Established
+    open var state: SocketStatus = .established
 
 
     // MARK: RawTCPSocketDelegate Protocol Implemention
@@ -126,9 +126,9 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The socket which did disconnect.
      */
-    public func didDisconnect(socket: RawTCPSocketProtocol) {
-        state = .Closed
-        observer?.signal(.Disconnected(self))
+    open func didDisconnect(_ socket: RawTCPSocketProtocol) {
+        state = .closed
+        observer?.signal(.disconnected(self))
         delegate?.didDisconnect(self)
     }
 
@@ -139,8 +139,8 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    public func didReadData(data: NSData, withTag tag: Int, from: RawTCPSocketProtocol) {
-        observer?.signal(.ReadData(data, tag: tag, on: self))
+    open func didReadData(_ data: Data, withTag tag: Int, from: RawTCPSocketProtocol) {
+        observer?.signal(.readData(data, tag: tag, on: self))
     }
 
     /**
@@ -150,8 +150,8 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    public func didWriteData(data: NSData?, withTag tag: Int, from: RawTCPSocketProtocol) {
-        observer?.signal(.WroteData(data, tag: tag, on: self))
+    open func didWriteData(_ data: Data?, withTag tag: Int, from: RawTCPSocketProtocol) {
+        observer?.signal(.wroteData(data, tag: tag, on: self))
     }
 
     /**
@@ -161,7 +161,7 @@ public class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The connected socket.
      */
-    public func didConnect(socket: RawTCPSocketProtocol) {
+    open func didConnect(_ socket: RawTCPSocketProtocol) {
 
     }
 

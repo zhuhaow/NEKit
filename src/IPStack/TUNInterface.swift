@@ -2,9 +2,9 @@ import Foundation
 import NetworkExtension
 
 /// TUN interface provide a scheme to register a set of IP Stacks (implementing `IPStackProtocol`) to process IP packets from a virtual TUN interface.
-public class TUNInterface {
-    private weak var packetFlow: NEPacketTunnelFlow?
-    private var stacks: [IPStackProtocol] = []
+open class TUNInterface {
+    fileprivate weak var packetFlow: NEPacketTunnelFlow?
+    fileprivate var stacks: [IPStackProtocol] = []
 
     /**
      Initialize TUN interface with a packet flow.
@@ -20,14 +20,14 @@ public class TUNInterface {
 
      A stopped interface should never start again. Create a new interface instead.
      */
-    public func start() {
+    open func start() {
         readPackets()
     }
 
     /**
      Stop processing packets, this should be called before releasing the interface.
      */
-    public func stop() {
+    open func stop() {
         packetFlow = nil
 
         for stack in stacks {
@@ -43,14 +43,14 @@ public class TUNInterface {
 
      - parameter stack: The IP stack to append to the stack list.
      */
-    public func registerStack(stack: IPStackProtocol) {
+    open func registerStack(_ stack: IPStackProtocol) {
         stack.outputFunc = generateOutputBlock()
         stacks.append(stack)
     }
 
-    private func readPackets() {
-        packetFlow?.readPacketsWithCompletionHandler { packets, versions in
-            for (i, packet) in packets.enumerate() {
+    fileprivate func readPackets() {
+        packetFlow?.readPackets { packets, versions in
+            for (i, packet) in packets.enumerated() {
                 for stack in self.stacks {
                     if stack.inputPacket(packet, version: versions[i]) {
                         break
@@ -62,7 +62,7 @@ public class TUNInterface {
     }
 
 
-    private func generateOutputBlock() -> ([NSData], [NSNumber]) -> () {
+    fileprivate func generateOutputBlock() -> ([Data], [NSNumber]) -> () {
         return { [weak self] packets, versions in
             self?.packetFlow?.writePackets(packets, withProtocols: versions)
         }

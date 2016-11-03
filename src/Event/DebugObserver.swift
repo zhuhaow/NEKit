@@ -1,112 +1,112 @@
 import Foundation
 import CocoaLumberjackSwift
 
-public class DebugObserverFactory: ObserverFactory {
+open class DebugObserverFactory: ObserverFactory {
     public override init() {}
 
-    override public func getObserverForTunnel(tunnel: Tunnel) -> Observer<TunnelEvent>? {
+    override open func getObserverForTunnel(_ tunnel: Tunnel) -> Observer<TunnelEvent>? {
         return DebugTunnelObserver()
     }
 
-    override public func getObserverForProxyServer(server: ProxyServer) -> Observer<ProxyServerEvent>? {
+    override open func getObserverForProxyServer(_ server: ProxyServer) -> Observer<ProxyServerEvent>? {
         return DebugProxyServerObserver()
     }
 
-    override public func getObserverForProxySocket(socket: ProxySocket) -> Observer<ProxySocketEvent>? {
+    override open func getObserverForProxySocket(_ socket: ProxySocket) -> Observer<ProxySocketEvent>? {
         return DebugProxySocketObserver()
     }
 
-    override public func getObserverForAdapterSocket(socket: AdapterSocket) -> Observer<AdapterSocketEvent>? {
+    override open func getObserverForAdapterSocket(_ socket: AdapterSocket) -> Observer<AdapterSocketEvent>? {
         return DebugAdapterSocketObserver()
     }
 
-    public override func getObserverForRuleManager(manager: RuleManager) -> Observer<RuleMatchEvent>? {
+    open override func getObserverForRuleManager(_ manager: RuleManager) -> Observer<RuleMatchEvent>? {
         return DebugRuleManagerObserver()
     }
 }
 
-public class DebugTunnelObserver: Observer<TunnelEvent> {
-    override public func signal(event: TunnelEvent) {
+open class DebugTunnelObserver: Observer<TunnelEvent> {
+    override open func signal(_ event: TunnelEvent) {
         switch event {
-        case .ReceivedRequest,
-             .Closed:
+        case .receivedRequest,
+             .closed:
             DDLogInfo("\(event)")
-        case .Opened,
-             .ConnectedToRemote,
-             .UpdatingAdapterSocket:
+        case .opened,
+             .connectedToRemote,
+             .updatingAdapterSocket:
             DDLogVerbose("\(event)")
-        case .CloseCalled,
-             .ForceCloseCalled,
-             .ReceivedReadySignal,
-             .ProxySocketReadData,
-             .ProxySocketWroteData,
-             .AdapterSocketReadData,
-             .AdapterSocketWroteData:
+        case .closeCalled,
+             .forceCloseCalled,
+             .receivedReadySignal,
+             .proxySocketReadData,
+             .proxySocketWroteData,
+             .adapterSocketReadData,
+             .adapterSocketWroteData:
             DDLogDebug("\(event)")
         }
     }
 }
 
-public class DebugProxySocketObserver: Observer<ProxySocketEvent> {
-    override public func signal(event: ProxySocketEvent) {
+open class DebugProxySocketObserver: Observer<ProxySocketEvent> {
+    override open func signal(_ event: ProxySocketEvent) {
         switch event {
-        case .ErrorOccured:
+        case .errorOccured:
             DDLogError("\(event)")
-        case .Disconnected,
-             .ReceivedRequest:
+        case .disconnected,
+             .receivedRequest:
             DDLogInfo("\(event)")
-        case .SocketOpened,
-             .ReceivedResponse,
-             .ReadyForForward:
+        case .socketOpened,
+             .receivedResponse,
+             .readyForForward:
             DDLogVerbose("\(event)")
-        case .DisconnectCalled,
-             .ForceDisconnectCalled,
-             .ReadData,
-             .WroteData:
+        case .disconnectCalled,
+             .forceDisconnectCalled,
+             .readData,
+             .wroteData:
             DDLogDebug("\(event)")
         }
     }
 }
 
-public class DebugAdapterSocketObserver: Observer<AdapterSocketEvent> {
-    override public func signal(event: AdapterSocketEvent) {
+open class DebugAdapterSocketObserver: Observer<AdapterSocketEvent> {
+    override open func signal(_ event: AdapterSocketEvent) {
         switch event {
-        case .ErrorOccured:
+        case .errorOccured:
             DDLogError("\(event)")
-        case .Disconnected,
-             .Connected:
+        case .disconnected,
+             .connected:
             DDLogInfo("\(event)")
-        case .SocketOpened,
-             .ReadyForForward:
+        case .socketOpened,
+             .readyForForward:
             DDLogVerbose("\(event)")
-        case .DisconnectCalled,
-             .ForceDisconnectCalled,
-             .ReadData,
-             .WroteData:
+        case .disconnectCalled,
+             .forceDisconnectCalled,
+             .readData,
+             .wroteData:
             DDLogDebug("\(event)")
         }
     }
 }
 
-public class DebugProxyServerObserver: Observer<ProxyServerEvent> {
-    override public func signal(event: ProxyServerEvent) {
+open class DebugProxyServerObserver: Observer<ProxyServerEvent> {
+    override open func signal(_ event: ProxyServerEvent) {
         switch event {
-        case .Started,
-             .Stopped:
+        case .started,
+             .stopped:
             DDLogInfo("\(event)")
-        case .NewSocketAccepted,
-             .TunnelClosed:
+        case .newSocketAccepted,
+             .tunnelClosed:
             DDLogVerbose("\(event)")
         }
     }
 }
 
-public class DebugRuleManagerObserver: Observer<RuleMatchEvent> {
-    public override func signal(event: RuleMatchEvent) {
+open class DebugRuleManagerObserver: Observer<RuleMatchEvent> {
+    open override func signal(_ event: RuleMatchEvent) {
         switch event {
-        case .RuleDidNotMatch, .DNSRuleMatched:
+        case .ruleDidNotMatch, .dnsRuleMatched:
             DDLogVerbose("\(event)")
-        case .RuleMatched:
+        case .ruleMatched:
             DDLogInfo("\(event)")
         }
     }

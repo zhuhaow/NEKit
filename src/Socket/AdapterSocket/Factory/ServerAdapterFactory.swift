@@ -1,7 +1,7 @@
 import Foundation
 
 /// Factory building adapter with proxy server host and port.
-public class ServerAdapterFactory: AdapterFactory {
+open class ServerAdapterFactory: AdapterFactory {
     let serverHost: String
     let serverPort: Int
 

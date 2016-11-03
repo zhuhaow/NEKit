@@ -5,11 +5,11 @@ import CocoaLumberjackSwift
 /// A DNS server designed as an `IPStackProtocol` implemention which works with TUN interface.
 ///
 /// This class is thread-safe.
-public class DNSServer: DNSResolverDelegate, IPStackProtocol {
+open class DNSServer: DNSResolverDelegate, IPStackProtocol {
     /// Current DNS server.
     ///
     /// - warning: There is at most one DNS server running at the same time. If a DNS server is registered to `TUNInterface` then it must also be set here.
-    public static var currentServer: DNSServer?
+    open static var currentServer: DNSServer?
 
     /// The address of DNS server.
     let serverAddress: IPv4Address
@@ -17,16 +17,16 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
     /// The port of DNS server
     let serverPort: Port
 
-    private let queue: dispatch_queue_t = dispatch_queue_create("NEKit.DNSServer", DISPATCH_QUEUE_SERIAL)
-    private var fakeSessions: [IPv4Address: DNSSession] = [:]
-    private var pendingSessions: [UInt16: DNSSession] = [:]
-    private let pool: IPv4Pool?
-    private var resolvers: [DNSResolverProtocol] = []
+    fileprivate let queue: DispatchQueue = DispatchQueue(label: "NEKit.DNSServer", attributes: [])
+    fileprivate var fakeSessions: [IPv4Address: DNSSession] = [:]
+    fileprivate var pendingSessions: [UInt16: DNSSession] = [:]
+    fileprivate let pool: IPv4Pool?
+    fileprivate var resolvers: [DNSResolverProtocol] = []
 
-    public var outputFunc: (([NSData], [NSNumber]) -> ())!
+    open var outputFunc: (([Data], [NSNumber]) -> ())!
 
     // Only match A record as of now, all other records should be passed directly.
-    private let matchedType = [DNSType.A]
+    fileprivate let matchedType = [DNSType.a]
 
     /**
      Initailize a DNS server.
@@ -47,10 +47,10 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
      - parameter address: The fake IP address.
      - parameter delay:   How long should the fake IP be valid.
      */
-    private func cleanUpFakeIP(address: IPv4Address, after delay: Int) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay) * Int64(NSEC_PER_SEC)), queue) {
+    fileprivate func cleanUpFakeIP(_ address: IPv4Address, after delay: Int) {
+        queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay) * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC)) {
             [weak self] in
-            self?.fakeSessions.removeValueForKey(address)
+            _ = self?.fakeSessions.removeValue(forKey: address)
             self?.pool?.releaseIP(address)
         }
     }
@@ -61,45 +61,45 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
      - parameter session: The pending session.
      - parameter delay:   How long before the pending session be cleaned up.
      */
-    private func cleanUpPendingSession(session: DNSSession, after delay: Int) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay) * Int64(NSEC_PER_SEC)), queue) {
+    fileprivate func cleanUpPendingSession(_ session: DNSSession, after delay: Int) {
+        queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay) * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC)) {
             [weak self] in
-            self?.pendingSessions.removeValueForKey(session.requestMessage.transactionID)
+            _ = self?.pendingSessions.removeValue(forKey: session.requestMessage.transactionID)
         }
     }
 
-    private func lookup(session: DNSSession) {
+    fileprivate func lookup(_ session: DNSSession) {
         guard shouldMatch(session) else {
-            session.matchResult = .Real
+            session.matchResult = .real
             lookupRemotely(session)
             return
         }
 
-        RuleManager.currentManager.matchDNS(session, type: .Domain)
+        RuleManager.currentManager.matchDNS(session, type: .domain)
 
         switch session.matchResult! {
-        case .Fake:
+        case .fake:
             guard setUpFakeIP(session) else {
                 // failed to set up a fake IP, return the result directly
-                session.matchResult = .Real
+                session.matchResult = .real
                 lookupRemotely(session)
                 return
             }
             outputSession(session)
-        case .Real, .Unknown:
+        case .real, .unknown:
             lookupRemotely(session)
         default:
             DDLogError("The rule match result should never be .Pass.")
         }
     }
 
-    private func lookupRemotely(session: DNSSession) {
+    fileprivate func lookupRemotely(_ session: DNSSession) {
         pendingSessions[session.requestMessage.transactionID] = session
         cleanUpPendingSession(session, after: Opt.DNSPendingSessionLifeTime)
         sendQueryToRemote(session)
     }
 
-    private func sendQueryToRemote(session: DNSSession) {
+    fileprivate func sendQueryToRemote(_ session: DNSSession) {
         for resolver in resolvers {
             resolver.resolve(session)
         }
@@ -113,8 +113,8 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
 
      - returns: If the packet is taken in by this DNS server.
      */
-    public func inputPacket(packet: NSData, version: NSNumber?) -> Bool {
-        guard IPPacket.peekProtocol(packet) == .UDP else {
+    open func inputPacket(_ packet: Data, version: NSNumber?) -> Bool {
+        guard IPPacket.peekProtocol(packet) == .udp else {
             return false
         }
 
@@ -134,13 +134,13 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
             return false
         }
 
-        dispatch_async(queue) {
+        queue.async {
             self.lookup(session)
         }
         return true
     }
 
-    public func stop() {
+    open func stop() {
         for resolver in resolvers {
             resolver.stop()
         }
@@ -149,7 +149,7 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
         // The blocks scheduled with `dispatch_after` are ignored since they are hard to cancel. But there should be no consequence, everything will be released except for a few `IPAddress`es and the `queue` which will be released later.
     }
 
-    private func outputSession(session: DNSSession) {
+    fileprivate func outputSession(_ session: DNSSession) {
         guard let result = session.matchResult else {
             return
         }
@@ -159,16 +159,16 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
         // swiftlint:disable:next force_cast
         udpParser.destinationPort = (session.requestIPPacket!.protocolParser as! UDPProtocolParser).sourcePort
         switch result {
-        case .Real:
+        case .real:
             udpParser.payload = session.realResponseMessage!.payload
-        case .Fake:
+        case .fake:
             let response = DNSMessage()
             response.transactionID = session.requestMessage.transactionID
-            response.messageType = .Response
+            response.messageType = .response
             response.recursionAvailable = true
             // since we only support ipv4 as of now, it must be an answer of type A
             response.answers.append(DNSResource.ARecord(session.requestMessage.queries[0].name, TTL: UInt32(Opt.DNSFakeIPTTL), address: session.fakeIP!))
-            session.expireAt = NSDate().dateByAddingTimeInterval(Double(Opt.DNSFakeIPTTL))
+            session.expireAt = Date().addingTimeInterval(Double(Opt.DNSFakeIPTTL))
             guard response.buildMessage() else {
                 DDLogError("Failed to build DNS response.")
                 return
@@ -182,23 +182,23 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
         ipPacket.sourceAddress = serverAddress
         ipPacket.destinationAddress = session.requestIPPacket!.sourceAddress
         ipPacket.protocolParser = udpParser
-        ipPacket.transportProtocol = .UDP
+        ipPacket.transportProtocol = .udp
         ipPacket.buildPacket()
 
-        outputFunc([ipPacket.packetData], [NSNumber(int: AF_INET)])
+        outputFunc([ipPacket.packetData], [NSNumber(value: AF_INET as Int32)])
     }
 
-    private func shouldMatch(session: DNSSession) -> Bool {
+    fileprivate func shouldMatch(_ session: DNSSession) -> Bool {
         return matchedType.contains(session.requestMessage.type!)
     }
 
-    func isFakeIP(ipAddress: IPv4Address) -> Bool {
+    func isFakeIP(_ ipAddress: IPv4Address) -> Bool {
         return pool?.isInPool(ipAddress) ?? false
     }
 
-    func lookupFakeIP(address: IPv4Address) -> DNSSession? {
+    func lookupFakeIP(_ address: IPv4Address) -> DNSSession? {
         var session: DNSSession?
-        dispatch_sync(queue) {
+        queue.sync {
             session = self.fakeSessions[address]
         }
         return session
@@ -209,12 +209,12 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
 
      - parameter resolver: The resolver to add.
      */
-    public func registerResolver(resolver: DNSResolverProtocol) {
+    open func registerResolver(_ resolver: DNSResolverProtocol) {
         resolver.delegate = self
         resolvers.append(resolver)
     }
 
-    private func setUpFakeIP(session: DNSSession) -> Bool {
+    fileprivate func setUpFakeIP(_ session: DNSSession) -> Bool {
 
         guard let fakeIP = pool?.fetchIP() else {
             DDLogVerbose("Failed to get a fake IP.")
@@ -222,20 +222,20 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
         }
         session.fakeIP = fakeIP
         fakeSessions[fakeIP] = session
-        session.expireAt = NSDate().dateByAddingTimeInterval(NSTimeInterval(Opt.DNSFakeIPTTL))
+        session.expireAt = Date().addingTimeInterval(TimeInterval(Opt.DNSFakeIPTTL))
         // keep the fake session for 2 TTL
         cleanUpFakeIP(fakeIP, after: Opt.DNSFakeIPTTL * 2)
         return true
     }
 
-    public func didReceiveResponse(rawResponse: NSData) {
+    open func didReceiveResponse(_ rawResponse: Data) {
         guard let message = DNSMessage(payload: rawResponse) else {
             DDLogError("Failed to parse response from remote DNS server.")
             return
         }
 
-        dispatch_async(queue) {
-            guard let session = self.pendingSessions.removeValueForKey(message.transactionID) else {
+        queue.async {
+            guard let session = self.pendingSessions.removeValue(forKey: message.transactionID) else {
                 // this should not be a problem if there are multiple DNS servers or the DNS server is hijacked.
                 DDLogVerbose("Do not find the corresponding DNS session for the response.")
                 return
@@ -245,18 +245,18 @@ public class DNSServer: DNSResolverDelegate, IPStackProtocol {
 
             session.realIP = message.resolvedIPv4Address
 
-            if session.matchResult != .Fake && session.matchResult != .Real {
-                RuleManager.currentManager.matchDNS(session, type: .IP)
+            if session.matchResult != .fake && session.matchResult != .real {
+                RuleManager.currentManager.matchDNS(session, type: .ip)
             }
 
             switch session.matchResult! {
-            case .Fake:
+            case .fake:
                 if !self.setUpFakeIP(session) {
                     // return real response
-                    session.matchResult = .Real
+                    session.matchResult = .real
                 }
                 self.outputSession(session)
-            case .Real:
+            case .real:
                 self.outputSession(session)
             default:
                 DDLogError("The rule match result should never be .Pass or .Unknown in IP mode.")

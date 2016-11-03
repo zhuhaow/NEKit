@@ -8,15 +8,15 @@ import NetworkExtension
  - GCD: The socket based on `GCDAsyncSocket`.
  */
 public enum SocketBaseType {
-    case NW, GCD
+    case nw, gcd
 }
 
 /// Factory to create `RawTCPSocket` based on configuration.
-public class RawSocketFactory {
+open class RawSocketFactory {
     /// Current active `NETunnelProvider` which creates `NWTCPConnection` instance.
     ///
     /// - note: Must set before any connection is created if `NWTCPSocket` or `NWUDPSocket` is used.
-    public static weak var TunnelProvider: NETunnelProvider?
+    open static weak var TunnelProvider: NETunnelProvider?
 
     /**
      Return `RawTCPSocket` instance.
@@ -25,11 +25,11 @@ public class RawSocketFactory {
 
      - returns: The created socket instance.
      */
-    public static func getRawSocket(type: SocketBaseType? = nil) -> RawTCPSocketProtocol {
+    open static func getRawSocket(_ type: SocketBaseType? = nil) -> RawTCPSocketProtocol {
         switch type {
-        case .Some(.NW):
+        case .some(.nw):
             return NWTCPSocket()
-        case .Some(.GCD):
+        case .some(.gcd):
             return GCDTCPSocket()
         case nil:
             if RawSocketFactory.TunnelProvider == nil {

@@ -6,26 +6,26 @@ import CocoaAsyncSocket
 
  This proxy does not listen on any port.
  */
-public class ProxyServer: NSObject, TunnelDelegate {
+open class ProxyServer: NSObject, TunnelDelegate {
     typealias TunnelArray = Atomic<[Tunnel]>
 
     /// The port of proxy server.
-    public let port: Port
+    open let port: Port
 
     /// The address of proxy server.
-    public let address: IPv4Address?
+    open let address: IPv4Address?
 
     /// The type of the proxy server.
     ///
     /// This can be set to anything describing the proxy server.
-    public let type: String
+    open let type: String
 
     /// The description of proxy server.
-    public override var description: String {
+    open override var description: String {
         return "<\(type) address:\(address) port:\(port)>"
     }
 
-    public var observer: Observer<ProxyServerEvent>?
+    open var observer: Observer<ProxyServerEvent>?
 
     var tunnels: TunnelArray = Atomic([])
 
@@ -40,7 +40,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
     public init(address: IPv4Address?, port: Port) {
         self.address = address
         self.port = port
-        type = "\(self.dynamicType)"
+        type = "\(type(of: self))"
 
         super.init()
 
@@ -52,14 +52,14 @@ public class ProxyServer: NSObject, TunnelDelegate {
 
      - throws: The error occured when starting the proxy server.
      */
-    public func start() throws {
-        observer?.signal(.Started(self))
+    open func start() throws {
+        observer?.signal(.started(self))
     }
 
     /**
      Stop the proxy server.
      */
-    public func stop() {
+    open func stop() {
         // Note it is not possible to close tunnel here since the tunnel dispatch queue is not available.
         // But just removing all of them is sufficient.
         tunnels.withBox {
@@ -68,7 +68,7 @@ public class ProxyServer: NSObject, TunnelDelegate {
             }
 //            $0.value.removeAll()
         }
-        observer?.signal(.Stopped(self))
+        observer?.signal(.stopped(self))
     }
 
     /**
@@ -78,8 +78,8 @@ public class ProxyServer: NSObject, TunnelDelegate {
 
      - parameter socket: The accepted proxy socket.
      */
-    func didAcceptNewSocket(socket: ProxySocket) {
-        observer?.signal(.NewSocketAccepted(socket, onServer: self))
+    func didAcceptNewSocket(_ socket: ProxySocket) {
+        observer?.signal(.newSocketAccepted(socket, onServer: self))
         let tunnel = Tunnel(proxySocket: socket)
         tunnel.delegate = self
         tunnels.value.append(tunnel)
@@ -93,14 +93,14 @@ public class ProxyServer: NSObject, TunnelDelegate {
 
      - parameter tunnel: The closed tunnel.
      */
-    func tunnelDidClose(tunnel: Tunnel) {
-        observer?.signal(.TunnelClosed(tunnel, onServer: self))
+    func tunnelDidClose(_ tunnel: Tunnel) {
+        observer?.signal(.tunnelClosed(tunnel, onServer: self))
         tunnels.withBox { tunnels in
-            guard let index = tunnels.value.indexOf(tunnel) else {
+            guard let index = tunnels.value.index(of: tunnel) else {
                 // things went strange
                 return
             }
-            tunnels.value.removeAtIndex(index)
+            tunnels.value.remove(at: index)
         }
     }
 }
