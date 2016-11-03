@@ -1,4 +1,4 @@
 #!/bin/sh
 
-carthage bootstrap --no-use-binaries --platform mac,ios
+carthage bootstrap --no-use-binaries --platform mac,ios --verbose
 cp Cartfile.resolved Carthage
