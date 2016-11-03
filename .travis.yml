@@ -1,7 +1,7 @@
 language: objective-c
 osx_image: xcode8
 rvm:
-  - 2.2.2
+  - 2.3.1
 
 cache:
   directories:
