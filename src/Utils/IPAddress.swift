@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol IPAddress: CustomStringConvertible {
+public protocol IPAddress: CustomStringConvertible, Hashable {
     init?(fromString: String)
     init(fromBytesInNetworkOrder: [UInt8])
     init(fromBytesInNetworkOrder: UnsafeRawPointer)
@@ -8,7 +8,7 @@ public protocol IPAddress: CustomStringConvertible {
     var dataInNetworkOrder: Data { get }
 }
 
-open class IPv4Address: IPAddress, Hashable {
+open class IPv4Address: IPAddress {
     fileprivate var _in_addr: in_addr
 
     public init(fromInAddr: in_addr) {
@@ -81,6 +81,74 @@ open class IPv4Address: IPAddress, Hashable {
     }
 }
 
+public class IPv6Address: IPAddress {
+    public var dataInNetworkOrder: Data {
+        return Data(bytes: &_in6_addr, count: MemoryLayout.size(ofValue: _in6_addr))
+    }
+
+    public required init(fromBytesInNetworkOrder: UnsafeRawPointer) {
+        _in6_addr = fromBytesInNetworkOrder.load(as: in6_addr.self)
+    }
+
+    public required init(fromBytesInNetworkOrder: [UInt8]) {
+        var in6addr: in6_addr! = nil
+        fromBytesInNetworkOrder.withUnsafeBytes {
+            in6addr = $0.load(as: in6_addr.self)
+        }
+        _in6_addr = in6addr
+    }
+
+    fileprivate var _in6_addr: in6_addr
+    
+    public required init?(fromString: String) {
+        var addr: in6_addr = in6_addr()
+        var result: Int32 = 0
+        fromString.withCString {
+            result = inet_pton(AF_INET6, $0, &addr)
+        }
+        
+        guard result == 1 else {
+            return nil
+        }
+        _in6_addr = addr
+        presentation = fromString
+    }
+
+    lazy var presentation: String = { [unowned self] in
+        var buffer = [Int8](repeating: 0, count: Int(INET6_ADDRSTRLEN))
+        var p: UnsafePointer<Int8>! = nil
+        withUnsafePointer(to: &self._in6_addr) { (ptr: UnsafePointer<in6_addr>) in
+            p = inet_ntop(AF_INET6, ptr, &buffer, UInt32(INET6_ADDRSTRLEN))
+        }
+        return String(cString: p)
+    }()
+    
+    open var description: String {
+        return "<IPv6Address \(presentation)>"
+    }
+    
+    open var hashValue: Int {
+        return withUnsafeBytes(of: &_in6_addr.__u6_addr) {
+            return $0.load(as: Int.self) ^ $0.load(fromByteOffset: MemoryLayout<Int>.size, as: Int.self)
+        }
+    }
+}
+
 public func == (left: IPv4Address, right: IPv4Address) -> Bool {
     return left.hashValue == right.hashValue
+}
+
+public func == (left: IPv6Address, right: IPv6Address) -> Bool {
+    return left._in6_addr.__u6_addr.__u6_addr32 == right._in6_addr.__u6_addr.__u6_addr32
+}
+
+public func ==<T: IPAddress> (left: T, right: T) -> Bool {
+    switch (left, right) {
+    case let (l as IPv4Address, r as IPv4Address):
+        return l == r
+    case let (l as IPv6Address, r as IPv6Address):
+        return l == r
+    default:
+        return false
+    }
 }
