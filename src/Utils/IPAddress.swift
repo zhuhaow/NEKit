@@ -47,9 +47,11 @@ open class IPv4Address: IPAddress, Hashable {
 
     lazy var presentation: String = { [unowned self] in
         var buffer = [Int8](repeating: 0, count: Int(INET_ADDRSTRLEN))
-        var addr = self._in_addr
-        let p = inet_ntop(AF_INET, &addr, &buffer, UInt32(INET_ADDRSTRLEN))
-        return String(cString: p!)
+        var p: UnsafePointer<Int8>! = nil
+        withUnsafePointer(to: &self._in_addr) { (ptr: UnsafePointer<in_addr>) in
+            p = inet_ntop(AF_INET, ptr, &buffer, UInt32(INET_ADDRSTRLEN))
+        }
+        return String(cString: p)
     }()
 
     open var description: String {
