@@ -34,6 +34,7 @@ open class IPv4Address: IPAddress, Hashable {
             return nil
         }
         _in_addr = addr
+        presentation = fromString
     }
 
     required public init(fromBytesInNetworkOrder: [UInt8]) {
@@ -44,12 +45,12 @@ open class IPv4Address: IPAddress, Hashable {
         _in_addr = inaddr
     }
 
-    var presentation: String {
+    lazy var presentation: String = { [unowned self] in
         var buffer = [Int8](repeating: 0, count: Int(INET_ADDRSTRLEN))
-        var addr = _in_addr
+        var addr = self._in_addr
         let p = inet_ntop(AF_INET, &addr, &buffer, UInt32(INET_ADDRSTRLEN))
         return String(cString: p!)
-    }
+    }()
 
     open var description: String {
         return "<IPv4Address \(presentation)>"
