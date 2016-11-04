@@ -99,14 +99,14 @@ public class IPv6Address: IPAddress {
     }
 
     fileprivate var _in6_addr: in6_addr
-    
+
     public required init?(fromString: String) {
         var addr: in6_addr = in6_addr()
         var result: Int32 = 0
         fromString.withCString {
             result = inet_pton(AF_INET6, $0, &addr)
         }
-        
+
         guard result == 1 else {
             return nil
         }
@@ -122,11 +122,11 @@ public class IPv6Address: IPAddress {
         }
         return String(cString: p)
     }()
-    
+
     open var description: String {
         return "<IPv6Address \(presentation)>"
     }
-    
+
     open var hashValue: Int {
         return withUnsafeBytes(of: &_in6_addr.__u6_addr) {
             return $0.load(as: Int.self) ^ $0.load(fromByteOffset: MemoryLayout<Int>.size, as: Int.self)
