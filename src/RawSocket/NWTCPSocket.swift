@@ -128,7 +128,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     open func readDataWithTag(_ tag: Int) {
-        connection!.readMinimumLength(0, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
+        connection!.readMinimumLength(1, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
                 return
