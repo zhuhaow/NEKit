@@ -62,7 +62,7 @@ open class ShadowsocksAdapter: AdapterSocket {
     override open func didConnect(_ socket: RawTCPSocketProtocol) {
         super.didConnect(socket)
 
-        var helloData = NSData(data: writeIV) as Data
+        var helloData = writeIV
         var response: [UInt8] = [0x03]
         response.append(UInt8(request.host.utf8.count))
         response += [UInt8](request.host.utf8)
