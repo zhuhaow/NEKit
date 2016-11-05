@@ -20,12 +20,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // swiftlint:disable force_try
         try! config.load(fromConfigFile: filepath)
         RuleManager.currentManager = config.ruleManager
-        httpProxy = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: NEKit.Port(port: UInt16(config.proxyPort!)))
+        httpProxy = GCDHTTPProxyServer(address: nil, port: NEKit.Port(port: UInt16(config.proxyPort!)))
         // swiftlint:disable force_try
         try! httpProxy!.start()
 
         let port = NEKit.Port(port: UInt16(config.proxyPort!+1))
-        socks5Proxy = GCDSOCKS5ProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: port)
+        socks5Proxy = GCDSOCKS5ProxyServer(address: nil, port: port)
         // swiftlint:disable force_try
         try! socks5Proxy!.start()
     }
