@@ -1,4 +1,5 @@
 import Foundation
+import Resolver
 
 protocol TunnelDelegate : class {
     func tunnelDidClose(_ tunnel: Tunnel)
@@ -18,7 +19,7 @@ open class Tunnel: NSObject, SocketDelegate {
     weak var observer: Observer<TunnelEvent>?
 
     /// Every method call and variable access will be called on this queue.
-    var queue = DispatchQueue(label: "NEKit.TunnelQueue", attributes: []) {
+    var queue = TunnelQueueFactory.getQueue() {
         didSet {
             self.proxySocket.queue = queue
             self.adapterSocket?.queue = queue
@@ -92,6 +93,24 @@ open class Tunnel: NSObject, SocketDelegate {
 
     open func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket) {
         observer?.signal(.receivedRequest(request, from: from, on: self))
+
+        if Opt.resolveDNSInAdvance && !request.isIP() {
+            _ = Resolver.resolve(hostname: request.host) { [weak self] resolver, err in
+                self?.queue.async {
+                    if err != nil {
+                        request.ipAddress = ""
+                    } else {
+                        request.ipAddress = (resolver?.ipv4Result.first)!
+                    }
+                    self?.openAdapter(for: request)
+                }
+            }
+        } else {
+            openAdapter(for: request)
+        }
+    }
+
+    func openAdapter(for request: ConnectRequest) {
         let manager = RuleManager.currentManager
         let factory = manager.match(request)!
         adapterSocket = factory.getAdapter(request)

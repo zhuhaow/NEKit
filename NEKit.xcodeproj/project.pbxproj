@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		360F392C1DD2068E002BED59 /* Resolver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; };
+		360F392D1DD206A3002BED59 /* Resolver.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		360F392F1DD20774002BED59 /* Resolver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392E1DD20774002BED59 /* Resolver.framework */; };
+		360F39301DD20787002BED59 /* Resolver.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 360F392E1DD20774002BED59 /* Resolver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		362347181D7D44E700A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
 		362347271D7D458E00A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D4D1CF88DED0071804F /* NEKit.framework */; };
 		362347331D7D475100A047DE /* bootstrap in Resources */ = {isa = PBXBuildFile; fileRef = 3623472F1D7D475100A047DE /* bootstrap */; };
@@ -266,6 +270,10 @@
 		36D591C11D6C4895003E92B2 /* IPRangeListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */; };
 		36D591C21D6C4895003E92B2 /* IPRangeListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */; };
 		36E44A021CF2ED4800185DBF /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
+		36E9CCFF1DD6EEF5003597CE /* TunnelQueueFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */; };
+		36E9CD001DD6EEF5003597CE /* TunnelQueueFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */; };
+		36E9CD041DD6F0DE003597CE /* Resolver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; };
+		36E9CD051DD6F0DE003597CE /* Resolver.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -299,6 +307,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				360F392D1DD206A3002BED59 /* Resolver.framework in CopyFiles */,
 				362347881D7EA65400A047DE /* Nimble.framework in CopyFiles */,
 				362347891D7EA65400A047DE /* Quick.framework in CopyFiles */,
 				3623478A1D7EA65400A047DE /* CocoaAsyncSocket.framework in CopyFiles */,
@@ -319,6 +328,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				360F39301DD20787002BED59 /* Resolver.framework in CopyFiles */,
 				362347941D7FC5CA00A047DE /* Nimble.framework in CopyFiles */,
 				362347951D7FC5CA00A047DE /* Quick.framework in CopyFiles */,
 				362347961D7FC5CA00A047DE /* CocoaAsyncSocket.framework in CopyFiles */,
@@ -367,6 +377,7 @@
 				36C4B81E1D6C51A400F2BDCD /* Sodium.framework in Embed Frameworks */,
 				36A719B81D5EEB5900DC35F5 /* NEKit.framework in Embed Frameworks */,
 				36C4B81C1D6C51A400F2BDCD /* MMDB.framework in Embed Frameworks */,
+				36E9CD051DD6F0DE003597CE /* Resolver.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -374,6 +385,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		360F392B1DD2068E002BED59 /* Resolver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Resolver.framework; path = Carthage/Build/Mac/Resolver.framework; sourceTree = SOURCE_ROOT; };
+		360F392E1DD20774002BED59 /* Resolver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Resolver.framework; path = Carthage/Build/iOS/Resolver.framework; sourceTree = SOURCE_ROOT; };
 		36164A2A1CE41C3300BAC90A /* IPMutablePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPMutablePacket.swift; sourceTree = "<group>"; };
 		36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPMutablePacket.swift; sourceTree = "<group>"; };
 		36164A2E1CE7099300BAC90A /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
@@ -520,6 +533,7 @@
 		36D591BD1D6C40F2003E92B2 /* IPRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRange.swift; sourceTree = "<group>"; };
 		36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRangeListRule.swift; sourceTree = "<group>"; };
 		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
+		36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelQueueFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -547,6 +561,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				360F392C1DD2068E002BED59 /* Resolver.framework in Frameworks */,
 				36C4B7E41D6C517600F2BDCD /* CocoaAsyncSocket.framework in Frameworks */,
 				36C4B7E51D6C517600F2BDCD /* CocoaLumberjack.framework in Frameworks */,
 				36C4B7E61D6C517600F2BDCD /* CocoaLumberjackSwift.framework in Frameworks */,
@@ -573,6 +588,7 @@
 				36C4B81D1D6C51A400F2BDCD /* Sodium.framework in Frameworks */,
 				36A719B71D5EEB5900DC35F5 /* NEKit.framework in Frameworks */,
 				36C4B81B1D6C51A400F2BDCD /* MMDB.framework in Frameworks */,
+				36E9CD041DD6F0DE003597CE /* Resolver.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -580,6 +596,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				360F392F1DD20774002BED59 /* Resolver.framework in Frameworks */,
 				36C4B7D21D6C508100F2BDCD /* CocoaAsyncSocket.framework in Frameworks */,
 				36C4B7D31D6C508100F2BDCD /* CocoaLumberjack.framework in Frameworks */,
 				36C4B7D41D6C508100F2BDCD /* CocoaLumberjackSwift.framework in Frameworks */,
@@ -595,6 +612,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		360F392A1DD2068D002BED59 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				36C48D9B1CF9483F0071804F /* iOS */,
+				36C48D9C1CF948500071804F /* macOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		36164A291CE41AF200BAC90A /* Packet */ = {
 			isa = PBXGroup;
 			children = (
@@ -685,7 +711,7 @@
 			isa = PBXGroup;
 			children = (
 				36CB6DF31D97A89F004D8655 /* Gemfile */,
-				36A719431D5B234500DC35F5 /* Carthage */,
+				360F392A1DD2068D002BED59 /* Frameworks */,
 				36C48D4E1CF88DED0071804F /* NEKit-iOS */,
 				368225B91D12484D00E7B495 /* NEKit-macOS */,
 				36A719991D5EEB4900DC35F5 /* NEKitDemo */,
@@ -737,6 +763,7 @@
 				36C63DC61CFD252400A00CA2 /* Utils */,
 				3664F0BD1CE3069F008BA6D8 /* Opt.swift */,
 				36B162231CDDA0EA00F24C97 /* Tunnel.swift */,
+				36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */,
 				36B162241CDDA0EA00F24C97 /* Utils.swift */,
 			);
 			path = src;
@@ -783,15 +810,6 @@
 				36A718E21D5AE37C00DC35F5 /* build_docs.sh */,
 			);
 			path = docs;
-			sourceTree = "<group>";
-		};
-		36A719431D5B234500DC35F5 /* Carthage */ = {
-			isa = PBXGroup;
-			children = (
-				36C48D9B1CF9483F0071804F /* Framework iOS */,
-				36C48D9C1CF948500071804F /* Framework macOS */,
-			);
-			path = Carthage;
 			sourceTree = "<group>";
 		};
 		36A719991D5EEB4900DC35F5 /* NEKitDemo */ = {
@@ -918,9 +936,10 @@
 			path = "NEKit-iOS";
 			sourceTree = "<group>";
 		};
-		36C48D9B1CF9483F0071804F /* Framework iOS */ = {
+		36C48D9B1CF9483F0071804F /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				360F392E1DD20774002BED59 /* Resolver.framework */,
 				3623473B1D7E6F7300A047DE /* Nimble.framework */,
 				3623473C1D7E6F7300A047DE /* Quick.framework */,
 				36C4B7C91D6C508100F2BDCD /* CocoaAsyncSocket.framework */,
@@ -933,12 +952,14 @@
 				36C4B7D01D6C508100F2BDCD /* tun2socks.framework */,
 				36C4B7D11D6C508100F2BDCD /* Yaml.framework */,
 			);
-			path = "Framework iOS";
+			name = iOS;
+			path = "Carthage/Framework iOS";
 			sourceTree = "<group>";
 		};
-		36C48D9C1CF948500071804F /* Framework macOS */ = {
+		36C48D9C1CF948500071804F /* macOS */ = {
 			isa = PBXGroup;
 			children = (
+				360F392B1DD2068E002BED59 /* Resolver.framework */,
 				362347371D7E6F3D00A047DE /* Nimble.framework */,
 				362347381D7E6F3D00A047DE /* Quick.framework */,
 				36C4B7DB1D6C517600F2BDCD /* CocoaAsyncSocket.framework */,
@@ -951,7 +972,8 @@
 				36C4B7E21D6C517600F2BDCD /* tun2socks.framework */,
 				36C4B7E31D6C517600F2BDCD /* Yaml.framework */,
 			);
-			path = "Framework macOS";
+			name = macOS;
+			path = "Carthage/Framework macOS";
 			sourceTree = "<group>";
 		};
 		36C48DA71CF9D6250071804F /* DNS */ = {
@@ -1390,6 +1412,7 @@
 				36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */,
 				36B162271CDDA0EA00F24C97 /* GCDTCPSocket.swift in Sources */,
 				362950511D6AE396001A30F6 /* TunnelEvent.swift in Sources */,
+				36E9CCFF1DD6EEF5003597CE /* TunnelQueueFactory.swift in Sources */,
 				3650FAF41D27CD8400444E79 /* CryptoHelper.swift in Sources */,
 				36B162291CDDA0EA00F24C97 /* ProxySocket.swift in Sources */,
 				36CB0D331D51C68700DB7AF5 /* HTTPProxySocket.swift in Sources */,
@@ -1497,6 +1520,7 @@
 				36C48D611CF88EB60071804F /* SecureHTTPAdapter.swift in Sources */,
 				36C48D721CF88ECF0071804F /* GCDProxyServer.swift in Sources */,
 				362950521D6AE396001A30F6 /* TunnelEvent.swift in Sources */,
+				36E9CD001DD6EEF5003597CE /* TunnelQueueFactory.swift in Sources */,
 				3650FAF51D27CD8400444E79 /* CryptoHelper.swift in Sources */,
 				36C48D5E1CF88EB60071804F /* SpeedAdapterFactory.swift in Sources */,
 				36CB0D341D51C68700DB7AF5 /* HTTPProxySocket.swift in Sources */,
