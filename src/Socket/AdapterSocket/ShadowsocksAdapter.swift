@@ -93,7 +93,7 @@ open class ShadowsocksAdapter: AdapterSocket {
 
     override open func writeData(_ data: Data, withTag tag: Int) {
         var data = streamObfuscater.output(data: data)
-        
+
         encryptData(&data)
         writeRawData(data, withTag: tag)
     }
