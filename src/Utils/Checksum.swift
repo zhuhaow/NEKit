@@ -34,7 +34,6 @@ open class Checksum {
         return result
     }
 
-
     open static func toChecksum(_ checksum: UInt32) -> UInt16 {
         var result = checksum
         while (result) >> 16 != 0 {

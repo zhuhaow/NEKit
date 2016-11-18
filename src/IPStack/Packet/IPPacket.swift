@@ -130,7 +130,6 @@ open class IPPacket {
         return Port(bytesInNetworkOrder: (data as NSData).bytes.advanced(by: headerLength + 2))
     }
 
-
     /// The version of the current IP packet.
     open var version: IPVersion = .iPv4
 

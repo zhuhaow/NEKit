@@ -120,7 +120,6 @@ open class HTTPHeader {
         }
     }
 
-
     open func toData() -> Data {
         return toString().data(using: String.Encoding.utf8)!
     }

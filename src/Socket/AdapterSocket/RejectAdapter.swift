@@ -16,7 +16,6 @@ open class RejectAdapter: AdapterSocket {
         }
     }
 
-
     /**
      Disconnect the socket elegantly.
      */

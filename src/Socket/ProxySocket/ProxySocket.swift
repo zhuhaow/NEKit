@@ -100,7 +100,6 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         observer?.signal(.forceDisconnectCalled(self))
     }
 
-
     // MARK: SocketProtocol Implemention
 
     /// The underlying TCP socket transmitting data.
@@ -118,7 +117,6 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     /// The current connection status of the socket.
     open var state: SocketStatus = .established
-
 
     // MARK: RawTCPSocketDelegate Protocol Implemention
     /**
@@ -164,6 +162,5 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     open func didConnect(_ socket: RawTCPSocketProtocol) {
 
     }
-
 
 }

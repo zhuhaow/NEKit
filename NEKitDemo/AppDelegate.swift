@@ -35,5 +35,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         socks5Proxy?.stop()
     }
 
-
 }

@@ -261,7 +261,6 @@ open class DNSQuery {
 
     }
 
-
     var bytesLength: Int {
         return nameBytesLength + 4
     }
@@ -340,7 +339,6 @@ class DNSNameConverter {
                 ptr.advanced(by: position).pointee = UInt8(len)
             }
             position += 1
-
 
             data.replaceSubrange(position..<position+len, with: label.data(using: .utf8)!)
             position += len

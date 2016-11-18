@@ -95,7 +95,6 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-
     open func didWriteData(_ data: Data?, withTag: Int, from: SocketProtocol) {}
     open func didReadData(_ data: Data, withTag: Int, from: SocketProtocol) {}
     open func updateAdapter(_ newAdapter: AdapterSocket) {}
