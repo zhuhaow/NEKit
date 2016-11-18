@@ -534,6 +534,8 @@
 		36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRangeListRule.swift; sourceTree = "<group>"; };
 		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
 		36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelQueueFactory.swift; sourceTree = "<group>"; };
+		36E9CD071DD88C68003597CE /* SocketStreamProcesser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketStreamProcesser.swift; sourceTree = "<group>"; };
+		36E9CD0A1DD88CB6003597CE /* StreamPipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamPipe.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -703,6 +705,8 @@
 				36B162311CDDA0F300F24C97 /* AdapterSocket */,
 				36411A671D1A3A71005F4108 /* ProxySocket */,
 				36B1621F1CDDA0EA00F24C97 /* SocketProtocol.swift */,
+				36E9CD071DD88C68003597CE /* SocketStreamProcesser.swift */,
+				36E9CD0A1DD88CB6003597CE /* StreamPipe.swift */,
 			);
 			path = Socket;
 			sourceTree = "<group>";
