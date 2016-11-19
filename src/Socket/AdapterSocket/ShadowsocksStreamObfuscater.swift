@@ -80,4 +80,56 @@ extension ShadowsocksAdapter {
             return outputData
         }
     }
+
+//    public class AuthSha1V4StreamObfuscater: ShadowsocksStreamObfuscater {
+//        let key: Data
+//        let iv: Data
+//
+//        required public init(key: Data, iv: Data) {
+//            self.key = key
+//            self.iv = iv
+//        }
+//
+//        public func requestData(for: ConnectRequest) -> Data {
+//            let currentTime = Int32(truncatingBitPattern: Int(Date().timeIntervalSince1970))
+//
+//        }
+//
+//        public func input(data: Data) -> Data {
+//
+//        }
+//
+//        public func output(data: Data) -> Data {
+//
+//        }
+//
+//        func randomData(length: Int) -> Data {
+//            if length > 1200 {
+//                return Data(bytes: [0x01])
+//            }
+//
+//            let maxlen: UInt32 = length > 400 ? 256 : 512
+//            let dataLen = Int(arc4random_uniform(maxlen))
+//            var result: Data
+//            if dataLen < 128 {
+//                result = Data(capacity: dataLen + 1)
+//                result[0] = UInt8(dataLen + 1)
+//                result.withUnsafeMutableBytes {
+//                    arc4random_buf($0.advanced(by: 1), dataLen)
+//                }
+//            } else {
+//                result = Data(capacity: dataLen + 3)
+//                result[0] = 255
+//                var len = UInt16(dataLen + 3).bigEndian
+//                withUnsafeBytes(of: &len) {
+//                    result.replaceSubrange(1..<3, with: $0)
+//                }
+//                result.withUnsafeMutableBytes {
+//                    arc4random_buf($0.advanced(by: 3), dataLen)
+//                }
+//
+//            }
+//            return result
+//        }
+//    }
 }
