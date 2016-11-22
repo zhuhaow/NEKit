@@ -1,6 +1,5 @@
 github "robbiehanson/CocoaAsyncSocket" "7.5.1"
 github "CocoaLumberjack/CocoaLumberjack" "3.0.0"
-github "soffes/CommonCrypto" "v1.1.0"
 github "lexrus/MMDB-Swift" "7039f8fea1641f8b1f387ac3fc2ffa2e89576d29"
 github "Quick/Nimble" "v5.1.0"
 github "Quick/Quick" "v0.10.0"
