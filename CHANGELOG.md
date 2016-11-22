@@ -7,7 +7,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 - Updated to Swift 3.
 
 ### Fixed
-- Not http header with empty value will be handled.
+- Now http header with empty value will be handled.
 
 ### Added
 - Now all tunnel can be run in the same serial dispatch queue, this means there is no need to limit the number of active tunnels anymore on iOS. Check out `Opt`.
