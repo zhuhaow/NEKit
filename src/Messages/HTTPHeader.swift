@@ -35,7 +35,7 @@ open class HTTPHeader {
         pathURL = _url
 
         for line in lines[1..<lines.count-2] {
-            let header = line.characters.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
+            let header = line.characters.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
             guard header.count == 2 else {
                 return nil
             }
