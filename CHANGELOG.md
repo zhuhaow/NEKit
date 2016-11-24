@@ -5,6 +5,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ## Unreleased
 ### Changed
 - Updated to Swift 3.
+- `type` in `SocketProtocol` is changed to `typeName`.
 
 ### Fixed
 - Now http header with empty value will be handled.

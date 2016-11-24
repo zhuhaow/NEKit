@@ -14,13 +14,15 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     open override var description: String {
         if let request = request {
-            return "<\(type) host:\(request.host) port: \(request.port))>"
+            return "<\(typeName) host:\(request.host) port: \(request.port))>"
         } else {
-            return "<\(type)>"
+            return "<\(typeName)>"
         }
     }
 
-    open let type: String
+    open var typeName: String {
+        return className
+    }
 
     /**
      Init a `ProxySocket` with a raw TCP socket.
@@ -29,7 +31,6 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      */
     init(socket: RawTCPSocketProtocol) {
         self.socket = socket
-        type = "\(type(of: self))"
 
         super.init()
 

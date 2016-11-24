@@ -48,7 +48,7 @@ public protocol SocketProtocol: class {
     var isDisconnected: Bool { get }
 
     /// The type of the socket.
-    var type: String { get }
+    var typeName: String { get }
 
     /**
      Read data from the socket.
