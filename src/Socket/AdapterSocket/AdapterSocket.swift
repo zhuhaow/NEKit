@@ -7,7 +7,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     open var observer: Observer<AdapterSocketEvent>?
 
     open var typeName: String {
-        return className
+        return String(describing: type(of: self))
     }
 
     open override var description: String {

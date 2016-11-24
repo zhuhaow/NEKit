@@ -21,7 +21,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     }
 
     open var typeName: String {
-        return className
+        return String(describing: type(of: self))
     }
 
     /**
