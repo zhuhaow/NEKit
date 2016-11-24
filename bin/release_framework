@@ -1,0 +1,21 @@
+#!/bin/env sh
+
+carthage build --no-skip-current
+carthage archive NEKit
+
+export GOPATH=$HOME/golang
+export PATH=$PATH:$GOPATH/bin
+go get github.com/aktau/github-release
+github-release release \
+  --user zhuhaow \
+  --repo NEKit \
+  --tag $CIRCLE_TAG \
+  --name $CIRCLE_TAG \
+  --description $CIRCLE_TAG
+
+github-release upload \
+  --user zhuhaow \
+  --repo NEKit \
+  --tag $CIRCLE_TAG \
+  --name NEKit.framework.zip \
+  --file NEKit.framework.zip

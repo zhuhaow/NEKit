@@ -58,7 +58,7 @@ custom_categories:
       - NWTCPSocket
       - TUNTCPSocket
       - NWUDPSocket
-  
+
   - name: Rule
     children:
        - RuleManager
@@ -152,6 +152,3 @@ custom_categories:
       - Port
       - StreamScanner
       - Utils
-
-
-
