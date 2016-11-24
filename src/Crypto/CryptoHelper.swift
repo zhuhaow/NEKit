@@ -37,7 +37,9 @@ public struct CryptoHelper {
         var length = 0
         repeat {
             let copyLength = min(result.count - length, md5result.count)
-            result.replaceSubrange(length..<length+copyLength, with: md5result)
+            result.withUnsafeMutableBytes {
+                md5result.copyBytes(to: $0.advanced(by: length), count: copyLength)
+            }
             extendPasswordData.replaceSubrange(0..<md5result.count, with: md5result)
             md5result = MD5Hash.final(extendPasswordData)
             length += copyLength

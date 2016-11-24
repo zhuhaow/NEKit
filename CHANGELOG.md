@@ -9,6 +9,8 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 
 ### Fixed
 - Now http header with empty value will be handled.
+- Correctly generate key for shadowsocks.
+- Correctly encrypt with chacha20 and salsa20.
 
 ### Added
 - Now all tunnel can be run in the same serial dispatch queue, this means there is no need to limit the number of active tunnels anymore on iOS. Check out `Opt`.

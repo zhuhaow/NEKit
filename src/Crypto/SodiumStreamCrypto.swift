@@ -55,9 +55,11 @@ open class SodiumStreamCrypto: StreamCryptoProtocol {
         counter += data.count
 
         if padding == 0 {
-            data.replaceSubrange(0..<outputData.count, with: outputData)
+            data = outputData
         } else {
-            data.replaceSubrange(padding..<outputData.count, with: outputData)
+            data.withUnsafeMutableBytes {
+                outputData.copyBytes(to: $0, from: padding..<outputData.count)
+            }
         }
     }
 }
