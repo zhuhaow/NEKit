@@ -33,7 +33,7 @@ extension ShadowsocksAdapter {
     public class OTAStreamObfuscater: ShadowsocksStreamObfuscater {
         let key: Data
         let iv: Data
-        var count: Int = 0
+        var count: UInt32 = 0
 
         public func requestData(for request: ConnectRequest) -> Data {
             var response: [UInt8] = [0x13]
@@ -41,9 +41,10 @@ extension ShadowsocksAdapter {
             response += [UInt8](request.host.utf8)
             response += [UInt8](Utils.toByteArray(UInt16(request.port)).reversed())
             var responseData = Data(bytes: UnsafePointer<UInt8>(response), count: response.count)
-            var keyiv = Data(capacity: key.count + iv.count)
-            keyiv.replaceSubrange(0..<key.count, with: key)
-            keyiv.replaceSubrange(key.count..<key.count + iv.count, with: iv)
+            var keyiv = Data(count: key.count + iv.count)
+
+            keyiv.replaceSubrange(0..<iv.count, with: iv)
+            keyiv.replaceSubrange(iv.count..<iv.count + key.count, with: key)
             responseData.append(HMAC.final(value: responseData, algorithm: .SHA1, key: keyiv).subdata(in: 0..<10))
             return responseData
         }
@@ -58,17 +59,18 @@ extension ShadowsocksAdapter {
         }
 
         public func output(data: Data) -> Data {
-            var outputData = Data(capacity: data.count + 10 + 2)
-            var len = data.count.bigEndian
+            // TODO: If the data block is larger than 0xFFFF it will overflow.
+            var outputData = Data(count: data.count + 10 + 2)
+            var len = UInt16(data.count).bigEndian
             withUnsafeBytes(of: &len) {
                 outputData.replaceSubrange(0..<2, with: $0)
             }
 
-            var kc = Data(capacity: iv.count + MemoryLayout.size(ofValue: len))
+            var kc = Data(count: iv.count + MemoryLayout.size(ofValue: count))
             kc.replaceSubrange(0..<iv.count, with: iv)
             var c = count.bigEndian
             withUnsafeBytes(of: &c) {
-                outputData.replaceSubrange(0..<MemoryLayout.size(ofValue: c), with: $0)
+                kc.replaceSubrange(iv.count..<iv.count+MemoryLayout.size(ofValue: c), with: $0)
             }
 
             let hash = HMAC.final(value: data, algorithm: .SHA1, key: kc).subdata(in: 0..<10)
