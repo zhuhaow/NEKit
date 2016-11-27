@@ -91,7 +91,10 @@ struct AdapterFactoryParser {
             throw ConfigurationParserError.adapterParsingError(errorInfo: "Password (password) is required.")
         }
 
-        return ShadowsocksAdapterFactory(serverHost: host, serverPort: port, encryptAlgorithm: encryptMethod, password: password)!
+        let otaEnabled = config["ota"].bool ?? false
+        let streamObfuscaterType = otaEnabled ? ShadowsocksAdapter.OTAStreamObfuscater.self as ShadowsocksStreamObfuscater.Type : ShadowsocksAdapter.OriginStreamObfuscater.self as ShadowsocksStreamObfuscater.Type
+
+        return ShadowsocksAdapterFactory(serverHost: host, serverPort: port, encryptAlgorithm: encryptMethod, password: password, streamObfuscaterType: streamObfuscaterType)!
     }
 
     static func parseSpeedAdapterFactory(_ config: Yaml, factoryDict: [String:AdapterFactory]) throws -> SpeedAdapterFactory {
