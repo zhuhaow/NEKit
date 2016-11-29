@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## 0.8.1
+
+### Changed
+- Fix versions of dependecies.
+
 ## 0.8.0
 ### Changed
 - Updated to Swift 3.
