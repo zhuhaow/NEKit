@@ -6,10 +6,6 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     open var observer: Observer<AdapterSocketEvent>?
 
-    open var typeName: String {
-        return String(describing: type(of: self))
-    }
-
     open override var description: String {
         return "<\(typeName) host:\(request.host) port:\(request.port))>"
     }
@@ -45,11 +41,6 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     /// The current connection status of the socket.
     open var status: SocketStatus = .invalid
-
-    /// If the socket is disconnected.
-    open var isDisconnected: Bool {
-        return status == .closed || status == .invalid
-    }
 
     override public init() {
         super.init()

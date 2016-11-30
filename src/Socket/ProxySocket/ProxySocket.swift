@@ -7,21 +7,12 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     open var observer: Observer<ProxySocketEvent>?
 
-    /// If the socket is disconnected.
-    open var isDisconnected: Bool {
-        return status == .closed || status == .invalid
-    }
-
     open override var description: String {
         if let request = request {
             return "<\(typeName) host:\(request.host) port: \(request.port))>"
         } else {
             return "<\(typeName)>"
         }
-    }
-
-    open var typeName: String {
-        return String(describing: type(of: self))
     }
 
     /**

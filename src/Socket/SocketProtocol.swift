@@ -78,6 +78,17 @@ public protocol SocketProtocol: class {
     func forceDisconnect()
 }
 
+extension SocketProtocol {
+    /// If the socket is disconnected.
+    public var isDisconnected: Bool {
+        return status == .closed || status == .invalid
+    }
+
+    public var typeName: String {
+        return String(describing: type(of: self))
+    }
+}
+
 /// The delegate protocol to handle the events from a socket.
 public protocol SocketDelegate : class {
     /**
