@@ -42,7 +42,7 @@ public protocol SocketProtocol: class {
     var queue: DispatchQueue! { get set }
 
     /// The current connection status of the socket.
-    var state: SocketStatus { get set }
+    var status: SocketStatus { get set }
 
     /// If the socket is disconnected.
     var isDisconnected: Bool { get }

@@ -9,7 +9,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     /// If the socket is disconnected.
     open var isDisconnected: Bool {
-        return state == .closed || state == .invalid
+        return status == .closed || status == .invalid
     }
 
     open override var description: String {
@@ -87,7 +87,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Disconnect the socket elegantly.
      */
     open func disconnect() {
-        state = .disconnecting
+        status = .disconnecting
         socket.disconnect()
         observer?.signal(.disconnectCalled(self))
     }
@@ -96,7 +96,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Disconnect the socket immediately.
      */
     open func forceDisconnect() {
-        state = .disconnecting
+        status = .disconnecting
         socket.forceDisconnect()
         observer?.signal(.forceDisconnectCalled(self))
     }
@@ -117,7 +117,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     }
 
     /// The current connection status of the socket.
-    open var state: SocketStatus = .established
+    open var status: SocketStatus = .established
 
     // MARK: RawTCPSocketDelegate Protocol Implemention
     /**
@@ -126,7 +126,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter socket: The socket which did disconnect.
      */
     open func didDisconnect(_ socket: RawTCPSocketProtocol) {
-        state = .closed
+        status = .closed
         observer?.signal(.disconnected(self))
         delegate?.didDisconnect(self)
     }

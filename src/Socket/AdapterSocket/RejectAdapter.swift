@@ -21,7 +21,7 @@ open class RejectAdapter: AdapterSocket {
      */
     open override func disconnect() {
         observer?.signal(.disconnectCalled(self))
-        state = .closed
+        status = .closed
         delegate?.didDisconnect(self)
     }
 
@@ -30,7 +30,7 @@ open class RejectAdapter: AdapterSocket {
      */
     open override func forceDisconnect() {
         observer?.signal(.forceDisconnectCalled(self))
-        state = .closed
+        status = .closed
         delegate?.didDisconnect(self)
     }
 

@@ -45,7 +45,7 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
         pendingCount = 0
         for (adapter, _) in adapters {
             adapter.delegate = nil
-            if adapter.state != .invalid {
+            if adapter.status != .invalid {
                 adapter.disconnect()
             }
         }
@@ -56,7 +56,7 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
         pendingCount = 0
         for (adapter, _) in adapters {
             adapter.delegate = nil
-            if adapter.state != .invalid {
+            if adapter.status != .invalid {
                 adapter.forceDisconnect()
             }
         }
@@ -75,7 +75,7 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
         for (adapter, _) in adapters {
             if adapter != adapterSocket {
                 adapter.delegate = nil
-                if adapter.state != .invalid {
+                if adapter.status != .invalid {
                     adapter.forceDisconnect()
                 }
             }

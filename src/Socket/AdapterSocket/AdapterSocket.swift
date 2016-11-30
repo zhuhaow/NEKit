@@ -25,7 +25,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
         socket?.delegate = self
         socket?.queue = queue
-        state = .connecting
+        status = .connecting
     }
 
     // MARK: SocketProtocol Implemention
@@ -44,11 +44,11 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     }
 
     /// The current connection status of the socket.
-    open var state: SocketStatus = .invalid
+    open var status: SocketStatus = .invalid
 
     /// If the socket is disconnected.
     open var isDisconnected: Bool {
-        return state == .closed || state == .invalid
+        return status == .closed || status == .invalid
     }
 
     override public init() {
@@ -90,7 +90,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Disconnect the socket elegantly.
      */
     open func disconnect() {
-        state = .disconnecting
+        status = .disconnecting
         observer?.signal(.disconnectCalled(self))
         socket?.disconnect()
     }
@@ -99,7 +99,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Disconnect the socket immediately.
      */
     open func forceDisconnect() {
-        state = .disconnecting
+        status = .disconnecting
         observer?.signal(.forceDisconnectCalled(self))
         socket?.forceDisconnect()
     }
@@ -112,7 +112,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter socket: The socket which did disconnect.
      */
     open func didDisconnect(_ socket: RawTCPSocketProtocol) {
-        state = .closed
+        status = .closed
         observer?.signal(.disconnected(self))
         delegate?.didDisconnect(self)
     }
@@ -145,7 +145,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter socket: The connected socket.
      */
     open func didConnect(_ socket: RawTCPSocketProtocol) {
-        state = .established
+        status = .established
         observer?.signal(.connected(self, withResponse: response))
         delegate?.didConnect(self, withResponse: response)
     }
