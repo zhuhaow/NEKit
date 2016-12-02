@@ -24,7 +24,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         status = .connecting
     }
 
-    // MARK: SocketProtocol Implemention
+    // MARK: SocketProtocol Implementaion
 
     /// The underlying TCP socket transmitting data.
     open var socket: RawTCPSocketProtocol!
@@ -95,7 +95,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         socket?.forceDisconnect()
     }
 
-    // MARK: RawTCPSocketDelegate Protocol Implemention
+    // MARK: RawTCPSocketDelegate Protocol Implementaion
 
     /**
      The socket did disconnect.

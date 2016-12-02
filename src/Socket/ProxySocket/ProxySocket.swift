@@ -92,7 +92,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         observer?.signal(.forceDisconnectCalled(self))
     }
 
-    // MARK: SocketProtocol Implemention
+    // MARK: SocketProtocol Implementaion
 
     /// The underlying TCP socket transmitting data.
     open var socket: RawTCPSocketProtocol!
@@ -110,7 +110,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /// The current connection status of the socket.
     open var status: SocketStatus = .established
 
-    // MARK: RawTCPSocketDelegate Protocol Implemention
+    // MARK: RawTCPSocketDelegate Protocol Implementaion
     /**
      The socket did disconnect.
 

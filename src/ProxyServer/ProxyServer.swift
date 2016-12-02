@@ -86,7 +86,7 @@ open class ProxyServer: NSObject, TunnelDelegate {
         tunnel.openTunnel()
     }
 
-    // MARK: TunnelDelegate implemention
+    // MARK: TunnelDelegate implementaion
 
     /**
      Delegate method when a tunnel closed. The server will remote it internally.

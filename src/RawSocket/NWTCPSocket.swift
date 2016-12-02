@@ -16,7 +16,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     fileprivate var scannerTag: Int!
     fileprivate var readDataPrefix: Data?
 
-    // MARK: RawTCPSocketProtocol implemention
+    // MARK: RawTCPSocketProtocol implementaion
 
     /// The `RawTCPSocketDelegate` instance.
     weak open var delegate: RawTCPSocketDelegate?

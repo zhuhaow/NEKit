@@ -22,7 +22,7 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
         super.init()
     }
 
-    // MARK: RawTCPSocketProtocol implemention
+    // MARK: RawTCPSocketProtocol implementaion
 
     /// The `RawTCPSocketDelegate` instance.
     weak open var delegate: RawTCPSocketDelegate?

@@ -2,7 +2,7 @@ import Foundation
 import NetworkExtension
 import CocoaLumberjackSwift
 
-/// A DNS server designed as an `IPStackProtocol` implemention which works with TUN interface.
+/// A DNS server designed as an `IPStackProtocol` implementaion which works with TUN interface.
 ///
 /// This class is thread-safe.
 open class DNSServer: DNSResolverDelegate, IPStackProtocol {

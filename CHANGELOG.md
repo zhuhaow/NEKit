@@ -139,7 +139,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 
 ## [0.2.4]
 ### Changed
-- The `ProxyServer.mainProxy` is removed and instead you should set the `proxyServer` in the implemention of `IPStackProtocol` (`TCPStack` as of now) which requires a proxy server to function.
+- The `ProxyServer.mainProxy` is removed and instead you should set the `proxyServer` in the implementaion of `IPStackProtocol` (`TCPStack` as of now) which requires a proxy server to function.
 - Many things are now `public` instead of `internal`.
 
 ### Added
