@@ -144,7 +144,7 @@ open class IPPacket {
     /// This should be the length of the datagram.
     /// This value is not read from header since NEPacketTunnelFlow has already taken care of it for us.
     open var totalLength: UInt16 {
-            return UInt16(packetData.count)
+        return UInt16(packetData.count)
     }
 
     /// Identification of the current packet.
