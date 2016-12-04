@@ -705,8 +705,6 @@
 		36463A261CDCD5EB0040579C = {
 			isa = PBXGroup;
 			children = (
-				36CB6DF31D97A89F004D8655 /* Gemfile */,
-				36B05A141DE44D6C00074910 /* GenerateCommonCryptoModule.swift */,
 				360F392A1DD2068D002BED59 /* Frameworks */,
 				36C48D4E1CF88DED0071804F /* NEKit-iOS */,
 				368225B91D12484D00E7B495 /* NEKit-macOS */,
@@ -723,6 +721,8 @@
 				36B1624A1CDDA13500F24C97 /* Cartfile */,
 				362347861D7EA2A500A047DE /* Cartfile.private */,
 				362347311D7D475100A047DE /* Cartfile.resolved */,
+				36CB6DF31D97A89F004D8655 /* Gemfile */,
+				36B05A141DE44D6C00074910 /* GenerateCommonCryptoModule.swift */,
 				362347321D7D475100A047DE /* LICENSE.md */,
 				36A719EE1D63411E00DC35F5 /* README.md */,
 			);
@@ -756,10 +756,9 @@
 				36B162121CDDA0EA00F24C97 /* RawSocket */,
 				36B1620B1CDDA0E000F24C97 /* Rule */,
 				36411A6B1D1A41BF005F4108 /* Socket */,
+				36AA9D281DF434CD008273CC /* Tunnel */,
 				36C63DC61CFD252400A00CA2 /* Utils */,
 				3664F0BD1CE3069F008BA6D8 /* Opt.swift */,
-				36B162231CDDA0EA00F24C97 /* Tunnel.swift */,
-				36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */,
 				36B162241CDDA0EA00F24C97 /* Utils.swift */,
 			);
 			path = src;
@@ -771,11 +770,11 @@
 				3650FAED1D27C8A900444E79 /* CCCrypto.swift */,
 				3650FAF01D27C8CB00444E79 /* CryptoEnum.swift */,
 				3650FAF31D27CD8400444E79 /* CryptoHelper.swift */,
+				36B2ACD81DDF407F00BD2C3D /* HMAC.swift */,
 				3650FAE71D27BE8800444E79 /* Libsodium.swift */,
 				3650FAF61D27D64500444E79 /* MD5Hash.swift */,
 				3650FAE41D27BA5300444E79 /* SodiumStreamCrypto.swift */,
 				3650FAE11D27BA0900444E79 /* StreamCryptoProtocol.swift */,
-				36B2ACD81DDF407F00BD2C3D /* HMAC.swift */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -831,6 +830,15 @@
 			path = Event;
 			sourceTree = "<group>";
 		};
+		36AA9D281DF434CD008273CC /* Tunnel */ = {
+			isa = PBXGroup;
+			children = (
+				36B162231CDDA0EA00F24C97 /* Tunnel.swift */,
+				36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */,
+			);
+			path = Tunnel;
+			sourceTree = "<group>";
+		};
 		36B1620B1CDDA0E000F24C97 /* Rule */ = {
 			isa = PBXGroup;
 			children = (
@@ -866,14 +874,14 @@
 			isa = PBXGroup;
 			children = (
 				36B162331CDDA0F300F24C97 /* Factory */,
+				36B2ACD41DDF2BA600BD2C3D /* Shadowsocks */,
 				36B162151CDDA0EA00F24C97 /* AdapterSocket.swift */,
 				36B162321CDDA0F300F24C97 /* DirectAdapter.swift */,
 				366EB5AC1CDE0FCE00E0E942 /* HTTPAdapter.swift */,
 				368CBDA51D7911FA003CEA62 /* RejectAdapter.swift */,
-				366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */,
-				36B2ACD41DDF2BA600BD2C3D /* Shadowsocks */,
-				366EB5C21CDF375B00E0E942 /* SpeedAdapter.swift */,
 				3623479F1D824E4300A047DE /* SOCKS5Adapter.swift */,
+				366EB5AD1CDE0FCE00E0E942 /* SecureHTTPAdapter.swift */,
+				366EB5C21CDF375B00E0E942 /* SpeedAdapter.swift */,
 			);
 			path = AdapterSocket;
 			sourceTree = "<group>";
@@ -886,9 +894,9 @@
 				366EB5B21CDE150C00E0E942 /* AuthenticationServerAdapterFactory.swift */,
 				366EB5B31CDE150C00E0E942 /* HTTPAdapterFactory.swift */,
 				368CBDA21D7911D4003CEA62 /* RejectAdapterFactory.swift */,
+				362347A21D82525200A047DE /* SOCKS5AdapterFactory.swift */,
 				366EB5B41CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift */,
 				366EB5B51CDE150C00E0E942 /* ServerAdapterFactory.swift */,
-				362347A21D82525200A047DE /* SOCKS5AdapterFactory.swift */,
 				3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */,
 				366EB5C41CDF3FA700E0E942 /* SpeedAdapterFactory.swift */,
 			);
@@ -930,7 +938,7 @@
 				366EB5CE1CE0742F00E0E942 /* ShadowsocksAdapter.swift */,
 				36B2ACD51DDF2FBC00BD2C3D /* ShadowsocksStreamObfuscater.swift */,
 			);
-			name = Shadowsocks;
+			path = Shadowsocks;
 			sourceTree = "<group>";
 		};
 		36C48D4E1CF88DED0071804F /* NEKit-iOS */ = {
@@ -998,6 +1006,7 @@
 				36411A541D12C123005F4108 /* Atomic.swift */,
 				36C63DC71CFD254100A00CA2 /* BinaryDataScanner.swift */,
 				36C63DFB1D00797D00A00CA2 /* Checksum.swift */,
+				3669C8581DC8D60100BDCC82 /* Data.swift */,
 				366EB5B01CDE119200E0E942 /* HTTPAuthentication.swift */,
 				36B212331D54C30600C8AC0A /* HTTPStreamScanner.swift */,
 				3636DA5D1CE87C08007F9787 /* IPAddress.swift */,
@@ -1005,7 +1014,6 @@
 				36411A721D1FBFB0005F4108 /* IPv4Pool.swift */,
 				3636DA611CE892EF007F9787 /* Port.swift */,
 				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
-				3669C8581DC8D60100BDCC82 /* Data.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
