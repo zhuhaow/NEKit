@@ -5,12 +5,36 @@ protocol TunnelDelegate : class {
     func tunnelDidClose(_ tunnel: Tunnel)
 }
 
-/// The tunnel forwards data from local to remote and back.
-open class Tunnel: NSObject, SocketDelegate {
-    /// The proxy socket on local.
+/// The tunnel forwards data between local and remote.
+public class Tunnel: NSObject, SocketDelegate {
+
+    /// The status of `Tunnel`.
+    public enum TunnelStatus: CustomStringConvertible {
+
+        case invalid, readingRequest, waitingToBeReady, forwarding, closing, closed
+
+        public var description: String {
+            switch self {
+            case .invalid:
+                return "invalid"
+            case .readingRequest:
+                return "reading request"
+            case .waitingToBeReady:
+                return "waiting to be ready"
+            case .forwarding:
+                return "forwarding"
+            case .closing:
+                return "closing"
+            case .closed:
+                return "closed"
+            }
+        }
+    }
+
+    /// The proxy socket.
     var proxySocket: ProxySocket
 
-    /// The adapter socket connected to remote.
+    /// The adapter socket connecting to remote.
     var adapterSocket: AdapterSocket?
 
     /// The delegate instance.
@@ -27,14 +51,29 @@ open class Tunnel: NSObject, SocketDelegate {
     }
 
     /// Indicating how many socket is ready to forward data.
-    var readySignal = 0
+    private var readySignal = 0
 
     /// If the tunnel is closed, i.e., proxy socket and adapter socket are both disconnected.
     var isClosed: Bool {
         return proxySocket.isDisconnected && (adapterSocket?.isDisconnected ?? true)
     }
 
-    override open var description: String {
+    fileprivate var _cancelled: Bool = false
+    fileprivate var _stopForwarding = false
+    public var isCancelled: Bool {
+        return _cancelled
+    }
+
+    fileprivate var _status: TunnelStatus = .invalid
+    public var status: TunnelStatus {
+        return _status
+    }
+
+    public var statusDescription: String {
+        return status.description
+    }
+
+    override public var description: String {
         if let adapterSocket = adapterSocket {
             return "<Tunnel proxySocket:\(proxySocket) adapterSocket:\(adapterSocket)>"
         } else {
@@ -55,17 +94,31 @@ open class Tunnel: NSObject, SocketDelegate {
      Start running the tunnel.
      */
     func openTunnel() {
-        observer?.signal(.opened(self))
-        proxySocket.openSocket()
-        observer?.signal(.opened(self))
+        queue.async {
+            guard !self.isCancelled else {
+                return
+            }
+
+            self.proxySocket.openSocket()
+            self._status = .readingRequest
+            self.observer?.signal(.opened(self))
+        }
     }
 
     /**
-     Close the tunnel.
+     Close the tunnel elegantly.
      */
     func close() {
         observer?.signal(.closeCalled(self))
+
         queue.async {
+            guard !self.isCancelled else {
+                return
+            }
+
+            self._cancelled = true
+            self._status = .closing
+
             if !self.proxySocket.isDisconnected {
                 self.proxySocket.disconnect()
             }
@@ -77,9 +130,19 @@ open class Tunnel: NSObject, SocketDelegate {
         }
     }
 
+    /// Close the tunnel immediately.
     func forceClose() {
         observer?.signal(.forceCloseCalled(self))
+
         queue.async {
+            guard !self.isCancelled else {
+                return
+            }
+
+            self._cancelled = true
+            self._status = .closing
+            self._stopForwarding = true
+
             if !self.proxySocket.isDisconnected {
                 self.proxySocket.forceDisconnect()
             }
@@ -91,7 +154,12 @@ open class Tunnel: NSObject, SocketDelegate {
         }
     }
 
-    open func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket) {
+    public func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket) {
+        guard !isCancelled else {
+            return
+        }
+
+        _status = .waitingToBeReady
         observer?.signal(.receivedRequest(request, from: from, on: self))
 
         if Opt.resolveDNSInAdvance && !request.isIP() {
@@ -110,7 +178,11 @@ open class Tunnel: NSObject, SocketDelegate {
         }
     }
 
-    func openAdapter(for request: ConnectRequest) {
+    fileprivate func openAdapter(for request: ConnectRequest) {
+        guard !isCancelled else {
+            return
+        }
+
         let manager = RuleManager.currentManager
         let factory = manager.match(request)!
         adapterSocket = factory.getAdapter(request)
@@ -119,46 +191,80 @@ open class Tunnel: NSObject, SocketDelegate {
         adapterSocket!.openSocketWithRequest(request)
     }
 
-    open func readyToForward(_ socket: SocketProtocol) {
+    public func readyToForward(_ socket: SocketProtocol) {
+        guard !isCancelled else {
+            return
+        }
+
         readySignal += 1
         observer?.signal(.receivedReadySignal(socket, currentReady: readySignal, on: self))
         if readySignal == 2 {
+            _status = .forwarding
             proxySocket.readDataWithTag(SocketTag.Forward)
             adapterSocket?.readDataWithTag(SocketTag.Forward)
         }
     }
 
-    open func didDisconnect(_ socket: SocketProtocol) {
-        close()
+    public func didDisconnect(_ socket: SocketProtocol) {
+        if !isCancelled {
+            _status = .closing
+            _cancelled = true
+            _stopForwarding = true
+            close()
+        }
         checkStatus()
     }
 
-    open func didReadData(_ data: Data, withTag tag: Int, from socket: SocketProtocol) {
+    public func didReadData(_ data: Data, withTag tag: Int, from socket: SocketProtocol) {
         if let socket = socket as? ProxySocket {
             observer?.signal(.proxySocketReadData(data, tag: tag, from: socket, on: self))
+
+            guard !_stopForwarding else {
+                return
+            }
             adapterSocket!.writeData(data, withTag: tag)
         } else if let socket = socket as? AdapterSocket {
             observer?.signal(.adapterSocketReadData(data, tag: tag, from: socket, on: self))
+
+            guard !_stopForwarding else {
+                return
+            }
             proxySocket.writeData(data, withTag: tag)
         }
     }
 
-    open func didWriteData(_ data: Data?, withTag: Int, from socket: SocketProtocol) {
+    public func didWriteData(_ data: Data?, withTag: Int, from socket: SocketProtocol) {
         if let socket = socket as? ProxySocket {
             observer?.signal(.proxySocketWroteData(data, tag: withTag, from: socket, on: self))
+
+            guard !_stopForwarding else {
+                return
+            }
             adapterSocket?.readDataWithTag(SocketTag.Forward)
         } else if let socket = socket as? AdapterSocket {
             observer?.signal(.adapterSocketWroteData(data, tag: withTag, from: socket, on: self))
+
+            guard !_stopForwarding else {
+                return
+            }
             proxySocket.readDataWithTag(SocketTag.Forward)
         }
     }
 
-    open func didConnect(_ adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {
+    public func didConnect(_ adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {
+        guard !isCancelled else {
+            return
+        }
+
         observer?.signal(.connectedToRemote(adapterSocket, withResponse: response, on: self))
         proxySocket.respondToResponse(response)
     }
 
-    open func updateAdapter(_ newAdapter: AdapterSocket) {
+    public func updateAdapter(_ newAdapter: AdapterSocket) {
+        guard !isCancelled else {
+            return
+        }
+
         observer?.signal(.updatingAdapterSocket(from: adapterSocket!, to: newAdapter, on: self))
 
         adapterSocket = newAdapter
@@ -168,6 +274,7 @@ open class Tunnel: NSObject, SocketDelegate {
 
     fileprivate func checkStatus() {
         if isClosed {
+            _status = .closed
             observer?.signal(.closed(self))
             delegate?.tunnelDidClose(self)
             delegate = nil

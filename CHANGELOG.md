@@ -5,6 +5,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ## Unreleased
 ### Changed
 - `state` in `SocketProtocol` is changed to `status`.
+- `Tunnel` is refactored.
 
 ## 0.8.1
 ### Changed
