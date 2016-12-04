@@ -6,7 +6,6 @@ import CocoaLumberjackSwift
 ///
 /// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
 open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
-    static let ScannerReadTag = 10000
     fileprivate var connection: NWTCPConnection?
 
     fileprivate var writePending = false
