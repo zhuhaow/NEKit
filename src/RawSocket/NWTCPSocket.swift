@@ -76,7 +76,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         }
 
         guard let connection = RawSocketFactory.TunnelProvider?.createTCPConnection(to: endpoint, enableTLS: enableTLS, tlsParameters: tlsParameters, delegate: nil) else {
-            // This should only happen when the extension is already stoped and `RawSocketFactory.TunnelProvider` is set to `nil`.
+            // This should only happen when the extension is already stopped and `RawSocketFactory.TunnelProvider` is set to `nil`.
             return
         }
 
