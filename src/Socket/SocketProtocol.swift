@@ -56,19 +56,17 @@ public protocol SocketProtocol: class {
     /**
      Read data from the socket.
 
-     - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    func readDataWithTag(_ tag: Int)
+    func readData()
 
     /**
      Send data to remote.
 
      - parameter data: Data to send.
-     - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    func writeData(_ data: Data, withTag tag: Int)
+    func write(data: Data)
 
     /**
      Disconnect the socket elegantly.
@@ -97,9 +95,9 @@ public protocol SocketDelegate : class {
     /**
      The socket did connect to remote.
 
-     - parameter socket: The connected socket.
+     - parameter adapterSocket: The connected socket.
      */
-    func didConnect(_ adapterSocket: AdapterSocket, withResponse: ConnectResponse)
+    func didConnectWith(adapterSocket: AdapterSocket)
 
     /**
      The socket did disconnect.
@@ -108,45 +106,43 @@ public protocol SocketDelegate : class {
 
      - parameter socket: The socket which did disconnect.
      */
-    func didDisconnect(_ socket: SocketProtocol)
+    func didDisconnectWith(socket: SocketProtocol)
 
     /**
      The socket did read some data.
 
      - parameter data:    The data read from the socket.
-     - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    func didReadData(_ data: Data, withTag: Int, from: SocketProtocol)
+    func didRead(data: Data, from: SocketProtocol)
 
     /**
      The socket did send some data.
 
      - parameter data:    The data which have been sent to remote (acknowledged). Note this may not be available since the data may be released to save memory.
-     - parameter withTag: The tag given when calling the `writeData` method.
-     - parameter from:    The socket where the data is sent out.
+     - parameter by:      The socket where the data is sent out.
      */
-    func didWriteData(_ data: Data?, withTag: Int, from: SocketProtocol)
+    func didWrite(data: Data?, by: SocketProtocol)
 
     /**
      The socket is ready to forward data back and forth.
 
-     - parameter socket: The socket becomes ready to forward data.
+     - parameter socket: The socket which becomes ready to forward data.
      */
-    func readyToForward(_ socket: SocketProtocol)
+    func didBecomeReadyToForwardWith(socket: SocketProtocol)
 
     /**
-     Did receive a `ConnectRequest` from local that it is time to connect to remote.
+     Did receive a `ConnectRequest` from local now it is time to connect to remote.
 
      - parameter request: The received `ConnectRequest`.
      - parameter from:    The socket where the `ConnectRequest` is received.
      */
-    func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket)
+    func didReceive(request: ConnectRequest, from: ProxySocket)
 
     /**
      The adapter socket decided to replace itself with a new `AdapterSocket` to connect to remote.
 
      - parameter newAdapter: The new `AdapterSocket` to replace the old one.
      */
-    func updateAdapter(_ newAdapter: AdapterSocket)
+    func updateAdapterWith(newAdapter: AdapterSocket)
 }
