@@ -66,19 +66,11 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         socket.writeData(data, withTag: tag)
     }
 
-    //    func readDataToLength(length: Int, withTag tag: Int) {
-    //        socket.readDataToLength(length, withTag: tag)
-    //    }
-    //
-    //    func readDataToData(data: NSData, withTag tag: Int) {
-    //        socket.readDataToData(data, withTag: tag)
-    //    }
-
     /**
      Disconnect the socket elegantly.
      */
     open func disconnect() {
-        status = .disconnecting
+        _status = .disconnecting
         socket.disconnect()
         observer?.signal(.disconnectCalled(self))
     }
@@ -87,7 +79,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Disconnect the socket immediately.
      */
     open func forceDisconnect() {
-        status = .disconnecting
+        _status = .disconnecting
         socket.forceDisconnect()
         observer?.signal(.forceDisconnectCalled(self))
     }
@@ -95,20 +87,27 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     // MARK: SocketProtocol Implementaion
 
     /// The underlying TCP socket transmitting data.
-    open var socket: RawTCPSocketProtocol!
+    public var socket: RawTCPSocketProtocol!
 
     /// The delegate instance.
-    weak open var delegate: SocketDelegate?
+    weak public var delegate: SocketDelegate?
 
     /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    open var queue: DispatchQueue! {
+    public var queue: DispatchQueue! {
         didSet {
             socket.queue = queue
         }
     }
 
+    var _status: SocketStatus = .established
     /// The current connection status of the socket.
-    open var status: SocketStatus = .established
+    public var status: SocketStatus {
+        return _status
+    }
+    
+    open var statusDescription: String {
+        return "\(status)"
+    }
 
     // MARK: RawTCPSocketDelegate Protocol Implementaion
     /**

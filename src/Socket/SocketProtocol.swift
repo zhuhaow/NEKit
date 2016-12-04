@@ -44,6 +44,7 @@ public protocol SocketProtocol: class {
     /// The current connection status of the socket.
     var status: SocketStatus { get }
     
+    /// The description of the currect status.
     var statusDescription: String { get }
 
     /// If the socket is disconnected.
