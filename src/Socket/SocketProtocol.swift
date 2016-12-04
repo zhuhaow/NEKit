@@ -36,7 +36,7 @@ public protocol SocketProtocol: class {
     var socket: RawTCPSocketProtocol! { get }
 
     /// The delegate instance.
-    var delegate: SocketDelegate? { get set }
+    weak var delegate: SocketDelegate? { get set }
 
     /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
     var queue: DispatchQueue! { get set }
