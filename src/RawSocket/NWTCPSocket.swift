@@ -13,7 +13,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     fileprivate var closeAfterWriting = false
 
     fileprivate var scanner: StreamScanner!
-    fileprivate var scannerTag: Int!
+    fileprivate var scanning: Bool = false
     fileprivate var readDataPrefix: Data?
 
     // MARK: RawTCPSocketProtocol implementation
@@ -69,7 +69,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
      - throws: Never throws.
      */
-    open func connectTo(_ host: String, port: Int, enableTLS: Bool, tlsSettings: [AnyHashable: Any]?) throws {
+    open func connectTo(host: String, port: Int, enableTLS: Bool, tlsSettings: [AnyHashable: Any]?) throws {
         let endpoint = NWHostEndpoint(hostname: host, port: "\(port)")
         let tlsParameters = NWTLSParameters()
         if let tlsSettings = tlsSettings as? [String: AnyObject] {
@@ -92,7 +92,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      */
     open func disconnect() {
         if connection == nil  || connection!.state == .cancelled {
-            delegate?.didDisconnect(self)
+            delegate?.didDisconnectWith(socket: self)
         } else {
             closeAfterWriting = true
             checkStatus()
@@ -104,7 +104,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      */
     open func forceDisconnect() {
         if connection == nil  || connection!.state == .cancelled {
-            delegate?.didDisconnect(self)
+            delegate?.didDisconnectWith(socket: self)
         } else {
             cancel()
         }
@@ -114,20 +114,18 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      Send data to remote.
 
      - parameter data: Data to send.
-     - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    open func writeData(_ data: Data, withTag tag: Int) {
-        sendData(data, withTag: tag)
+    open func write(data: Data) {
+        send(data: data)
     }
 
     /**
      Read data from the socket.
 
-     - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    open func readDataWithTag(_ tag: Int) {
+    open func readData() {
         connection!.readMinimumLength(1, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
@@ -135,7 +133,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
                 return
             }
 
-            self.readCallback(data, tag: tag)
+            self.readCallback(data: data)
         }
     }
 
@@ -143,10 +141,9 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      Read specific length of data from the socket.
 
      - parameter length: The length of the data to read.
-     - parameter tag:    The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    open func readDataToLength(_ length: Int, withTag tag: Int) {
+    open func readDataTo(length: Int) {
         connection!.readLength(length) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(error)")
@@ -154,7 +151,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
                 return
             }
 
-            self.readCallback(data, tag: tag)
+            self.readCallback(data: data)
         }
     }
 
@@ -162,11 +159,10 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      Read data until a specific pattern (including the pattern).
 
      - parameter data: The pattern.
-     - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    open func readDataToData(_ data: Data, withTag tag: Int) {
-        readDataToData(data, withTag: tag, maxLength: 0)
+    open func readDataTo(data: Data) {
+        readDataTo(data: data, maxLength: 0)
     }
 
     // Actually, this method is available as `- (void)readToPattern:(id)arg1 maximumLength:(unsigned int)arg2 completionHandler:(id /* block */)arg3;`
@@ -177,18 +173,17 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
      Read data until a specific pattern (including the pattern).
 
      - parameter data: The pattern.
-     - parameter tag:  The tag identifying the data in the callback delegate method.
      - parameter maxLength: The max length of data to scan for the pattern.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    open func readDataToData(_ data: Data, withTag tag: Int, maxLength: Int) {
+    open func readDataTo(data: Data, maxLength: Int) {
         var maxLength = maxLength
         if maxLength == 0 {
             maxLength = Opt.MAXNWTCPScanLength
         }
         scanner = StreamScanner(pattern: data, maximumLength: maxLength)
-        scannerTag = tag
-        readDataWithTag(NWTCPSocket.ScannerReadTag)
+        scanning = true
+        readData()
     }
 
     fileprivate func queueCall(_ block: @escaping ()->()) {
@@ -203,7 +198,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         switch connection!.state {
         case .connected:
             queueCall {
-                self.delegate?.didConnect(self)
+                self.delegate?.didConnectWith(socket: self)
             }
         case .disconnected:
             cancel()
@@ -211,27 +206,28 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             queueCall {
                 let delegate = self.delegate
                 self.delegate = nil
-                delegate?.didDisconnect(self)
+                delegate?.didDisconnectWith(socket: self)
             }
         default:
             break
         }
     }
 
-    fileprivate func readCallback(_ data: Data?, tag: Int) {
+    fileprivate func readCallback(data: Data?) {
         queueCall {
             guard let data = self.consumeReadData(data) else {
                 // remote read is closed, but this is okay, nothing need to be done, if this socket is read again, then error occurs.
                 return
             }
 
-            if tag == NWTCPSocket.ScannerReadTag {
+            if self.scanning {
                 guard let (match, rest) = self.scanner.addAndScan(data) else {
-                    self.readDataWithTag(NWTCPSocket.ScannerReadTag)
+                    self.readData()
                     return
                 }
 
                 self.scanner = nil
+                self.scanning = false
 
                 guard let matchData = match else {
                     // do not find match in the given length, stop now
@@ -239,14 +235,14 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
                 }
 
                 self.readDataPrefix = rest
-                self.delegate?.didReadData(matchData, withTag: self.scannerTag, from: self)
+                self.delegate?.didRead(data: matchData, from: self)
             } else {
-                self.delegate?.didReadData(data, withTag: tag, from: self)
+                self.delegate?.didRead(data: data, from: self)
             }
         }
     }
 
-    fileprivate func sendData(_ data: Data, withTag tag: Int) {
+    fileprivate func send(data: Data) {
         writePending = true
         self.connection!.write(data) { error in
             self.writePending = false
@@ -258,7 +254,7 @@ open class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             }
 
             self.queueCall {
-                self.delegate?.didWriteData(data, withTag: tag, from: self)
+                self.delegate?.didWrite(data: data, by: self)
             }
             self.checkStatus()
         }
