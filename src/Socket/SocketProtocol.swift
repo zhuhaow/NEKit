@@ -79,6 +79,11 @@ public protocol SocketProtocol: class {
 }
 
 extension SocketProtocol {
+    /// If the socket is disconnected.
+    public var isDisconnected: Bool {
+        return status == .closed || status == .invalid
+    }
+
     public var typeName: String {
         return String(describing: type(of: self))
     }
