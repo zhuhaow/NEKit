@@ -26,7 +26,7 @@ open class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
         tsSocket.delegate = self
     }
 
-    // MARK: RawTCPSocketProtocol implementaion
+    // MARK: RawTCPSocketProtocol implementation
 
     /// The `RawTCPSocketDelegate` instance.
     open weak var delegate: RawTCPSocketDelegate?
@@ -205,7 +205,7 @@ open class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
         }
     }
 
-    // MARK: TSTCPSocketDelegate implementaion
+    // MARK: TSTCPSocketDelegate implementation
     // The local stop sending anything.
     // Theoretically, the local may still be reading data from remote.
     // However, there is simply no way to know if the local is still open, so we can only assume that the local side close tx only when it decides that it does not need to read anymore.

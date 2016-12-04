@@ -215,7 +215,7 @@ The structure of the proxy server is given as follows:
        ╚══════════════╝     ╚══════════════╝        
 ```
 
-When a new socket is accepted from the listening socket of the proxy server, it is wrapped in some implementaion of `RawSocketProtocol` as a raw socket which just reads and writes data. 
+When a new socket is accepted from the listening socket of the proxy server, it is wrapped in some implementation of `RawSocketProtocol` as a raw socket which just reads and writes data. 
 
 Then it is wrapped in a subclass of `ProxySocket` which encapsulates the proxy logic. 
 

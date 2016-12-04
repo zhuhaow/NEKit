@@ -28,7 +28,7 @@ public enum SocketStatus {
 
 /// Protocol for socket with various functions.
 ///
-/// Any concrete implementaion does not need to be thread-safe.
+/// Any concrete implementation does not need to be thread-safe.
 ///
 /// - warning: It is expected that the instance is accessed on the `queue` only.
 public protocol SocketProtocol: class {

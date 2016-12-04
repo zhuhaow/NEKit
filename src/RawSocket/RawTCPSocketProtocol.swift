@@ -2,7 +2,7 @@ import Foundation
 
 /// The raw socket protocol which represents a TCP socket.
 ///
-/// Any concrete implementaion does not need to be thread-safe.
+/// Any concrete implementation does not need to be thread-safe.
 ///
 /// - warning: It is expected that the instance is accessed on the `queue` only.
 public protocol RawTCPSocketProtocol : class {
@@ -44,7 +44,7 @@ public protocol RawTCPSocketProtocol : class {
 
      The socket should disconnect elegantly after any queued writing data are successfully sent.
 
-     - note: Usually, any concrete implementaion should wait until any pending writing data are finished then call `forceDisconnect()`.
+     - note: Usually, any concrete implementation should wait until any pending writing data are finished then call `forceDisconnect()`.
      */
     func disconnect()
 

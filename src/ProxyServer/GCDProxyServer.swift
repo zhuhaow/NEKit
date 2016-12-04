@@ -3,7 +3,7 @@ import CocoaAsyncSocket
 
 /// Proxy server which listens on some port by GCDAsyncSocket.
 ///
-/// This shoule be the base class for any concrete implementaion of proxy server (e.g., HTTP or SOCKS5) which needs to listen on some port.
+/// This shoule be the base class for any concrete implementation of proxy server (e.g., HTTP or SOCKS5) which needs to listen on some port.
 open class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
     fileprivate let listenQueue: DispatchQueue = DispatchQueue(label: "NEKit.GCDProxyServer.listenQueue", attributes: [])
     fileprivate var listenSocket: GCDAsyncSocket!
@@ -45,7 +45,7 @@ open class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
     /**
      Delegate method to handle the newly accepted GCDTCPSocket.
 
-     Only this method should be overrided in any concrete implementaion of proxy server which listens on some port with GCDAsyncSocket.
+     Only this method should be overrided in any concrete implementation of proxy server which listens on some port with GCDAsyncSocket.
 
      - parameter socket: The accepted socket.
      */

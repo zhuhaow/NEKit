@@ -109,7 +109,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         return "\(status)"
     }
 
-    // MARK: RawTCPSocketDelegate Protocol Implementaion
+    // MARK: RawTCPSocketDelegate Protocol Implementation
     /**
      The socket did disconnect.
 
