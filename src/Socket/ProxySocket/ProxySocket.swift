@@ -3,9 +3,9 @@ import Foundation
 /// The socket which encapsulates the logic to handle connection to proxies.
 open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /// Received `ConnectRequest`.
-    open var request: ConnectRequest?
+    public var request: ConnectRequest?
 
-    open var observer: Observer<ProxySocketEvent>?
+    public var observer: Observer<ProxySocketEvent>?
 
     open override var description: String {
         if let request = request {
@@ -20,7 +20,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The raw TCP socket.
      */
-    init(socket: RawTCPSocketProtocol) {
+    public init(socket: RawTCPSocketProtocol) {
         self.socket = socket
 
         super.init()
@@ -32,7 +32,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /**
      Begin reading and processing data from the socket.
      */
-    func openSocket() {
+    open func openSocket() {
         observer?.signal(.socketOpened(self))
     }
 
@@ -41,7 +41,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter response: The `ConnectResponse`.
      */
-    func respondToResponse(_ response: ConnectResponse) {
+    open func respondToResponse(_ response: ConnectResponse) {
         observer?.signal(.receivedResponse(response, on: self))
     }
 
@@ -84,7 +84,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         observer?.signal(.forceDisconnectCalled(self))
     }
 
-    // MARK: SocketProtocol Implementaion
+    // MARK: SocketProtocol Implementation
 
     /// The underlying TCP socket transmitting data.
     public var socket: RawTCPSocketProtocol!
@@ -116,7 +116,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter socket: The socket which did disconnect.
      */
     open func didDisconnect(_ socket: RawTCPSocketProtocol) {
-        status = .closed
+        _status = .closed
         observer?.signal(.disconnected(self))
         delegate?.didDisconnect(self)
     }
