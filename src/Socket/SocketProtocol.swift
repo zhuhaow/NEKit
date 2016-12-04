@@ -79,11 +79,6 @@ public protocol SocketProtocol: class {
 }
 
 extension SocketProtocol {
-    /// If the socket is disconnected.
-    public var isDisconnected: Bool {
-        return status == .closed || status == .invalid
-    }
-
     public var typeName: String {
         return String(describing: type(of: self))
     }
@@ -141,7 +136,7 @@ public protocol SocketDelegate : class {
     func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket)
 
     /**
-     The socket decided to use a new `AdapterSocket` to connect to remote.
+     The adapter socket decided to replace itself with a new `AdapterSocket` to connect to remote.
 
      - parameter newAdapter: The new `AdapterSocket` to replace the old one.
      */
