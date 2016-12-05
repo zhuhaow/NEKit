@@ -1,51 +1,85 @@
 import Foundation
 
-open class HTTPProxySocket: ProxySocket {
+public class HTTPProxySocket: ProxySocket {
+    enum HTTPProxyStatus: CustomStringConvertible {
+        case invalid,
+        readingFirstHeader,
+        waitingAdapter,
+        sendingConnectResponse,
+        waitingToForward,
+        readingHeader,
+        readingContent,
+        stopped
+
+        var description: String {
+            switch self {
+            case .invalid:
+                return "invalid"
+            case .readingFirstHeader:
+                return "reading first header"
+            case .waitingAdapter:
+                return "waiting adpater to be ready"
+            case .sendingConnectResponse:
+                return "sending response header for CONNECT"
+            case .waitingToForward:
+                return "waiting to begin forwarding data"
+            case .readingHeader:
+                return "reading header (forwarding)"
+            case .readingContent:
+                return "reading content (forwarding)"
+            case .stopped:
+                return "stopped"
+            }
+        }
+    }
     /// The remote host to connect to.
-    open var destinationHost: String!
+    public var destinationHost: String!
 
     /// The remote port to connect to.
-    open var destinationPort: Int!
+    public var destinationPort: Int!
 
-    fileprivate var firstHeader: Bool = true
+    private var currentHeader: HTTPHeader!
 
-    fileprivate var currentHeader: HTTPHeader!
+    private let scanner: HTTPStreamScanner = HTTPStreamScanner()
 
-    fileprivate var currentReadTag: Int!
+    private var internalStatus: HTTPProxyStatus = .invalid
 
-    fileprivate let scanner: HTTPStreamScanner = HTTPStreamScanner()
+    public var isConnectCommand = false
 
-    fileprivate var isConnect = false
+    public override var statusDescription: String {
+        return "\(status) (\(internalStatus))"
+    }
 
     /**
      Begin reading and processing data from the socket.
      */
-    override func openSocket() {
+    override public func openSocket() {
         super.openSocket()
-        socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: SocketTag.HTTP.Header)
+        internalStatus = .readingFirstHeader
+        socket.readDataTo(data: Utils.HTTPData.DoubleCRLF)
     }
 
-    override open func readDataWithTag(_ tag: Int = SocketTag.Forward) {
-        currentReadTag = tag
-
-        if firstHeader {
-            firstHeader = false
-            if !isConnect {
-                delegate?.didReadData(currentHeader.toData(), withTag: tag, from: self)
-                return
-            }
+    override public func readData() {
+        // Return the first header we read when the socket was opened if the proxy command is not CONNECT.
+        if internalStatus == .waitingToForward && !isConnectCommand {
+            delegate?.didRead(data: currentHeader.toData(), from: self)
+            internalStatus = .readingContent
+            return
         }
 
         switch scanner.nextAction {
         case .readContent(let length):
+            internalStatus = .readingContent
             if length > 0 {
-                socket.readDataToLength(length, withTag: SocketTag.HTTP.Content)
+                socket.readDataTo(length: length)
             } else {
-                socket.readDataWithTag(SocketTag.HTTP.Content)
+                socket.readData()
             }
         case .readHeader:
-            socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: SocketTag.HTTP.Header)
+            internalStatus = .readingHeader
+            socket.readDataTo(data: Utils.HTTPData.DoubleCRLF)
         case .stop:
+            internalStatus = .stopped
             disconnect()
         }
 
@@ -55,17 +89,17 @@ open class HTTPProxySocket: ProxySocket {
     // swiftlint:disable cyclomatic_complexity
     /**
      The socket did read some data.
-
+     
      - parameter data:    The data read from the socket.
-     - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    override open func didReadData(_ data: Data, withTag tag: Int, from: RawTCPSocketProtocol) {
-        super.didReadData(data, withTag: tag, from: from)
+    override public func didRead(data: Data, from: RawTCPSocketProtocol) {
+        super.didRead(data: data, from: from)
 
-        switch tag {
-        case SocketTag.HTTP.Header:
+        switch internalStatus {
+        case .readingFirstHeader:
             guard let header = scanner.input(data).0 else {
+                // TODO: indicate observer
                 disconnect()
                 return
             }
@@ -74,56 +108,73 @@ open class HTTPProxySocket: ProxySocket {
             currentHeader.removeProxyHeader()
             currentHeader.rewriteToRelativePath()
 
-            if firstHeader {
-                destinationHost = currentHeader.host
-                destinationPort = currentHeader.port
-                isConnect = currentHeader.isConnect
+            destinationHost = currentHeader.host
+            destinationPort = currentHeader.port
+            isConnectCommand = currentHeader.isConnect
 
-                request = ConnectRequest(host: destinationHost!, port: destinationPort!)
-                observer?.signal(.receivedRequest(request!, on: self))
-                delegate?.didReceiveRequest(request!, from: self)
-            } else {
-                delegate?.didReadData(header.toData(), withTag: currentReadTag, from: self)
+            internalStatus = .waitingAdapter
+
+            request = ConnectRequest(host: destinationHost!, port: destinationPort!)
+            observer?.signal(.receivedRequest(request!, on: self))
+            delegate?.didReceive(request: request!, from: self)
+        case .readingHeader:
+            guard let header = scanner.input(data).0 else {
+                // TODO: indicate observer
+                disconnect()
+                return
             }
-        case SocketTag.HTTP.Content:
+
+            currentHeader = header
+            currentHeader.removeProxyHeader()
+            currentHeader.rewriteToRelativePath()
+
+            delegate?.didRead(data: currentHeader.toData(), from: self)
+        case .readingContent:
             guard let content = scanner.input(data).1 else {
                 disconnect()
                 return
             }
 
-            delegate?.didReadData(content, withTag: currentReadTag, from: self)
+            delegate?.didRead(data: content, from: self)
         default:
-            break
+            return
         }
     }
 
     /**
      The socket did send some data.
-
+     
      - parameter data:    The data which have been sent to remote (acknowledged). Note this may not be available since the data may be released to save memory.
-     - parameter withTag: The tag given when calling the `writeData` method.
-     - parameter from:    The socket where the data is sent out.
+     - parameter by:    The socket where the data is sent out.
      */
-    override open func didWriteData(_ data: Data?, withTag tag: Int, from: RawTCPSocketProtocol) {
-        super.didWriteData(data, withTag: tag, from: from)
+    override public func didWrite(data: Data?, by: RawTCPSocketProtocol) {
+        super.didWrite(data: data, by: by)
 
-        if tag >= 0 {
-            delegate?.didWriteData(data, withTag: tag, from: self)
-        }
-        if tag == SocketTag.HTTP.ConnectResponse {
+        switch internalStatus {
+        case .sendingConnectResponse:
+            internalStatus = .waitingToForward
             observer?.signal(.readyForForward(self))
-            delegate?.readyToForward(self)
+            delegate?.didBecomeReadyToForwardWith(socket: self)
+        default:
+            delegate?.didWrite(data: data, by: self)
         }
     }
 
-    override func respondToResponse(_ response: ConnectResponse) {
-        super.respondToResponse(response)
+    public override func respondTo(adapter: AdapterSocket) {
+        super.respondTo(adapter: adapter)
 
-        if isConnect {
-            writeData(Utils.HTTPData.ConnectSuccessResponse, withTag: SocketTag.HTTP.ConnectResponse)
+        // TODO: notify observer
+        guard internalStatus == .waitingAdapter else {
+            return
+        }
+
+        if isConnectCommand {
+            internalStatus = .sendingConnectResponse
+            write(data: Utils.HTTPData.ConnectSuccessResponse)
         } else {
+            internalStatus = .waitingToForward
             observer?.signal(.readyForForward(self))
-            delegate?.readyToForward(self)
+            delegate?.didBecomeReadyToForwardWith(socket: self)
         }
     }
 }
