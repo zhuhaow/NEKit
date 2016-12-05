@@ -154,7 +154,7 @@ public class Tunnel: NSObject, SocketDelegate {
         }
     }
 
-    public func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket) {
+    public func didReceive(request: ConnectRequest, from: ProxySocket) {
         guard !isCancelled else {
             return
         }
@@ -188,10 +188,10 @@ public class Tunnel: NSObject, SocketDelegate {
         adapterSocket = factory.getAdapter(request)
         adapterSocket!.queue = queue
         adapterSocket!.delegate = self
-        adapterSocket!.openSocketWithRequest(request)
+        adapterSocket!.openSocketWith(request: request)
     }
 
-    public func readyToForward(_ socket: SocketProtocol) {
+    public func didBecomeReadyToForwardWith(socket: SocketProtocol) {
         guard !isCancelled else {
             return
         }
@@ -200,12 +200,12 @@ public class Tunnel: NSObject, SocketDelegate {
         observer?.signal(.receivedReadySignal(socket, currentReady: readySignal, on: self))
         if readySignal == 2 {
             _status = .forwarding
-            proxySocket.readDataWithTag(SocketTag.Forward)
-            adapterSocket?.readDataWithTag(SocketTag.Forward)
+            proxySocket.readData()
+            adapterSocket?.readData()
         }
     }
 
-    public func didDisconnect(_ socket: SocketProtocol) {
+    public func didDisconnectWith(socket: SocketProtocol) {
         if !isCancelled {
             _status = .closing
             _cancelled = true
@@ -215,52 +215,52 @@ public class Tunnel: NSObject, SocketDelegate {
         checkStatus()
     }
 
-    public func didReadData(_ data: Data, withTag tag: Int, from socket: SocketProtocol) {
+    public func didRead(data: Data, from socket: SocketProtocol) {
         if let socket = socket as? ProxySocket {
-            observer?.signal(.proxySocketReadData(data, tag: tag, from: socket, on: self))
+            observer?.signal(.proxySocketReadData(data, from: socket, on: self))
 
             guard !_stopForwarding else {
                 return
             }
-            adapterSocket!.writeData(data, withTag: tag)
+            adapterSocket!.write(data: data)
         } else if let socket = socket as? AdapterSocket {
-            observer?.signal(.adapterSocketReadData(data, tag: tag, from: socket, on: self))
+            observer?.signal(.adapterSocketReadData(data, from: socket, on: self))
 
             guard !_stopForwarding else {
                 return
             }
-            proxySocket.writeData(data, withTag: tag)
+            proxySocket.write(data: data)
         }
     }
 
-    public func didWriteData(_ data: Data?, withTag: Int, from socket: SocketProtocol) {
+    public func didWrite(data: Data?, by socket: SocketProtocol) {
         if let socket = socket as? ProxySocket {
-            observer?.signal(.proxySocketWroteData(data, tag: withTag, from: socket, on: self))
+            observer?.signal(.proxySocketWroteData(data, by: socket, on: self))
 
             guard !_stopForwarding else {
                 return
             }
-            adapterSocket?.readDataWithTag(SocketTag.Forward)
+            adapterSocket?.readData()
         } else if let socket = socket as? AdapterSocket {
-            observer?.signal(.adapterSocketWroteData(data, tag: withTag, from: socket, on: self))
+            observer?.signal(.adapterSocketWroteData(data, by: socket, on: self))
 
             guard !_stopForwarding else {
                 return
             }
-            proxySocket.readDataWithTag(SocketTag.Forward)
+            proxySocket.readData()
         }
     }
 
-    public func didConnect(_ adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {
+    public func didConnectWith(adapterSocket: AdapterSocket) {
         guard !isCancelled else {
             return
         }
 
-        observer?.signal(.connectedToRemote(adapterSocket, withResponse: response, on: self))
-        proxySocket.respondToResponse(response)
+        observer?.signal(.connectedToRemote(adapterSocket, on: self))
+        proxySocket.respondTo(adapter: adapterSocket)
     }
 
-    public func updateAdapter(_ newAdapter: AdapterSocket) {
+    public func updateAdapterWith(newAdapter: AdapterSocket) {
         guard !isCancelled else {
             return
         }
