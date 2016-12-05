@@ -160,6 +160,11 @@ public class HTTPProxySocket: ProxySocket {
         }
     }
 
+    /**
+     Response to the `AdapterSocket` on the other side of the `Tunnel` which has succefully connected to the remote server.
+     
+     - parameter adapter: The `AdapterSocket`.
+     */
     public override func respondTo(adapter: AdapterSocket) {
         super.respondTo(adapter: adapter)
 
