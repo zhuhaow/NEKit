@@ -37,33 +37,30 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     }
 
     /**
-     Response to the `ConnectResponse` from `AdapterSocket` on the other side of the `Tunnel`.
+     Response to the `AdapterSocket` on the other side of the `Tunnel` which has succefully connected to the remote server.
 
-     - parameter response: The `ConnectResponse`.
+     - parameter adapter: The `AdapterSocket`.
      */
-    open func respondToResponse(_ response: ConnectResponse) {
-        observer?.signal(.receivedResponse(response, on: self))
+    open func respondTo(adapter: AdapterSocket) {
+        observer?.signal(.askedToResponseTo(adapter, on: self))
     }
 
     /**
      Read data from the socket.
-
-     - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    open func readDataWithTag(_ tag: Int) {
-        socket.readDataWithTag(tag)
+    open func readData() {
+        socket.readData()
     }
 
     /**
      Send data to remote.
 
      - parameter data: Data to send.
-     - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    open func writeData(_ data: Data, withTag tag: Int) {
-        socket.writeData(data, withTag: tag)
+    open func write(data: Data) {
+        socket.write(data: data)
     }
 
     /**
@@ -104,7 +101,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     public var status: SocketStatus {
         return _status
     }
-    
+
     open var statusDescription: String {
         return "\(status)"
     }
@@ -115,10 +112,10 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The socket which did disconnect.
      */
-    open func didDisconnect(_ socket: RawTCPSocketProtocol) {
+    open func didDisconnectWith(socket: RawTCPSocketProtocol) {
         _status = .closed
         observer?.signal(.disconnected(self))
-        delegate?.didDisconnect(self)
+        delegate?.didDisconnectWith(socket: self)
     }
 
     /**
@@ -128,19 +125,18 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    open func didReadData(_ data: Data, withTag tag: Int, from: RawTCPSocketProtocol) {
-        observer?.signal(.readData(data, tag: tag, on: self))
+    open func didRead(data: Data, from: RawTCPSocketProtocol) {
+        observer?.signal(.readData(data, on: self))
     }
 
     /**
      The socket did send some data.
 
      - parameter data:    The data which have been sent to remote (acknowledged). Note this may not be available since the data may be released to save memory.
-     - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    open func didWriteData(_ data: Data?, withTag tag: Int, from: RawTCPSocketProtocol) {
-        observer?.signal(.wroteData(data, tag: tag, on: self))
+    open func didWrite(data: Data?, by: RawTCPSocketProtocol) {
+        observer?.signal(.wroteData(data, on: self))
     }
 
     /**
@@ -150,7 +146,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The connected socket.
      */
-    open func didConnect(_ socket: RawTCPSocketProtocol) {
+    open func didConnectWith(socket: RawTCPSocketProtocol) {
 
     }
 
