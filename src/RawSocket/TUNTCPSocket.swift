@@ -12,7 +12,7 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     fileprivate var closeAfterWriting = false
 
     fileprivate var scanner: StreamScanner?
-    
+
     fileprivate var readLength: Int?
 
     /**
@@ -59,7 +59,7 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     public var destinationPort: Port? {
         return Port(port: tsSocket.destinationPort)
     }
-    
+
     /// `TUNTCPSocket` cannot connect to anything actively, this is just a stub method.
     ///
     /// - Parameters:
