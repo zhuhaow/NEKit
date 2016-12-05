@@ -1,125 +1,181 @@
 import Foundation
 
-open class SOCKS5ProxySocket: ProxySocket {
+public class SOCKS5ProxySocket: ProxySocket {
+    enum SOCKS5ProxyStatus {
+        case invalid,
+        readingVersionIdentifierAndNumberOfMethods,
+        readingMethods,
+        readingConnectHeader,
+        readingIPv4Address,
+        readingDomainLength,
+        readingDomain,
+        readingIPv6Address,
+        readingPort,
+        waitingAdapter,
+        sendingResponse,
+        waitingToForward,
+        forwarding,
+        stopped
+    }
     /// The remote host to connect to.
-    open var destinationHost: String!
+    public var destinationHost: String!
 
     /// The remote port to connect to.
-    open var destinationPort: Int!
+    public var destinationPort: Int!
+
+    var internalStatus: SOCKS5ProxyStatus = .invalid
 
     /**
      Begin reading and processing data from the socket.
      */
-    override func openSocket() {
+    override public func openSocket() {
         super.openSocket()
-        socket.readDataToLength(2, withTag: SocketTag.SOCKS5.Open)
+        internalStatus = .readingVersionIdentifierAndNumberOfMethods
+        socket.readDataTo(length: 2)
     }
 
     // swiftlint:disable function_body_length
     // swiftlint:disable cyclomatic_complexity
     /**
      The socket did read some data.
-
+     
      - parameter data:    The data read from the socket.
-     - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    override open func didReadData(_ data: Data, withTag tag: Int, from: RawTCPSocketProtocol) {
-        super.didReadData(data, withTag: tag, from: from)
+    override public func didRead(data: Data, from: RawTCPSocketProtocol) {
+        super.didRead(data: data, from: from)
 
-        switch tag {
-        case SocketTag.SOCKS5.Open:
-            let pointer = (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count)
+        switch internalStatus {
+        case .waitingToForward:
+            internalStatus = .forwarding
+            fallthrough
+        case .forwarding:
+            delegate?.didRead(data: data, from: self)
+        case .readingVersionIdentifierAndNumberOfMethods:
+            data.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
+                guard pointer.pointee == 5 else {
+                    // TODO: notify observer
+                    self.disconnect()
+                    return
+                }
 
-            guard pointer.pointee == 5 else {
-                // TODO: trigger error event
-                return
+                guard pointer.successor().pointee > 0 else {
+                    // TODO: notify observer
+                    self.disconnect()
+                    return
+                }
+
+                self.internalStatus = .readingMethods
+                self.socket.readDataTo(length: Int(pointer.successor().pointee))
             }
+        case .readingMethods:
+            // TODO: check for 0x00 in read data
 
-            guard pointer.successor().pointee > 0 else {
-                return
-            }
-
-            socket.readDataToLength(Int(pointer.successor().pointee), withTag: SocketTag.SOCKS5.ConnectMethod)
-        case SocketTag.SOCKS5.ConnectMethod:
-            let response = Data(bytes: UnsafePointer<UInt8>([0x05, 0x00] as [UInt8]), count: 2 * MemoryLayout<UInt8>.size)
+            let response = Data(bytes: [0x05, 0x00])
             // we would not be able to read anything before the data is written out, so no need to handle the dataWrote event.
-            writeData(response, withTag: SocketTag.SOCKS5.MethodResponse)
-            socket.readDataToLength(4, withTag: SocketTag.SOCKS5.ConnectInit)
-        case SocketTag.SOCKS5.ConnectInit:
-            var requestInfo = [UInt8](repeating: 0, count: 5)
-            (data as NSData).getBytes(&requestInfo, length: 5 * MemoryLayout<UInt8>.size)
-            let addressType = requestInfo[3]
-            switch addressType {
-            case 1:
-                socket.readDataToLength(4, withTag: SocketTag.SOCKS5.ConnectIPv4)
-            case 3:
-                socket.readDataToLength(1, withTag: SocketTag.SOCKS5.ConnectDomainLength)
-            case 4:
-                socket.readDataToLength(16, withTag: SocketTag.SOCKS5.ConnectIPv4)
-            default:
-                break
+            write(data: response)
+            internalStatus = .readingConnectHeader
+            socket.readDataTo(length: 4)
+        case .readingConnectHeader:
+            data.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
+                guard pointer.pointee == 5 && pointer.successor().pointee == 1 else {
+                    // TODO: notify observer
+                    self.disconnect()
+                    return
+                }
+                switch pointer.advanced(by: 3).pointee {
+                case 1:
+                    internalStatus = .readingIPv4Address
+                    socket.readDataTo(length: 4)
+                case 3:
+                    internalStatus = .readingDomainLength
+                    socket.readDataTo(length: 1)
+                case 4:
+                    internalStatus = .readingIPv6Address
+                    socket.readDataTo(length: 16)
+                default:
+                    break
+                }
             }
-        case SocketTag.SOCKS5.ConnectIPv4:
-            var address = [Int8](repeating: 0, count: Int(INET_ADDRSTRLEN))
-            inet_ntop(AF_INET, (data as NSData).bytes, &address, socklen_t(INET_ADDRSTRLEN))
-            destinationHost = NSString(cString: &address, encoding: String.Encoding.utf8.rawValue)! as String
-            socket.readDataToLength(2, withTag: SocketTag.SOCKS5.ConnectPort)
-        case SocketTag.SOCKS5.ConnectIPv6:
-            var address = [Int8](repeating: 0, count: Int(INET6_ADDRSTRLEN))
-            inet_ntop(AF_INET6, (data as NSData).bytes, &address, socklen_t(INET6_ADDRSTRLEN))
-            destinationHost = NSString(cString: &address, encoding: String.Encoding.utf8.rawValue)! as String
-            socket.readDataToLength(2, withTag: SocketTag.SOCKS5.ConnectPort)
-        case SocketTag.SOCKS5.ConnectDomainLength:
-            let length: UInt8 = (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count).pointee
-            socket.readDataToLength(Int(length), withTag: SocketTag.SOCKS5.ConnectDomain)
-        case SocketTag.SOCKS5.ConnectDomain:
-            destinationHost = NSString(bytes: (data as NSData).bytes, length: data.count, encoding: String.Encoding.utf8.rawValue)! as String
-            socket.readDataToLength(2, withTag: SocketTag.SOCKS5.ConnectPort)
-        case SocketTag.SOCKS5.ConnectPort:
-            var rawPort: UInt16 = 0
-            (data as NSData).getBytes(&rawPort, length: MemoryLayout<UInt16>.size)
-            destinationPort = Int(NSSwapBigShortToHost(rawPort))
-            request = ConnectRequest(host: destinationHost!, port: destinationPort!)
+        case .readingIPv4Address:
+            var address = Data(count: Int(INET_ADDRSTRLEN))
+            _ = data.withUnsafeRawPointer { data_ptr in
+                address.withUnsafeMutableBytes { addr_ptr in
+                    inet_ntop(AF_INET, data_ptr, addr_ptr, socklen_t(INET_ADDRSTRLEN))
+                }
+            }
+
+            destinationHost = String(data: address, encoding: .utf8)
+
+            internalStatus = .readingPort
+            socket.readDataTo(length: 2)
+        case .readingIPv6Address:
+            var address = Data(count: Int(INET6_ADDRSTRLEN))
+            _ = data.withUnsafeRawPointer { data_ptr in
+                address.withUnsafeMutableBytes { addr_ptr in
+                    inet_ntop(AF_INET6, data_ptr, addr_ptr, socklen_t(INET6_ADDRSTRLEN))
+                }
+            }
+
+            destinationHost = String(data: address, encoding: .utf8)
+
+            internalStatus = .readingPort
+            socket.readDataTo(length: 2)
+        case .readingDomainLength:
+            data.withUnsafeRawPointer {
+                internalStatus = .readingDomain
+                socket.readDataTo(length: Int($0.load(as: UInt8.self)))
+            }
+        case .readingDomain:
+            destinationHost = String(data: data, encoding: .utf8)
+            internalStatus = .readingPort
+            socket.readDataTo(length: 2)
+        case .readingPort:
+            data.withUnsafeRawPointer {
+                destinationPort = Int($0.load(as: UInt16.self))
+            }
+
+            internalStatus = .waitingAdapter
+            request = ConnectRequest(host: destinationHost, port: destinationPort)
             observer?.signal(.receivedRequest(request!, on: self))
-            delegate?.didReceiveRequest(request!, from: self)
-        case _ where tag >= 0:
-            delegate?.didReadData(data, withTag: tag, from: self)
+            delegate?.didReceive(request: request!, from: self)
         default:
-            break
+            return
         }
     }
 
     /**
      The socket did send some data.
-
+     
      - parameter data:    The data which have been sent to remote (acknowledged). Note this may not be available since the data may be released to save memory.
-     - parameter withTag: The tag given when calling the `writeData` method.
      - parameter from:    The socket where the data is sent out.
      */
-    override open func didWriteData(_ data: Data?, withTag tag: Int, from: RawTCPSocketProtocol) {
-        super.didWriteData(data, withTag: tag, from: from)
+    override public func didWrite(data: Data?, by: RawTCPSocketProtocol) {
+        super.didWrite(data: data, by: by)
 
-        if tag >= 0 {
-            delegate?.didWriteData(data, withTag: tag, from: self)
-        }
-        if tag == SocketTag.SOCKS5.ConnectResponse {
-            observer?.signal(.readyForForward(self))
-            delegate?.readyToForward(self)
+        switch internalStatus {
+        case .forwarding:
+            delegate?.didWrite(data: data, by: self)
+        case .sendingResponse:
+            internalStatus = .waitingToForward
+        default:
+            return
         }
     }
 
     /**
-     Response to the `ConnectResponse` from `AdapterSocket` on the other side of the `Tunnel`.
-
-     - parameter response: The `ConnectResponse`.
+     Response to the `AdapterSocket` on the other side of the `Tunnel` which has succefully connected to the remote server.
+     
+     - parameter adapter: The `AdapterSocket`.
      */
-    override func respondToResponse(_ response: ConnectResponse) {
-        super.respondToResponse(response)
+    override public func respondTo(adapter: AdapterSocket) {
+        super.respondTo(adapter: adapter)
 
         var responseBytes = [UInt8](repeating: 0, count: 10)
         responseBytes[0...3] = [0x05, 0x00, 0x00, 0x01]
         let responseData = Data(bytes: responseBytes)
-        writeData(responseData, withTag: SocketTag.SOCKS5.ConnectResponse)
+
+        internalStatus = .sendingResponse
+        write(data: responseData)
     }
 }
