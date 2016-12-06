@@ -6,7 +6,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     public var request: ConnectRequest?
 
     public var observer: Observer<ProxySocketEvent>?
-    
+
     private var _cancelled = false
     var isCancelled: Bool {
         return _cancelled
@@ -25,13 +25,16 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The raw TCP socket.
      */
-    public init(socket: RawTCPSocketProtocol) {
+    public init(socket: RawTCPSocketProtocol, observe: Bool = true) {
         self.socket = socket
 
         super.init()
 
         self.socket.delegate = self
-        observer = ObserverFactory.currentFactory?.getObserverForProxySocket(self)
+        
+        if observe {
+            observer = ObserverFactory.currentFactory?.getObserverForProxySocket(self)
+        }
     }
 
     /**

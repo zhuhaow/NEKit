@@ -32,7 +32,7 @@ public class SOCKS5Adapter: AdapterSocket {
 
     public override func openSocketWith(request: ConnectRequest) {
         super.openSocketWith(request: request)
-        
+
         guard !isCancelled else {
             return
         }

@@ -9,7 +9,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     open override var description: String {
         return "<\(typeName) host:\(request.host) port:\(request.port))>"
     }
-    
+
     internal var _cancelled = false
     var isCancelled: Bool {
         return _cancelled
@@ -24,7 +24,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         guard !isCancelled else {
             return
         }
-        
+
         self.request = request
         observer?.signal(.socketOpened(self, withRequest: request))
 
@@ -58,10 +58,12 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         return "\(status)"
     }
 
-    override public init() {
+    public init(observe: Bool = true) {
         super.init()
 
-        observer = ObserverFactory.currentFactory?.getObserverForAdapterSocket(self)
+        if observe {
+            observer = ObserverFactory.currentFactory?.getObserverForAdapterSocket(self)
+        }
     }
 
     /**
@@ -73,7 +75,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         guard !isCancelled else {
             return
         }
-        
+
         socket?.readData()
     }
 
@@ -87,7 +89,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         guard !isCancelled else {
             return
         }
-        
+
         socket?.write(data: data)
     }
 

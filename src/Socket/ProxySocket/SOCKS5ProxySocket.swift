@@ -67,7 +67,7 @@ public class SOCKS5ProxySocket: ProxySocket {
      */
     override public func openSocket() {
         super.openSocket()
-        
+
         guard !isCancelled else {
             return
         }

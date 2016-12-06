@@ -23,7 +23,7 @@ public class RejectAdapter: AdapterSocket {
         guard !isCancelled else {
             return
         }
-        
+
         _cancelled = true
         observer?.signal(.disconnectCalled(self))
         _status = .closed
@@ -37,7 +37,7 @@ public class RejectAdapter: AdapterSocket {
         guard !isCancelled else {
             return
         }
-        
+
         _cancelled = true
         observer?.signal(.forceDisconnectCalled(self))
         _status = .closed

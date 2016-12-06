@@ -10,7 +10,7 @@ public class DirectProxySocket: ProxySocket {
      */
     override public func openSocket() {
         super.openSocket()
-        
+
         guard !isCancelled else {
             return
         }
@@ -32,7 +32,7 @@ public class DirectProxySocket: ProxySocket {
      */
     override public func respondTo(adapter: AdapterSocket) {
         super.respondTo(adapter: adapter)
-        
+
         guard !isCancelled else {
             return
         }

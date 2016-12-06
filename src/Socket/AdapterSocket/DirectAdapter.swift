@@ -20,7 +20,7 @@ public class DirectAdapter: AdapterSocket {
         guard !isCancelled else {
             return
         }
-        
+
         do {
             try socket.connectTo(host: request.host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
         } catch let error {
