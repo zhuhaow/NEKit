@@ -17,6 +17,10 @@ public class DirectAdapter: AdapterSocket {
     override public func openSocketWith(request: ConnectRequest) {
         super.openSocketWith(request: request)
 
+        guard !isCancelled else {
+            return
+        }
+        
         do {
             try socket.connectTo(host: request.host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
         } catch let error {

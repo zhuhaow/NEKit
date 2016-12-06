@@ -9,6 +9,11 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     open override var description: String {
         return "<\(typeName) host:\(request.host) port:\(request.port))>"
     }
+    
+    internal var _cancelled = false
+    var isCancelled: Bool {
+        return _cancelled
+    }
 
     /**
      Connect to remote according to the `ConnectRequest`.
@@ -16,6 +21,10 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter request: The connect request.
      */
     func openSocketWith(request: ConnectRequest) {
+        guard !isCancelled else {
+            return
+        }
+        
         self.request = request
         observer?.signal(.socketOpened(self, withRequest: request))
 
@@ -61,6 +70,10 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     open func readData() {
+        guard !isCancelled else {
+            return
+        }
+        
         socket?.readData()
     }
 
@@ -71,6 +84,10 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
     open func write(data: Data) {
+        guard !isCancelled else {
+            return
+        }
+        
         socket?.write(data: data)
     }
 
@@ -79,6 +96,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      */
     open func disconnect() {
         _status = .disconnecting
+        _cancelled = true
         observer?.signal(.disconnectCalled(self))
         socket?.disconnect()
     }
@@ -88,6 +106,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      */
     open func forceDisconnect() {
         _status = .disconnecting
+        _cancelled = true
         observer?.signal(.forceDisconnectCalled(self))
         socket?.forceDisconnect()
     }

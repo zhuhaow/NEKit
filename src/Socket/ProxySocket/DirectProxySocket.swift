@@ -10,6 +10,10 @@ public class DirectProxySocket: ProxySocket {
      */
     override public func openSocket() {
         super.openSocket()
+        
+        guard !isCancelled else {
+            return
+        }
 
         if let address = socket.destinationIPAddress, let port = socket.destinationPort {
             request = ConnectRequest(host: address.presentation, port: Int(port.value))
@@ -28,6 +32,10 @@ public class DirectProxySocket: ProxySocket {
      */
     override public func respondTo(adapter: AdapterSocket) {
         super.respondTo(adapter: adapter)
+        
+        guard !isCancelled else {
+            return
+        }
 
         observer?.signal(.readyForForward(self))
         delegate?.didBecomeReadyToForwardWith(socket: self)

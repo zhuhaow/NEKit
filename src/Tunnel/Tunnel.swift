@@ -92,6 +92,8 @@ public class Tunnel: NSObject, SocketDelegate {
 
     /**
      Start running the tunnel.
+     
+     - note: This method is thread-safe.
      */
     func openTunnel() {
         queue.async {
@@ -107,6 +109,8 @@ public class Tunnel: NSObject, SocketDelegate {
 
     /**
      Close the tunnel elegantly.
+     
+     - note: This method is thread-safe.
      */
     func close() {
         observer?.signal(.closeCalled(self))
@@ -131,6 +135,8 @@ public class Tunnel: NSObject, SocketDelegate {
     }
 
     /// Close the tunnel immediately.
+    ///
+    /// - note: This method is thread-safe.
     func forceClose() {
         observer?.signal(.forceCloseCalled(self))
 
@@ -219,14 +225,14 @@ public class Tunnel: NSObject, SocketDelegate {
         if let socket = socket as? ProxySocket {
             observer?.signal(.proxySocketReadData(data, from: socket, on: self))
 
-            guard !_stopForwarding else {
+            guard !isCancelled else {
                 return
             }
             adapterSocket!.write(data: data)
         } else if let socket = socket as? AdapterSocket {
             observer?.signal(.adapterSocketReadData(data, from: socket, on: self))
 
-            guard !_stopForwarding else {
+            guard !isCancelled else {
                 return
             }
             proxySocket.write(data: data)
@@ -237,14 +243,14 @@ public class Tunnel: NSObject, SocketDelegate {
         if let socket = socket as? ProxySocket {
             observer?.signal(.proxySocketWroteData(data, by: socket, on: self))
 
-            guard !_stopForwarding else {
+            guard !isCancelled else {
                 return
             }
             adapterSocket?.readData()
         } else if let socket = socket as? AdapterSocket {
             observer?.signal(.adapterSocketWroteData(data, by: socket, on: self))
 
-            guard !_stopForwarding else {
+            guard !isCancelled else {
                 return
             }
             proxySocket.readData()

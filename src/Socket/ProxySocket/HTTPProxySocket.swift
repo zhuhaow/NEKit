@@ -55,11 +55,20 @@ public class HTTPProxySocket: ProxySocket {
      */
     override public func openSocket() {
         super.openSocket()
+        
+        guard !isCancelled else {
+            return
+        }
+
         internalStatus = .readingFirstHeader
         socket.readDataTo(data: Utils.HTTPData.DoubleCRLF)
     }
 
     override public func readData() {
+        guard !isCancelled else {
+            return
+        }
+
         // Return the first header we read when the socket was opened if the proxy command is not CONNECT.
         if internalStatus == .waitingToForward && !isConnectCommand {
             delegate?.didRead(data: currentHeader.toData(), from: self)
@@ -167,6 +176,10 @@ public class HTTPProxySocket: ProxySocket {
      */
     public override func respondTo(adapter: AdapterSocket) {
         super.respondTo(adapter: adapter)
+
+        guard !isCancelled else {
+            return
+        }
 
         // TODO: notify observer
         guard internalStatus == .waitingAdapter else {

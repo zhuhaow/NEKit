@@ -20,6 +20,11 @@ public class RejectAdapter: AdapterSocket {
      Disconnect the socket elegantly.
      */
     public override func disconnect() {
+        guard !isCancelled else {
+            return
+        }
+        
+        _cancelled = true
         observer?.signal(.disconnectCalled(self))
         _status = .closed
         delegate?.didDisconnectWith(socket: self)
@@ -29,6 +34,11 @@ public class RejectAdapter: AdapterSocket {
      Disconnect the socket immediately.
      */
     public override func forceDisconnect() {
+        guard !isCancelled else {
+            return
+        }
+        
+        _cancelled = true
         observer?.signal(.forceDisconnectCalled(self))
         _status = .closed
         delegate?.didDisconnectWith(socket: self)

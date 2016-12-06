@@ -67,6 +67,11 @@ public class SOCKS5ProxySocket: ProxySocket {
      */
     override public func openSocket() {
         super.openSocket()
+        
+        guard !isCancelled else {
+            return
+        }
+
         internalStatus = .readingVersionIdentifierAndNumberOfMethods
         socket.readDataTo(length: 2)
     }
@@ -209,6 +214,10 @@ public class SOCKS5ProxySocket: ProxySocket {
      */
     override public func respondTo(adapter: AdapterSocket) {
         super.respondTo(adapter: adapter)
+
+        guard !isCancelled else {
+            return
+        }
 
         var responseBytes = [UInt8](repeating: 0, count: 10)
         responseBytes[0...3] = [0x05, 0x00, 0x00, 0x01]

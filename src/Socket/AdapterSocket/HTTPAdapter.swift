@@ -47,6 +47,11 @@ public class HTTPAdapter: AdapterSocket {
 
     override public func openSocketWith(request: ConnectRequest) {
         super.openSocketWith(request: request)
+        
+        guard !isCancelled else {
+            return
+        }
+        
         do {
             internalStatus = .connecting
             try socket.connectTo(host: serverHost, port: serverPort, enableTLS: secured, tlsSettings: nil)

@@ -6,6 +6,11 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     public var request: ConnectRequest?
 
     public var observer: Observer<ProxySocketEvent>?
+    
+    private var _cancelled = false
+    var isCancelled: Bool {
+        return _cancelled
+    }
 
     open override var description: String {
         if let request = request {
@@ -33,6 +38,10 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Begin reading and processing data from the socket.
      */
     open func openSocket() {
+        guard !isCancelled else {
+            return
+        }
+
         observer?.signal(.socketOpened(self))
     }
 
@@ -42,6 +51,10 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - parameter adapter: The `AdapterSocket`.
      */
     open func respondTo(adapter: AdapterSocket) {
+        guard !isCancelled else {
+            return
+        }
+
         observer?.signal(.askedToResponseTo(adapter, on: self))
     }
 
@@ -50,6 +63,10 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
     open func readData() {
+        guard !isCancelled else {
+            return
+        }
+
         socket.readData()
     }
 
@@ -60,6 +77,10 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
     open func write(data: Data) {
+        guard !isCancelled else {
+            return
+        }
+
         socket.write(data: data)
     }
 
@@ -67,7 +88,12 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Disconnect the socket elegantly.
      */
     open func disconnect() {
+        guard !isCancelled else {
+            return
+        }
+
         _status = .disconnecting
+        _cancelled = true
         socket.disconnect()
         observer?.signal(.disconnectCalled(self))
     }
@@ -76,7 +102,12 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Disconnect the socket immediately.
      */
     open func forceDisconnect() {
+        guard !isCancelled else {
+            return
+        }
+
         _status = .disconnecting
+        _cancelled = true
         socket.forceDisconnect()
         observer?.signal(.forceDisconnectCalled(self))
     }
