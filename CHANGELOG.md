@@ -5,7 +5,8 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ## Unreleased
 ### Changed
 - `state` in `SocketProtocol` is changed to `status`.
-- `Tunnel` is refactored.
+- All interfaces relating to adapter, proxy and tunnel are refined according to the new Swift 3 convention.
+- All data tags are removed, now information is saved in `internalStatus`.
 
 ## 0.8.1
 ### Changed
