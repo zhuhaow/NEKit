@@ -13,7 +13,7 @@ open class HTTPAdapterFactory: HTTPAuthenticationAdapterFactory {
 
      - returns: The built adapter.
      */
-    override func getAdapter(_ request: ConnectRequest) -> AdapterSocket {
+    override func getAdapterFor(request: ConnectRequest) -> AdapterSocket {
         let adapter = HTTPAdapter(serverHost: serverHost, serverPort: serverPort, auth: auth)
         adapter.socket = RawSocketFactory.getRawSocket()
         return adapter

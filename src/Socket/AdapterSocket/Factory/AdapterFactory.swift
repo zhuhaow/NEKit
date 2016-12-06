@@ -9,7 +9,7 @@ open class AdapterFactory {
 
      - returns: The built adapter.
      */
-    func getAdapter(_ request: ConnectRequest) -> AdapterSocket {
+    func getAdapterFor(request: ConnectRequest) -> AdapterSocket {
         return getDirectAdapter()
     }
 

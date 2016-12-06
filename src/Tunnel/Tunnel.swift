@@ -191,7 +191,7 @@ public class Tunnel: NSObject, SocketDelegate {
 
         let manager = RuleManager.currentManager
         let factory = manager.match(request)!
-        adapterSocket = factory.getAdapter(request)
+        adapterSocket = factory.getAdapterFor(request: request)
         adapterSocket!.queue = queue
         adapterSocket!.delegate = self
         adapterSocket!.openSocketWith(request: request)
