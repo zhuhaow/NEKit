@@ -31,7 +31,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         super.init()
 
         self.socket.delegate = self
-        
+
         if observe {
             observer = ObserverFactory.currentFactory?.getObserverForProxySocket(self)
         }
