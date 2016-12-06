@@ -6,8 +6,7 @@ public class ShadowsocksAdapter: AdapterSocket {
     enum ShadowsocksAdapterStatus {
         case invalid,
         connecting,
-        waitingIV,
-        readingIV,
+        sendingIV,
         forwarding,
         stopped
     }
@@ -25,9 +24,6 @@ public class ShadowsocksAdapter: AdapterSocket {
     public let port: Int
 
     let streamObfuscaterType: ShadowsocksStreamObfuscater.Type
-
-    var readingIV: Bool = false
-    var nextReadTag: Int = 0
 
     var internalStatus: ShadowsocksAdapterStatus = .invalid
 
@@ -82,7 +78,7 @@ public class ShadowsocksAdapter: AdapterSocket {
         encryptData(&requestData)
         helloData.append(requestData)
 
-        internalStatus = .waitingIV
+        internalStatus = .sendingIV
         write(rawData: helloData)
     }
 
@@ -91,14 +87,10 @@ public class ShadowsocksAdapter: AdapterSocket {
     }
 
     override public func readData() {
-        switch internalStatus {
-        case .forwarding:
-            super.readData()
-        case .waitingIV:
-            internalStatus = .readingIV
+        if readIV == nil {
             socket.readDataTo(length: ivLength)
-        default:
-            return
+        } else {
+            super.readData()
         }
     }
 
@@ -112,18 +104,13 @@ public class ShadowsocksAdapter: AdapterSocket {
     override public func didRead(data: Data, from socket: RawTCPSocketProtocol) {
         super.didRead(data: data, from: socket)
 
-        switch internalStatus {
-        case .forwarding:
+        if readIV == nil {
+            readIV = data
+            readData()
+        } else {
             var data = streamObfuscater.input(data: data)
             decryptData(&data)
             delegate?.didRead(data: data, from: self)
-        case .readingIV:
-            // IV is only read when the first read is requested
-            readIV = data
-            internalStatus = .forwarding
-            readData()
-        default:
-            return
         }
     }
 
@@ -133,7 +120,8 @@ public class ShadowsocksAdapter: AdapterSocket {
         switch internalStatus {
         case .forwarding:
             delegate?.didWrite(data: data, by: self)
-        case .waitingIV:
+        case .sendingIV:
+            internalStatus = .forwarding
             observer?.signal(.readyForForward(self))
             delegate?.didBecomeReadyToForwardWith(socket: self)
         default:
