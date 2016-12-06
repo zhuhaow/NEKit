@@ -11,11 +11,18 @@ public enum HTTPAdapterError: Error, CustomStringConvertible {
             return "Failed to serialize HTTP CONNECT header"
         }
     }
-
 }
 
 /// This adapter connects to remote host through a HTTP proxy.
-open class HTTPAdapter: AdapterSocket {
+public class HTTPAdapter: AdapterSocket {
+    enum HTTPAdapterStatus {
+        case invalid,
+        connecting,
+        readingResponse,
+        forwarding,
+        stopped
+    }
+
     /// The host domain of the HTTP proxy.
     let serverHost: String
 
@@ -28,12 +35,7 @@ open class HTTPAdapter: AdapterSocket {
     /// Whether the connection to the proxy should be secured or not.
     var secured: Bool
 
-    enum ReadTag: Int {
-        case connectResponse = 30000
-    }
-    enum WriteTag: Int {
-        case connect = 40000, header
-    }
+    var internalStatus: HTTPAdapterStatus = .invalid
 
     public init(serverHost: String, serverPort: Int, auth: HTTPAuthentication?) {
         self.serverHost = serverHost
@@ -43,15 +45,16 @@ open class HTTPAdapter: AdapterSocket {
         super.init()
     }
 
-    override func openSocketWithRequest(_ request: ConnectRequest) {
-        super.openSocketWithRequest(request)
+    override public func openSocketWith(request: ConnectRequest) {
+        super.openSocketWith(request: request)
         do {
-            try socket.connectTo(serverHost, port: serverPort, enableTLS: secured, tlsSettings: nil)
+            internalStatus = .connecting
+            try socket.connectTo(host: serverHost, port: serverPort, enableTLS: secured, tlsSettings: nil)
         } catch {}
     }
 
-    override open func didConnect(_ socket: RawTCPSocketProtocol) {
-        super.didConnect(socket)
+    override public func didConnectWith(socket: RawTCPSocketProtocol) {
+        super.didConnectWith(socket: socket)
 
         guard let url = URL(string: "\(request.host):\(request.port)") else {
             observer?.signal(.errorOccured(HTTPAdapterError.invalidURL, on: self))
@@ -71,24 +74,32 @@ open class HTTPAdapter: AdapterSocket {
             return
         }
 
-        writeData(requestData as Data, withTag: WriteTag.connect.rawValue)
-        socket.readDataToData(Utils.HTTPData.DoubleCRLF, withTag: ReadTag.connectResponse.rawValue)
+        internalStatus = .readingResponse
+        write(data: requestData as Data)
+        socket.readDataTo(data: Utils.HTTPData.DoubleCRLF)
     }
 
-    override open func didReadData(_ data: Data, withTag tag: Int, from socket: RawTCPSocketProtocol) {
-        super.didReadData(data, withTag: tag, from: socket)
-        if tag == ReadTag.connectResponse.rawValue {
+    override public func didRead(data: Data, from socket: RawTCPSocketProtocol) {
+        super.didRead(data: data, from: socket)
+
+        switch internalStatus {
+        case .readingResponse:
+            internalStatus = .forwarding
             observer?.signal(.readyForForward(self))
-            delegate?.readyToForward(self)
-        } else {
-            delegate?.didReadData(data, withTag: tag, from: self)
+            delegate?.didBecomeReadyToForwardWith(socket: self)
+        case .forwarding:
+            observer?.signal(.readData(data, on: self))
+            delegate?.didRead(data: data, from: self)
+        default:
+            return
         }
     }
 
-    override open func didWriteData(_ data: Data?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
-        super.didWriteData(data, withTag: tag, from: socket)
-        if tag != WriteTag.connect.rawValue {
-            delegate?.didWriteData(data, withTag: tag, from: self)
+    override public func didWrite(data: Data?, by socket: RawTCPSocketProtocol) {
+        super.didWrite(data: data, by: socket)
+        if internalStatus == .forwarding {
+            observer?.signal(.wroteData(data, on: self))
+            delegate?.didWrite(data: data, by: self)
         }
     }
 }

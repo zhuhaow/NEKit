@@ -1,7 +1,7 @@
 import Foundation
 
 /// This adapter connects to remote directly.
-open class DirectAdapter: AdapterSocket {
+public class DirectAdapter: AdapterSocket {
     /// If this is set to `false`, then the IP address will be resolved by system.
     var resolveHost = false
 
@@ -14,11 +14,11 @@ open class DirectAdapter: AdapterSocket {
 
      - parameter request: The connect request.
      */
-    override func openSocketWithRequest(_ request: ConnectRequest) {
-        super.openSocketWithRequest(request)
+    override public func openSocketWith(request: ConnectRequest) {
+        super.openSocketWith(request: request)
 
         do {
-            try socket.connectTo(request.host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
+            try socket.connectTo(host: request.host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
         } catch let error {
             observer?.signal(.errorOccured(error, on: self))
             disconnect()
@@ -30,19 +30,19 @@ open class DirectAdapter: AdapterSocket {
 
      - parameter socket: The connected socket.
      */
-    override open func didConnect(_ socket: RawTCPSocketProtocol) {
-        super.didConnect(socket)
+    override public func didConnectWith(socket: RawTCPSocketProtocol) {
+        super.didConnectWith(socket: socket)
         observer?.signal(.readyForForward(self))
-        delegate?.readyToForward(self)
+        delegate?.didBecomeReadyToForwardWith(socket: self)
     }
 
-    override open func didReadData(_ data: Data, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
-        super.didReadData(data, withTag: tag, from: rawSocket)
-        delegate?.didReadData(data, withTag: tag, from: self)
+    override public func didRead(data: Data, from rawSocket: RawTCPSocketProtocol) {
+        super.didRead(data: data, from: rawSocket)
+        delegate?.didRead(data: data, from: self)
     }
 
-    override open func didWriteData(_ data: Data?, withTag tag: Int, from rawSocket: RawTCPSocketProtocol) {
-        super.didWriteData(data, withTag: tag, from: rawSocket)
-        delegate?.didWriteData(data, withTag: tag, from: self)
+    override public func didWrite(data: Data?, by rawSocket: RawTCPSocketProtocol) {
+        super.didWrite(data: data, by: rawSocket)
+        delegate?.didWrite(data: data, by: self)
     }
 }

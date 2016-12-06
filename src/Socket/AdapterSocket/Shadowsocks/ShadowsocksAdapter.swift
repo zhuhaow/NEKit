@@ -2,17 +2,34 @@ import Foundation
 import CommonCrypto
 
 /// This adapter connects to remote through Shadowsocks proxy.
-open class ShadowsocksAdapter: AdapterSocket {
+public class ShadowsocksAdapter: AdapterSocket {
+    enum ShadowsocksAdapterStatus {
+        case invalid,
+        connecting,
+        waitingIV,
+        readingIV,
+        forwarding,
+        stopped
+    }
+
+    enum EncryptMethod: String {
+        case AES128CFB = "AES-128-CFB", AES192CFB = "AES-192-CFB", AES256CFB = "AES-256-CFB"
+
+        static let allValues: [EncryptMethod] = [.AES128CFB, .AES192CFB, .AES256CFB]
+    }
+
     var readIV: Data!
     let key: Data
-    open let encryptAlgorithm: CryptoAlgorithm
-    open let host: String
-    open let port: Int
+    public let encryptAlgorithm: CryptoAlgorithm
+    public let host: String
+    public let port: Int
 
     let streamObfuscaterType: ShadowsocksStreamObfuscater.Type
 
     var readingIV: Bool = false
     var nextReadTag: Int = 0
+
+    var internalStatus: ShadowsocksAdapterStatus = .invalid
 
     lazy var writeIV: Data = {
         [unowned self] in
@@ -35,16 +52,6 @@ open class ShadowsocksAdapter: AdapterSocket {
         return self.streamObfuscaterType.init(key: self.key, iv: self.writeIV)
     }()
 
-    enum EncryptMethod: String {
-        case AES128CFB = "AES-128-CFB", AES192CFB = "AES-192-CFB", AES256CFB = "AES-256-CFB"
-
-        static let allValues: [EncryptMethod] = [.AES128CFB, .AES192CFB, .AES256CFB]
-    }
-
-    enum ShadowsocksTag: Int {
-        case initialVector = 25000, connect
-    }
-
     public init(host: String, port: Int, encryptAlgorithm: CryptoAlgorithm, password: String, streamObfuscaterType: ShadowsocksStreamObfuscater.Type = OriginStreamObfuscater.self) {
         self.encryptAlgorithm = encryptAlgorithm
         self.key = CryptoHelper.getKey(password, methodType: encryptAlgorithm)
@@ -55,71 +62,82 @@ open class ShadowsocksAdapter: AdapterSocket {
         super.init()
     }
 
-    override func openSocketWithRequest(_ request: ConnectRequest) {
-        super.openSocketWithRequest(request)
+    override func openSocketWith(request: ConnectRequest) {
+        super.openSocketWith(request: request)
 
         do {
-            try socket.connectTo(host, port: port, enableTLS: false, tlsSettings: nil)
+            internalStatus = .connecting
+            try socket.connectTo(host: host, port: port, enableTLS: false, tlsSettings: nil)
         } catch let error {
             observer?.signal(.errorOccured(error, on: self))
             disconnect()
         }
     }
 
-    override open func didConnect(_ socket: RawTCPSocketProtocol) {
-        super.didConnect(socket)
+    override public func didConnectWith(socket: RawTCPSocketProtocol) {
+        super.didConnectWith(socket: socket)
 
         var helloData = writeIV
         var requestData = streamObfuscater.requestData(for: request)
         encryptData(&requestData)
         helloData.append(requestData)
 
-        writeRawData(helloData, withTag: ShadowsocksTag.connect.rawValue)
+        internalStatus = .waitingIV
+        write(rawData: helloData)
     }
 
-    func writeRawData(_ data: Data, withTag tag: Int) {
-        super.writeData(data, withTag: tag)
+    func write(rawData: Data) {
+        super.write(data: rawData)
     }
 
-    override open func readDataWithTag(_ tag: Int) {
-        if readIV == nil && !readingIV {
-            readingIV = true
-            nextReadTag = tag
-            socket.readDataToLength(ivLength, withTag: ShadowsocksTag.initialVector.rawValue)
-        } else {
-            super.readDataWithTag(tag)
+    override public func readData() {
+        switch internalStatus {
+        case .forwarding:
+            super.readData()
+        case .waitingIV:
+            internalStatus = .readingIV
+            socket.readDataTo(length: ivLength)
+        default:
+            return
         }
     }
 
-    override open func writeData(_ data: Data, withTag tag: Int) {
+    override public func write(data: Data) {
         var data = streamObfuscater.output(data: data)
 
         encryptData(&data)
-        writeRawData(data, withTag: tag)
+        write(rawData: data)
     }
 
-    override open func didReadData(_ data: Data, withTag tag: Int, from socket: RawTCPSocketProtocol) {
-        super.didReadData(data, withTag: tag, from: socket)
+    override public func didRead(data: Data, from socket: RawTCPSocketProtocol) {
+        super.didRead(data: data, from: socket)
 
-        if tag == ShadowsocksTag.initialVector.rawValue {
-            readIV = data
-            readingIV = false
-            super.readDataWithTag(nextReadTag)
-        } else {
+        switch internalStatus {
+        case .forwarding:
             var data = streamObfuscater.input(data: data)
             decryptData(&data)
-            delegate?.didReadData(data, withTag: tag, from: self)
+            delegate?.didRead(data: data, from: self)
+        case .readingIV:
+            // IV is only read when the first read is requested
+            readIV = data
+            internalStatus = .forwarding
+            readData()
+        default:
+            return
         }
     }
 
-    override open func didWriteData(_ data: Data?, withTag tag: Int, from socket: RawTCPSocketProtocol) {
-        super.didWriteData(data, withTag: tag, from: socket)
+    override public func didWrite(data: Data?, by socket: RawTCPSocketProtocol) {
+        super.didWrite(data: data, by: socket)
 
-        if tag == ShadowsocksTag.connect.rawValue {
+        switch internalStatus {
+        case .forwarding:
+            delegate?.didWrite(data: data, by: self)
+        case .waitingIV:
             observer?.signal(.readyForForward(self))
-            delegate?.readyToForward(self)
-        } else {
-            delegate?.didWriteData(nil, withTag: tag, from: self)
+            delegate?.didBecomeReadyToForwardWith(socket: self)
+        default:
+            return
         }
     }
 

@@ -11,16 +11,16 @@ public enum AdapterSocketEvent: EventType {
             return "Force disconnect is just called on adapter socket \(socket)."
         case .disconnected(let socket):
             return "Adapter socket \(socket) disconnected."
-        case let .readData(data, tag: tag, on: socket):
-            return "Received \(data.count) bytes data with tag \(tag) on adatper socket \(socket)."
-        case let .wroteData(data, tag: tag, on: socket):
+        case let .readData(data, on: socket):
+            return "Received \(data.count) bytes data on adatper socket \(socket)."
+        case let .wroteData(data, on: socket):
             if let data = data {
-                return "Sent \(data.count) bytes data with tag \(tag) on adapter socket \(socket)."
+                return "Sent \(data.count) bytes data on adapter socket \(socket)."
             } else {
-                return "Sent data with tag \(tag) on adapter socket \(socket)."
+                return "Sent data on adapter socket \(socket)."
             }
-        case let .connected(socket, withResponse: response):
-            return "Adapter socket \(socket) connected to remote with response \(response)."
+        case let .connected(socket):
+            return "Adapter socket \(socket) connected to remote."
         case .readyForForward(let socket):
             return "Adatper socket \(socket) is ready to forward data."
         case let .errorOccured(error, on: socket):
@@ -32,9 +32,9 @@ public enum AdapterSocketEvent: EventType {
     disconnectCalled(AdapterSocket),
     forceDisconnectCalled(AdapterSocket),
     disconnected(AdapterSocket),
-    readData(Data, tag: Int, on: AdapterSocket),
-    wroteData(Data?, tag: Int, on: AdapterSocket),
-    connected(AdapterSocket, withResponse: ConnectResponse),
+    readData(Data, on: AdapterSocket),
+    wroteData(Data?, on: AdapterSocket),
+    connected(AdapterSocket),
     readyForForward(AdapterSocket),
     errorOccured(Error, on: AdapterSocket)
 }

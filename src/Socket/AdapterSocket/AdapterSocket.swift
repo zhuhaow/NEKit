@@ -15,13 +15,13 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter request: The connect request.
      */
-    func openSocketWithRequest(_ request: ConnectRequest) {
+    func openSocketWith(request: ConnectRequest) {
         self.request = request
         observer?.signal(.socketOpened(self, withRequest: request))
 
         socket?.delegate = self
         socket?.queue = queue
-        status = .connecting
+        _status = .connecting
     }
 
     // MARK: SocketProtocol Implementation
@@ -39,8 +39,15 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         }
     }
 
+    var _status: SocketStatus = .invalid
     /// The current connection status of the socket.
-    open var status: SocketStatus = .invalid
+    public var status: SocketStatus {
+        return _status
+    }
+
+    open var statusDescription: String {
+        return "\(status)"
+    }
 
     override public init() {
         super.init()
@@ -51,37 +58,27 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /**
      Read data from the socket.
 
-     - parameter tag: The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last read is finished, i.e., `delegate?.didReadData()` is called.
      */
-    open func readDataWithTag(_ tag: Int) {
-        socket?.readDataWithTag(tag)
+    open func readData() {
+        socket?.readData()
     }
 
     /**
      Send data to remote.
 
      - parameter data: Data to send.
-     - parameter tag:  The tag identifying the data in the callback delegate method.
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
-    open func writeData(_ data: Data, withTag tag: Int) {
-        socket?.writeData(data, withTag: tag)
+    open func write(data: Data) {
+        socket?.write(data: data)
     }
-
-    //    func readDataToLength(length: Int, withTag tag: Int) {
-    //        socket.readDataToLength(length, withTag: tag)
-    //    }
-    //
-    //    func readDataToData(data: NSData, withTag tag: Int) {
-    //        socket.readDataToData(data, withTag: tag)
-    //    }
 
     /**
      Disconnect the socket elegantly.
      */
     open func disconnect() {
-        status = .disconnecting
+        _status = .disconnecting
         observer?.signal(.disconnectCalled(self))
         socket?.disconnect()
     }
@@ -90,7 +87,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
      Disconnect the socket immediately.
      */
     open func forceDisconnect() {
-        status = .disconnecting
+        _status = .disconnecting
         observer?.signal(.forceDisconnectCalled(self))
         socket?.forceDisconnect()
     }
@@ -102,32 +99,30 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The socket which did disconnect.
      */
-    open func didDisconnect(_ socket: RawTCPSocketProtocol) {
-        status = .closed
+    open func didDisconnectWith(socket: RawTCPSocketProtocol) {
+        _status = .closed
         observer?.signal(.disconnected(self))
-        delegate?.didDisconnect(self)
+        delegate?.didDisconnectWith(socket: self)
     }
 
     /**
      The socket did read some data.
 
      - parameter data:    The data read from the socket.
-     - parameter withTag: The tag given when calling the `readData` method.
      - parameter from:    The socket where the data is read from.
      */
-    open func didReadData(_ data: Data, withTag tag: Int, from: RawTCPSocketProtocol) {
-        observer?.signal(.readData(data, tag: tag, on: self))
+    open func didRead(data: Data, from: RawTCPSocketProtocol) {
+        observer?.signal(.readData(data, on: self))
     }
 
     /**
      The socket did send some data.
 
      - parameter data:    The data which have been sent to remote (acknowledged). Note this may not be available since the data may be released to save memory.
-     - parameter withTag: The tag given when calling the `writeData` method.
-     - parameter from:    The socket where the data is sent out.
+     - parameter by:    The socket where the data is sent out.
      */
-    open func didWriteData(_ data: Data?, withTag tag: Int, from: RawTCPSocketProtocol) {
-        observer?.signal(.wroteData(data, tag: tag, on: self))
+    open func didWrite(data: Data?, by: RawTCPSocketProtocol) {
+        observer?.signal(.wroteData(data, on: self))
     }
 
     /**
@@ -135,9 +130,9 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter socket: The connected socket.
      */
-    open func didConnect(_ socket: RawTCPSocketProtocol) {
-        status = .established
-        observer?.signal(.connected(self, withResponse: response))
-        delegate?.didConnect(self, withResponse: response)
+    open func didConnectWith(socket: RawTCPSocketProtocol) {
+        _status = .established
+        observer?.signal(.connected(self))
+        delegate?.didConnectWith(adapterSocket: self)
     }
 }

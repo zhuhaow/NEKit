@@ -56,7 +56,7 @@ open class DebugProxySocketObserver: Observer<ProxySocketEvent> {
              .receivedRequest:
             DDLogInfo("\(event)")
         case .socketOpened,
-             .receivedResponse,
+             .askedToResponseTo,
              .readyForForward:
             DDLogVerbose("\(event)")
         case .disconnectCalled,

@@ -2,14 +2,14 @@ import Foundation
 
 /// This adpater selects the fastest proxy automatically from a set of proxies.
 // TODO: Event support
-open class SpeedAdapter: AdapterSocket, SocketDelegate {
-    open var adapters: [(AdapterSocket, Int)]!
+public class SpeedAdapter: AdapterSocket, SocketDelegate {
+    public var adapters: [(AdapterSocket, Int)]!
     var connectingCount = 0
     var pendingCount = 0
 
     fileprivate var _shouldConnect: Bool = true
 
-    override open var queue: DispatchQueue! {
+    override public var queue: DispatchQueue! {
         didSet {
             for (adapter, _) in adapters {
                 adapter.queue = queue
@@ -21,7 +21,7 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
         super.init()
     }
 
-    override func openSocketWithRequest(_ request: ConnectRequest) {
+    override func openSocketWith(request: ConnectRequest) {
         // FIXME: This is a temporary workaround for wechat which uses a wrong way to detect ipv6 by itself.
         if request.isIPv6() {
             disconnect()
@@ -33,14 +33,14 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
             queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(NSEC_PER_MSEC) * Int64(delay)) / Double(NSEC_PER_SEC)) {
                 if self._shouldConnect {
                     adapter.delegate = self
-                    adapter.openSocketWithRequest(request)
+                    adapter.openSocketWith(request: request)
                     self.connectingCount += 1
                 }
             }
         }
     }
 
-    override open func disconnect() {
+    override public func disconnect() {
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
@@ -51,7 +51,7 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    override open func forceDisconnect() {
+    override public func forceDisconnect() {
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
@@ -62,9 +62,9 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    open func didConnect(_ adapterSocket: AdapterSocket, withResponse response: ConnectResponse) {}
+    public func didConnectWith(adapterSocket socket: AdapterSocket) {}
 
-    open func readyToForward(_ socket: SocketProtocol) {
+    public func didBecomeReadyToForwardWith(socket: SocketProtocol) {
         guard let adapterSocket = socket as? AdapterSocket else {
             return
         }
@@ -81,22 +81,22 @@ open class SpeedAdapter: AdapterSocket, SocketDelegate {
             }
         }
 
-        delegate?.updateAdapter(adapterSocket)
-        delegate?.didConnect(adapterSocket, withResponse: adapterSocket.response)
-        delegate?.readyToForward(adapterSocket)
+        delegate?.updateAdapterWith(newAdapter: adapterSocket)
+        delegate?.didConnectWith(adapterSocket: adapterSocket)
+        delegate?.didBecomeReadyToForwardWith(socket: adapterSocket)
         delegate = nil
     }
 
-    open func didDisconnect(_ socket: SocketProtocol) {
+    public func didDisconnectWith(socket: SocketProtocol) {
         connectingCount -= 1
         if connectingCount == 0 && pendingCount == 0 {
             // failed to connect
-            delegate?.didDisconnect(self)
+            delegate?.didDisconnectWith(socket: self)
         }
     }
 
-    open func didWriteData(_ data: Data?, withTag: Int, from: SocketProtocol) {}
-    open func didReadData(_ data: Data, withTag: Int, from: SocketProtocol) {}
-    open func updateAdapter(_ newAdapter: AdapterSocket) {}
-    open func didReceiveRequest(_ request: ConnectRequest, from: ProxySocket) {}
+    public func didWrite(data: Data?, by: SocketProtocol) {}
+    public func didRead(data: Data, from: SocketProtocol) {}
+    public func updateAdapterWith(newAdapter: AdapterSocket) {}
+    public func didReceive(request: ConnectRequest, from: ProxySocket) {}
 }

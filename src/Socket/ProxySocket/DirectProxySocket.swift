@@ -51,7 +51,7 @@ public class DirectProxySocket: ProxySocket {
      - parameter by:    The socket where the data is sent out.
      */
     override open func didWrite(data: Data?, by: RawTCPSocketProtocol) {
-        super.didWrite(data: data, by: from)
+        super.didWrite(data: data, by: by)
         delegate?.didWrite(data: data, by: self)
     }
 }
