@@ -48,7 +48,7 @@ public class SOCKS5ProxySocket: ProxySocket {
         switch internalStatus {
         case .waitingToForward:
             internalStatus = .forwarding
-            fallthrough
+            delegate?.didRead(data: data, from: self)
         case .forwarding:
             delegate?.didRead(data: data, from: self)
         case .readingVersionIdentifierAndNumberOfMethods:
@@ -132,7 +132,7 @@ public class SOCKS5ProxySocket: ProxySocket {
             socket.readDataTo(length: 2)
         case .readingPort:
             data.withUnsafeRawPointer {
-                destinationPort = Int($0.load(as: UInt16.self))
+                destinationPort = Int($0.load(as: UInt16.self).bigEndian)
             }
 
             internalStatus = .waitingAdapter
