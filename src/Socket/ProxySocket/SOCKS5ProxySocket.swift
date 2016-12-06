@@ -1,7 +1,7 @@
 import Foundation
 
 public class SOCKS5ProxySocket: ProxySocket {
-    enum SOCKS5ProxyStatus {
+    enum SOCKS5ProxyStatus: CustomStringConvertible {
         case invalid,
         readingVersionIdentifierAndNumberOfMethods,
         readingMethods,
@@ -16,6 +16,39 @@ public class SOCKS5ProxySocket: ProxySocket {
         waitingToForward,
         forwarding,
         stopped
+
+        var description: String {
+            switch self {
+            case .invalid:
+                return "invalid"
+            case .readingVersionIdentifierAndNumberOfMethods:
+                return "reading version and methods"
+            case .readingMethods:
+                return "reading methods"
+            case .readingConnectHeader:
+                return "reading connect header"
+            case .readingIPv4Address:
+                return "IPv4 address"
+            case .readingDomainLength:
+                return "domain length"
+            case .readingDomain:
+                return "domain"
+            case .readingIPv6Address:
+                return "IPv6 address"
+            case .readingPort:
+                return "reading port"
+            case .waitingAdapter:
+                return "waiting adapter"
+            case .sendingResponse:
+                return "sending response"
+            case .waitingToForward:
+                return "waiting to begin forwarding data"
+            case .forwarding:
+                return "forwarding"
+            case .stopped:
+                return "stopped"
+            }
+        }
     }
     /// The remote host to connect to.
     public var destinationHost: String!
@@ -24,6 +57,10 @@ public class SOCKS5ProxySocket: ProxySocket {
     public var destinationPort: Int!
 
     var internalStatus: SOCKS5ProxyStatus = .invalid
+
+    public override var statusDescription: String {
+        return "\(status) (\(internalStatus))"
+    }
 
     /**
      Begin reading and processing data from the socket.
