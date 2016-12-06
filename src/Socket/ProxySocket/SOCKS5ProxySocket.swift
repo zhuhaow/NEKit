@@ -158,6 +158,8 @@ public class SOCKS5ProxySocket: ProxySocket {
             delegate?.didWrite(data: data, by: self)
         case .sendingResponse:
             internalStatus = .waitingToForward
+            observer?.signal(.readyForForward(self))
+            delegate?.didBecomeReadyToForwardWith(socket: self)
         default:
             return
         }
