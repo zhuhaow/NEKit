@@ -7,6 +7,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 - `state` in `SocketProtocol` is changed to `status`.
 - All interfaces relating to adapter, proxy and tunnel are refined according to the new Swift 3 convention.
 - All data tags are removed, now information is saved in `internalStatus`.
+- `SpeedAdapter` now signals observer with partial information.
 
 ## 0.8.1
 ### Changed
