@@ -1,0 +1,34 @@
+language: objective-c
+osx_image: xcode8.1
+rvm:
+  - 2.3.1
+
+cache:
+  directories:
+  - Carthage
+
+install:
+- bin/bootstrap-if-needed
+- gem install scan
+
+script:
+  - scan --scheme NEKit-macOS
+  - scan --scheme NEKit-iOS
+  
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+- ./docs/build_docs.sh
+
+before_deploy:
+- carthage build --no-skip-current
+- carthage archive NEKit
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: DZC5vAZl8nbvPsVnYTf3zmh9/x7Y8hl3b2gSMklVtmwg2RkQ+OlaiJmpIzwiCY1iUkEBZ4X/5vRj/Ed07s648atJMkp8Y0WXNKzsLAZXmHNd+2h99IVx7PC112mj8qQTmoihUle5+vANthHZoG1jti59siHeFgpLb4BEQl1iCRESy4tl6XQZcgRwphTeEwyNWuveBToBdIx2piCAavwlw++YPsD3+NFgyqy8gZsiueins2sX7hpcZDNKjfDKSO7Lfi3YSqvEXF6xYrmwG7TO25Jf6iCurQho/Gc74n0RwjJgBgfGm5SIdzmK+Est061xW1iQQzEUF1RN/kB6kKtqVjxxdGNg7GhTEpXBII0GyCdsoIlPSxC40xz+3QAR6xHkcEEygle39QSIIza9hBX3weKYABZFjnCQz2i/hGnN+KBurgNLeBJeOUbNN9Dzct3WPV72yebiOMLl+lnPuK88NB5mRR5Gq9ZFtBp86JBNmStWb041Dd8jY6tTqsLd253phosVFmClvndauQayuYUVLAKx9csKNwhyrVtpjdsniiRSzHn8E+zzi4jvC7KEXDUym5Jq8qvJMb0c1itv4A+yzBc4C7jxBsPz5AiUWbFoWJv+lYtQlOCjagNjFDCMz3XqDIJvyDmxNgsgCUbnJsz6NQLCydnwcsHvk+v8iOZjMUs=
+  file: NEKit.framework.zip
+  on:
+    repo: zhuhaow/NEKit
+    tags: true
