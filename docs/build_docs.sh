@@ -42,7 +42,7 @@ git config user.email "$EMAIL"
 
 git add -fA
 git commit --allow-empty -m "$COMMIT_MESSAGE [ci skip]"
-git push -f -q $ORIGIN_CREDENTIALS gh-pages
+git push -f -q $ORIGIN_CREDENTIALS gh-pages > /dev/null 2>&1
 
 echo "Deployed Successfully!"
 
