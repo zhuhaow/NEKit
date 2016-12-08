@@ -61,7 +61,7 @@ public final class ConnectRequest {
     public lazy var country: String = {
         [unowned self] in
         guard let c = Utils.GeoIPLookup.Lookup(self.ipAddress) else {
-            return "--"
+            return ""
         }
         return c
     }()
