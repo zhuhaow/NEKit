@@ -213,8 +213,6 @@ public class Tunnel: NSObject, SocketDelegate {
 
     public func didDisconnectWith(socket: SocketProtocol) {
         if !isCancelled {
-            _status = .closing
-            _cancelled = true
             _stopForwarding = true
             close()
         }
