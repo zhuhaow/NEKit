@@ -20,4 +20,16 @@ public struct HMAC {
 
         return result
     }
+
+    public static func final(value: UnsafeRawPointer, length: Int, algorithm: HashAlgorithm, key: Data) -> Data {
+        var result = Data(count: algorithm.digestLength)
+
+        _ = result.withUnsafeMutableBytes { res in
+                key.withUnsafeRawPointer { k in
+                    CCHmac(algorithm.HMACAlgorithm, k, key.count, value, length, res)
+                }
+            }
+
+        return result
+    }
 }
