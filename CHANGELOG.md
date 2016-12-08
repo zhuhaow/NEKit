@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
-## Unreleased
+## 0.9.0
 ### Changed
 - `state` in `SocketProtocol` is changed to `status`.
 - All interfaces relating to adapter, proxy and tunnel are refined according to the new Swift 3 convention.
