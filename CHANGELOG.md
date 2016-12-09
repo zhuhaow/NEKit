@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## Unrealsed
+
+### Fixed
+- Fix that when the request is an IP address it will not be processed correctly.
+
+### Changed
+- Now `internalStatus` is changed to read and write status.
+
 ## 0.10.2
 
 ### Changed
