@@ -160,6 +160,9 @@ public class Tunnel: NSObject, SocketDelegate {
                     self?.openAdapter(for: request)
                 }
             }
+        } else {
+            request.ipAddress = request.host
+            openAdapter(for: request)
         }
     }
 
