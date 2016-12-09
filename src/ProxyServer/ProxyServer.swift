@@ -54,19 +54,23 @@ open class ProxyServer: NSObject, TunnelDelegate {
      - throws: The error occured when starting the proxy server.
      */
     open func start() throws {
-        GlobalIntializer.initalize()
-        self.observer?.signal(.started(self))
+        QueueFactory.executeOnQueueSynchronizedly {
+            GlobalIntializer.initalize()
+            self.observer?.signal(.started(self))
+        }
     }
 
     /**
      Stop the proxy server.
      */
     open func stop() {
-        for tunnel in tunnels {
-            tunnel.forceClose()
-        }
+        QueueFactory.executeOnQueueSynchronizedly {
+            for tunnel in tunnels {
+                tunnel.forceClose()
+            }
 
-        observer?.signal(.stopped(self))
+            observer?.signal(.stopped(self))
+        }
     }
 
     /**
