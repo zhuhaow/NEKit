@@ -132,7 +132,7 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     open var readStatusDescription: String {
         return "\(status)"
     }
-    
+
     open var writeStatusDescription: String {
         return "\(status)"
     }

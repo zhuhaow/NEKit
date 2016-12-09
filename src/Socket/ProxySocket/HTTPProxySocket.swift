@@ -64,7 +64,7 @@ public class HTTPProxySocket: ProxySocket {
     public override var readStatusDescription: String {
         return readingStatus.description
     }
-    
+
     public override var writeStatusDescription: String {
         return writingStatus.description
     }
