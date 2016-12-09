@@ -4,7 +4,7 @@ import CocoaLumberjackSwift
 
 /// The TCP socket build upon `NWTCPConnection`.
 ///
-/// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
+/// - warning: This class is not thread-safe.
 public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     private var connection: NWTCPConnection?
 
@@ -20,11 +20,6 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
     /// The `RawTCPSocketDelegate` instance.
     weak open var delegate: RawTCPSocketDelegate?
-
-    /// Every method call and variable access must be operated on this queue. And all delegate methods will be called on this queue.
-    ///
-    /// - warning: This should be set as soon as the instance is initialized.
-    public var queue: DispatchQueue!
 
     /// If the socket is connected.
     public var isConnected: Bool {
@@ -211,7 +206,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     }
 
     private func queueCall(_ block: @escaping ()->()) {
-        queue.async(execute: block)
+        QueueFactory.getQueue().async(execute: block)
     }
 
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {

@@ -29,7 +29,6 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         observer?.signal(.socketOpened(self, withRequest: request))
 
         socket?.delegate = self
-        socket?.queue = queue
         _status = .connecting
     }
 
@@ -40,13 +39,6 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
     /// The delegate instance.
     weak open var delegate: SocketDelegate?
-
-    /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    open var queue: DispatchQueue! {
-        didSet {
-            socket?.queue = queue
-        }
-    }
 
     var _status: SocketStatus = .invalid
     /// The current connection status of the socket.

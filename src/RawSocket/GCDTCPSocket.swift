@@ -3,7 +3,7 @@ import CocoaAsyncSocket
 
 /// The TCP socket build upon `GCDAsyncSocket`.
 ///
-/// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
+/// - warning: This class is not thread-safe.
 open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     fileprivate let socket: GCDAsyncSocket
     fileprivate var enableTLS: Bool = false
@@ -16,25 +16,19 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
     public init(socket: GCDAsyncSocket? = nil) {
         if let socket = socket {
             self.socket = socket
+            self.socket.setDelegate(nil, delegateQueue: QueueFactory.getQueue())
         } else {
-            self.socket = GCDAsyncSocket()
+            self.socket = GCDAsyncSocket(delegate: nil, delegateQueue: QueueFactory.getQueue(), socketQueue: QueueFactory.getQueue())
         }
         super.init()
+
+        self.socket.synchronouslySetDelegate(self)
     }
 
     // MARK: RawTCPSocketProtocol implementation
 
     /// The `RawTCPSocketDelegate` instance.
     weak open var delegate: RawTCPSocketDelegate?
-
-    /// Every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
-    ///
-    /// - warning: This should be set as soon as the instance is initialized.
-    open var queue: DispatchQueue! = nil {
-        didSet {
-            socket.setDelegate(self, delegateQueue: queue)
-        }
-    }
 
     /// If the socket is connected.
     open var isConnected: Bool {

@@ -11,6 +11,8 @@
 		360F392D1DD206A3002BED59 /* Resolver.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		360F392F1DD20774002BED59 /* Resolver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392E1DD20774002BED59 /* Resolver.framework */; };
 		360F39301DD20787002BED59 /* Resolver.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 360F392E1DD20774002BED59 /* Resolver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3621B9491DFA92480003ABB3 /* GlobalIntializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3621B9481DFA92480003ABB3 /* GlobalIntializer.swift */; };
+		3621B94A1DFA92480003ABB3 /* GlobalIntializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3621B9481DFA92480003ABB3 /* GlobalIntializer.swift */; };
 		362347181D7D44E700A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36463A301CDCD5EB0040579C /* NEKit.framework */; };
 		362347271D7D458E00A047DE /* NEKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36C48D4D1CF88DED0071804F /* NEKit.framework */; };
 		362347391D7E6F3D00A047DE /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 362347371D7E6F3D00A047DE /* Nimble.framework */; };
@@ -142,7 +144,6 @@
 		36B162291CDDA0EA00F24C97 /* ProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1621C1CDDA0EA00F24C97 /* ProxySocket.swift */; };
 		36B1622B1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1621E1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift */; };
 		36B1622C1CDDA0EA00F24C97 /* SocketProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1621F1CDDA0EA00F24C97 /* SocketProtocol.swift */; };
-		36B1622D1CDDA0EA00F24C97 /* SocketTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162201CDDA0EA00F24C97 /* SocketTag.swift */; };
 		36B1622E1CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162211CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift */; };
 		36B1622F1CDDA0EA00F24C97 /* Tunnel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162231CDDA0EA00F24C97 /* Tunnel.swift */; };
 		36B162301CDDA0EA00F24C97 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162241CDDA0EA00F24C97 /* Utils.swift */; };
@@ -189,7 +190,6 @@
 		36C48D741CF88ED40071804F /* NWTCPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1621A1CDDA0EA00F24C97 /* NWTCPSocket.swift */; };
 		36C48D751CF88ED40071804F /* RawSocketFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */; };
 		36C48D761CF88ED40071804F /* RawTCPSocketProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1621E1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift */; };
-		36C48D771CF88ED40071804F /* SocketTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162201CDDA0EA00F24C97 /* SocketTag.swift */; };
 		36C48D781CF88ED40071804F /* TUNTCPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BC589A1CF2A3D400E0E367 /* TUNTCPSocket.swift */; };
 		36C48D791CF88EDA0071804F /* CountryRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620C1CDDA0E000F24C97 /* CountryRule.swift */; };
 		36C48D7A1CF88EDA0071804F /* DomainListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5C61CE033FB00E0E942 /* DomainListRule.swift */; };
@@ -266,8 +266,8 @@
 		36D591C11D6C4895003E92B2 /* IPRangeListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */; };
 		36D591C21D6C4895003E92B2 /* IPRangeListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */; };
 		36E44A021CF2ED4800185DBF /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
-		36E9CCFF1DD6EEF5003597CE /* TunnelQueueFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */; };
-		36E9CD001DD6EEF5003597CE /* TunnelQueueFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */; };
+		36E9CCFF1DD6EEF5003597CE /* QueueFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E9CCFE1DD6EEF5003597CE /* QueueFactory.swift */; };
+		36E9CD001DD6EEF5003597CE /* QueueFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E9CCFE1DD6EEF5003597CE /* QueueFactory.swift */; };
 		36E9CD041DD6F0DE003597CE /* Resolver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; };
 		36E9CD051DD6F0DE003597CE /* Resolver.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -383,6 +383,7 @@
 		36164A2A1CE41C3300BAC90A /* IPMutablePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPMutablePacket.swift; sourceTree = "<group>"; };
 		36164A2C1CE6EB3800BAC90A /* TCPMutablePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPMutablePacket.swift; sourceTree = "<group>"; };
 		36164A2E1CE7099300BAC90A /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		3621B9481DFA92480003ABB3 /* GlobalIntializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalIntializer.swift; sourceTree = "<group>"; };
 		362347131D7D44E700A047DE /* NEKitTest-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NEKitTest-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		362347171D7D44E700A047DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		362347221D7D458E00A047DE /* NEKitTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NEKitTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -476,7 +477,6 @@
 		36B1621C1CDDA0EA00F24C97 /* ProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxySocket.swift; sourceTree = "<group>"; };
 		36B1621E1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawTCPSocketProtocol.swift; sourceTree = "<group>"; };
 		36B1621F1CDDA0EA00F24C97 /* SocketProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketProtocol.swift; sourceTree = "<group>"; };
-		36B162201CDDA0EA00F24C97 /* SocketTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketTag.swift; sourceTree = "<group>"; };
 		36B162211CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOCKS5ProxySocket.swift; sourceTree = "<group>"; };
 		36B162231CDDA0EA00F24C97 /* Tunnel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tunnel.swift; sourceTree = "<group>"; };
 		36B162241CDDA0EA00F24C97 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -527,7 +527,7 @@
 		36D591BD1D6C40F2003E92B2 /* IPRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRange.swift; sourceTree = "<group>"; };
 		36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRangeListRule.swift; sourceTree = "<group>"; };
 		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
-		36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelQueueFactory.swift; sourceTree = "<group>"; };
+		36E9CCFE1DD6EEF5003597CE /* QueueFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QueueFactory.swift; path = Tunnel/QueueFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -754,8 +754,10 @@
 				36411A6B1D1A41BF005F4108 /* Socket */,
 				36AA9D281DF434CD008273CC /* Tunnel */,
 				36C63DC61CFD252400A00CA2 /* Utils */,
+				36E9CCFE1DD6EEF5003597CE /* QueueFactory.swift */,
 				3664F0BD1CE3069F008BA6D8 /* Opt.swift */,
 				36B162241CDDA0EA00F24C97 /* Utils.swift */,
+				3621B9481DFA92480003ABB3 /* GlobalIntializer.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -830,7 +832,6 @@
 			isa = PBXGroup;
 			children = (
 				36B162231CDDA0EA00F24C97 /* Tunnel.swift */,
-				36E9CCFE1DD6EEF5003597CE /* TunnelQueueFactory.swift */,
 			);
 			path = Tunnel;
 			sourceTree = "<group>";
@@ -860,7 +861,6 @@
 				36C63DF51CFFDCAF00A00CA2 /* NWUDPSocket.swift */,
 				366EB5CC1CE06B5E00E0E942 /* RawSocketFactory.swift */,
 				36B1621E1CDDA0EA00F24C97 /* RawTCPSocketProtocol.swift */,
-				36B162201CDDA0EA00F24C97 /* SocketTag.swift */,
 				36BC589A1CF2A3D400E0E367 /* TUNTCPSocket.swift */,
 			);
 			path = RawSocket;
@@ -1371,6 +1371,7 @@
 				36BC589B1CF2A3D400E0E367 /* TUNTCPSocket.swift in Sources */,
 				36B3667B1D586CA1003343AA /* DNSFailRule.swift in Sources */,
 				36CB0D381D51E06700DB7AF5 /* HTTPHeader.swift in Sources */,
+				3621B9491DFA92480003ABB3 /* GlobalIntializer.swift in Sources */,
 				36C63DCB1CFD602500A00CA2 /* DNSSession.swift in Sources */,
 				36411A701D1ACD27005F4108 /* DNSResolver.swift in Sources */,
 				366EB5B71CDE150C00E0E942 /* HTTPAdapterFactory.swift in Sources */,
@@ -1396,7 +1397,6 @@
 				3664F0BE1CE3069F008BA6D8 /* Opt.swift in Sources */,
 				366EB5B81CDE150C00E0E942 /* SecureHTTPAdapterFactory.swift in Sources */,
 				3629504B1D6AE30C001A30F6 /* ProxySocketEvent.swift in Sources */,
-				36B1622D1CDDA0EA00F24C97 /* SocketTag.swift in Sources */,
 				3669C8591DC8D60100BDCC82 /* Data.swift in Sources */,
 				36411A5C1D167AA9005F4108 /* DNSSessionMatchResult.swift in Sources */,
 				36411A651D167AF2005F4108 /* DirectRule.swift in Sources */,
@@ -1451,7 +1451,7 @@
 				36A503F91CF5D27E00D1FC78 /* DirectProxySocket.swift in Sources */,
 				36B162271CDDA0EA00F24C97 /* GCDTCPSocket.swift in Sources */,
 				362950511D6AE396001A30F6 /* TunnelEvent.swift in Sources */,
-				36E9CCFF1DD6EEF5003597CE /* TunnelQueueFactory.swift in Sources */,
+				36E9CCFF1DD6EEF5003597CE /* QueueFactory.swift in Sources */,
 				3650FAF41D27CD8400444E79 /* CryptoHelper.swift in Sources */,
 				36B162291CDDA0EA00F24C97 /* ProxySocket.swift in Sources */,
 				36CB0D331D51C68700DB7AF5 /* HTTPProxySocket.swift in Sources */,
@@ -1481,6 +1481,7 @@
 				36C48D681CF88EC10071804F /* GeoIP.swift in Sources */,
 				36B3667C1D586CA1003343AA /* DNSFailRule.swift in Sources */,
 				36CB0D391D51E06700DB7AF5 /* HTTPHeader.swift in Sources */,
+				3621B94A1DFA92480003ABB3 /* GlobalIntializer.swift in Sources */,
 				36C63DCC1CFD602500A00CA2 /* DNSSession.swift in Sources */,
 				36411A711D1ACD27005F4108 /* DNSResolver.swift in Sources */,
 				36C48D5C1CF88EB60071804F /* ServerAdapterFactory.swift in Sources */,
@@ -1501,7 +1502,6 @@
 				36C48D661CF88EBC0071804F /* Configuration.swift in Sources */,
 				36411A5A1D13988A005F4108 /* GCDHTTPProxyServer.swift in Sources */,
 				36C48D701CF88ECB0071804F /* TUNInterface.swift in Sources */,
-				36C48D771CF88ED40071804F /* SocketTag.swift in Sources */,
 				36C48D6C1CF88ECB0071804F /* Port.swift in Sources */,
 				36C48D861CF88EE60071804F /* Tunnel.swift in Sources */,
 				36411A5D1D167AA9005F4108 /* DNSSessionMatchResult.swift in Sources */,
@@ -1561,7 +1561,7 @@
 				36C48D611CF88EB60071804F /* SecureHTTPAdapter.swift in Sources */,
 				36C48D721CF88ECF0071804F /* GCDProxyServer.swift in Sources */,
 				362950521D6AE396001A30F6 /* TunnelEvent.swift in Sources */,
-				36E9CD001DD6EEF5003597CE /* TunnelQueueFactory.swift in Sources */,
+				36E9CD001DD6EEF5003597CE /* QueueFactory.swift in Sources */,
 				3650FAF51D27CD8400444E79 /* CryptoHelper.swift in Sources */,
 				36C48D5E1CF88EB60071804F /* SpeedAdapterFactory.swift in Sources */,
 				36CB0D341D51C68700DB7AF5 /* HTTPProxySocket.swift in Sources */,

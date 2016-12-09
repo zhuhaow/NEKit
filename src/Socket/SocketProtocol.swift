@@ -29,17 +29,12 @@ public enum SocketStatus {
 /// Protocol for socket with various functions.
 ///
 /// Any concrete implementation does not need to be thread-safe.
-///
-/// - warning: It is expected that the instance is accessed on the `queue` only.
 public protocol SocketProtocol: class {
     /// The underlying TCP socket transmitting data.
     var socket: RawTCPSocketProtocol! { get }
 
     /// The delegate instance.
     weak var delegate: SocketDelegate? { get set }
-
-    /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    var queue: DispatchQueue! { get set }
 
     /// The current connection status of the socket.
     var status: SocketStatus { get }

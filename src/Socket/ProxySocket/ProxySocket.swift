@@ -123,13 +123,6 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /// The delegate instance.
     weak public var delegate: SocketDelegate?
 
-    /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    public var queue: DispatchQueue! {
-        didSet {
-            socket.queue = queue
-        }
-    }
-
     var _status: SocketStatus = .established
     /// The current connection status of the socket.
     public var status: SocketStatus {

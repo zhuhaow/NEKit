@@ -4,13 +4,10 @@ import Foundation
 ///
 /// Any concrete implementation does not need to be thread-safe.
 ///
-/// - warning: It is expected that the instance is accessed on the `queue` only.
+/// - warning: It is expected that the instance is accessed on the specific queue only.
 public protocol RawTCPSocketProtocol : class {
     /// The `RawTCPSocketDelegate` instance.
     weak var delegate: RawTCPSocketDelegate? { get set }
-
-    /// Every delegate method should be called on this dispatch queue. And every method call and variable access will be called on this queue.
-    var queue: DispatchQueue! { get set }
 
     /// If the socket is connected.
     var isConnected: Bool { get }

@@ -3,7 +3,7 @@ import tun2socks
 
 /// The TCP socket build upon `TSTCPSocket`.
 ///
-/// - warning: This class is not thread-safe, it is expected that the instance is accessed on the `queue` only.
+/// - warning: This class is not thread-safe.
 public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     fileprivate let tsSocket: TSTCPSocket
     fileprivate var reading = false
@@ -29,11 +29,6 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
 
     /// The `RawTCPSocketDelegate` instance.
     public weak var delegate: RawTCPSocketDelegate?
-
-    /// Every method call and variable access must operated on this queue. And all delegate methods will be called on this queue.
-    ///
-    /// - warning: This should be set as soon as the instance is initialized.
-    public var queue: DispatchQueue!
 
     /// If the socket is connected.
     public var isConnected: Bool {
@@ -152,7 +147,7 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
     }
 
     fileprivate func queueCall(_ block: @escaping ()->()) {
-        queue.async(execute: block)
+        QueueFactory.getQueue().async(execute: block)
     }
 
     fileprivate func checkReadData() {

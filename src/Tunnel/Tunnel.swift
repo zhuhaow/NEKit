@@ -42,14 +42,6 @@ public class Tunnel: NSObject, SocketDelegate {
 
     weak var observer: Observer<TunnelEvent>?
 
-    /// Every method call and variable access will be called on this queue.
-    var queue = TunnelQueueFactory.getQueue() {
-        didSet {
-            self.proxySocket.queue = queue
-            self.adapterSocket?.queue = queue
-        }
-    }
-
     /// Indicating how many socket is ready to forward data.
     private var readySignal = 0
 
@@ -83,7 +75,6 @@ public class Tunnel: NSObject, SocketDelegate {
 
     init(proxySocket: ProxySocket) {
         self.proxySocket = proxySocket
-        self.proxySocket.queue = queue
         super.init()
         self.proxySocket.delegate = self
 
@@ -92,11 +83,8 @@ public class Tunnel: NSObject, SocketDelegate {
 
     /**
      Start running the tunnel.
-     
-     - note: This method is thread-safe.
      */
     func openTunnel() {
-        queue.async {
             guard !self.isCancelled else {
                 return
             }
@@ -104,32 +92,27 @@ public class Tunnel: NSObject, SocketDelegate {
             self.proxySocket.openSocket()
             self._status = .readingRequest
             self.observer?.signal(.opened(self))
-        }
     }
 
     /**
      Close the tunnel elegantly.
-     
-     - note: This method is thread-safe.
      */
     func close() {
         observer?.signal(.closeCalled(self))
 
-        queue.async {
-            guard !self.isCancelled else {
-                return
-            }
+        guard !self.isCancelled else {
+            return
+        }
 
-            self._cancelled = true
-            self._status = .closing
+        self._cancelled = true
+        self._status = .closing
 
-            if !self.proxySocket.isDisconnected {
-                self.proxySocket.disconnect()
-            }
-            if let adapterSocket = self.adapterSocket {
-                if !adapterSocket.isDisconnected {
-                    adapterSocket.disconnect()
-                }
+        if !self.proxySocket.isDisconnected {
+            self.proxySocket.disconnect()
+        }
+        if let adapterSocket = self.adapterSocket {
+            if !adapterSocket.isDisconnected {
+                adapterSocket.disconnect()
             }
         }
     }
@@ -140,22 +123,20 @@ public class Tunnel: NSObject, SocketDelegate {
     func forceClose() {
         observer?.signal(.forceCloseCalled(self))
 
-        queue.async {
-            guard !self.isCancelled else {
-                return
-            }
+        guard !self.isCancelled else {
+            return
+        }
 
-            self._cancelled = true
-            self._status = .closing
-            self._stopForwarding = true
+        self._cancelled = true
+        self._status = .closing
+        self._stopForwarding = true
 
-            if !self.proxySocket.isDisconnected {
-                self.proxySocket.forceDisconnect()
-            }
-            if let adapterSocket = self.adapterSocket {
-                if !adapterSocket.isDisconnected {
-                    adapterSocket.forceDisconnect()
-                }
+        if !self.proxySocket.isDisconnected {
+            self.proxySocket.forceDisconnect()
+        }
+        if let adapterSocket = self.adapterSocket {
+            if !adapterSocket.isDisconnected {
+                adapterSocket.forceDisconnect()
             }
         }
     }
@@ -168,9 +149,9 @@ public class Tunnel: NSObject, SocketDelegate {
         _status = .waitingToBeReady
         observer?.signal(.receivedRequest(request, from: from, on: self))
 
-        if Opt.resolveDNSInAdvance && !request.isIP() {
+        if !request.isIP() {
             _ = Resolver.resolve(hostname: request.host) { [weak self] resolver, err in
-                self?.queue.async {
+                QueueFactory.getQueue().async {
                     if err != nil {
                         request.ipAddress = ""
                     } else {
@@ -179,8 +160,6 @@ public class Tunnel: NSObject, SocketDelegate {
                     self?.openAdapter(for: request)
                 }
             }
-        } else {
-            openAdapter(for: request)
         }
     }
 
@@ -192,7 +171,6 @@ public class Tunnel: NSObject, SocketDelegate {
         let manager = RuleManager.currentManager
         let factory = manager.match(request)!
         adapterSocket = factory.getAdapterFor(request: request)
-        adapterSocket!.queue = queue
         adapterSocket!.delegate = self
         adapterSocket!.openSocketWith(request: request)
     }
@@ -273,7 +251,6 @@ public class Tunnel: NSObject, SocketDelegate {
 
         adapterSocket = newAdapter
         adapterSocket?.delegate = self
-        adapterSocket?.queue = queue
     }
 
     fileprivate func checkStatus() {
