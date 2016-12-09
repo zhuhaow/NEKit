@@ -1,12 +1,10 @@
 import Foundation
 
 public class HTTPProxySocket: ProxySocket {
-    enum HTTPProxyStatus: CustomStringConvertible {
+    enum HTTPProxyReadStatus: CustomStringConvertible {
         case invalid,
         readingFirstHeader,
-        waitingAdapter,
-        sendingConnectResponse,
-        waitingToForward,
+        pendingFirstHeader,
         readingHeader,
         readingContent,
         stopped
@@ -17,16 +15,32 @@ public class HTTPProxySocket: ProxySocket {
                 return "invalid"
             case .readingFirstHeader:
                 return "reading first header"
-            case .waitingAdapter:
-                return "waiting adpater to be ready"
-            case .sendingConnectResponse:
-                return "sending response header for CONNECT"
-            case .waitingToForward:
-                return "waiting to begin forwarding data"
+            case .pendingFirstHeader:
+                return "waiting to send first header"
             case .readingHeader:
                 return "reading header (forwarding)"
             case .readingContent:
                 return "reading content (forwarding)"
+            case .stopped:
+                return "stopped"
+            }
+        }
+    }
+
+    enum HTTPProxyWriteStatus: CustomStringConvertible {
+        case invalid,
+        sendingConnectResponse,
+        forwarding,
+        stopped
+
+        var description: String {
+            switch self {
+            case .invalid:
+                return "invalid"
+            case .sendingConnectResponse:
+                return "sending response header for CONNECT"
+            case .forwarding:
+                return "waiting to begin forwarding data"
             case .stopped:
                 return "stopped"
             }
@@ -42,12 +56,13 @@ public class HTTPProxySocket: ProxySocket {
 
     private let scanner: HTTPStreamScanner = HTTPStreamScanner()
 
-    private var internalStatus: HTTPProxyStatus = .invalid
+    private var readingStatus: HTTPProxyReadStatus = .invalid
+    private var writingStatus: HTTPProxyWriteStatus = .invalid
 
     public var isConnectCommand = false
 
     public override var statusDescription: String {
-        return "\(status) (\(internalStatus))"
+        return "\(status) (read status: \(readingStatus)) (write status: \(writingStatus))"
     }
 
     /**
@@ -60,7 +75,7 @@ public class HTTPProxySocket: ProxySocket {
             return
         }
 
-        internalStatus = .readingFirstHeader
+        readingStatus = .readingFirstHeader
         socket.readDataTo(data: Utils.HTTPData.DoubleCRLF)
     }
 
@@ -70,25 +85,25 @@ public class HTTPProxySocket: ProxySocket {
         }
 
         // Return the first header we read when the socket was opened if the proxy command is not CONNECT.
-        if internalStatus == .waitingToForward && !isConnectCommand {
+        if readingStatus == .pendingFirstHeader {
             delegate?.didRead(data: currentHeader.toData(), from: self)
-            internalStatus = .readingContent
+            readingStatus = .readingContent
             return
         }
 
         switch scanner.nextAction {
         case .readContent(let length):
-            internalStatus = .readingContent
+            readingStatus = .readingContent
             if length > 0 {
                 socket.readDataTo(length: length)
             } else {
                 socket.readData()
             }
         case .readHeader:
-            internalStatus = .readingHeader
+            readingStatus = .readingHeader
             socket.readDataTo(data: Utils.HTTPData.DoubleCRLF)
         case .stop:
-            internalStatus = .stopped
+            readingStatus = .stopped
             disconnect()
         }
 
@@ -105,7 +120,7 @@ public class HTTPProxySocket: ProxySocket {
     override public func didRead(data: Data, from: RawTCPSocketProtocol) {
         super.didRead(data: data, from: from)
 
-        switch internalStatus {
+        switch readingStatus {
         case .readingFirstHeader:
             guard let header = scanner.input(data).0 else {
                 // TODO: indicate observer
@@ -121,7 +136,11 @@ public class HTTPProxySocket: ProxySocket {
             destinationPort = currentHeader.port
             isConnectCommand = currentHeader.isConnect
 
-            internalStatus = .waitingAdapter
+            if !isConnectCommand {
+                readingStatus = .pendingFirstHeader
+            } else {
+                readingStatus = .readingContent
+            }
 
             request = ConnectRequest(host: destinationHost!, port: destinationPort!)
             observer?.signal(.receivedRequest(request!, on: self))
@@ -159,9 +178,9 @@ public class HTTPProxySocket: ProxySocket {
     override public func didWrite(data: Data?, by: RawTCPSocketProtocol) {
         super.didWrite(data: data, by: by)
 
-        switch internalStatus {
+        switch writingStatus {
         case .sendingConnectResponse:
-            internalStatus = .waitingToForward
+            writingStatus = .forwarding
             observer?.signal(.readyForForward(self))
             delegate?.didBecomeReadyToForwardWith(socket: self)
         default:
@@ -181,16 +200,11 @@ public class HTTPProxySocket: ProxySocket {
             return
         }
 
-        // TODO: notify observer
-        guard internalStatus == .waitingAdapter else {
-            return
-        }
-
         if isConnectCommand {
-            internalStatus = .sendingConnectResponse
+            writingStatus = .sendingConnectResponse
             write(data: Utils.HTTPData.ConnectSuccessResponse)
         } else {
-            internalStatus = .waitingToForward
+            writingStatus = .forwarding
             observer?.signal(.readyForForward(self))
             delegate?.didBecomeReadyToForwardWith(socket: self)
         }
