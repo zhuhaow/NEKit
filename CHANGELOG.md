@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## 0.10.2
+
+### Changed
+- Set DNS timeout to 1 second.
+
 ## 0.10.1
 
 ### Fixed

@@ -150,7 +150,7 @@ public class Tunnel: NSObject, SocketDelegate {
         observer?.signal(.receivedRequest(request, from: from, on: self))
 
         if !request.isIP() {
-            _ = Resolver.resolve(hostname: request.host) { [weak self] resolver, err in
+            _ = Resolver.resolve(hostname: request.host, timeout: Opt.DNSTimeout) { [weak self] resolver, err in
                 QueueFactory.getQueue().async {
                     if err != nil {
                         request.ipAddress = ""
