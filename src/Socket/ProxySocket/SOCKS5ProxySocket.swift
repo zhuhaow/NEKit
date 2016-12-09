@@ -1,7 +1,7 @@
 import Foundation
 
 public class SOCKS5ProxySocket: ProxySocket {
-    enum SOCKS5ProxyStatus: CustomStringConvertible {
+    enum SOCKS5ProxyReadStatus: CustomStringConvertible {
         case invalid,
         readingVersionIdentifierAndNumberOfMethods,
         readingMethods,
@@ -11,9 +11,6 @@ public class SOCKS5ProxySocket: ProxySocket {
         readingDomain,
         readingIPv6Address,
         readingPort,
-        waitingAdapter,
-        sendingResponse,
-        waitingToForward,
         forwarding,
         stopped
 
@@ -37,12 +34,26 @@ public class SOCKS5ProxySocket: ProxySocket {
                 return "IPv6 address"
             case .readingPort:
                 return "reading port"
-            case .waitingAdapter:
-                return "waiting adapter"
+            case .forwarding:
+                return "forwarding"
+            case .stopped:
+                return "stopped"
+            }
+        }
+    }
+
+    enum SOCKS5ProxyWriteStatus: CustomStringConvertible {
+        case invalid,
+        sendingResponse,
+        forwarding,
+        stopped
+
+        var description: String {
+            switch self {
+            case .invalid:
+                return "invalid"
             case .sendingResponse:
                 return "sending response"
-            case .waitingToForward:
-                return "waiting to begin forwarding data"
             case .forwarding:
                 return "forwarding"
             case .stopped:
@@ -56,7 +67,16 @@ public class SOCKS5ProxySocket: ProxySocket {
     /// The remote port to connect to.
     public var destinationPort: Int!
 
-    var internalStatus: SOCKS5ProxyStatus = .invalid
+    private var readStatus: SOCKS5ProxyReadStatus = .invalid
+    private var writeStatus: SOCKS5ProxyWriteStatus = .invalid
+    
+    public override var readStatusDescription: String {
+        return readStatus.description
+    }
+    
+    public override var writeStatusDescription: String {
+        return writeStatus.description
+    }
 
     /**
      Begin reading and processing data from the socket.
@@ -68,19 +88,8 @@ public class SOCKS5ProxySocket: ProxySocket {
             return
         }
 
-        internalStatus = .readingVersionIdentifierAndNumberOfMethods
+        readStatus = .readingVersionIdentifierAndNumberOfMethods
         socket.readDataTo(length: 2)
-    }
-
-    public override func write(data: Data) {
-        switch internalStatus {
-        case .waitingToForward:
-            internalStatus = .forwarding
-        default:
-            break
-        }
-
-        super.write(data: data)
     }
 
     // swiftlint:disable function_body_length
@@ -94,10 +103,7 @@ public class SOCKS5ProxySocket: ProxySocket {
     override public func didRead(data: Data, from: RawTCPSocketProtocol) {
         super.didRead(data: data, from: from)
 
-        switch internalStatus {
-        case .waitingToForward:
-            internalStatus = .forwarding
-            delegate?.didRead(data: data, from: self)
+        switch readStatus {
         case .forwarding:
             delegate?.didRead(data: data, from: self)
         case .readingVersionIdentifierAndNumberOfMethods:
@@ -114,7 +120,7 @@ public class SOCKS5ProxySocket: ProxySocket {
                     return
                 }
 
-                self.internalStatus = .readingMethods
+                self.readStatus = .readingMethods
                 self.socket.readDataTo(length: Int(pointer.successor().pointee))
             }
         case .readingMethods:
@@ -123,7 +129,7 @@ public class SOCKS5ProxySocket: ProxySocket {
             let response = Data(bytes: [0x05, 0x00])
             // we would not be able to read anything before the data is written out, so no need to handle the dataWrote event.
             write(data: response)
-            internalStatus = .readingConnectHeader
+            readStatus = .readingConnectHeader
             socket.readDataTo(length: 4)
         case .readingConnectHeader:
             data.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
@@ -134,13 +140,13 @@ public class SOCKS5ProxySocket: ProxySocket {
                 }
                 switch pointer.advanced(by: 3).pointee {
                 case 1:
-                    internalStatus = .readingIPv4Address
+                    readStatus = .readingIPv4Address
                     socket.readDataTo(length: 4)
                 case 3:
-                    internalStatus = .readingDomainLength
+                    readStatus = .readingDomainLength
                     socket.readDataTo(length: 1)
                 case 4:
-                    internalStatus = .readingIPv6Address
+                    readStatus = .readingIPv6Address
                     socket.readDataTo(length: 16)
                 default:
                     break
@@ -156,7 +162,7 @@ public class SOCKS5ProxySocket: ProxySocket {
 
             destinationHost = String(data: address, encoding: .utf8)
 
-            internalStatus = .readingPort
+            readStatus = .readingPort
             socket.readDataTo(length: 2)
         case .readingIPv6Address:
             var address = Data(count: Int(INET6_ADDRSTRLEN))
@@ -168,23 +174,23 @@ public class SOCKS5ProxySocket: ProxySocket {
 
             destinationHost = String(data: address, encoding: .utf8)
 
-            internalStatus = .readingPort
+            readStatus = .readingPort
             socket.readDataTo(length: 2)
         case .readingDomainLength:
             data.withUnsafeRawPointer {
-                internalStatus = .readingDomain
+                readStatus = .readingDomain
                 socket.readDataTo(length: Int($0.load(as: UInt8.self)))
             }
         case .readingDomain:
             destinationHost = String(data: data, encoding: .utf8)
-            internalStatus = .readingPort
+            readStatus = .readingPort
             socket.readDataTo(length: 2)
         case .readingPort:
             data.withUnsafeRawPointer {
                 destinationPort = Int($0.load(as: UInt16.self).bigEndian)
             }
 
-            internalStatus = .waitingAdapter
+            readStatus = .forwarding
             request = ConnectRequest(host: destinationHost, port: destinationPort)
             observer?.signal(.receivedRequest(request!, on: self))
             delegate?.didReceive(request: request!, from: self)
@@ -202,11 +208,11 @@ public class SOCKS5ProxySocket: ProxySocket {
     override public func didWrite(data: Data?, by: RawTCPSocketProtocol) {
         super.didWrite(data: data, by: by)
 
-        switch internalStatus {
+        switch writeStatus {
         case .forwarding:
             delegate?.didWrite(data: data, by: self)
         case .sendingResponse:
-            internalStatus = .waitingToForward
+            writeStatus = .forwarding
             observer?.signal(.readyForForward(self))
             delegate?.didBecomeReadyToForwardWith(socket: self)
         default:
@@ -230,7 +236,7 @@ public class SOCKS5ProxySocket: ProxySocket {
         responseBytes[0...3] = [0x05, 0x00, 0x00, 0x01]
         let responseData = Data(bytes: responseBytes)
 
-        internalStatus = .sendingResponse
+        writeStatus = .sendingResponse
         write(data: responseData)
     }
 }
