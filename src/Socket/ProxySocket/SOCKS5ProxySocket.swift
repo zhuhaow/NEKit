@@ -76,6 +76,17 @@ public class SOCKS5ProxySocket: ProxySocket {
         socket.readDataTo(length: 2)
     }
 
+    public override func write(data: Data) {
+        switch internalStatus {
+        case .waitingToForward:
+            internalStatus = .forwarding
+        default:
+            break
+        }
+
+        super.write(data: data)
+    }
+
     // swiftlint:disable function_body_length
     // swiftlint:disable cyclomatic_complexity
     /**
