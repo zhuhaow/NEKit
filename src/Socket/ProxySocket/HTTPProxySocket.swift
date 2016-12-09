@@ -61,8 +61,12 @@ public class HTTPProxySocket: ProxySocket {
 
     public var isConnectCommand = false
 
-    public override var statusDescription: String {
-        return "\(status) (read status: \(readingStatus)) (write status: \(writingStatus))"
+    public override var readStatusDescription: String {
+        return readingStatus.description
+    }
+    
+    public override var writeStatusDescription: String {
+        return writingStatus.description
     }
 
     /**

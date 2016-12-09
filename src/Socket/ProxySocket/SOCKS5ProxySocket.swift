@@ -58,10 +58,6 @@ public class SOCKS5ProxySocket: ProxySocket {
 
     var internalStatus: SOCKS5ProxyStatus = .invalid
 
-    public override var statusDescription: String {
-        return "\(status) (\(internalStatus))"
-    }
-
     /**
      Begin reading and processing data from the socket.
      */
