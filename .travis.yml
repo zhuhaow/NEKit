@@ -8,6 +8,7 @@ cache:
 install:
 - bin/bootstrap-if-needed
 - gem install scan
+script: true
 matrix:
   include:
     - script:
