@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
-## Unrealsed
+## 0.10.3
 
 ### Fixed
 - Fix that when the request is an IP address it will not be processed correctly.
