@@ -1,24 +1,16 @@
 language: objective-c
 osx_image: xcode8.1
+rvm:
+- 2.3.1
 cache:
   directories:
   - Carthage
 install:
 - bin/bootstrap-if-needed
 - gem install scan
-script: true
-matrix:
-  include:
-    - script:
-        - scan --scheme NEKit-macOS
-      env:
-        - CARTHAGE_PLATFORM=mac
-      rvm: 2.3.1
-    - script:
-        - scan --scheme NEKit-iOS
-      env:
-        - CARTHAGE_PLATFORM=ios
-      rvm: 2.3.1
+script:
+- scan --scheme NEKit-macOS
+- scan --scheme NEKit-iOS
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - "./docs/build_docs.sh"
