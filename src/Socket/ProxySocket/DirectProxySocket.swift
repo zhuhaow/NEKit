@@ -3,6 +3,51 @@ import Foundation
 /// This class just forwards data directly. 
 /// - note: It is designed to work with tun2socks only.
 public class DirectProxySocket: ProxySocket {
+    enum DirectProxyReadStatus: CustomStringConvertible {
+        case invalid,
+        forwarding,
+        stopped
+        
+        var description: String {
+            switch self {
+            case .invalid:
+                return "invalid"
+            case .forwarding:
+                return "forwarding"
+            case .stopped:
+                return "stopped"
+            }
+        }
+    }
+    
+    enum DirectProxyWriteStatus {
+        case invalid,
+        forwarding,
+        stopped
+        
+        var description: String {
+            switch self {
+            case .invalid:
+                return "invalid"
+            case .forwarding:
+                return "forwarding"
+            case .stopped:
+                return "stopped"
+            }
+        }
+    }
+    
+    private var readStatus: DirectProxyReadStatus = .invalid
+    private var writeStatus: DirectProxyWriteStatus = .invalid
+    
+    public var readStatusDescription: String {
+        return readingStatus.description
+    }
+    
+    public var writeStatusDescription: String {
+        return writingStatus.description
+    }
+    
     /**
      Begin reading and processing data from the socket.
 
@@ -37,6 +82,9 @@ public class DirectProxySocket: ProxySocket {
             return
         }
 
+        readStatus = .forwarding
+        writeStatus = .forwarding
+        
         observer?.signal(.readyForForward(self))
         delegate?.didBecomeReadyToForwardWith(socket: self)
     }
