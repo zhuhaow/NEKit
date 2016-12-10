@@ -7,7 +7,7 @@ public class DirectProxySocket: ProxySocket {
         case invalid,
         forwarding,
         stopped
-        
+
         var description: String {
             switch self {
             case .invalid:
@@ -19,12 +19,12 @@ public class DirectProxySocket: ProxySocket {
             }
         }
     }
-    
+
     enum DirectProxyWriteStatus {
         case invalid,
         forwarding,
         stopped
-        
+
         var description: String {
             switch self {
             case .invalid:
@@ -36,18 +36,18 @@ public class DirectProxySocket: ProxySocket {
             }
         }
     }
-    
+
     private var readStatus: DirectProxyReadStatus = .invalid
     private var writeStatus: DirectProxyWriteStatus = .invalid
-    
+
     public var readStatusDescription: String {
-        return readingStatus.description
+        return readStatus.description
     }
-    
+
     public var writeStatusDescription: String {
-        return writingStatus.description
+        return writeStatus.description
     }
-    
+
     /**
      Begin reading and processing data from the socket.
 
@@ -84,7 +84,7 @@ public class DirectProxySocket: ProxySocket {
 
         readStatus = .forwarding
         writeStatus = .forwarding
-        
+
         observer?.signal(.readyForForward(self))
         delegate?.didBecomeReadyToForwardWith(socket: self)
     }
