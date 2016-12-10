@@ -48,6 +48,10 @@ public protocol SocketProtocol: class {
     /// The type of the socket.
     var typeName: String { get }
 
+    var readStatusDescription: String { get }
+
+    var writeStatusDescription: String { get }
+
     /**
      Read data from the socket.
 
@@ -82,6 +86,14 @@ extension SocketProtocol {
 
     public var typeName: String {
         return String(describing: type(of: self))
+    }
+
+    public var readStatusDescription: String {
+        return "\(status)"
+    }
+
+    public var writeStatusDescription: String {
+        return "\(status)"
     }
 }
 

@@ -69,12 +69,12 @@ public class SOCKS5ProxySocket: ProxySocket {
 
     private var readStatus: SOCKS5ProxyReadStatus = .invalid
     private var writeStatus: SOCKS5ProxyWriteStatus = .invalid
-    
-    public override var readStatusDescription: String {
+
+    public var readStatusDescription: String {
         return readStatus.description
     }
-    
-    public override var writeStatusDescription: String {
+
+    public var writeStatusDescription: String {
         return writeStatus.description
     }
 

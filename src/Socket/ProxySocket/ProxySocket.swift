@@ -129,14 +129,6 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         return _status
     }
 
-    open var readStatusDescription: String {
-        return "\(status)"
-    }
-
-    open var writeStatusDescription: String {
-        return "\(status)"
-    }
-
     // MARK: RawTCPSocketDelegate Protocol Implementation
     /**
      The socket did disconnect.

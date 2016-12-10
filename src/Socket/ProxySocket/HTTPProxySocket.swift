@@ -61,11 +61,11 @@ public class HTTPProxySocket: ProxySocket {
 
     public var isConnectCommand = false
 
-    public override var readStatusDescription: String {
+    public var readStatusDescription: String {
         return readingStatus.description
     }
 
-    public override var writeStatusDescription: String {
+    public var writeStatusDescription: String {
         return writingStatus.description
     }
 
