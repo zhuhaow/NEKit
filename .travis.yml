@@ -8,9 +8,16 @@ cache:
 install:
 - bin/bootstrap-if-needed
 - gem install scan
-script:
-- scan --scheme NEKit-macOS
-- scan --scheme NEKit-iOS
+matrix:
+  include:
+    - script:
+        - scan --scheme NEKit-macOS
+      env:
+        - CARTHAGE_PLATFORM=mac
+    - script:
+        - scan --scheme NEKit-iOS
+      env:
+        - CARTHAGE_PLATFORM=ios
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - "./docs/build_docs.sh"
