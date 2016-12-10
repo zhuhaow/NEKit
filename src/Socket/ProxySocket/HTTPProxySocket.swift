@@ -56,17 +56,17 @@ public class HTTPProxySocket: ProxySocket {
 
     private let scanner: HTTPStreamScanner = HTTPStreamScanner()
 
-    private var readingStatus: HTTPProxyReadStatus = .invalid
-    private var writingStatus: HTTPProxyWriteStatus = .invalid
+    private var readStatus: HTTPProxyReadStatus = .invalid
+    private var writeStatus: HTTPProxyWriteStatus = .invalid
 
     public var isConnectCommand = false
 
     public var readStatusDescription: String {
-        return readingStatus.description
+        return readStatus.description
     }
 
     public var writeStatusDescription: String {
-        return writingStatus.description
+        return writeStatus.description
     }
 
     /**
@@ -79,7 +79,7 @@ public class HTTPProxySocket: ProxySocket {
             return
         }
 
-        readingStatus = .readingFirstHeader
+        readStatus = .readingFirstHeader
         socket.readDataTo(data: Utils.HTTPData.DoubleCRLF)
     }
 
@@ -89,25 +89,25 @@ public class HTTPProxySocket: ProxySocket {
         }
 
         // Return the first header we read when the socket was opened if the proxy command is not CONNECT.
-        if readingStatus == .pendingFirstHeader {
+        if readStatus == .pendingFirstHeader {
             delegate?.didRead(data: currentHeader.toData(), from: self)
-            readingStatus = .readingContent
+            readStatus = .readingContent
             return
         }
 
         switch scanner.nextAction {
         case .readContent(let length):
-            readingStatus = .readingContent
+            readStatus = .readingContent
             if length > 0 {
                 socket.readDataTo(length: length)
             } else {
                 socket.readData()
             }
         case .readHeader:
-            readingStatus = .readingHeader
+            readStatus = .readingHeader
             socket.readDataTo(data: Utils.HTTPData.DoubleCRLF)
         case .stop:
-            readingStatus = .stopped
+            readStatus = .stopped
             disconnect()
         }
 
@@ -124,7 +124,7 @@ public class HTTPProxySocket: ProxySocket {
     override public func didRead(data: Data, from: RawTCPSocketProtocol) {
         super.didRead(data: data, from: from)
 
-        switch readingStatus {
+        switch readStatus {
         case .readingFirstHeader:
             guard let header = scanner.input(data).0 else {
                 // TODO: indicate observer
@@ -141,9 +141,9 @@ public class HTTPProxySocket: ProxySocket {
             isConnectCommand = currentHeader.isConnect
 
             if !isConnectCommand {
-                readingStatus = .pendingFirstHeader
+                readStatus = .pendingFirstHeader
             } else {
-                readingStatus = .readingContent
+                readStatus = .readingContent
             }
 
             request = ConnectRequest(host: destinationHost!, port: destinationPort!)
@@ -182,9 +182,9 @@ public class HTTPProxySocket: ProxySocket {
     override public func didWrite(data: Data?, by: RawTCPSocketProtocol) {
         super.didWrite(data: data, by: by)
 
-        switch writingStatus {
+        switch writeStatus {
         case .sendingConnectResponse:
-            writingStatus = .forwarding
+            writeStatus = .forwarding
             observer?.signal(.readyForForward(self))
             delegate?.didBecomeReadyToForwardWith(socket: self)
         default:
@@ -205,10 +205,10 @@ public class HTTPProxySocket: ProxySocket {
         }
 
         if isConnectCommand {
-            writingStatus = .sendingConnectResponse
+            writeStatus = .sendingConnectResponse
             write(data: Utils.HTTPData.ConnectSuccessResponse)
         } else {
-            writingStatus = .forwarding
+            writeStatus = .forwarding
             observer?.signal(.readyForForward(self))
             delegate?.didBecomeReadyToForwardWith(socket: self)
         }
