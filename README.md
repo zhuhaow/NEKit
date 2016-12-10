@@ -8,7 +8,7 @@ NEKit is the successor of [Soca](https://github.com/zhuhaow/soca-ios). The main 
 
 **NEKit does not depend on Network Extension framework. You can use NEKit without Network Extension entitlement to build a rule based proxy in a few lines.**
 
-**It is highly unrecommended to enable `TUNInterface` as of now since it is not stable yet.**
+**Do not enable `TUNInterface` as of now since it is not working.**
 
 There are two demos that you should check out.
 
