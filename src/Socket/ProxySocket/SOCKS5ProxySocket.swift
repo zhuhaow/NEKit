@@ -160,7 +160,9 @@ public class SOCKS5ProxySocket: ProxySocket {
                 }
             }
 
-            destinationHost = String(data: address, encoding: .utf8)
+            address.withUnsafeBytes {
+                destinationHost = String(cString: $0, encoding: .utf8)
+            }
 
             readStatus = .readingPort
             socket.readDataTo(length: 2)
@@ -172,7 +174,9 @@ public class SOCKS5ProxySocket: ProxySocket {
                 }
             }
 
-            destinationHost = String(data: address, encoding: .utf8)
+            address.withUnsafeBytes {
+                destinationHost = String(cString: $0, encoding: .utf8)
+            }
 
             readStatus = .readingPort
             socket.readDataTo(length: 2)
