@@ -87,14 +87,38 @@ struct AdapterFactoryParser {
             throw ConfigurationParserError.adapterParsingError(errorInfo: "Encryption method (method) is required.")
         }
 
+        guard let algorithm = CryptoAlgorithm(rawValue: encryptMethod.uppercased()) else {
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "Encryption method \(encryptMethod) is not supported.")
+        }
+
         guard let password = config["password"].stringOrIntString else {
             throw ConfigurationParserError.adapterParsingError(errorInfo: "Password (password) is required.")
         }
 
-        let otaEnabled = config["ota"].bool ?? false
-        let streamObfuscaterType = otaEnabled ? ShadowsocksAdapter.OTAStreamObfuscater.self as ShadowsocksStreamObfuscater.Type : ShadowsocksAdapter.OriginStreamObfuscater.self as ShadowsocksStreamObfuscater.Type
+        let proto = config["obfs"].string?.lowercased() ?? "origin"
+        let stream = config["protocol"].string?.lowercased() ?? "origin"
 
-        return ShadowsocksAdapterFactory(serverHost: host, serverPort: port, encryptAlgorithm: encryptMethod, password: password, streamObfuscaterType: streamObfuscaterType)!
+        let protocolObfuscaterFactory: ShadowsocksAdapter.ProtocolObfuscater.Factory
+        switch proto {
+        case "origin":
+            protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.OriginProtocolObfuscater.Factory()
+        default:
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "protocol \"\(proto)\" is not supported")
+        }
+
+        let streamObfuscaterFactory: ShadowsocksAdapter.StreamObfuscater.Factory
+        switch stream {
+        case "origin":
+            streamObfuscaterFactory = ShadowsocksAdapter.StreamObfuscater.OriginStreamObfuscater.Factory()
+        case "verify_sha1":
+            streamObfuscaterFactory = ShadowsocksAdapter.StreamObfuscater.OTAStreamObfuscater.Factory()
+        default:
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "obfs \"\(stream)\" is not supported")
+        }
+
+        let cryptoFactory = ShadowsocksAdapter.CryptoStreamProcessor.Factory(password: password, algorithm: algorithm)
+
+        return ShadowsocksAdapterFactory(serverHost: host, serverPort: port, protocolObfuscaterFactory: protocolObfuscaterFactory, cryptorFactory: cryptoFactory, streamObfuscaterFactory: streamObfuscaterFactory)
     }
 
     static func parseSpeedAdapterFactory(_ config: Yaml, factoryDict: [String:AdapterFactory]) throws -> SpeedAdapterFactory {
