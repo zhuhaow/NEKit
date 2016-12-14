@@ -10,7 +10,7 @@ public class RejectAdapter: AdapterSocket {
     override func openSocketWith(request: ConnectRequest) {
         super.openSocketWith(request: request)
 
-        QueueFactory.getQueue().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.microseconds(delay)) {
+        QueueFactory.getQueue().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(delay)) {
             [weak self] in
             self?.disconnect()
         }
