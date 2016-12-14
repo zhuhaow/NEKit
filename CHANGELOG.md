@@ -11,6 +11,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 
 ### Added
 - Add support for `simple_http` and `tls1.2_ticket_auth` obfuscation for SSR.
+- **`ota: true` is obsolete, use the configuration of ShadowsocksR (`obfs: verify_sha1`) instead.**
 
 ## 0.10.5
 

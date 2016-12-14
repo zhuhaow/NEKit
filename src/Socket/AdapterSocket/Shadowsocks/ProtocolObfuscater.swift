@@ -1,9 +1,7 @@
 import Foundation
 
 extension ShadowsocksAdapter {
-
     public struct ProtocolObfuscater {
-
         public class Factory {
             public func build() -> ProtocolObfuscaterBase {
                 return ProtocolObfuscaterBase()
@@ -14,17 +12,11 @@ extension ShadowsocksAdapter {
             public weak var inputStreamProcessor: CryptoStreamProcessor!
             public weak var outputStreamProcessor: ShadowsocksAdapter!
 
-            public func start() {
-            }
+            public func start() {}
+            public func input(data: Data) throws {}
+            public func output(data: Data) {}
 
-            public func input(data: Data) throws {
-            }
-
-            public func output(data: Data) {
-            }
-
-            public func didWrite() {
-            }
+            public func didWrite() {}
         }
 
         public class OriginProtocolObfuscater: ProtocolObfuscaterBase {
@@ -373,5 +365,4 @@ extension ShadowsocksAdapter {
         }
 
     }
-
 }
