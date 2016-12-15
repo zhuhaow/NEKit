@@ -25,7 +25,7 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
 
         pendingCount = adapters.count
         for (adapter, delay) in adapters {
-            QueueFactory.getQueue().asyncAfter(deadline: DispatchTime.now() + Double(Int64(NSEC_PER_MSEC) * Int64(delay)) / Double(NSEC_PER_SEC)) {
+            QueueFactory.getQueue().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(delay)) {
                 if self._shouldConnect {
                     adapter.delegate = self
                     adapter.openSocketWith(request: request)
