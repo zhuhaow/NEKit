@@ -2,12 +2,10 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
-=======
 ## Unreleased
 
 ### Changed
 - **`ota: true` is obsolete, use the configuration of ShadowsocksR (`obfs: verify_sha1`) instead.**
-- Rewrite `ShadowsocksAdapter`.
 - Prepare `ShadowsocksAdapter` for SSR.
 
 ## 0.10.5
