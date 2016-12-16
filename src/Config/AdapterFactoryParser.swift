@@ -102,6 +102,23 @@ struct AdapterFactoryParser {
         switch proto {
         case "origin":
             protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.OriginProtocolObfuscater.Factory()
+        case "http_simple":
+            var headerHosts = [host]
+            var customHeader: String?
+            let headerMethod = "GET"
+
+            if let param = config["obfs_param"].string {
+                let params = param.characters.split(separator: "#", maxSplits: 1, omittingEmptySubsequences: true)
+                if params.count > 0 {
+                    headerHosts = String(params[0]).components(separatedBy: ",")
+                    if params.count > 1 {
+                        customHeader = String(params[1])
+                        customHeader = customHeader?.replacingOccurrences(of: "\n", with: "\r\n")
+                        customHeader = customHeader?.replacingOccurrences(of: "\\n", with: "\r\n")
+                    }
+                }
+            }
+            protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.HTTPProtocolObfuscater.Factory(method: headerMethod, hosts: headerHosts, customHeader: customHeader)
         default:
             throw ConfigurationParserError.adapterParsingError(errorInfo: "protocol \"\(proto)\" is not supported")
         }

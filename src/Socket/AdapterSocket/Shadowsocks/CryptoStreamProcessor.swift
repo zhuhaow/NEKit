@@ -66,6 +66,7 @@ extension ShadowsocksAdapter {
                 buffer.append(data: data)
                 readIV = buffer.get(length: ivLength)
                 guard readIV != nil else {
+                    try inputStreamProcessor!.input(data: Data())
                     return
                 }
 

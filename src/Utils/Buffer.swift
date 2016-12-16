@@ -7,6 +7,10 @@ struct Buffer {
     private var buffer: Data
     private var offset = 0
 
+    var left: Int {
+        return buffer.count - offset
+    }
+
     init(capacity: Int) {
         buffer = Data(capacity: capacity)
     }
@@ -40,7 +44,7 @@ struct Buffer {
             return nil
         }
 
-        return get(length: range.count)
+        return get(length: range.upperBound - offset)
     }
 
     mutating func get() -> Data? {
