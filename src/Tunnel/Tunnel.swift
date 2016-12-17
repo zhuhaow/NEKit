@@ -185,6 +185,11 @@ public class Tunnel: NSObject, SocketDelegate {
 
         readySignal += 1
         observer?.signal(.receivedReadySignal(socket, currentReady: readySignal, on: self))
+
+        if let socket = socket as? AdapterSocket {
+            proxySocket.respondTo(adapter: socket)
+        }
+
         if readySignal == 2 {
             _status = .forwarding
             proxySocket.readData()
@@ -242,7 +247,6 @@ public class Tunnel: NSObject, SocketDelegate {
         }
 
         observer?.signal(.connectedToRemote(adapterSocket, on: self))
-        proxySocket.respondTo(adapter: adapterSocket)
     }
 
     public func updateAdapterWith(newAdapter: AdapterSocket) {
