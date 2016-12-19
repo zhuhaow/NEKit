@@ -119,6 +119,13 @@ struct AdapterFactoryParser {
                 }
             }
             protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.HTTPProtocolObfuscater.Factory(method: headerMethod, hosts: headerHosts, customHeader: customHeader)
+        case "tls1.2_ticket_auth":
+            var headerHosts = [host]
+
+            if let param = config["obfs_param"].string {
+                    headerHosts = String(param).components(separatedBy: ",")
+            }
+            protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.TLSProtocolObfuscater.Factory(hosts: headerHosts)
         default:
             throw ConfigurationParserError.adapterParsingError(errorInfo: "protocol \"\(proto)\" is not supported")
         }

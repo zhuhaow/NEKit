@@ -63,4 +63,16 @@ struct Buffer {
     mutating func release() {
         buffer = Data()
     }
+
+    mutating func withUnsafeBytes<T, U>(_ body: @escaping (UnsafePointer<T>) throws -> U ) rethrows -> U {
+        return try buffer.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) -> U in
+            return try ptr.advanced(by: offset).withMemoryRebound(to: T.self, capacity: (buffer.count - offset) / MemoryLayout<T>.stride) {
+                return try body($0)
+            }
+        }
+    }
+
+    mutating func skip(_ step: Int) {
+        offset += step
+    }
 }

@@ -98,4 +98,16 @@ public struct Utils {
             Array($0)
         }
     }
+
+    struct Random {
+        static func fill(data: inout Data, from: Int = 0, to: Int = -1) {
+            data.withUnsafeMutableBytes {
+                arc4random_buf($0.advanced(by: from), to == -1 ? data.count - from : to - from)
+            }
+        }
+
+        static func fill(data: inout Data, from: Int = 0, length: Int) {
+            fill(data: &data, from: from, to: from + length)
+        }
+    }
 }
