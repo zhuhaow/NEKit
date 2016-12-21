@@ -96,7 +96,7 @@ struct AdapterFactoryParser {
         }
         
         if let _ = config["ota"].string {
-            throw ConfigurationParserError.adapterParsingError(errorInfo: "Do not use \"ota: true\", use \"obfs: verify_sha1\" instead.")
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "Do not use \"ota: true\", use \"protocol: verify_sha1\" instead.")
         }
 
         let proto = config["obfs"].string?.lowercased() ?? "origin"
