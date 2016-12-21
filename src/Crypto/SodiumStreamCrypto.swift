@@ -22,6 +22,10 @@ open class SodiumStreamCrypto: StreamCryptoProtocol {
     }
 
     open func update(_ data: inout Data) {
+        guard data.count > 0 else {
+            return
+        }
+
         let padding = counter % blockSize
 
         var outputData: Data
