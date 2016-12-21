@@ -20,6 +20,10 @@ struct Buffer {
     }
 
     mutating func squeeze() {
+        guard offset > 0 else {
+            return
+        }
+
         buffer.withUnsafeMutableBytes {
             buffer.copyBytes(to: $0, from: offset..<buffer.count)
         }
