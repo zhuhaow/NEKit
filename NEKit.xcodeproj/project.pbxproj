@@ -261,6 +261,10 @@
 		36CB0D341D51C68700DB7AF5 /* HTTPProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB0D321D51C68700DB7AF5 /* HTTPProxySocket.swift */; };
 		36CB0D381D51E06700DB7AF5 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */; };
 		36CB0D391D51E06700DB7AF5 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */; };
+		36D4007D1E07E48B00583102 /* HTTPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D4007C1E07E48B00583102 /* HTTPURL.swift */; };
+		36D4007E1E07E48B00583102 /* HTTPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D4007C1E07E48B00583102 /* HTTPURL.swift */; };
+		36D400801E07E8A100583102 /* HTTPURLSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D4007F1E07E8A100583102 /* HTTPURLSpec.swift */; };
+		36D400811E07E8A100583102 /* HTTPURLSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D4007F1E07E8A100583102 /* HTTPURLSpec.swift */; };
 		36D591BE1D6C40F2003E92B2 /* IPRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591BD1D6C40F2003E92B2 /* IPRange.swift */; };
 		36D591BF1D6C40F2003E92B2 /* IPRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591BD1D6C40F2003E92B2 /* IPRange.swift */; };
 		36D591C11D6C4895003E92B2 /* IPRangeListRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */; };
@@ -524,6 +528,8 @@
 		36CB0D321D51C68700DB7AF5 /* HTTPProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPProxySocket.swift; sourceTree = "<group>"; };
 		36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
 		36CB6DF31D97A89F004D8655 /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
+		36D4007C1E07E48B00583102 /* HTTPURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPURL.swift; sourceTree = "<group>"; };
+		36D4007F1E07E8A100583102 /* HTTPURLSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPURLSpec.swift; sourceTree = "<group>"; };
 		36D591BD1D6C40F2003E92B2 /* IPRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRange.swift; sourceTree = "<group>"; };
 		36D591C01D6C4895003E92B2 /* IPRangeListRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPRangeListRule.swift; sourceTree = "<group>"; };
 		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
@@ -660,6 +666,7 @@
 			isa = PBXGroup;
 			children = (
 				3623473F1D7E706300A047DE /* IPRangeSpec.swift */,
+				36D4007F1E07E8A100583102 /* HTTPURLSpec.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1010,6 +1017,7 @@
 				36411A721D1FBFB0005F4108 /* IPv4Pool.swift */,
 				3636DA611CE892EF007F9787 /* Port.swift */,
 				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
+				36D4007C1E07E48B00583102 /* HTTPURL.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1351,6 +1359,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36D400801E07E8A100583102 /* HTTPURLSpec.swift in Sources */,
 				362347401D7E706300A047DE /* IPRangeSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1359,6 +1368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36D400811E07E8A100583102 /* HTTPURLSpec.swift in Sources */,
 				362347411D7E706300A047DE /* IPRangeSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1377,6 +1387,7 @@
 				366EB5B71CDE150C00E0E942 /* HTTPAdapterFactory.swift in Sources */,
 				3636DA5E1CE87C08007F9787 /* IPAddress.swift in Sources */,
 				36411A551D12C123005F4108 /* Atomic.swift in Sources */,
+				36D4007D1E07E48B00583102 /* HTTPURL.swift in Sources */,
 				36C63DCE1CFD70C100A00CA2 /* DNSServer.swift in Sources */,
 				3636DA621CE892EF007F9787 /* Port.swift in Sources */,
 				36C63E041D02C0B700A00CA2 /* TCPStack.swift in Sources */,
@@ -1487,6 +1498,7 @@
 				36C48D5C1CF88EB60071804F /* ServerAdapterFactory.swift in Sources */,
 				36C48D651CF88EBC0071804F /* AdapterFactoryParser.swift in Sources */,
 				36411A561D12C123005F4108 /* Atomic.swift in Sources */,
+				36D4007E1E07E48B00583102 /* HTTPURL.swift in Sources */,
 				36C63DCF1CFD70C100A00CA2 /* DNSServer.swift in Sources */,
 				36C48D7B1CF88EDA0071804F /* Rule.swift in Sources */,
 				36C63E051D02C0B700A00CA2 /* TCPStack.swift in Sources */,
