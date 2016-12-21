@@ -50,8 +50,8 @@ open class NWUDPSocket {
 
             sSelf.updateActivityTimer()
 
-            guard error == nil else {
-                DDLogError("Error when reading from remote server. \(error)")
+            guard error == nil, let dataArray = dataArray else {
+                DDLogError("Error when reading from remote server. \(error?.localizedDescription ?? "Connection reset")")
                 return
             }
 
