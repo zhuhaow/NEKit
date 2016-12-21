@@ -146,7 +146,7 @@ public class TUNTCPSocket: RawTCPSocketProtocol, TSTCPSocketDelegate {
         checkReadData()
     }
 
-    fileprivate func queueCall(_ block: @escaping ()->()) {
+    fileprivate func queueCall(_ block: @escaping () -> Void) {
         QueueFactory.getQueue().async(execute: block)
     }
 

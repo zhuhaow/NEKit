@@ -17,7 +17,7 @@ public protocol IPStackProtocol: class {
     /// The parameter is the safe as the `inputPacket`.
     ///
     /// - note: This block is thread-safe.
-    var outputFunc: (([Data], [NSNumber]) -> ())! { get set }
+    var outputFunc: (([Data], [NSNumber]) -> Void)! { get set }
 
     /**
      Stop the stack from running.

@@ -23,7 +23,7 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
     fileprivate let pool: IPv4Pool?
     fileprivate var resolvers: [DNSResolverProtocol] = []
 
-    open var outputFunc: (([Data], [NSNumber]) -> ())!
+    open var outputFunc: (([Data], [NSNumber]) -> Void)!
 
     // Only match A record as of now, all other records should be passed directly.
     fileprivate let matchedType = [DNSType.a]

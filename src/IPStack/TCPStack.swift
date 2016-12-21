@@ -20,7 +20,7 @@ open class TCPStack: TSIPStackDelegate, IPStackProtocol {
     open weak var proxyServer: ProxyServer?
 
     /// This is set automatically when the stack is registered to some interface.
-    open var outputFunc: (([Data], [NSNumber]) -> ())! {
+    open var outputFunc: (([Data], [NSNumber]) -> Void)! {
         get {
             return TSIPStack.stack.outputBlock
         }

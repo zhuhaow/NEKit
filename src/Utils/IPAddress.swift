@@ -70,7 +70,7 @@ open class IPv4Address: IPAddress {
         return _in_addr.s_addr
     }
 
-    open func withBytesInNetworkOrder(_ block: (UnsafeRawPointer) -> ()) {
+    open func withBytesInNetworkOrder(_ block: (UnsafeRawPointer) -> Void) {
         withUnsafePointer(to: &_in_addr) {
             block($0)
         }

@@ -94,7 +94,7 @@ struct AdapterFactoryParser {
         guard let password = config["password"].stringOrIntString else {
             throw ConfigurationParserError.adapterParsingError(errorInfo: "Password (password) is required.")
         }
-        
+
         if let _ = config["ota"].string {
             throw ConfigurationParserError.adapterParsingError(errorInfo: "Do not use \"ota: true\", use \"protocol: verify_sha1\" instead.")
         }
