@@ -1030,6 +1030,7 @@
 				3664F0BF1CE30957008BA6D8 /* StreamScanner.swift */,
 				36D4007C1E07E48B00583102 /* HTTPURL.swift */,
 				361176591DFFE98700A1A058 /* Buffer.swift */,
+				36D4007C1E07E48B00583102 /* HTTPURL.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
