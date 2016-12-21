@@ -5,7 +5,8 @@ open class HTTPHeader {
     open var method: String
     open var isConnect: Bool = false
     open var path: String
-    open var pathURL: Foundation.URL
+    open var foundationURL: Foundation.URL?
+    open var homemadeURL: HTTPURL?
     open var host: String
     open var port: Int
     // just assume that `Content-Length` is given as of now.
@@ -28,11 +29,6 @@ open class HTTPHeader {
         method = request[0]
         path = request[1]
         HTTPVersion = request[2]
-
-        guard let _url = Foundation.URL(string: path) else {
-            return nil
-        }
-        pathURL = _url
 
         for line in lines[1..<lines.count-2] {
             let header = line.characters.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
@@ -57,10 +53,31 @@ open class HTTPHeader {
 
             self.contentLength = 0
         } else {
-            if pathURL.host != nil {
-                host = pathURL.host!
-                port = pathURL.port ?? 80
+            var resolved = false
+
+            host = ""
+            port = 80
+
+            if let _url = Foundation.URL(string: path) {
+                foundationURL = _url
+                if foundationURL!.host != nil {
+                    host = foundationURL!.host!
+                    port = foundationURL!.port ?? 80
+                    resolved = true
+                }
             } else {
+                guard let _url = HTTPURL(string: path) else {
+                    return nil
+                }
+                homemadeURL = _url
+                if homemadeURL!.host != nil {
+                    host = homemadeURL!.host!
+                    port = homemadeURL!.port ?? 80
+                    resolved = true
+                }
+            }
+
+            if !resolved {
                 var url: String = ""
                 for (key, value) in headers {
                     if "Host".caseInsensitiveCompare(key) == .orderedSame {
