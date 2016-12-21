@@ -155,6 +155,13 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
      - warning: This should only be called after the last write is finished, i.e., `delegate?.didWriteData()` is called.
      */
     func write(data: Data, withTimeout timeout: Double) {
+        guard data.count > 0 else {
+            QueueFactory.getQueue().async {
+                self.delegate?.didWrite(data: data, by: self)
+            }
+            return
+        }
+
         socket.write(data, withTimeout: timeout, tag: 0)
     }
 

@@ -120,6 +120,13 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             return
         }
 
+        guard data.count > 0 else {
+            QueueFactory.getQueue().async {
+                self.delegate?.didWrite(data: data, by: self)
+            }
+            return
+        }
+
         send(data: data)
     }
 
@@ -205,7 +212,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         readData()
     }
 
-    private func queueCall(_ block: @escaping ()->()) {
+    private func queueCall(_ block: @escaping () -> Void) {
         QueueFactory.getQueue().async(execute: block)
     }
 
