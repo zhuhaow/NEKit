@@ -21,7 +21,7 @@ class HTTPURLSpec: QuickSpec {
             ("google.com::8080/ccc/aaa/vvv", false, "", "", nil, "")
         ]
         
-        it("can parse http urls") {
+        it("can parse urls") {
             for test in testCases {
                 let url = HTTPURL(string: test.0)
                 if test.1 {
