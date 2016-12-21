@@ -6,7 +6,7 @@ public class ShadowsocksAdapter: AdapterSocket {
     enum ShadowsocksAdapterStatus {
         case invalid,
         connecting,
-        sendingIV,
+        connected,
         forwarding,
         stopped
     }
@@ -17,45 +17,32 @@ public class ShadowsocksAdapter: AdapterSocket {
         static let allValues: [EncryptMethod] = [.AES128CFB, .AES192CFB, .AES256CFB]
     }
 
-    var readIV: Data!
-    let key: Data
-    public let encryptAlgorithm: CryptoAlgorithm
     public let host: String
     public let port: Int
 
-    let streamObfuscaterType: ShadowsocksStreamObfuscater.Type
-
     var internalStatus: ShadowsocksAdapterStatus = .invalid
 
-    lazy var writeIV: Data = {
-        [unowned self] in
-        CryptoHelper.getIV(self.encryptAlgorithm)
-        }()
-    lazy var ivLength: Int = {
-        [unowned self] in
-        CryptoHelper.getIVLength(self.encryptAlgorithm)
-        }()
-    lazy var encryptor: StreamCryptoProtocol = {
-        [unowned self] in
-        self.getCrypto(.encrypt)
-        }()
-    lazy var decryptor: StreamCryptoProtocol = {
-        [unowned self] in
-        self.getCrypto(.decrypt)
-        }()
-    lazy var streamObfuscater: ShadowsocksStreamObfuscater = {
-        [unowned self] in
-        return self.streamObfuscaterType.init(key: self.key, iv: self.writeIV)
-    }()
+    private let protocolObfuscater: ProtocolObfuscater.ProtocolObfuscaterBase
+    private let cryptor: CryptoStreamProcessor
+    private let streamObfuscator: StreamObfuscater.StreamObfuscaterBase
 
-    public init(host: String, port: Int, encryptAlgorithm: CryptoAlgorithm, password: String, streamObfuscaterType: ShadowsocksStreamObfuscater.Type = OriginStreamObfuscater.self) {
-        self.encryptAlgorithm = encryptAlgorithm
-        self.key = CryptoHelper.getKey(password, methodType: encryptAlgorithm)
+    public init(host: String, port: Int, protocolObfuscater: ProtocolObfuscater.ProtocolObfuscaterBase, cryptor: CryptoStreamProcessor, streamObfuscator: StreamObfuscater.StreamObfuscaterBase) {
         self.host = host
         self.port = port
-        self.streamObfuscaterType = streamObfuscaterType
+        self.protocolObfuscater = protocolObfuscater
+        self.cryptor = cryptor
+        self.streamObfuscator = streamObfuscator
 
         super.init()
+
+        protocolObfuscater.inputStreamProcessor = cryptor
+        protocolObfuscater.outputStreamProcessor = self
+
+        cryptor.inputStreamProcessor = streamObfuscator
+        cryptor.outputStreamProcessor = protocolObfuscater
+
+        streamObfuscator.inputStreamProcessor = self
+        streamObfuscator.outputStreamProcessor = cryptor
     }
 
     override func openSocketWith(request: ConnectRequest) {
@@ -73,104 +60,53 @@ public class ShadowsocksAdapter: AdapterSocket {
     override public func didConnectWith(socket: RawTCPSocketProtocol) {
         super.didConnectWith(socket: socket)
 
-        var helloData = writeIV
-        var requestData = streamObfuscater.requestData(for: request)
-        encryptData(&requestData)
-        helloData.append(requestData)
+        internalStatus = .connected
 
-        internalStatus = .sendingIV
-        write(rawData: helloData)
-    }
-
-    func write(rawData: Data) {
-        super.write(data: rawData)
-    }
-
-    override public func readData() {
-        if readIV == nil {
-            socket.readDataTo(length: ivLength)
-        } else {
-            super.readData()
-        }
-    }
-
-    override public func write(data: Data) {
-        var data = streamObfuscater.output(data: data)
-
-        encryptData(&data)
-        write(rawData: data)
+        protocolObfuscater.start()
     }
 
     override public func didRead(data: Data, from socket: RawTCPSocketProtocol) {
         super.didRead(data: data, from: socket)
 
-        if readIV == nil {
-            readIV = data
-            readData()
-        } else {
-            var data = streamObfuscater.input(data: data)
-            decryptData(&data)
-            delegate?.didRead(data: data, from: self)
+        do {
+            try protocolObfuscater.input(data: data)
+        } catch {
+            disconnect()
         }
+    }
+
+    public override func write(data: Data) {
+        streamObfuscator.output(data: data)
+    }
+
+    public func write(rawData: Data) {
+        super.write(data: rawData)
+    }
+
+    public func input(data: Data) {
+        delegate?.didRead(data: data, from: self)
+    }
+
+    public func output(data: Data) {
+        write(rawData: data)
     }
 
     override public func didWrite(data: Data?, by socket: RawTCPSocketProtocol) {
         super.didWrite(data: data, by: socket)
 
+        protocolObfuscater.didWrite()
+
         switch internalStatus {
         case .forwarding:
             delegate?.didWrite(data: data, by: self)
-        case .sendingIV:
-            internalStatus = .forwarding
-            observer?.signal(.readyForForward(self))
-            delegate?.didBecomeReadyToForwardWith(socket: self)
         default:
             return
         }
     }
 
-    func encryptData(_ data: inout Data) {
-        return encryptor.update(&data)
-    }
-
-    func decryptData(_ data: inout Data) {
-        return decryptor.update(&data)
-    }
-
-    fileprivate func getCrypto(_ operation: CryptoOperation) -> StreamCryptoProtocol {
-        switch encryptAlgorithm {
-        case .AES128CFB, .AES192CFB, .AES256CFB:
-            switch operation {
-            case .decrypt:
-                return CCCrypto(operation: .decrypt, mode: .cfb, algorithm: .aes, initialVector: readIV, key: key)
-            case .encrypt:
-                return CCCrypto(operation: .encrypt, mode: .cfb, algorithm: .aes, initialVector: writeIV, key: key)
-            }
-        case .CHACHA20:
-            switch operation {
-            case .decrypt:
-                return SodiumStreamCrypto(key: key, iv: readIV, algorithm: .chacha20)
-            case .encrypt:
-                return SodiumStreamCrypto(key: key, iv: writeIV, algorithm: .chacha20)
-            }
-        case .SALSA20:
-            switch operation {
-            case .decrypt:
-                return SodiumStreamCrypto(key: key, iv: readIV, algorithm: .salsa20)
-            case .encrypt:
-                return SodiumStreamCrypto(key: key, iv: writeIV, algorithm: .salsa20)
-            }
-        case .RC4MD5:
-            var combinedKey = Data(capacity: key.count + ivLength)
-            combinedKey.append(key)
-            switch operation {
-            case .decrypt:
-                combinedKey.append(readIV)
-                return CCCrypto(operation: .decrypt, mode: .rc4, algorithm: .rc4, initialVector: nil, key: MD5Hash.final(combinedKey))
-            case .encrypt:
-                combinedKey.append(writeIV)
-                return CCCrypto(operation: .encrypt, mode: .rc4, algorithm: .rc4, initialVector: nil, key: MD5Hash.final(combinedKey))
-            }
-        }
+    func becomeReadyToForward() {
+        internalStatus = .forwarding
+        observer?.signal(.readyForForward(self))
+        delegate?.didBecomeReadyToForwardWith(socket: self)
     }
 }

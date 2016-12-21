@@ -42,9 +42,7 @@ open class BinaryDataScanner {
 //    let encoding: NSStringEncoding
 
     var remaining: Int {
-        get {
-            return data.count - position
-        }
+        return data.count - position
     }
 
     var position: Int = 0

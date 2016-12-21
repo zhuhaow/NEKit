@@ -18,7 +18,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let config = Configuration()
         let filepath = (NSHomeDirectory() as NSString).appendingPathComponent(".NEKit_demo.yaml")
         // swiftlint:disable force_try
-        try! config.load(fromConfigFile: filepath)
+        do {
+            try config.load(fromConfigFile: filepath)
+        } catch let error {
+            DDLogError("\(error)")
+        }
         RuleManager.currentManager = config.ruleManager
         httpProxy = GCDHTTPProxyServer(address: nil, port: NEKit.Port(port: UInt16(config.proxyPort!)))
         // swiftlint:disable force_try

@@ -87,14 +87,62 @@ struct AdapterFactoryParser {
             throw ConfigurationParserError.adapterParsingError(errorInfo: "Encryption method (method) is required.")
         }
 
+        guard let algorithm = CryptoAlgorithm(rawValue: encryptMethod.uppercased()) else {
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "Encryption method \(encryptMethod) is not supported.")
+        }
+
         guard let password = config["password"].stringOrIntString else {
             throw ConfigurationParserError.adapterParsingError(errorInfo: "Password (password) is required.")
         }
 
-        let otaEnabled = config["ota"].bool ?? false
-        let streamObfuscaterType = otaEnabled ? ShadowsocksAdapter.OTAStreamObfuscater.self as ShadowsocksStreamObfuscater.Type : ShadowsocksAdapter.OriginStreamObfuscater.self as ShadowsocksStreamObfuscater.Type
+        let proto = config["obfs"].string?.lowercased() ?? "origin"
+        let stream = config["protocol"].string?.lowercased() ?? "origin"
 
-        return ShadowsocksAdapterFactory(serverHost: host, serverPort: port, encryptAlgorithm: encryptMethod, password: password, streamObfuscaterType: streamObfuscaterType)!
+        let protocolObfuscaterFactory: ShadowsocksAdapter.ProtocolObfuscater.Factory
+        switch proto {
+        case "origin":
+            protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.OriginProtocolObfuscater.Factory()
+        case "http_simple":
+            var headerHosts = [host]
+            var customHeader: String?
+            let headerMethod = "GET"
+
+            if let param = config["obfs_param"].string {
+                let params = param.characters.split(separator: "#", maxSplits: 1, omittingEmptySubsequences: true)
+                if params.count > 0 {
+                    headerHosts = String(params[0]).components(separatedBy: ",")
+                    if params.count > 1 {
+                        customHeader = String(params[1])
+                        customHeader = customHeader?.replacingOccurrences(of: "\n", with: "\r\n")
+                        customHeader = customHeader?.replacingOccurrences(of: "\\n", with: "\r\n")
+                    }
+                }
+            }
+            protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.HTTPProtocolObfuscater.Factory(method: headerMethod, hosts: headerHosts, customHeader: customHeader)
+        case "tls1.2_ticket_auth":
+            var headerHosts = [host]
+
+            if let param = config["obfs_param"].string {
+                    headerHosts = String(param).components(separatedBy: ",")
+            }
+            protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.TLSProtocolObfuscater.Factory(hosts: headerHosts)
+        default:
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "protocol \"\(proto)\" is not supported")
+        }
+
+        let streamObfuscaterFactory: ShadowsocksAdapter.StreamObfuscater.Factory
+        switch stream {
+        case "origin":
+            streamObfuscaterFactory = ShadowsocksAdapter.StreamObfuscater.OriginStreamObfuscater.Factory()
+        case "verify_sha1":
+            streamObfuscaterFactory = ShadowsocksAdapter.StreamObfuscater.OTAStreamObfuscater.Factory()
+        default:
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "obfs \"\(stream)\" is not supported")
+        }
+
+        let cryptoFactory = ShadowsocksAdapter.CryptoStreamProcessor.Factory(password: password, algorithm: algorithm)
+
+        return ShadowsocksAdapterFactory(serverHost: host, serverPort: port, protocolObfuscaterFactory: protocolObfuscaterFactory, cryptorFactory: cryptoFactory, streamObfuscaterFactory: streamObfuscaterFactory)
     }
 
     static func parseSpeedAdapterFactory(_ config: Yaml, factoryDict: [String:AdapterFactory]) throws -> SpeedAdapterFactory {
