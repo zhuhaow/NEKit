@@ -190,7 +190,7 @@ extension ShadowsocksAdapter {
 
             public override func start() {
                 handleStatus0()
-                outputStreamProcessor.socket.readDataTo(length: 101)
+                outputStreamProcessor.socket.readDataTo(length: 129)
             }
 
             public override func input(data: Data) throws {
@@ -200,7 +200,7 @@ extension ShadowsocksAdapter {
                 case 1:
                     outputStreamProcessor.becomeReadyToForward()
                 default:
-                    try inputStreamProcessor.input(data: Data())
+                    break
                 }
             }
 
@@ -354,9 +354,9 @@ extension ShadowsocksAdapter {
                 while buffer.left > 5 {
                     buffer.skip(3)
                     if !buffer.withUnsafeBytes({ (ptr: UnsafePointer<UInt16>) -> Bool in
-                        let length = Int(ptr.pointee)
+                        let length = Int(ptr.pointee.byteSwapped)
                         self.buffer.skip(2)
-                        if self.buffer.left > length {
+                        if self.buffer.left >= length {
                             unpackedData.append(self.buffer.get(length: length)!)
                             return true
                         } else {
