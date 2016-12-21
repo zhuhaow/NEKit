@@ -2,13 +2,13 @@ import Foundation
 
 public class HTTPURL {
     public let scheme: String?
-    public let host: String
+    public let host: String?
     public let port: Int?
     //    public let path: String
     public let relativePath: String
 
     // swiftlint:disable:next force_try
-    static let urlreg = try! NSRegularExpression(pattern: "^(?:(https?):\\/\\/)?([\\w\\.]+)(?::(\\d+))?(?:\\/(.*))?$", options: NSRegularExpression.Options.caseInsensitive)
+    static let urlreg = try! NSRegularExpression(pattern: "^(?:(?:(https?):\\/\\/)?([\\w\\.]+)(?::(\\d+))?)?(?:\\/(.*))?$", options: NSRegularExpression.Options.caseInsensitive)
 
     init?(string url: String) {
         let nsurl = url as NSString
@@ -33,10 +33,11 @@ public class HTTPURL {
         }
 
         range = result.rangeAt(2)
-        guard range.location != NSNotFound else {
-            return nil
+        if range.location != NSNotFound {
+            host = nsurl.substring(with: range)
+        } else {
+            host = nil
         }
-        host = nsurl.substring(with: range)
 
         range = result.rangeAt(3)
         if range.location != NSNotFound {

@@ -4,7 +4,7 @@ import Nimble
 
 class HTTPURLSpec: QuickSpec {
     override func spec() {
-        let testCases: [(String, Bool, String?, String, Int?, String)] = [
+        let testCases: [(String, Bool, String?, String?, Int?, String)] = [
             ("http://google.com/ncr", true, "http", "google.com", nil, "ncr"),
             ("http://google.com/", true, "http", "google.com", nil, ""),
             ("http://google.com:8080/", true, "http", "google.com", 8080, ""),
@@ -18,7 +18,8 @@ class HTTPURLSpec: QuickSpec {
             ("google.com/", true, nil, "google.com", nil, ""),
             ("google.com:8080/", true, nil, "google.com", 8080, ""),
             ("google.com:8080/ccc/aaa/vvv", true, nil, "google.com", 8080, "ccc/aaa/vvv"),
-            ("google.com::8080/ccc/aaa/vvv", false, "", "", nil, "")
+            ("google.com::8080/ccc/aaa/vvv", false, "", "", nil, ""),
+            ("/ccc/aaa/vvv", true, nil, nil, nil, "ccc/aaa/vvv"),
         ]
         
         it("can parse urls") {
@@ -27,7 +28,7 @@ class HTTPURLSpec: QuickSpec {
                 if test.1 {
                     let url = url!
                     expect(url.scheme == test.2) == true
-                    expect(url.host).to(equal(test.3))
+                    expect(url.host == test.3) == true
                     expect(url.port == test.4) == true
                     expect(url.relativePath).to(equal(test.5))
                 } else {
