@@ -4,7 +4,7 @@ extension ShadowsocksAdapter {
     public struct ProtocolObfuscater {
         public class Factory {
             public init() {}
-            
+
             public func build() -> ProtocolObfuscaterBase {
                 return ProtocolObfuscaterBase()
             }
@@ -24,8 +24,8 @@ extension ShadowsocksAdapter {
         public class OriginProtocolObfuscater: ProtocolObfuscaterBase {
 
             public class Factory: ProtocolObfuscater.Factory {
-                public init() {}
-                
+                public override init() {}
+
                 public override func build() -> ShadowsocksAdapter.ProtocolObfuscater.ProtocolObfuscaterBase {
                     return OriginProtocolObfuscater()
                 }
