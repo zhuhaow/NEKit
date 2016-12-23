@@ -41,7 +41,7 @@ public final class ConnectRequest {
                 return ip
             }
 
-            guard let address = IPv4Address(fromString: ip) else {
+            guard let address = IPAddress(fromString: ip) else {
                 return ip
             }
 
@@ -80,7 +80,7 @@ public final class ConnectRequest {
         }
     }
 
-    public convenience init?(ipAddress: IPv4Address, port: Port, fakeIPEnabled: Bool = true) {
+    public convenience init?(ipAddress: IPAddress, port: Port, fakeIPEnabled: Bool = true) {
         self.init(host: ipAddress.presentation, port: Int(port.value), fakeIPEnabled: fakeIPEnabled)
     }
 
@@ -95,7 +95,7 @@ public final class ConnectRequest {
             return true
         }
 
-        let address = IPv4Address(fromString: requestedHost)!
+        let address = IPAddress(fromString: requestedHost)!
         guard dnsServer.isFakeIP(address) else {
             return true
         }

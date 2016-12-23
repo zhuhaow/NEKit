@@ -15,9 +15,9 @@ public enum TransportProtocol: UInt8 {
 open class IPPacket {
     /**
      Get the version of the IP Packet without parsing the whole packet.
-
+     
      - parameter data: The data containing the whole IP packet.
-
+     
      - returns: The version of the packet. Returns `nil` if failed to parse the packet.
      */
     open static func peekIPVersion(_ data: Data) -> IPVersion? {
@@ -31,9 +31,9 @@ open class IPPacket {
 
     /**
      Get the protocol of the IP Packet without parsing the whole packet.
-
+     
      - parameter data: The data containing the whole IP packet.
-
+     
      - returns: The protocol of the packet. Returns `nil` if failed to parse the packet.
      */
     open static func peekProtocol(_ data: Data) -> TransportProtocol? {
@@ -46,41 +46,41 @@ open class IPPacket {
 
     /**
      Get the source IP address of the IP packet without parsing the whole packet.
-
+     
      - parameter data: The data containing the whole IP packet.
-
+     
      - returns: The source IP address of the packet. Returns `nil` if failed to parse the packet.
      */
-    open static func peekSourceAddress(_ data: Data) -> IPv4Address? {
+    open static func peekSourceAddress(_ data: Data) -> IPAddress? {
         guard data.count >= 20 else {
             return nil
         }
 
-        return IPv4Address(fromBytesInNetworkOrder: (data as NSData).bytes.advanced(by: 12))
+        return IPAddress(fromBytesInNetworkOrder: (data as NSData).bytes.advanced(by: 12))
     }
 
     /**
      Get the destination IP address of the IP packet without parsing the whole packet.
-
+     
      - parameter data: The data containing the whole IP packet.
-
+     
      - returns: The destination IP address of the packet. Returns `nil` if failed to parse the packet.
      */
-    open static func peekDestinationAddress(_ data: Data) -> IPv4Address? {
+    open static func peekDestinationAddress(_ data: Data) -> IPAddress? {
         guard data.count >= 20 else {
             return nil
         }
 
-        return IPv4Address(fromBytesInNetworkOrder: (data as NSData).bytes.advanced(by: 16))
+        return IPAddress(fromBytesInNetworkOrder: (data as NSData).bytes.advanced(by: 16))
     }
 
     /**
      Get the source port of the IP packet without parsing the whole packet.
-
+     
      - parameter data: The data containing the whole IP packet.
-
+     
      - returns: The source IP address of the packet. Returns `nil` if failed to parse the packet.
-
+     
      - note: Only TCP and UDP packet has port field.
      */
     open static func peekSourcePort(_ data: Data) -> Port? {
@@ -104,11 +104,11 @@ open class IPPacket {
 
     /**
      Get the destination port of the IP packet without parsing the whole packet.
-
+     
      - parameter data: The data containing the whole IP packet.
-
+     
      - returns: The destination IP address of the packet. Returns `nil` if failed to parse the packet.
-
+     
      - note: Only TCP and UDP packet has port field.
      */
     open static func peekDestinationPort(_ data: Data) -> Port? {
@@ -162,10 +162,10 @@ open class IPPacket {
     var TTL: UInt8 = 64
 
     /// Source IP address.
-    var sourceAddress: IPv4Address!
+    var sourceAddress: IPAddress!
 
     /// Destination IP address.
-    var destinationAddress: IPv4Address!
+    var destinationAddress: IPAddress!
 
     /// Transport protocol of the packet.
     var transportProtocol: TransportProtocol!
@@ -183,7 +183,7 @@ open class IPPacket {
 
     /**
      Initailize an `IPPacket` with data.
-
+     
      - parameter packetData: The data containing a whole packet.
      */
     init?(packetData: Data) {
@@ -227,8 +227,8 @@ open class IPPacket {
 
         switch version {
         case .iPv4:
-            sourceAddress = IPv4Address(fromUInt32InHostOrder: scanner.read32()!)
-            destinationAddress = IPv4Address(fromUInt32InHostOrder: scanner.read32()!)
+            sourceAddress = IPAddress(ipv4InNetworkOrder: scanner.read32()!)
+            destinationAddress = IPAddress(ipv4InNetworkOrder: scanner.read32()!)
         default:
             // IPv6 is not supported yet.
             DDLogWarn("IPv6 is not supported yet.")
@@ -250,10 +250,10 @@ open class IPPacket {
     func computePseudoHeaderChecksum() -> UInt32 {
         var result: UInt32 = 0
         if let address = sourceAddress {
-            result += address.UInt32InHostOrder >> 16 + address.UInt32InHostOrder & 0xFFFF
+            result += address.UInt32InNetworkOrder! >> 16 + address.UInt32InNetworkOrder! & 0xFFFF
         }
         if let address = destinationAddress {
-            result += address.UInt32InHostOrder >> 16 + address.UInt32InHostOrder & 0xFFFF
+            result += address.UInt32InNetworkOrder! >> 16 + address.UInt32InNetworkOrder! & 0xFFFF
         }
         result += UInt32(transportProtocol.rawValue) << 8
         result += UInt32(protocolParser.bytesLength)
@@ -273,8 +273,8 @@ open class IPPacket {
         setPayloadWithUInt8(transportProtocol.rawValue, at: 9)
         // clear checksum bytes
         resetPayloadAt(10, length: 2)
-        setPayloadWithUInt32(sourceAddress.UInt32InNetworkOrder, at: 12, swap: false)
-        setPayloadWithUInt32(destinationAddress.UInt32InNetworkOrder, at: 16, swap: false)
+        setPayloadWithUInt32(sourceAddress.UInt32InNetworkOrder!, at: 12, swap: false)
+        setPayloadWithUInt32(destinationAddress.UInt32InNetworkOrder!, at: 16, swap: false)
 
         // let TCP or UDP packet build
         protocolParser.packetData = packetData

@@ -46,7 +46,7 @@ open class IPRangeListRule: Rule {
         }
 
         for range in ranges {
-            if range.inRange(ip) {
+            if range.contains(ip: ip) {
                 return .fake
             }
         }
@@ -61,12 +61,12 @@ open class IPRangeListRule: Rule {
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
     override func match(_ request: ConnectRequest) -> AdapterFactory? {
-        guard let ip = IPv4Address(fromString: request.ipAddress) else {
+        guard let ip = IPAddress(fromString: request.ipAddress) else {
             return nil
         }
 
         for range in ranges {
-            if range.inRange(ip) {
+            if range.contains(ip: ip) {
                 return adapterFactory
             }
         }

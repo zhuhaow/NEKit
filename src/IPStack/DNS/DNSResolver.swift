@@ -14,7 +14,7 @@ open class UDPDNSResolver: DNSResolverProtocol, NWUDPSocketDelegate {
     let socket: NWUDPSocket
     open weak var delegate: DNSResolverDelegate?
 
-    public init(address: IPv4Address, port: Port) {
+    public init(address: IPAddress, port: Port) {
         socket = NWUDPSocket(host: address.presentation, port: Int(port.value))!
         socket.delegate = self
     }

@@ -12,15 +12,15 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
     open static var currentServer: DNSServer?
 
     /// The address of DNS server.
-    let serverAddress: IPv4Address
+    let serverAddress: IPAddress
 
     /// The port of DNS server
     let serverPort: Port
 
     fileprivate let queue: DispatchQueue = DispatchQueue(label: "NEKit.DNSServer", attributes: [])
-    fileprivate var fakeSessions: [IPv4Address: DNSSession] = [:]
+    fileprivate var fakeSessions: [IPAddress: DNSSession] = [:]
     fileprivate var pendingSessions: [UInt16: DNSSession] = [:]
-    fileprivate let pool: IPv4Pool?
+    fileprivate let pool: IPPool?
     fileprivate var resolvers: [DNSResolverProtocol] = []
 
     open var outputFunc: (([Data], [NSNumber]) -> Void)!
@@ -35,7 +35,7 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
      - parameter port:       The listening port of the server.
      - parameter fakeIPPool: The pool of fake IP addresses. Set to nil if no fake IP is needed.
      */
-    public init(address: IPv4Address, port: Port, fakeIPPool: IPv4Pool? = nil) {
+    public init(address: IPAddress, port: Port, fakeIPPool: IPPool? = nil) {
         serverAddress = address
         serverPort = port
         pool = fakeIPPool
@@ -47,11 +47,11 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
      - parameter address: The fake IP address.
      - parameter delay:   How long should the fake IP be valid.
      */
-    fileprivate func cleanUpFakeIP(_ address: IPv4Address, after delay: Int) {
+    fileprivate func cleanUpFakeIP(_ address: IPAddress, after delay: Int) {
         queue.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay) * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC)) {
             [weak self] in
             _ = self?.fakeSessions.removeValue(forKey: address)
-            self?.pool?.releaseIP(address)
+            self?.pool?.release(ip: address)
         }
     }
 
@@ -192,11 +192,11 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
         return matchedType.contains(session.requestMessage.type!)
     }
 
-    func isFakeIP(_ ipAddress: IPv4Address) -> Bool {
-        return pool?.isInPool(ipAddress) ?? false
+    func isFakeIP(_ ipAddress: IPAddress) -> Bool {
+        return pool?.contains(ip: ipAddress) ?? false
     }
 
-    func lookupFakeIP(_ address: IPv4Address) -> DNSSession? {
+    func lookupFakeIP(_ address: IPAddress) -> DNSSession? {
         var session: DNSSession?
         queue.sync {
             session = self.fakeSessions[address]

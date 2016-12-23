@@ -36,11 +36,11 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
     }
 
     /// The source address.
-    open var sourceIPAddress: IPv4Address? {
+    open var sourceIPAddress: IPAddress? {
         guard let localHost = socket.localHost else {
             return nil
         }
-        return IPv4Address(fromString: localHost)
+        return IPAddress(fromString: localHost)
     }
 
     /// The source port.
@@ -51,7 +51,7 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
     /// The destination address.
     ///
     /// - note: Always returns `nil`.
-    open var destinationIPAddress: IPv4Address? {
+    open var destinationIPAddress: IPAddress? {
         return nil
     }
 

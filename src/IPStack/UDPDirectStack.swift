@@ -1,9 +1,9 @@
 import Foundation
 
 struct ConnectInfo: Hashable {
-    let sourceAddress: IPv4Address
+    let sourceAddress: IPAddress
     let sourcePort: Port
-    let destinationAddress: IPv4Address
+    let destinationAddress: IPAddress
     let destinationPort: Port
 
     var hashValue: Int {

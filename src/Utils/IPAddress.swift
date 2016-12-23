@@ -1,153 +1,204 @@
 import Foundation
 
-public protocol IPAddress: CustomStringConvertible, Hashable {
-    init?(fromString: String)
-    init(fromBytesInNetworkOrder: [UInt8])
-    init(fromBytesInNetworkOrder: UnsafeRawPointer)
-
-    var dataInNetworkOrder: Data { get }
-}
-
-open class IPv4Address: IPAddress {
-    fileprivate var _in_addr: in_addr
-
-    public init(fromInAddr: in_addr) {
-        _in_addr = fromInAddr
+public class IPAddress: CustomStringConvertible, Hashable, Comparable {
+    public enum Family {
+        case IPv4, IPv6
     }
 
-    public init(fromUInt32InHostOrder: UInt32) {
-        _in_addr = in_addr(s_addr: NSSwapHostIntToBig(fromUInt32InHostOrder))
-    }
+    public enum Address: Equatable {
+        case IPv4(in_addr), IPv6(in6_addr)
 
-    required public init(fromBytesInNetworkOrder: UnsafeRawPointer) {
-        _in_addr = fromBytesInNetworkOrder.load(as: in_addr.self)
-    }
-
-    required public init?(fromString: String) {
-        var addr: in_addr = in_addr()
-        var result: Int32 = 0
-        fromString.withCString {
-            result = inet_pton(AF_INET, $0, &addr)
+        public var asUInt128: UInt128 {
+            switch self {
+            case .IPv4(let addr):
+                return UInt128(addr.s_addr.byteSwapped)
+            case .IPv6(var addr):
+                var upperBits: UInt64 = 0, lowerBits: UInt64 = 0
+                withUnsafeBytes(of: &addr) {
+                    upperBits = $0.load(as: UInt64.self).byteSwapped
+                    lowerBits = $0.load(fromByteOffset: MemoryLayout<UInt64>.size, as: UInt64.self).byteSwapped
+                }
+                return UInt128(upperBits: upperBits, lowerBits: lowerBits)
+            }
         }
-
-        guard result == 1 else {
-            return nil
-        }
-        _in_addr = addr
-        presentation = fromString
     }
 
-    required public init(fromBytesInNetworkOrder: [UInt8]) {
-        var inaddr: in_addr! = nil
-        fromBytesInNetworkOrder.withUnsafeBufferPointer {
-            inaddr = UnsafeRawPointer($0.baseAddress!).load(as: in_addr.self)
-        }
-        _in_addr = inaddr
-    }
+    public let family: Family
+    public let address: Address
 
-    lazy var presentation: String = { [unowned self] in
-        var buffer = [Int8](repeating: 0, count: Int(INET_ADDRSTRLEN))
-        var p: UnsafePointer<Int8>! = nil
-        withUnsafePointer(to: &self._in_addr) { (ptr: UnsafePointer<in_addr>) in
-            p = inet_ntop(AF_INET, ptr, &buffer, UInt32(INET_ADDRSTRLEN))
+    public lazy var presentation: String = { [unowned self] in
+        switch self.address {
+        case .IPv4(var addr):
+            var buffer = [Int8](repeating: 0, count: Int(INET_ADDRSTRLEN))
+            var p: UnsafePointer<Int8>! = nil
+            withUnsafePointer(to: &addr) {
+                p = inet_ntop(AF_INET, $0, &buffer, UInt32(INET_ADDRSTRLEN))
+            }
+            return String(cString: p)
+        case .IPv6(var addr):
+            var buffer = [Int8](repeating: 0, count: Int(INET6_ADDRSTRLEN))
+            var p: UnsafePointer<Int8>! = nil
+            withUnsafePointer(to: &addr) {
+                p = inet_ntop(AF_INET6, $0, &buffer, UInt32(INET6_ADDRSTRLEN))
+            }
+            return String(cString: p)
         }
-        return String(cString: p)
     }()
 
-    open var description: String {
-        return "<IPv4Address \(presentation)>"
+    public init(fromInAddr addr: in_addr) {
+        family = .IPv4
+        address = .IPv4(addr)
     }
 
-    open var hashValue: Int {
-        return _in_addr.s_addr.hashValue
+    public init(fromIn6Addr addr6: in6_addr) {
+        family = .IPv6
+        address = .IPv6(addr6)
     }
 
-    open var UInt32InHostOrder: UInt32 {
-        return NSSwapBigIntToHost(_in_addr.s_addr)
-    }
+    public convenience init?(fromString string: String) {
+        var addr = in_addr()
 
-    open var UInt32InNetworkOrder: UInt32 {
-        return _in_addr.s_addr
-    }
-
-    open func withBytesInNetworkOrder(_ block: (UnsafeRawPointer) -> Void) {
-        withUnsafePointer(to: &_in_addr) {
-            block($0)
+        if (string.withCString {
+            return inet_pton(AF_INET, $0, &addr)
+        }) == 1 {
+            self.init(fromInAddr: addr)
+            presentation = string
+        } else {
+            var addr6 = in6_addr()
+            if (string.withCString {
+                return inet_pton(AF_INET6, $0, &addr6)
+            }) == 1 {
+                self.init(fromIn6Addr: addr6)
+                presentation = string
+            } else {
+                return nil
+            }
         }
     }
 
-    open var dataInNetworkOrder: Data {
-        return Data(bytes: &_in_addr, count: MemoryLayout.size(ofValue: _in_addr))
+    public convenience init(ipv4InNetworkOrder: UInt32) {
+        let addr = in_addr(s_addr: ipv4InNetworkOrder)
+        self.init(fromInAddr: addr)
     }
-}
 
-public class IPv6Address: IPAddress {
+    public convenience init(ipv6InNetworkOrder: UInt128) {
+        var ip = ipv6InNetworkOrder
+        var addr = in6_addr()
+        withUnsafeBytes(of: &ip) { ipptr in
+            withUnsafeMutableBytes(of: &addr) { addrptr in
+                addrptr.storeBytes(of: ipptr.load(as: UInt64.self).byteSwapped, toByteOffset: 0, as: UInt64.self)
+                addrptr.storeBytes(of: ipptr.load(fromByteOffset: MemoryLayout<UInt64>.size, as: UInt64.self).byteSwapped, toByteOffset: MemoryLayout<UInt64>.size, as: UInt64.self)
+            }
+        }
+        self.init(fromIn6Addr: addr)
+    }
+
+    public convenience init(fromBytesInNetworkOrder ptr: UnsafeRawPointer, family: Family = .IPv4) {
+        switch family {
+        case .IPv4:
+            let addr = ptr.load(as: in_addr.self)
+            self.init(fromInAddr: addr)
+        case .IPv6:
+            let addr6 = ptr.load(as: in6_addr.self)
+            self.init(fromIn6Addr: addr6)
+        }
+    }
+
+    public var hashValue: Int {
+        switch address {
+        case .IPv4(let addr):
+            return addr.s_addr.hashValue
+        case .IPv6(var addr):
+            return withUnsafeBytes(of: &addr) {
+                return $0.load(as: Int.self) ^ $0.load(fromByteOffset: MemoryLayout<Int>.size, as: Int.self)
+            }
+        }
+    }
+
+    public var description: String {
+        return presentation
+    }
+
     public var dataInNetworkOrder: Data {
-        return Data(bytes: &_in6_addr, count: MemoryLayout.size(ofValue: _in6_addr))
-    }
-
-    public required init(fromBytesInNetworkOrder: UnsafeRawPointer) {
-        _in6_addr = fromBytesInNetworkOrder.load(as: in6_addr.self)
-    }
-
-    public required init(fromBytesInNetworkOrder: [UInt8]) {
-        var in6addr: in6_addr! = nil
-        fromBytesInNetworkOrder.withUnsafeBytes {
-            in6addr = $0.load(as: in6_addr.self)
+        var outputData: Data? = nil
+        withBytesInNetworkOrder {
+            outputData = Data($0)
         }
-        _in6_addr = in6addr
+        return outputData!
     }
 
-    fileprivate var _in6_addr: in6_addr
-
-    public required init?(fromString: String) {
-        var addr: in6_addr = in6_addr()
-        var result: Int32 = 0
-        fromString.withCString {
-            result = inet_pton(AF_INET6, $0, &addr)
-        }
-
-        guard result == 1 else {
+    public var UInt32InNetworkOrder: UInt32? {
+        switch self.address {
+        case .IPv4(let addr):
+            return addr.s_addr
+        default:
             return nil
         }
-        _in6_addr = addr
-        presentation = fromString
     }
 
-    lazy var presentation: String = { [unowned self] in
-        var buffer = [Int8](repeating: 0, count: Int(INET6_ADDRSTRLEN))
-        var p: UnsafePointer<Int8>! = nil
-        withUnsafePointer(to: &self._in6_addr) { (ptr: UnsafePointer<in6_addr>) in
-            p = inet_ntop(AF_INET6, ptr, &buffer, UInt32(INET6_ADDRSTRLEN))
-        }
-        return String(cString: p)
-    }()
-
-    open var description: String {
-        return "<IPv6Address \(presentation)>"
+    public var UInt128InNetworkOrder: UInt128? {
+        return self.address.asUInt128
     }
 
-    open var hashValue: Int {
-        return withUnsafeBytes(of: &_in6_addr.__u6_addr) {
-            return $0.load(as: Int.self) ^ $0.load(fromByteOffset: MemoryLayout<Int>.size, as: Int.self)
+    public func withBytesInNetworkOrder<U>(_ body: (UnsafeRawBufferPointer) throws -> U) rethrows -> U {
+        switch address {
+        case .IPv4(var addr):
+            return try withUnsafeBytes(of: &addr, body)
+        case .IPv6(var addr):
+            return try withUnsafeBytes(of: &addr, body)
         }
     }
+
+    public func advanced(by interval: IPInterval) -> IPAddress? {
+        switch (interval, address) {
+        case (.IPv4(let range), .IPv4(let addr)):
+            return IPAddress(ipv4InNetworkOrder: (addr.s_addr.byteSwapped &+ range).byteSwapped)
+        case (.IPv6(let range), .IPv6):
+            return IPAddress(ipv6InNetworkOrder: (address.asUInt128.byteSwapped &+ range).byteSwapped)
+        default:
+            return nil
+        }
+    }
+
+    public func advanced(by interval: UInt) -> IPAddress? {
+        switch self.address {
+        case .IPv4(let addr):
+            return IPAddress(ipv4InNetworkOrder: (addr.s_addr.byteSwapped &+ UInt32(interval)).byteSwapped)
+        case .IPv6:
+            return IPAddress(ipv6InNetworkOrder: (address.asUInt128.byteSwapped &+ UInt128(interval)).byteSwapped)
+        }
+    }
 }
 
-public func == (left: IPv4Address, right: IPv4Address) -> Bool {
-    return left.hashValue == right.hashValue
+public func == (lhs: IPAddress, rhs: IPAddress) -> Bool {
+    return lhs.address == rhs.address
 }
 
-public func == (left: IPv6Address, right: IPv6Address) -> Bool {
-    return left._in6_addr.__u6_addr.__u6_addr32 == right._in6_addr.__u6_addr.__u6_addr32
+// Comparing IP addresses of different families are undefined.
+// But currently, IPv4 is considered smaller than IPv6 address. Do NOT depend on this behavior.
+public func < (lhs: IPAddress, rhs: IPAddress) -> Bool {
+    switch (lhs.address, rhs.address) {
+    case (.IPv4(let addrl), .IPv4(let addrr)):
+        return addrl.s_addr.byteSwapped < addrr.s_addr.byteSwapped
+    case (.IPv6(var addrl), .IPv6(var addrr)):
+        return (withUnsafeBytes(of: &addrl) { ptrl in
+            withUnsafeBytes(of: &addrr) { ptrr in
+                return memcmp(ptrl.baseAddress!, ptrr.baseAddress!, MemoryLayout.size(ofValue: addrl))
+            }
+        }) < 0
+    case (.IPv4, .IPv6):
+        return true
+    case (.IPv6, .IPv4):
+        return false
+    }
 }
 
-public func ==<T: IPAddress> (left: T, right: T) -> Bool {
-    switch (left, right) {
-    case let (l as IPv4Address, r as IPv4Address):
-        return l == r
-    case let (l as IPv6Address, r as IPv6Address):
-        return l == r
+public func == (lhs: IPAddress.Address, rhs: IPAddress.Address) -> Bool {
+    switch (lhs, rhs) {
+    case (.IPv4(let addrl), .IPv4(let addrr)):
+        return addrl.s_addr == addrr.s_addr
+    case (.IPv6(let addrl), .IPv6(let addrr)):
+        return addrl.__u6_addr.__u6_addr32 == addrr.__u6_addr.__u6_addr32
     default:
         return false
     }
