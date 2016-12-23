@@ -4,7 +4,6 @@ disabled_rules:
 - variable_name
 - cyclomatic_complexity
 - nesting
-- cyclomatic_complexity
 excluded:
   - Carthage
   - tun2socks
