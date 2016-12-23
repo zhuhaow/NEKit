@@ -3,6 +3,8 @@ import Foundation
 extension ShadowsocksAdapter {
     public struct StreamObfuscater {
         public class Factory {
+            public init() {}
+            
             public func build(for request: ConnectRequest) -> StreamObfuscaterBase {
                 return StreamObfuscaterBase(for: request)
             }
@@ -37,6 +39,8 @@ extension ShadowsocksAdapter {
 
         public class OriginStreamObfuscater: StreamObfuscaterBase {
             public class Factory: StreamObfuscater.Factory {
+                public init() {}
+                
                 public override func build(for request: ConnectRequest) -> ShadowsocksAdapter.StreamObfuscater.StreamObfuscaterBase {
                     return OriginStreamObfuscater(for: request)
                 }

@@ -7,7 +7,7 @@ extension ShadowsocksAdapter {
             let algorithm: CryptoAlgorithm
             let key: Data
 
-            init(password: String, algorithm: CryptoAlgorithm) {
+            public init(password: String, algorithm: CryptoAlgorithm) {
                 self.password = password
                 self.algorithm = algorithm
                 key = CryptoHelper.getKey(password, methodType: algorithm)
