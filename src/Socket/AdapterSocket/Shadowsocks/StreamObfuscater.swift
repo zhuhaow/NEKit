@@ -81,6 +81,8 @@ extension ShadowsocksAdapter {
 
         public class OTAStreamObfuscater: StreamObfuscaterBase {
             public class Factory: StreamObfuscater.Factory {
+                public init() {}
+                
                 public override func build(for request: ConnectRequest) -> ShadowsocksAdapter.StreamObfuscater.StreamObfuscaterBase {
                     return OTAStreamObfuscater(for: request)
                 }
