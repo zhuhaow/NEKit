@@ -131,7 +131,7 @@ struct AdapterFactoryParser {
             }
             protocolObfuscaterFactory = ShadowsocksAdapter.ProtocolObfuscater.TLSProtocolObfuscater.Factory(hosts: headerHosts)
         default:
-            throw ConfigurationParserError.adapterParsingError(errorInfo: "protocol \"\(proto)\" is not supported")
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "obfs \"\(proto)\" is not supported")
         }
 
         let streamObfuscaterFactory: ShadowsocksAdapter.StreamObfuscater.Factory
@@ -141,7 +141,7 @@ struct AdapterFactoryParser {
         case "verify_sha1":
             streamObfuscaterFactory = ShadowsocksAdapter.StreamObfuscater.OTAStreamObfuscater.Factory()
         default:
-            throw ConfigurationParserError.adapterParsingError(errorInfo: "obfs \"\(stream)\" is not supported")
+            throw ConfigurationParserError.adapterParsingError(errorInfo: "protocol \"\(stream)\" is not supported")
         }
 
         let cryptoFactory = ShadowsocksAdapter.CryptoStreamProcessor.Factory(password: password, algorithm: algorithm)
