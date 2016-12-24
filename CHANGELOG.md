@@ -8,13 +8,12 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 - Courageous adventurers are never satisfied with the status quo. They are not only always prepared, but also desired to explore something new, something never happened before. Some of the bravest tried to let the Internet know thay were here, ready to chanllenge the law and order and put an end to the old, antiquated and decayed speficications. Well, they have been acknowledged. 
 - A very tolerant parser will be used if the URL is illegal.
 - **`ota: true` is obsolete, use the configuration of ShadowsocksR (`protocol: verify_sha1`) instead.**
+- `IPv4Address` is removed. Now both IPv4 and IPv6 are represented by one class `IPAddress`.
+- `IPPool` now supports both IPv4 and IPv6 addresses.
 
 ### Added
 - Add support for `simple_http` and `tls1.2_ticket_auth` obfuscation for SSR.
 - **`ota: true` is obsolete, use the configuration of ShadowsocksR (`obfs: verify_sha1`) instead.**
-
-### Added
-- Add support for `simple_http` and `tls1.2_ticket_auth` obfuscation for SSR.
 
 ## 0.10.5
 
