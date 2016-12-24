@@ -1144,7 +1144,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 36463A441CDCD5EB0040579C /* Build configuration list for PBXNativeTarget "NEKit-macOS" */;
 			buildPhases = (
-				3664F0C71CE377B1008BA6D8 /* ShellScript */,
 				36B05A151DE44D9800074910 /* ShellScript */,
 				36463A2B1CDCD5EB0040579C /* Sources */,
 				36463A2C1CDCD5EB0040579C /* Frameworks */,
@@ -1301,19 +1300,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3664F0C71CE377B1008BA6D8 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\nswiftlint autocorrect\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
-		};
 		36B05A151DE44D9800074910 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
