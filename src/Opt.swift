@@ -19,4 +19,6 @@ public struct Opt {
     public static var RejectAdapterDefaultDelay = 300
 
     public static var DNSTimeout = 1
+
+    public static var forwardReadInterval = 50
 }

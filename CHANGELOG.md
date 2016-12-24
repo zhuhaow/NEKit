@@ -10,6 +10,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 - **`ota: true` is obsolete, use the configuration of ShadowsocksR (`protocol: verify_sha1`) instead.**
 - `IPv4Address` is removed. Now both IPv4 and IPv6 are represented by one class `IPAddress`.
 - `IPPool` now supports both IPv4 and IPv6 addresses.
+- Now there is an interval (see `Opt`) between each read, this should reduce the number of total system calls.
 
 ### Added
 - Add support for `simple_http` and `tls1.2_ticket_auth` obfuscation for SSR.
