@@ -85,13 +85,13 @@ public class Tunnel: NSObject, SocketDelegate {
      Start running the tunnel.
      */
     func openTunnel() {
-            guard !self.isCancelled else {
-                return
-            }
+        guard !self.isCancelled else {
+            return
+        }
 
-            self.proxySocket.openSocket()
-            self._status = .readingRequest
-            self.observer?.signal(.opened(self))
+        self.proxySocket.openSocket()
+        self._status = .readingRequest
+        self.observer?.signal(.opened(self))
     }
 
     /**
@@ -186,10 +186,11 @@ public class Tunnel: NSObject, SocketDelegate {
         readySignal += 1
         observer?.signal(.receivedReadySignal(socket, currentReady: readySignal, on: self))
 
-        if let socket = socket as? AdapterSocket {
-            proxySocket.respondTo(adapter: socket)
+        defer {
+            if let socket = socket as? AdapterSocket {
+                proxySocket.respondTo(adapter: socket)
+            }
         }
-
         if readySignal == 2 {
             _status = .forwarding
             proxySocket.readData()
