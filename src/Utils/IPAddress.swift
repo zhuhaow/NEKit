@@ -86,8 +86,8 @@ public class IPAddress: CustomStringConvertible, Hashable, Comparable {
         var addr = in6_addr()
         withUnsafeBytes(of: &ip) { ipptr in
             withUnsafeMutableBytes(of: &addr) { addrptr in
-                addrptr.storeBytes(of: ipptr.load(as: UInt64.self).byteSwapped, toByteOffset: 0, as: UInt64.self)
-                addrptr.storeBytes(of: ipptr.load(fromByteOffset: MemoryLayout<UInt64>.size, as: UInt64.self).byteSwapped, toByteOffset: MemoryLayout<UInt64>.size, as: UInt64.self)
+                addrptr.storeBytes(of: ipptr.load(fromByteOffset: MemoryLayout<UInt64>.size, as: UInt64.self), toByteOffset: 0, as: UInt64.self)
+                addrptr.storeBytes(of: ipptr.load(as: UInt64.self), toByteOffset: MemoryLayout<UInt64>.size, as: UInt64.self)
             }
         }
         self.init(fromIn6Addr: addr)
@@ -137,7 +137,7 @@ public class IPAddress: CustomStringConvertible, Hashable, Comparable {
     }
 
     public var UInt128InNetworkOrder: UInt128? {
-        return self.address.asUInt128
+        return self.address.asUInt128.byteSwapped
     }
 
     public func withBytesInNetworkOrder<U>(_ body: (UnsafeRawBufferPointer) throws -> U) rethrows -> U {
@@ -154,7 +154,7 @@ public class IPAddress: CustomStringConvertible, Hashable, Comparable {
         case (.IPv4(let range), .IPv4(let addr)):
             return IPAddress(ipv4InNetworkOrder: (addr.s_addr.byteSwapped &+ range).byteSwapped)
         case (.IPv6(let range), .IPv6):
-            return IPAddress(ipv6InNetworkOrder: (address.asUInt128.byteSwapped &+ range).byteSwapped)
+            return IPAddress(ipv6InNetworkOrder: (address.asUInt128 &+ range).byteSwapped)
         default:
             return nil
         }
@@ -165,7 +165,7 @@ public class IPAddress: CustomStringConvertible, Hashable, Comparable {
         case .IPv4(let addr):
             return IPAddress(ipv4InNetworkOrder: (addr.s_addr.byteSwapped &+ UInt32(interval)).byteSwapped)
         case .IPv6:
-            return IPAddress(ipv6InNetworkOrder: (address.asUInt128.byteSwapped &+ UInt128(interval)).byteSwapped)
+            return IPAddress(ipv6InNetworkOrder: (address.asUInt128 &+ UInt128(interval)).byteSwapped)
         }
     }
 }
