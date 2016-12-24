@@ -57,7 +57,7 @@ class HTTPStreamScanner {
         switch remainContentLength {
         case 0:
             nextAction = .readHeader
-        case -1:
+        case _ where remainContentLength < 0:
             nextAction = .readContent(-1)
         default:
             nextAction = .readContent(min(remainContentLength, Opt.MAXHTTPContentBlockLength))
