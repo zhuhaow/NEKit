@@ -73,5 +73,15 @@ class IPRangeSpec: QuickSpec {
                 }
             }
         }
+        
+        describe("IPRange matching") {
+            it ("Can match IPv4 address with mask") {
+                let range = try! IPRange(withString: "8.8.8.8/24")
+                expect(range.contains(ip: IPAddress(fromString: "8.8.8.0")!)).to(beTrue())
+                expect(range.contains(ip: IPAddress(fromString: "8.8.8.255")!)).to(beTrue())
+                expect(range.contains(ip: IPAddress(fromString: "8.8.7.255")!)).to(beFalse())
+                expect(range.contains(ip: IPAddress(fromString: "8.8.9.0")!)).to(beFalse())
+            }
+        }
     }
 }
