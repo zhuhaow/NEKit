@@ -59,7 +59,7 @@ open class TUNInterface {
             QueueFactory.getQueue().async {
                 for (i, packet) in packets.enumerated() {
                     for stack in self.stacks {
-                        if stack.inputPacket(packet, version: versions[i]) {
+                        if stack.input(packet: packet, version: versions[i]) {
                             break
                         }
                     }

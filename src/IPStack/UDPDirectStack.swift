@@ -35,7 +35,7 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
 
      - returns: If the stack accepts in this packet. If the packet is accepted, then it won't be processed by other IP stacks.
      */
-    public func inputPacket(_ packet: Data, version: NSNumber?) -> Bool {
+    public func input(packet: Data, version: NSNumber?) -> Bool {
         if let version = version {
             // we do not process IPv6 packets now
             if version.int32Value == AF_INET6 {

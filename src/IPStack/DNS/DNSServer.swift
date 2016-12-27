@@ -113,7 +113,7 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
 
      - returns: If the packet is taken in by this DNS server.
      */
-    open func inputPacket(_ packet: Data, version: NSNumber?) -> Bool {
+    open func input(packet: Data, version: NSNumber?) -> Bool {
         guard IPPacket.peekProtocol(packet) == .udp else {
             return false
         }

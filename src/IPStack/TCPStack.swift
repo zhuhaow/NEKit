@@ -49,7 +49,7 @@ open class TCPStack: TSIPStackDelegate, IPStackProtocol {
 
      - returns: If the stack takes in this packet. If the packet is taken in, then it won't be processed by other IP stacks.
      */
-    open func inputPacket(_ packet: Data, version: NSNumber?) -> Bool {
+    open func input(packet: Data, version: NSNumber?) -> Bool {
         if let version = version {
             // we do not process IPv6 packets now
             if version.int32Value == AF_INET6 {
