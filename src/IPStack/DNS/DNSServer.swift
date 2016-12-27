@@ -17,7 +17,7 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
     /// The port of DNS server
     let serverPort: Port
 
-    fileprivate let queue: DispatchQueue = DispatchQueue(label: "NEKit.DNSServer", attributes: [])
+    fileprivate let queue: DispatchQueue = QueueFactory.getQueue()
     fileprivate var fakeSessions: [IPAddress: DNSSession] = [:]
     fileprivate var pendingSessions: [UInt16: DNSSession] = [:]
     fileprivate let pool: IPPool?
