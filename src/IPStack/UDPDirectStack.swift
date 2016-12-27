@@ -19,23 +19,11 @@ func == (left: ConnectInfo, right: ConnectInfo) -> Bool {
 }
 
 /// This stack tranmits UDP packets directly.
-open class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
+public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
     fileprivate var activeSockets: [ConnectInfo: NWUDPSocket] = [:]
-    open var outputFunc: (([Data], [NSNumber]) -> Void)!
+    public var outputFunc: (([Data], [NSNumber]) -> Void)!
 
     fileprivate let queue: DispatchQueue = DispatchQueue(label: "NEKit.UDPDirectStack.SocketArrayQueue", attributes: [])
-
-    fileprivate let cleanUpTimer: DispatchSourceTimer
-
-    public init() {
-        cleanUpTimer = DispatchSource.makeTimerSource(flags: DispatchSource.TimerFlags(rawValue: 0), queue: queue)
-        cleanUpTimer.scheduleRepeating(deadline: DispatchTime.distantFuture, interval: DispatchTimeInterval.seconds(Opt.UDPSocketActiveCheckInterval), leeway: DispatchTimeInterval.seconds(Opt.UDPSocketActiveCheckInterval))
-        cleanUpTimer.setEventHandler {
-            [weak self] in
-            self?.cleanUpTimeoutSocket()
-        }
-        cleanUpTimer.resume()
-    }
 
     /**
      Input a packet into the stack.
@@ -47,7 +35,7 @@ open class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
 
      - returns: If the stack accepts in this packet. If the packet is accepted, then it won't be processed by other IP stacks.
      */
-    open func inputPacket(_ packet: Data, version: NSNumber?) -> Bool {
+    public func inputPacket(_ packet: Data, version: NSNumber?) -> Bool {
         if let version = version {
             // we do not process IPv6 packets now
             if version.int32Value == AF_INET6 {
@@ -61,7 +49,7 @@ open class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
         return false
     }
 
-    open func stop() {
+    public func stop() {
         queue.async {
             for socket in self.activeSockets.values {
                 socket.disconnect()
@@ -81,7 +69,7 @@ open class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
 
         // swiftlint:disable:next force_cast
         let payload = (packet.protocolParser as! UDPProtocolParser).payload
-        socket.writeData(payload!)
+        socket.write(data: payload!)
     }
 
     fileprivate func findSocket(connectInfo: ConnectInfo?, socket: NWUDPSocket?) -> (ConnectInfo, NWUDPSocket)? {
@@ -139,17 +127,7 @@ open class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
         return (connectInfo, udpSocket)
     }
 
-    // This shoule be called by the timer, so is already on `queue`.
-    fileprivate func cleanUpTimeoutSocket() {
-        for (connectInfo, socket) in activeSockets {
-            if socket.lastActive.addingTimeInterval(TimeInterval(Opt.UDPSocketActiveTimeout)).compare(Date()) == .orderedAscending {
-                socket.delegate = nil
-                activeSockets.removeValue(forKey: connectInfo)
-            }
-        }
-    }
-
-    open func didReceiveData(_ data: Data, from: NWUDPSocket) {
+    public func didReceive(data: Data, from: NWUDPSocket) {
         guard let (connectInfo, _) = findSocket(connectInfo: nil, socket: from) else {
             return
         }
@@ -166,5 +144,13 @@ open class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
         packet.buildPacket()
 
         outputFunc([packet.packetData], [NSNumber(value: AF_INET as Int32)])
+    }
+    
+    public func didCancel(socket: NWUDPSocket) {
+        guard let (info, _) = findSocket(connectInfo: nil, socket: socket) else {
+            return
+        }
+        
+        activeSockets.removeValue(forKey: info)
     }
 }

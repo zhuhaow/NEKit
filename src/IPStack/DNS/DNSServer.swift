@@ -101,7 +101,7 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
 
     fileprivate func sendQueryToRemote(_ session: DNSSession) {
         for resolver in resolvers {
-            resolver.resolve(session)
+            resolver.resolve(session: session)
         }
     }
 
@@ -228,7 +228,7 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
         return true
     }
 
-    open func didReceiveResponse(_ rawResponse: Data) {
+    open func didReceive(rawResponse: Data) {
         guard let message = DNSMessage(payload: rawResponse) else {
             DDLogError("Failed to parse response from remote DNS server.")
             return

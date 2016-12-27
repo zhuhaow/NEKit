@@ -6,101 +6,150 @@ import CocoaLumberjackSwift
 public protocol NWUDPSocketDelegate: class {
     /**
      Socket did receive data from remote.
-
+     
      - parameter data: The data.
      - parameter from: The socket the data is read from.
      */
-    func didReceiveData(_ data: Data, from: NWUDPSocket)
+    func didReceive(data: Data, from: NWUDPSocket)
+    
+    func didCancel(socket: NWUDPSocket)
 }
 
 /// The wrapper for NWUDPSession.
 ///
 /// - note: This class is thread-safe.
-open class NWUDPSocket {
-    fileprivate let session: NWUDPSession
-    fileprivate var pendingWriteData: [Data] = []
-    fileprivate var writing = false
-    fileprivate let queue: DispatchQueue = DispatchQueue(label: "NWUDPSocket.queue", attributes: [])
-
+public class NWUDPSocket: NSObject {
+    private let session: NWUDPSession
+    private var pendingWriteData: [Data] = []
+    private var writing = false
+    private let queue: DispatchQueue = QueueFactory.getQueue()
+    private let timer: DispatchSourceTimer
+    private let timeout: Int
+    
     /// The delegate instance.
-    open weak var delegate: NWUDPSocketDelegate?
-
+    public weak var delegate: NWUDPSocketDelegate?
+    
     /// The time when the last activity happens.
     ///
     /// Since UDP do not have a "close" semantic, this can be an indicator of timeout.
-    open var lastActive: Date = Date()
-
+    public var lastActive: Date = Date()
+    
     /**
      Create a new UDP socket connecting to remote.
-
+     
      - parameter host: The host.
      - parameter port: The port.
      */
-    init?(host: String, port: Int) {
+    public init?(host: String, port: Int, timeout: Int = Opt.UDPSocketActiveTimeout) {
         guard let udpsession = RawSocketFactory.TunnelProvider?.createUDPSession(to: NWHostEndpoint(hostname: host, port: "\(port)"), from: nil) else {
             return nil
         }
-
+        
         session = udpsession
-
+        self.timeout = timeout
+        
+        timer = DispatchSource.makeTimerSource(queue: queue)
+        
+        super.init()
+        
+        timer.scheduleRepeating(deadline: DispatchTime.now(), interval: DispatchTimeInterval.seconds(Opt.UDPSocketActiveCheckInterval), leeway: DispatchTimeInterval.seconds(Opt.UDPSocketActiveCheckInterval))
+        timer.setEventHandler { [weak self] in
+            self?.queueCall {
+                self?.checkStatus()
+            }
+        }
+        
+        session.addObserver(self, forKeyPath: #keyPath(NWUDPSession.state), options: [.new], context: nil)
+        
         session.setReadHandler({ [ weak self ] dataArray, error in
-            guard let sSelf = self else {
-                return
-            }
-
-            sSelf.updateActivityTimer()
-
-            guard error == nil, let dataArray = dataArray else {
-                DDLogError("Error when reading from remote server. \(error?.localizedDescription ?? "Connection reset")")
-                return
-            }
-
-            for data in dataArray {
-                sSelf.delegate?.didReceiveData(data, from: sSelf)
+            self?.queueCall {
+                guard let sSelf = self else {
+                    return
+                }
+                
+                sSelf.updateActivityTimer()
+                
+                guard error == nil, let dataArray = dataArray else {
+                    DDLogError("Error when reading from remote server. \(error?.localizedDescription ?? "Connection reset")")
+                    return
+                }
+                
+                for data in dataArray {
+                    sSelf.delegate?.didReceive(data: data, from: sSelf)
+                }
             }
             }, maxDatagrams: 32)
     }
-
+    
     /**
      Send data to remote.
-
+     
      - parameter data: The data to send.
      */
-    func writeData(_ data: Data) {
-        queue.async {
+    func write(data: Data) {
+        queueCall {
             self.pendingWriteData.append(data)
             self.checkWrite()
         }
     }
-
+    
     func disconnect() {
-        queue.async {
+        queueCall {
             self.session.cancel()
         }
     }
-
-    fileprivate func checkWrite() {
-        queue.async {
-            self.updateActivityTimer()
-
-            guard !self.writing else {
-                return
-            }
-
-            guard self.pendingWriteData.count > 0 else {
-                return
-            }
-
-            self.writing = true
-            self.session.writeMultipleDatagrams(self.pendingWriteData) {_ in
+    
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard keyPath == "state" else {
+            return
+        }
+        
+        switch session.state {
+        case .cancelled:
+            delegate?.didCancel(socket: self)
+        default:
+            break
+        }
+    }
+    
+    private func checkWrite() {
+        updateActivityTimer()
+        
+        guard !writing else {
+            return
+        }
+        
+        guard pendingWriteData.count > 0 else {
+            return
+        }
+        
+        writing = true
+        session.writeMultipleDatagrams(self.pendingWriteData) {_ in
+            self.queueCall {
                 self.writing = false
                 self.checkWrite()
             }
-            self.pendingWriteData.removeAll(keepingCapacity: true)
+        }
+        self.pendingWriteData.removeAll(keepingCapacity: true)
+    }
+    
+    private func updateActivityTimer() {
+        lastActive = Date()
+    }
+    
+    private func checkStatus() {
+        if timeout > 0 && Date().timeIntervalSince(lastActive) > TimeInterval(timeout) {
+            disconnect()
         }
     }
-
-    fileprivate func updateActivityTimer() {
-        lastActive = Date()
+    
+    private func queueCall(block: @escaping () -> Void) {
+        queue.async {
+            block()
+        }
+    }
+    
+    deinit {
+        session.removeObserver(self, forKeyPath: #keyPath(NWUDPSession.state))
     }
 }
