@@ -87,12 +87,12 @@ public class NWUDPSocket: NSObject {
      - parameter data: The data to send.
      */
     func write(data: Data) {
-            pendingWriteData.append(data)
-            checkWrite()
+        pendingWriteData.append(data)
+        checkWrite()
     }
     
     func disconnect() {
-            session.cancel()
+        session.cancel()
     }
     
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
