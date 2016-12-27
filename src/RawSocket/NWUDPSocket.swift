@@ -87,16 +87,12 @@ public class NWUDPSocket: NSObject {
      - parameter data: The data to send.
      */
     func write(data: Data) {
-        queueCall {
-            self.pendingWriteData.append(data)
-            self.checkWrite()
-        }
+            pendingWriteData.append(data)
+            checkWrite()
     }
     
     func disconnect() {
-        queueCall {
-            self.session.cancel()
-        }
+            session.cancel()
     }
     
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -106,7 +102,9 @@ public class NWUDPSocket: NSObject {
         
         switch session.state {
         case .cancelled:
-            delegate?.didCancel(socket: self)
+            queueCall {
+                self.delegate?.didCancel(socket: self)
+            }
         default:
             break
         }
