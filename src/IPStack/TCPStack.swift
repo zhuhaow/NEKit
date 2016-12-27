@@ -25,7 +25,11 @@ open class TCPStack: TSIPStackDelegate, IPStackProtocol {
             return TSIPStack.stack.outputBlock
         }
         set {
-            TSIPStack.stack.outputBlock = newValue
+            TSIPStack.stack.outputBlock = { (data, version) in
+                QueueFactory.getQueue().async {
+                    newValue(data, version)
+                }
+            }
         }
     }
 
