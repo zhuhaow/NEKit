@@ -25,6 +25,8 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
 
     fileprivate let queue: DispatchQueue = DispatchQueue(label: "NEKit.UDPDirectStack.SocketArrayQueue", attributes: [])
 
+    public init() {}
+    
     /**
      Input a packet into the stack.
 
