@@ -139,6 +139,10 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
         }
         return true
     }
+    
+    public func start() {
+        
+    }
 
     open func stop() {
         for resolver in resolvers {

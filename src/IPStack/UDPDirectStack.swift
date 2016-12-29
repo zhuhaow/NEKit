@@ -50,6 +50,10 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
         }
         return false
     }
+    
+    public func start() {
+        
+    }
 
     public func stop() {
         queue.async {

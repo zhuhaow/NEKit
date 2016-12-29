@@ -19,6 +19,8 @@ public protocol IPStackProtocol: class {
     /// - note: This block is thread-safe.
     var outputFunc: (([Data], [NSNumber]) -> Void)! { get set }
 
+    func start()
+    
     /**
      Stop the stack from running.
 
