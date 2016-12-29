@@ -22,6 +22,10 @@ open class TUNInterface {
      */
     open func start() {
         QueueFactory.executeOnQueueSynchronizedly {
+            for stack in self.stacks {
+                stack.start()
+            }
+            
             self.readPackets()
         }
     }
