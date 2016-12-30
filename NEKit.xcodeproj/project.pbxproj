@@ -146,7 +146,6 @@
 		36B162101CDDA0E000F24C97 /* Rule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620D1CDDA0E000F24C97 /* Rule.swift */; };
 		36B162111CDDA0E000F24C97 /* RuleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1620E1CDDA0E000F24C97 /* RuleManager.swift */; };
 		36B162251CDDA0EA00F24C97 /* AdapterSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162151CDDA0EA00F24C97 /* AdapterSocket.swift */; };
-		36B162261CDDA0EA00F24C97 /* ConnectResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162161CDDA0EA00F24C97 /* ConnectResponse.swift */; };
 		36B162271CDDA0EA00F24C97 /* GCDTCPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162181CDDA0EA00F24C97 /* GCDTCPSocket.swift */; };
 		36B162281CDDA0EA00F24C97 /* NWTCPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1621A1CDDA0EA00F24C97 /* NWTCPSocket.swift */; };
 		36B162291CDDA0EA00F24C97 /* ProxySocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B1621C1CDDA0EA00F24C97 /* ProxySocket.swift */; };
@@ -186,7 +185,6 @@
 		36C48D661CF88EBC0071804F /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5BF1CDE32CD00E0E942 /* Configuration.swift */; };
 		36C48D671CF88EBC0071804F /* RuleParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366EB5C81CE061C500E0E942 /* RuleParser.swift */; };
 		36C48D681CF88EC10071804F /* GeoIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162611CDDADC100F24C97 /* GeoIP.swift */; };
-		36C48D691CF88EC50071804F /* ConnectResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162161CDDA0EA00F24C97 /* ConnectResponse.swift */; };
 		36C48D6A1CF88ECB0071804F /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA5D1CE87C08007F9787 /* IPAddress.swift */; };
 		36C48D6C1CF88ECB0071804F /* Port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3636DA611CE892EF007F9787 /* Port.swift */; };
 		36C48D701CF88ECB0071804F /* TUNInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E44A011CF2ED4800185DBF /* TUNInterface.swift */; };
@@ -493,7 +491,6 @@
 		36B1620D1CDDA0E000F24C97 /* Rule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rule.swift; sourceTree = "<group>"; };
 		36B1620E1CDDA0E000F24C97 /* RuleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuleManager.swift; sourceTree = "<group>"; };
 		36B162151CDDA0EA00F24C97 /* AdapterSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AdapterSocket.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		36B162161CDDA0EA00F24C97 /* ConnectResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectResponse.swift; sourceTree = "<group>"; };
 		36B162181CDDA0EA00F24C97 /* GCDTCPSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GCDTCPSocket.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		36B1621A1CDDA0EA00F24C97 /* NWTCPSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NWTCPSocket.swift; sourceTree = "<group>"; };
 		36B1621C1CDDA0EA00F24C97 /* ProxySocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxySocket.swift; sourceTree = "<group>"; };
@@ -950,7 +947,6 @@
 			isa = PBXGroup;
 			children = (
 				36411A7B1D1FE696005F4108 /* ConnectSession.swift */,
-				36B162161CDDA0EA00F24C97 /* ConnectResponse.swift */,
 				36CB0D371D51E06700DB7AF5 /* HTTPHeader.swift */,
 			);
 			path = Messages;
@@ -1466,7 +1462,6 @@
 				36411A791D1FC224005F4108 /* UDPDirectStack.swift in Sources */,
 				3650FAE81D27BE8800444E79 /* Libsodium.swift in Sources */,
 				361176631E00361600A1A058 /* CryptoStreamProcessor.swift in Sources */,
-				36B162261CDDA0EA00F24C97 /* ConnectResponse.swift in Sources */,
 				3650FAE21D27BA0900444E79 /* StreamCryptoProtocol.swift in Sources */,
 				36C48DA91CF9D6390071804F /* DNSMessage.swift in Sources */,
 				3664F0B81CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift in Sources */,
@@ -1560,7 +1555,6 @@
 				3629504C1D6AE30C001A30F6 /* ProxySocketEvent.swift in Sources */,
 				36411A661D167AF2005F4108 /* DirectRule.swift in Sources */,
 				3669C85A1DC8D60100BDCC82 /* Data.swift in Sources */,
-				36C48D691CF88EC50071804F /* ConnectResponse.swift in Sources */,
 				36C48D7A1CF88EDA0071804F /* DomainListRule.swift in Sources */,
 				36C48D621CF88EB60071804F /* ShadowsocksAdapter.swift in Sources */,
 				36411A631D167AE0005F4108 /* AllRule.swift in Sources */,
