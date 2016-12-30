@@ -1,15 +1,15 @@
 import Foundation
 
-/// The request containing information to connect to remote.
-public final class ConnectRequest {
+/// Representing all the information in one connect session.
+public final class ConnectSession {
     /// The requested host.
     ///
     /// This is the host received in the request. May be a domain, a real IP or a fake IP.
     public let requestedHost: String
 
-    /// The real host for this request.
+    /// The real host for this session.
     ///
-    /// If the request is initailized with a host domain, then `host == requestedHost`.
+    /// If the session is initailized with a host domain, then `host == requestedHost`.
     /// Otherwise, the requested IP address is looked up in the DNS server to see if it corresponds to a domain if `fakeIPEnabled` is `true`.
     /// Unless there is a good reason not to, any socket shoule connect based on this directly.
     public var host: String
@@ -128,7 +128,7 @@ public final class ConnectRequest {
     }
 }
 
-extension ConnectRequest: CustomStringConvertible {
+extension ConnectSession: CustomStringConvertible {
     public var description: String {
         if requestedHost != host {
         return "<\(type(of: self)) host:\(host) port:\(port) requestedHost:\(requestedHost)>"

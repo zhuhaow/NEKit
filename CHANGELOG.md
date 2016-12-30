@@ -65,6 +65,10 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 ### Changed
 - Fix versions of dependecies.
 
+## Unreleased
+### Changed
+- `ConnectRequest` is renamed to `ConnectSession`, `ConnectResponse` is removed.
+
 ## 0.8.0
 ### Changed
 - Updated to Swift 3.
@@ -185,7 +189,7 @@ I will do my best to guarantee that this project adheres to [Semantic Versioning
 
 ## [0.2.5]
 ### Changed
-- Many things in `HTTPHeader` and `ConnectRequest` become `public`.
+- Many things in `HTTPHeader` and `ConnectSession` become `public`.
 - Refined `description` of many classes.
 
 ### Added

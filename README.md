@@ -49,7 +49,7 @@ But consider that if an application tries to make a socket connection by itself,
 
 We can read only two independent things from the TUN interface, a UDP packet containing the DNS lookup request and a TCP flow consisting of a serial of TCP packets. So there is no way we can know the initial request domain for the TCP flow. And since there may be multiple domains served on the same host, we can not get the origin domain by saving the DNS response and looking that up reversely later.
 
-The only solution is to create a fake IP pool and assign each requested domain with a unique fake IP so we can look that up reversely. Every connection needs to look that up from the DNS server afterwards; this is the only non-modular part of NEKit which is already encapsulated in `ConnectRequest`.
+The only solution is to create a fake IP pool and assign each requested domain with a unique fake IP so we can look that up reversely. Every connection needs to look that up from the DNS server afterwards; this is the only non-modular part of NEKit which is already encapsulated in `ConnectSession`.
 
 ## Usage
 
@@ -231,9 +231,9 @@ Pretty much everything of NEKit follows the [delegation pattern](https://en.wiki
 
 When a `RawSocketProtocol` socket is accepted or created by `TCPStack`, it is wrapped in a `ProxySocket` then in a `Tunnel`. The `Tunnel` will call `proxySocket.openSocket()` to let the proxy socket start process data. 
 
-When the `ProxySocket` read enough data to build a `ConnectRequest`, it calls `func didReceiveRequest(request: ConnectRequest, from: ProxySocket)` of the `delegate` (which should be the `Tunnel`). 
+When the `ProxySocket` read enough data to build a `ConnectSession`, it calls `func didReceiveRequest(request: ConnectSession, from: ProxySocket)` of the `delegate` (which should be the `Tunnel`). 
 
-The `Tunnel` then matches this request in `RuleManager` to get the corresponding `AdapterFactory`. Then `func openSocketWithRequest(request: ConnectRequest)` of the produced `AdapterSocket` is called to connect to remote server.
+The `Tunnel` then matches this request in `RuleManager` to get the corresponding `AdapterFactory`. Then `func openSocketWithSession(session: ConnectSession)` of the produced `AdapterSocket` is called to connect to remote server.
 
 The `AdapterSocket` calls `func didConnect(adapterSocket: AdapterSocket, withResponse response: ConnectResponse)` of the `Tunnel` to let the `ProxySocket` has a chance to respond to remote response. (This is ignored as of now.) 
 

@@ -45,7 +45,7 @@ public enum TunnelEvent: EventType {
     case opened(Tunnel),
     closeCalled(Tunnel),
     forceCloseCalled(Tunnel),
-    receivedRequest(ConnectRequest, from: ProxySocket, on: Tunnel),
+    receivedRequest(ConnectSession, from: ProxySocket, on: Tunnel),
     receivedReadySignal(SocketProtocol, currentReady: Int, on: Tunnel),
     proxySocketReadData(Data, from: ProxySocket, on: Tunnel),
     proxySocketWroteData(Data?, by: ProxySocket, on: Tunnel),

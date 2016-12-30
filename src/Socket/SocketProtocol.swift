@@ -139,12 +139,12 @@ public protocol SocketDelegate : class {
     func didBecomeReadyToForwardWith(socket: SocketProtocol)
 
     /**
-     Did receive a `ConnectRequest` from local now it is time to connect to remote.
+     Did receive a `ConnectSession` from local now it is time to connect to remote.
 
-     - parameter request: The received `ConnectRequest`.
-     - parameter from:    The socket where the `ConnectRequest` is received.
+     - parameter session: The received `ConnectSession`.
+     - parameter from:    The socket where the `ConnectSession` is received.
      */
-    func didReceive(request: ConnectRequest, from: ProxySocket)
+    func didReceive(session: ConnectSession, from: ProxySocket)
 
     /**
      The adapter socket decided to replace itself with a new `AdapterSocket` to connect to remote.

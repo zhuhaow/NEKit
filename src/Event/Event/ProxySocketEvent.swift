@@ -11,8 +11,8 @@ public enum ProxySocketEvent: EventType {
             return "Force disconnect is just called on proxy socket \(socket)."
         case .disconnected(let socket):
             return "Proxy socket \(socket) disconnected."
-        case let .receivedRequest(request, on: socket):
-            return "Proxy socket \(socket) received request \(request)."
+        case let .receivedRequest(session, on: socket):
+            return "Proxy socket \(socket) received request \(session)."
         case let .readData(data, on: socket):
             return "Received \(data.count) bytes data on proxy socket \(socket)."
         case let .wroteData(data, on: socket):
@@ -34,7 +34,7 @@ public enum ProxySocketEvent: EventType {
     disconnectCalled(ProxySocket),
     forceDisconnectCalled(ProxySocket),
     disconnected(ProxySocket),
-    receivedRequest(ConnectRequest, on: ProxySocket),
+    receivedRequest(ConnectSession, on: ProxySocket),
     readData(Data, on: ProxySocket),
     wroteData(Data?, on: ProxySocket),
     askedToResponseTo(AdapterSocket, on: ProxySocket),

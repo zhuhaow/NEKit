@@ -1,14 +1,14 @@
 import Foundation
 import CocoaLumberjackSwift
 
-/// The rule matches the request based on the geographical location of the corresponding IP address.
+/// The rule matches the session based on the geographical location of the corresponding IP address.
 open class CountryRule: Rule {
     fileprivate let adapterFactory: AdapterFactory
 
     /// The ISO code of the country.
     open let countryCode: String
 
-    /// The rule should match the request which matches the country or not.
+    /// The rule should match the session which matches the country or not.
     open let match: Bool
 
     open override var description: String {
@@ -19,7 +19,7 @@ open class CountryRule: Rule {
      Create a new `CountryRule` instance.
 
      - parameter countryCode:    The ISO code of the country.
-     - parameter match:          The rule should match the request which matches the country or not.
+     - parameter match:          The rule should match the session which matches the country or not.
      - parameter adapterFactory: The factory which builds a corresponding adapter when needed.
      */
     public init(countryCode: String, match: Bool, adapterFactory: AdapterFactory) {
@@ -53,14 +53,14 @@ open class CountryRule: Rule {
     }
 
     /**
-     Match connect request to this rule.
+     Match connect session to this rule.
 
-     - parameter request: Connect request to match.
+     - parameter session: connect session to match.
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(_ request: ConnectRequest) -> AdapterFactory? {
-        if (request.country != countryCode) != match {
+    override func match(_ session: ConnectSession) -> AdapterFactory? {
+        if (session.country != countryCode) != match {
             return adapterFactory
         }
         return nil

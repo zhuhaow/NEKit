@@ -195,9 +195,9 @@ public class SOCKS5ProxySocket: ProxySocket {
             }
 
             readStatus = .forwarding
-            request = ConnectRequest(host: destinationHost, port: destinationPort)
-            observer?.signal(.receivedRequest(request!, on: self))
-            delegate?.didReceive(request: request!, from: self)
+            session = ConnectSession(host: destinationHost, port: destinationPort)
+            observer?.signal(.receivedRequest(session!, on: self))
+            delegate?.didReceive(session: session!, from: self)
         default:
             return
         }

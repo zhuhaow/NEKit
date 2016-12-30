@@ -117,11 +117,11 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
             return (connectInfo, socket)
         }
 
-        guard let request = ConnectRequest(ipAddress: connectInfo.destinationAddress, port: connectInfo.destinationPort) else {
+        guard let session = ConnectSession(ipAddress: connectInfo.destinationAddress, port: connectInfo.destinationPort) else {
             return nil
         }
 
-        guard let udpSocket = NWUDPSocket(host: request.host, port: request.port) else {
+        guard let udpSocket = NWUDPSocket(host: session.host, port: session.port) else {
             return nil
         }
 

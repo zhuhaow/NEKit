@@ -5,11 +5,11 @@ open class AdapterFactory {
     /**
      Build an adapter.
 
-     - parameter request: The connect request.
+     - parameter session: The connect session.
 
      - returns: The built adapter.
      */
-    func getAdapterFor(request: ConnectRequest) -> AdapterSocket {
+    func getAdapterFor(session: ConnectSession) -> AdapterSocket {
         return getDirectAdapter()
     }
 

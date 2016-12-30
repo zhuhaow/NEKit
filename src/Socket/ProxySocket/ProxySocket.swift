@@ -2,8 +2,8 @@ import Foundation
 
 /// The socket which encapsulates the logic to handle connection to proxies.
 open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
-    /// Received `ConnectRequest`.
-    public var request: ConnectRequest?
+    /// Received `ConnectSession`.
+    public var session: ConnectSession?
 
     public var observer: Observer<ProxySocketEvent>?
 
@@ -13,8 +13,8 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     }
 
     open override var description: String {
-        if let request = request {
-            return "<\(typeName) host:\(request.host) port: \(request.port))>"
+        if let session = session {
+            return "<\(typeName) host:\(session.host) port: \(session.port))>"
         } else {
             return "<\(typeName)>"
         }

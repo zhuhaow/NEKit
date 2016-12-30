@@ -71,7 +71,7 @@ custom_categories:
 
   - name: Connect Message
     children:
-      - ConnectRequest
+      - ConnectSession
       - ConnectResponse
       - HTTPHeader
 

@@ -1,6 +1,6 @@
 import Foundation
 
-/// The rule matches all DNS and connect requests.
+/// The rule matches all DNS and connect sessions.
 open class AllRule: Rule {
     fileprivate let adapterFactory: AdapterFactory
 
@@ -19,7 +19,7 @@ open class AllRule: Rule {
     }
 
     /**
-     Match DNS request to this rule.
+     Match DNS session to this rule.
 
      - parameter session: The DNS session to match.
      - parameter type:    What kind of information is available.
@@ -36,13 +36,13 @@ open class AllRule: Rule {
     }
 
     /**
-     Match connect request to this rule.
+     Match connect session to this rule.
 
-     - parameter request: Connect request to match.
+     - parameter session: connect session to match.
 
      - returns: The configured adapter.
      */
-    override func match(_ request: ConnectRequest) -> AdapterFactory? {
+    override func match(_ session: ConnectSession) -> AdapterFactory? {
         return adapterFactory
     }
 }

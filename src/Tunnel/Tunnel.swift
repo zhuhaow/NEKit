@@ -141,41 +141,41 @@ public class Tunnel: NSObject, SocketDelegate {
         }
     }
     
-    public func didReceive(request: ConnectRequest, from: ProxySocket) {
+    public func didReceive(session: ConnectSession, from: ProxySocket) {
         guard !isCancelled else {
             return
         }
         
         _status = .waitingToBeReady
-        observer?.signal(.receivedRequest(request, from: from, on: self))
+        observer?.signal(.receivedRequest(session, from: from, on: self))
         
-        if !request.isIP() {
-            _ = Resolver.resolve(hostname: request.host, timeout: Opt.DNSTimeout) { [weak self] resolver, err in
+        if !session.isIP() {
+            _ = Resolver.resolve(hostname: session.host, timeout: Opt.DNSTimeout) { [weak self] resolver, err in
                 QueueFactory.getQueue().async {
                     if err != nil {
-                        request.ipAddress = ""
+                        session.ipAddress = ""
                     } else {
-                        request.ipAddress = (resolver?.ipv4Result.first)!
+                        session.ipAddress = (resolver?.ipv4Result.first)!
                     }
-                    self?.openAdapter(for: request)
+                    self?.openAdapter(for: session)
                 }
             }
         } else {
-            request.ipAddress = request.host
-            openAdapter(for: request)
+            session.ipAddress = session.host
+            openAdapter(for: session)
         }
     }
     
-    fileprivate func openAdapter(for request: ConnectRequest) {
+    fileprivate func openAdapter(for session: ConnectSession) {
         guard !isCancelled else {
             return
         }
         
         let manager = RuleManager.currentManager
-        let factory = manager.match(request)!
-        adapterSocket = factory.getAdapterFor(request: request)
+        let factory = manager.match(session)!
+        adapterSocket = factory.getAdapterFor(session: session)
         adapterSocket!.delegate = self
-        adapterSocket!.openSocketWith(request: request)
+        adapterSocket!.openSocketWith(session: session)
     }
     
     public func didBecomeReadyToForwardWith(socket: SocketProtocol) {

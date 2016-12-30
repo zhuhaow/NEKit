@@ -60,14 +60,14 @@ open class DomainListRule: Rule {
     }
 
     /**
-     Match connect request to this rule.
+     Match connect session to this rule.
 
-     - parameter request: Connect request to match.
+     - parameter session: connect session to match.
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(_ request: ConnectRequest) -> AdapterFactory? {
-        if matchDomain(request.host) {
+    override func match(_ session: ConnectSession) -> AdapterFactory? {
+        if matchDomain(session.host) {
             return adapterFactory
         }
         return nil

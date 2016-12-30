@@ -45,8 +45,8 @@ public class HTTPAdapter: AdapterSocket {
         super.init()
     }
 
-    override public func openSocketWith(request: ConnectRequest) {
-        super.openSocketWith(request: request)
+    override public func openSocketWith(session: ConnectSession) {
+        super.openSocketWith(session: session)
 
         guard !isCancelled else {
             return
@@ -61,7 +61,7 @@ public class HTTPAdapter: AdapterSocket {
     override public func didConnectWith(socket: RawTCPSocketProtocol) {
         super.didConnectWith(socket: socket)
 
-        guard let url = URL(string: "\(request.host):\(request.port)") else {
+        guard let url = URL(string: "\(session.host):\(session.port)") else {
             observer?.signal(.errorOccured(HTTPAdapterError.invalidURL, on: self))
             disconnect()
             return
@@ -70,7 +70,7 @@ public class HTTPAdapter: AdapterSocket {
         if let authData = auth {
             CFHTTPMessageSetHeaderFieldValue(message, "Proxy-Authorization" as CFString, authData.authString() as CFString?)
         }
-        CFHTTPMessageSetHeaderFieldValue(message, "Host" as CFString, "\(request.host):\(request.port)" as CFString?)
+        CFHTTPMessageSetHeaderFieldValue(message, "Host" as CFString, "\(session.host):\(session.port)" as CFString?)
         CFHTTPMessageSetHeaderFieldValue(message, "Content-Length" as CFString, "0" as CFString?)
 
         guard let requestData = CFHTTPMessageCopySerializedMessage(message)?.takeRetainedValue() else {

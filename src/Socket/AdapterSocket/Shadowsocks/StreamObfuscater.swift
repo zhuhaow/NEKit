@@ -5,8 +5,8 @@ extension ShadowsocksAdapter {
         public class Factory {
             public init() {}
 
-            public func build(for request: ConnectRequest) -> StreamObfuscaterBase {
-                return StreamObfuscaterBase(for: request)
+            public func build(for session: ConnectSession) -> StreamObfuscaterBase {
+                return StreamObfuscaterBase(for: session)
             }
         }
 
@@ -27,10 +27,10 @@ extension ShadowsocksAdapter {
             public var key: Data?
             public var writeIV: Data?
 
-            let request: ConnectRequest
+            let session: ConnectSession
 
-            init(for request: ConnectRequest) {
-                self.request = request
+            init(for session: ConnectSession) {
+                self.session = session
             }
 
             func output(data: Data) {}
@@ -41,23 +41,23 @@ extension ShadowsocksAdapter {
             public class Factory: StreamObfuscater.Factory {
                 public override init() {}
 
-                public override func build(for request: ConnectRequest) -> ShadowsocksAdapter.StreamObfuscater.StreamObfuscaterBase {
-                    return OriginStreamObfuscater(for: request)
+                public override func build(for session: ConnectSession) -> ShadowsocksAdapter.StreamObfuscater.StreamObfuscaterBase {
+                    return OriginStreamObfuscater(for: session)
                 }
             }
 
             private var requestSend = false
 
             private func requestData(withData data: Data) -> Data {
-                let hostLength = request.host.utf8.count
+                let hostLength = session.host.utf8.count
                 let length = 1 + 1 + hostLength + 2 + data.count
                 var response = Data(count: length)
                 response.withUnsafeMutableBytes { (pointer: UnsafeMutablePointer<UInt8>) in
                     pointer.pointee = 3
                     pointer.successor().pointee = UInt8(hostLength)
                 }
-                response.replaceSubrange(2..<2+hostLength, with: request.host.utf8)
-                var beport = UInt16(request.port).bigEndian
+                response.replaceSubrange(2..<2+hostLength, with: session.host.utf8)
+                var beport = UInt16(session.port).bigEndian
                 withUnsafeBytes(of: &beport) {
                     response.replaceSubrange(2+hostLength..<4+hostLength, with: $0)
                 }
@@ -83,8 +83,8 @@ extension ShadowsocksAdapter {
             public class Factory: StreamObfuscater.Factory {
                 public override init() {}
 
-                public override func build(for request: ConnectRequest) -> ShadowsocksAdapter.StreamObfuscater.StreamObfuscaterBase {
-                    return OTAStreamObfuscater(for: request)
+                public override func build(for session: ConnectSession) -> ShadowsocksAdapter.StreamObfuscater.StreamObfuscaterBase {
+                    return OTAStreamObfuscater(for: session)
                 }
             }
 
@@ -96,9 +96,9 @@ extension ShadowsocksAdapter {
 
             private func requestData() -> Data {
                 var response: [UInt8] = [0x13]
-                response.append(UInt8(request.host.utf8.count))
-                response += [UInt8](request.host.utf8)
-                response += [UInt8](Utils.toByteArray(UInt16(request.port)).reversed())
+                response.append(UInt8(session.host.utf8.count))
+                response += [UInt8](session.host.utf8)
+                response += [UInt8](Utils.toByteArray(UInt16(session.port)).reversed())
                 var responseData = Data(bytes: UnsafePointer<UInt8>(response), count: response.count)
                 var keyiv = Data(count: key!.count + writeIV!.count)
 

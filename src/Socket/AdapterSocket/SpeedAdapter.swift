@@ -8,15 +8,15 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
 
     fileprivate var _shouldConnect: Bool = true
 
-    override func openSocketWith(request: ConnectRequest) {
+    override func openSocketWith(session: ConnectSession) {
         for (adapter, _) in adapters {
             adapter.observer = nil
         }
 
-        super.openSocketWith(request: request)
+        super.openSocketWith(session: session)
 
         // FIXME: This is a temporary workaround for wechat which uses a wrong way to detect ipv6 by itself.
-        if request.isIPv6() {
+        if session.isIPv6() {
             _cancelled = true
             // Note `socket` is nil so `didDisconnectWith(socket:)` will never be called.
             didDisconnectWith(socket: self)
@@ -28,7 +28,7 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
             QueueFactory.getQueue().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(delay)) {
                 if self._shouldConnect {
                     adapter.delegate = self
-                    adapter.openSocketWith(request: request)
+                    adapter.openSocketWith(session: session)
                     self.connectingCount += 1
                 }
             }
@@ -101,5 +101,5 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
     public func didWrite(data: Data?, by: SocketProtocol) {}
     public func didRead(data: Data, from: SocketProtocol) {}
     public func updateAdapterWith(newAdapter: AdapterSocket) {}
-    public func didReceive(request: ConnectRequest, from: ProxySocket) {}
+    public func didReceive(session: ConnectSession, from: ProxySocket) {}
 }

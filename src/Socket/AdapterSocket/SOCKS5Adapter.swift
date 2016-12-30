@@ -30,8 +30,8 @@ public class SOCKS5Adapter: AdapterSocket {
         super.init()
     }
 
-    public override func openSocketWith(request: ConnectRequest) {
-        super.openSocketWith(request: request)
+    public override func openSocketWith(session: ConnectSession) {
+        super.openSocketWith(session: session)
 
         guard !isCancelled else {
             return
@@ -57,19 +57,19 @@ public class SOCKS5Adapter: AdapterSocket {
         switch internalStatus {
         case .readingMethodResponse:
             var response: [UInt8]
-            if request.isIPv4() {
+            if session.isIPv4() {
                 response = [0x05, 0x01, 0x00, 0x01]
-                response += Utils.IP.IPv4ToBytes(request.host)!
-            } else if request.isIPv6() {
+                response += Utils.IP.IPv4ToBytes(session.host)!
+            } else if session.isIPv6() {
                 response = [0x05, 0x01, 0x00, 0x04]
-                response += Utils.IP.IPv6ToBytes(request.host)!
+                response += Utils.IP.IPv6ToBytes(session.host)!
             } else {
                 response = [0x05, 0x01, 0x00, 0x03]
-                response.append(UInt8(request.host.utf8.count))
-                response += [UInt8](request.host.utf8)
+                response.append(UInt8(session.host.utf8.count))
+                response += [UInt8](session.host.utf8)
             }
 
-            let portBytes: [UInt8] = Utils.toByteArray(UInt16(request.port)).reversed()
+            let portBytes: [UInt8] = Utils.toByteArray(UInt16(session.port)).reversed()
             response.append(contentsOf: portBytes)
             write(data: Data(bytes: response))
 

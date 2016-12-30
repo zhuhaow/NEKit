@@ -1,13 +1,12 @@
 import Foundation
 
 open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
-    open var request: ConnectRequest!
-    open var response: ConnectResponse = ConnectResponse()
-
+    open var session: ConnectSession!
+    
     open var observer: Observer<AdapterSocketEvent>?
 
     open override var description: String {
-        return "<\(typeName) host:\(request.host) port:\(request.port))>"
+        return "<\(typeName) host:\(session.host) port:\(session.port))>"
     }
 
     internal var _cancelled = false
@@ -16,17 +15,17 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     }
 
     /**
-     Connect to remote according to the `ConnectRequest`.
+     Connect to remote according to the `ConnectSession`.
 
-     - parameter request: The connect request.
+     - parameter session: The connect session.
      */
-    func openSocketWith(request: ConnectRequest) {
+    func openSocketWith(session: ConnectSession) {
         guard !isCancelled else {
             return
         }
 
-        self.request = request
-        observer?.signal(.socketOpened(self, withRequest: request))
+        self.session = session
+        observer?.signal(.socketOpened(self, withSession: session))
 
         socket?.delegate = self
         _status = .connecting

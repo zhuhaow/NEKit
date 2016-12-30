@@ -4,7 +4,7 @@ import Foundation
 open class RuleManager {
     /// The current used `RuleManager`, there is only one manager should be used at a time.
     ///
-    /// - note: This should be set before any DNS or connect requests.
+    /// - note: This should be set before any DNS or connect sessions.
     open static var currentManager: RuleManager = RuleManager(fromRules: [], appendDirect: true)
 
     /// The rule list.
@@ -53,26 +53,26 @@ open class RuleManager {
     }
 
     /**
-     Match connect request to all rules.
+     Match connect session to all rules.
 
-     - parameter request: Connect request to match.
+     - parameter session: connect session to match.
 
      - returns: The matched configured adapter.
      */
-    func match(_ request: ConnectRequest) -> AdapterFactory! {
-        if request.matchedRule != nil {
-            observer?.signal(.ruleMatched(request, rule: request.matchedRule!))
-            return request.matchedRule!.match(request)
+    func match(_ session: ConnectSession) -> AdapterFactory! {
+        if session.matchedRule != nil {
+            observer?.signal(.ruleMatched(session, rule: session.matchedRule!))
+            return session.matchedRule!.match(session)
         }
 
         for rule in rules {
-            if let adapterFactory = rule.match(request) {
-                observer?.signal(.ruleMatched(request, rule: rule))
+            if let adapterFactory = rule.match(session) {
+                observer?.signal(.ruleMatched(session, rule: rule))
 
-                request.matchedRule = rule
+                session.matchedRule = rule
                 return adapterFactory
             } else {
-                observer?.signal(.ruleDidNotMatch(request, rule: rule))
+                observer?.signal(.ruleDidNotMatch(session, rule: rule))
             }
         }
         return nil // this should never happens

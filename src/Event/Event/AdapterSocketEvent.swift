@@ -3,8 +3,8 @@ import Foundation
 public enum AdapterSocketEvent: EventType {
     public var description: String {
         switch self {
-        case let .socketOpened(socket, withRequest: request):
-            return "Adatper socket \(socket) starts to connect to remote with request \(request)."
+        case let .socketOpened(socket, withSession: session):
+            return "Adatper socket \(socket) starts to connect to remote with session \(session)."
         case .disconnectCalled(let socket):
             return "Disconnect is just called on adapter socket \(socket)."
         case .forceDisconnectCalled(let socket):
@@ -28,7 +28,7 @@ public enum AdapterSocketEvent: EventType {
         }
     }
 
-    case socketOpened(AdapterSocket, withRequest: ConnectRequest),
+    case socketOpened(AdapterSocket, withSession: ConnectSession),
     disconnectCalled(AdapterSocket),
     forceDisconnectCalled(AdapterSocket),
     disconnected(AdapterSocket),

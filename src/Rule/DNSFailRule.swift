@@ -44,14 +44,14 @@ open class DNSFailRule: Rule {
     }
 
     /**
-     Match connect request to this rule.
+     Match connect session to this rule.
 
-     - parameter request: Connect request to match.
+     - parameter session: connect session to match.
 
      - returns: The configured adapter.
      */
-    override func match(_ request: ConnectRequest) -> AdapterFactory? {
-        if request.ipAddress == "" {
+    override func match(_ session: ConnectSession) -> AdapterFactory? {
+        if session.ipAddress == "" {
             return adapterFactory
         } else {
             return nil

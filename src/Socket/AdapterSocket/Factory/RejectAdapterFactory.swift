@@ -7,7 +7,7 @@ open class RejectAdapterFactory: AdapterFactory {
         self.delay = delay
     }
 
-    override func getAdapterFor(request: ConnectRequest) -> AdapterSocket {
+    override func getAdapterFor(session: ConnectSession) -> AdapterSocket {
         return RejectAdapter(delay: delay)
     }
 }

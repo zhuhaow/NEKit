@@ -16,12 +16,12 @@ open class ShadowsocksAdapterFactory: ServerAdapterFactory {
     /**
      Get a Shadowsocks adapter.
 
-     - parameter request: The connect request.
+     - parameter session: The connect session.
 
      - returns: The built adapter.
      */
-    override func getAdapterFor(request: ConnectRequest) -> AdapterSocket {
-        let adapter = ShadowsocksAdapter(host: serverHost, port: serverPort, protocolObfuscater: protocolObfuscaterFactory.build(), cryptor: cryptorFactory.build(), streamObfuscator: streamObfuscaterFactory.build(for: request))
+    override func getAdapterFor(session: ConnectSession) -> AdapterSocket {
+        let adapter = ShadowsocksAdapter(host: serverHost, port: serverPort, protocolObfuscater: protocolObfuscaterFactory.build(), cryptor: cryptorFactory.build(), streamObfuscator: streamObfuscaterFactory.build(for: session))
         adapter.socket = RawSocketFactory.getRawSocket()
         return adapter
     }

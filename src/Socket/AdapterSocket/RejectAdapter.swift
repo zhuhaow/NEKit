@@ -7,8 +7,8 @@ public class RejectAdapter: AdapterSocket {
         self.delay = delay
     }
 
-    override func openSocketWith(request: ConnectRequest) {
-        super.openSocketWith(request: request)
+    override func openSocketWith(session: ConnectSession) {
+        super.openSocketWith(session: session)
 
         QueueFactory.getQueue().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(delay)) {
             [weak self] in

@@ -146,9 +146,9 @@ public class HTTPProxySocket: ProxySocket {
                 readStatus = .readingContent
             }
 
-            request = ConnectRequest(host: destinationHost!, port: destinationPort!)
-            observer?.signal(.receivedRequest(request!, on: self))
-            delegate?.didReceive(request: request!, from: self)
+            session = ConnectSession(host: destinationHost!, port: destinationPort!)
+            observer?.signal(.receivedRequest(session!, on: self))
+            delegate?.didReceive(session: session!, from: self)
         case .readingHeader:
             guard let header = scanner.input(data).0 else {
                 // TODO: indicate observer

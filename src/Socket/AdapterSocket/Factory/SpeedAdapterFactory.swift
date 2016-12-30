@@ -9,13 +9,13 @@ open class SpeedAdapterFactory: AdapterFactory {
     /**
      Get a speed adapter.
 
-     - parameter request: The connect request.
+     - parameter session: The connect session.
 
      - returns: The built adapter.
      */
-    override func getAdapterFor(request: ConnectRequest) -> AdapterSocket {
+    override func getAdapterFor(session: ConnectSession) -> AdapterSocket {
         let adapters = adapterFactories.map { adapterFactory, delay -> (AdapterSocket, Int) in
-            let adapter = adapterFactory.getAdapterFor(request: request)
+            let adapter = adapterFactory.getAdapterFor(session: session)
             adapter.socket = RawSocketFactory.getRawSocket()
             return (adapter, delay)
         }

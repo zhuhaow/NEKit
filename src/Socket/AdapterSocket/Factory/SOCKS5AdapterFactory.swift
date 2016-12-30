@@ -9,11 +9,11 @@ open class SOCKS5AdapterFactory: ServerAdapterFactory {
     /**
      Get a SOCKS5 adapter.
 
-     - parameter request: The connect request.
+     - parameter session: The connect session.
 
      - returns: The built adapter.
      */
-    override func getAdapterFor(request: ConnectRequest) -> AdapterSocket {
+    override func getAdapterFor(session: ConnectSession) -> AdapterSocket {
         let adapter = SOCKS5Adapter(serverHost: serverHost, serverPort: serverPort)
         adapter.socket = RawSocketFactory.getRawSocket()
         return adapter

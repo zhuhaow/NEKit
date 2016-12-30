@@ -6,19 +6,19 @@ public class DirectAdapter: AdapterSocket {
     var resolveHost = false
 
     /**
-     Connect to remote according to the `ConnectRequest`.
+     Connect to remote according to the `ConnectSession`.
 
-     - parameter request: The connect request.
+     - parameter session: The connect session.
      */
-    override public func openSocketWith(request: ConnectRequest) {
-        super.openSocketWith(request: request)
+    override public func openSocketWith(session: ConnectSession) {
+        super.openSocketWith(session: session)
 
         guard !isCancelled else {
             return
         }
 
         do {
-            try socket.connectTo(host: request.host, port: Int(request.port), enableTLS: false, tlsSettings: nil)
+            try socket.connectTo(host: session.host, port: Int(session.port), enableTLS: false, tlsSettings: nil)
         } catch let error {
             observer?.signal(.errorOccured(error, on: self))
             disconnect()

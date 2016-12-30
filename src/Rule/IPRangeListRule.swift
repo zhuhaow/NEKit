@@ -54,14 +54,14 @@ open class IPRangeListRule: Rule {
     }
 
     /**
-     Match connect request to this rule.
+     Match connect session to this rule.
 
-     - parameter request: Connect request to match.
+     - parameter session: connect session to match.
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(_ request: ConnectRequest) -> AdapterFactory? {
-        guard let ip = IPAddress(fromString: request.ipAddress) else {
+    override func match(_ session: ConnectSession) -> AdapterFactory? {
+        guard let ip = IPAddress(fromString: session.ipAddress) else {
             return nil
         }
 
