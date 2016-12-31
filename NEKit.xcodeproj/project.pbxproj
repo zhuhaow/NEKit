@@ -166,6 +166,8 @@
 		36B2ACDA1DDF407F00BD2C3D /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B2ACD81DDF407F00BD2C3D /* HMAC.swift */; };
 		36B3667B1D586CA1003343AA /* DNSFailRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B3667A1D586CA1003343AA /* DNSFailRule.swift */; };
 		36B3667C1D586CA1003343AA /* DNSFailRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B3667A1D586CA1003343AA /* DNSFailRule.swift */; };
+		36B8936E1E17F97600881890 /* ResponseGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B8936D1E17F97600881890 /* ResponseGenerator.swift */; };
+		36B8936F1E17F97600881890 /* ResponseGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B8936D1E17F97600881890 /* ResponseGenerator.swift */; };
 		36BC589B1CF2A3D400E0E367 /* TUNTCPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BC589A1CF2A3D400E0E367 /* TUNTCPSocket.swift */; };
 		36C48D501CF88DED0071804F /* NEKit-iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 36C48D4F1CF88DED0071804F /* NEKit-iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36C48D561CF88EB60071804F /* AdapterFactoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162351CDDA0F300F24C97 /* AdapterFactoryManager.swift */; };
@@ -509,6 +511,7 @@
 		36B212331D54C30600C8AC0A /* HTTPStreamScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStreamScanner.swift; sourceTree = "<group>"; };
 		36B2ACD81DDF407F00BD2C3D /* HMAC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HMAC.swift; sourceTree = "<group>"; };
 		36B3667A1D586CA1003343AA /* DNSFailRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSFailRule.swift; sourceTree = "<group>"; };
+		36B8936D1E17F97600881890 /* ResponseGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseGenerator.swift; sourceTree = "<group>"; };
 		36BC589A1CF2A3D400E0E367 /* TUNTCPSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNTCPSocket.swift; sourceTree = "<group>"; };
 		36C48D4D1CF88DED0071804F /* NEKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NEKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36C48D4F1CF88DED0071804F /* NEKit-iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NEKit-iOS.h"; sourceTree = "<group>"; };
@@ -767,6 +770,7 @@
 		36463A321CDCD5EB0040579C /* src */ = {
 			isa = PBXGroup;
 			children = (
+				36B8936C1E17F96000881890 /* ResponseGenerator */,
 				366EB5BE1CDE32BF00E0E942 /* Config */,
 				3650FAE01D27B9F300444E79 /* Crypto */,
 				36A719F01D634E8A00DC35F5 /* Event */,
@@ -961,6 +965,14 @@
 				361176621E00361600A1A058 /* CryptoStreamProcessor.swift */,
 			);
 			path = Shadowsocks;
+			sourceTree = "<group>";
+		};
+		36B8936C1E17F96000881890 /* ResponseGenerator */ = {
+			isa = PBXGroup;
+			children = (
+				36B8936D1E17F97600881890 /* ResponseGenerator.swift */,
+			);
+			name = ResponseGenerator;
 			sourceTree = "<group>";
 		};
 		36C48D4E1CF88DED0071804F /* NEKit-iOS */ = {
@@ -1427,6 +1439,7 @@
 				366EB5C01CDE32CD00E0E942 /* Configuration.swift in Sources */,
 				3650FAE51D27BA5300444E79 /* SodiumStreamCrypto.swift in Sources */,
 				36411A801D214D32005F4108 /* PacketProtocolParser.swift in Sources */,
+				36B8936E1E17F97600881890 /* ResponseGenerator.swift in Sources */,
 				366EB5B91CDE150C00E0E942 /* ServerAdapterFactory.swift in Sources */,
 				36C63DF91D001FDA00A00CA2 /* IPPacket.swift in Sources */,
 				36C48DAC1CF9D6580071804F /* DNSEnums.swift in Sources */,
@@ -1543,6 +1556,7 @@
 				36C48D5A1CF88EB60071804F /* HTTPAdapterFactory.swift in Sources */,
 				3650FAE61D27BA5300444E79 /* SodiumStreamCrypto.swift in Sources */,
 				36411A811D214D32005F4108 /* PacketProtocolParser.swift in Sources */,
+				36B8936F1E17F97600881890 /* ResponseGenerator.swift in Sources */,
 				36C48D571CF88EB60071804F /* AdapterFactory.swift in Sources */,
 				36C63DFA1D001FDA00A00CA2 /* IPPacket.swift in Sources */,
 				36C48DAD1CF9D6580071804F /* DNSEnums.swift in Sources */,
