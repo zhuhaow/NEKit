@@ -70,12 +70,12 @@ public protocol SocketProtocol: class {
     /**
      Disconnect the socket elegantly.
      */
-    func disconnect()
+    func disconnect(becauseOf error: Error?)
 
     /**
      Disconnect the socket immediately.
      */
-    func forceDisconnect()
+    func forceDisconnect(becauseOf error: Error?)
 }
 
 extension SocketProtocol {

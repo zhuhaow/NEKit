@@ -19,12 +19,13 @@ public class RejectAdapter: AdapterSocket {
     /**
      Disconnect the socket elegantly.
      */
-    public override func disconnect() {
+    public override func disconnect(becauseOf error: Error? = nil) {
         guard !isCancelled else {
             return
         }
 
         _cancelled = true
+        session.disconnected(becauseOf: error, by: .adapter)
         observer?.signal(.disconnectCalled(self))
         _status = .closed
         delegate?.didDisconnectWith(socket: self)
@@ -33,12 +34,13 @@ public class RejectAdapter: AdapterSocket {
     /**
      Disconnect the socket immediately.
      */
-    public override func forceDisconnect() {
+    public override func forceDisconnect(becauseOf error: Error? = nil) {
         guard !isCancelled else {
             return
         }
 
         _cancelled = true
+        session.disconnected(becauseOf: error, by: .adapter)
         observer?.signal(.forceDisconnectCalled(self))
         _status = .closed
         delegate?.didDisconnectWith(socket: self)

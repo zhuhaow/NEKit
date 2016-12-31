@@ -1,6 +1,10 @@
 import Foundation
 
 open class HTTPHeader {
+    public enum HTTPHeaderError: Error {
+        case malformedHeader, invalidRequestLine, invalidHeaderField, invalidConnectURL, invalidConnectPort, invalidURL, missingHostField, invalidHostField, invalidHostPort, invalidContentLength, illegalEncoding
+    }
+    
     open var HTTPVersion: String
     open var method: String
     open var isConnect: Bool = false
@@ -15,15 +19,15 @@ open class HTTPHeader {
     open var headers: [(String, String)] = []
     open var rawHeader: Data?
 
-    public init?(headerString: String) {
+    public init(headerString: String) throws {
         let lines = headerString.components(separatedBy: "\r\n")
         guard lines.count >= 3 else {
-            return nil
+            throw HTTPHeaderError.malformedHeader
         }
 
         let request = lines[0].components(separatedBy: " ")
         guard request.count == 3 else {
-            return nil
+            throw HTTPHeaderError.invalidRequestLine
         }
 
         method = request[0]
@@ -33,7 +37,7 @@ open class HTTPHeader {
         for line in lines[1..<lines.count-2] {
             let header = line.characters.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
             guard header.count == 2 else {
-                return nil
+                throw HTTPHeaderError.invalidHeaderField
             }
             headers.append((String(header[0]).trimmingCharacters(in: CharacterSet.whitespaces), String(header[1]).trimmingCharacters(in: CharacterSet.whitespaces)))
         }
@@ -43,11 +47,11 @@ open class HTTPHeader {
 
             let urlInfo = path.components(separatedBy: ":")
             guard urlInfo.count == 2 else {
-                return nil
+                throw HTTPHeaderError.invalidConnectURL
             }
             host = urlInfo[0]
             guard let port = Int(urlInfo[1]) else {
-                return nil
+                throw HTTPHeaderError.invalidConnectPort
             }
             self.port = port
 
@@ -67,7 +71,7 @@ open class HTTPHeader {
                 }
             } else {
                 guard let _url = HTTPURL(string: path) else {
-                    return nil
+                    throw HTTPHeaderError.invalidURL
                 }
                 homemadeURL = _url
                 if homemadeURL!.host != nil {
@@ -86,17 +90,17 @@ open class HTTPHeader {
                     }
                 }
                 guard url != "" else {
-                    return nil
+                    throw HTTPHeaderError.missingHostField
                 }
 
                 let urlInfo = url.components(separatedBy: ":")
                 guard urlInfo.count <= 2 else {
-                    return nil
+                    throw HTTPHeaderError.invalidHostField
                 }
                 if urlInfo.count == 2 {
                     host = urlInfo[0]
                     guard let port = Int(urlInfo[1]) else {
-                        return nil
+                        throw HTTPHeaderError.invalidHostPort
                     }
                     self.port = port
                 } else {
@@ -108,7 +112,7 @@ open class HTTPHeader {
             for (key, value) in headers {
                 if "Content-Length".caseInsensitiveCompare(key) == .orderedSame {
                     guard let contentLength = Int(value) else {
-                        return nil
+                        throw HTTPHeaderError.invalidContentLength
                     }
                     self.contentLength = contentLength
                     break
@@ -117,12 +121,12 @@ open class HTTPHeader {
         }
     }
 
-    public convenience init?(headerData: Data) {
-        guard let headerString = NSString(data: headerData, encoding: String.Encoding.utf8.rawValue) as? String else {
-            return nil
+    public convenience init(headerData: Data) throws {
+        guard let headerString = String(data: headerData, encoding: .utf8) else {
+            throw HTTPHeaderError.illegalEncoding
         }
 
-        self.init(headerString: headerString)
+        try self.init(headerString: headerString)
         rawHeader = headerData
     }
 

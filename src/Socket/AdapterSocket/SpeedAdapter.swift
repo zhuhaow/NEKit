@@ -35,28 +35,28 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    override public func disconnect() {
-        super.disconnect()
+    override public func disconnect(becauseOf error: Error? = nil) {
+        super.disconnect(becauseOf: error)
 
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
             adapter.delegate = nil
             if adapter.status != .invalid {
-                adapter.disconnect()
+                adapter.disconnect(becauseOf: error)
             }
         }
     }
 
-    override public func forceDisconnect() {
-        super.forceDisconnect()
+    override public func forceDisconnect(becauseOf error: Error? = nil) {
+        super.forceDisconnect(becauseOf: error)
 
         _shouldConnect = false
         pendingCount = 0
         for (adapter, _) in adapters {
             adapter.delegate = nil
             if adapter.status != .invalid {
-                adapter.forceDisconnect()
+                adapter.forceDisconnect(becauseOf: error)
             }
         }
     }

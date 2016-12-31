@@ -87,9 +87,10 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /**
      Disconnect the socket elegantly.
      */
-    open func disconnect() {
+    open func disconnect(becauseOf error: Error? = nil) {
         _status = .disconnecting
         _cancelled = true
+        session.disconnected(becauseOf: error, by: .adapter)
         observer?.signal(.disconnectCalled(self))
         socket?.disconnect()
     }
@@ -97,9 +98,10 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     /**
      Disconnect the socket immediately.
      */
-    open func forceDisconnect() {
+    open func forceDisconnect(becauseOf error: Error? = nil) {
         _status = .disconnecting
         _cancelled = true
+        session.disconnected(becauseOf: error, by: .adapter)
         observer?.signal(.forceDisconnectCalled(self))
         socket?.forceDisconnect()
     }

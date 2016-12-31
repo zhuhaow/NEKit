@@ -4,23 +4,34 @@ class HTTPStreamScanner {
     enum ReadAction {
         case readHeader, readContent(Int), stop
     }
-
+    
+    enum Result {
+        case header(HTTPHeader), content(Data)
+    }
+    
+    enum HTTPStreamScannerError: Error {
+        case contentIsTooLong, scannerIsStopped
+    }
+    
     var nextAction: ReadAction = .readHeader
-
+    
     var remainContentLength: Int = 0
-
+    
     var currentHeader: HTTPHeader!
-
+    
     var isConnect: Bool = false
-
-    func input(_ data: Data) -> (HTTPHeader?, Data?) {
+    
+    func input(_ data: Data) throws -> Result {
         switch nextAction {
         case .readHeader:
-            guard let header = HTTPHeader(headerData: data) else {
+            let header: HTTPHeader
+            do {
+                header = try HTTPHeader(headerData: data)
+            } catch let error {
                 nextAction = .stop
-                return (nil, nil)
+                throw error
             }
-
+            
             if currentHeader == nil {
                 if header.isConnect {
                     isConnect = true
@@ -32,27 +43,27 @@ class HTTPStreamScanner {
             } else {
                 remainContentLength = header.contentLength
             }
-
+            
             currentHeader = header
-
+            
             setNextAction()
-
-            return (header, nil)
+            
+            return .header(header)
         case .readContent:
             remainContentLength -= data.count
             if !isConnect && remainContentLength < 0 {
                 nextAction = .stop
-                return (nil, nil)
+                throw HTTPStreamScannerError.contentIsTooLong
             }
-
+            
             setNextAction()
-
-            return (nil, data)
+            
+            return .content(data)
         case .stop:
-            return (nil, nil)
+            throw HTTPStreamScannerError.scannerIsStopped
         }
     }
-
+    
     fileprivate func setNextAction() {
         switch remainContentLength {
         case 0:
