@@ -170,6 +170,8 @@
 		36B8936F1E17F97600881890 /* ResponseGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B8936D1E17F97600881890 /* ResponseGenerator.swift */; };
 		36B893711E17FB0B00881890 /* ResponseGeneratorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B893701E17FB0B00881890 /* ResponseGeneratorFactory.swift */; };
 		36B893721E17FB0B00881890 /* ResponseGeneratorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B893701E17FB0B00881890 /* ResponseGeneratorFactory.swift */; };
+		36B893741E1A6C9500881890 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B893731E1A6C9500881890 /* Queue.swift */; };
+		36B893751E1A6C9500881890 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B893731E1A6C9500881890 /* Queue.swift */; };
 		36BC589B1CF2A3D400E0E367 /* TUNTCPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BC589A1CF2A3D400E0E367 /* TUNTCPSocket.swift */; };
 		36C48D501CF88DED0071804F /* NEKit-iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 36C48D4F1CF88DED0071804F /* NEKit-iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36C48D561CF88EB60071804F /* AdapterFactoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B162351CDDA0F300F24C97 /* AdapterFactoryManager.swift */; };
@@ -515,6 +517,7 @@
 		36B3667A1D586CA1003343AA /* DNSFailRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSFailRule.swift; sourceTree = "<group>"; };
 		36B8936D1E17F97600881890 /* ResponseGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseGenerator.swift; sourceTree = "<group>"; };
 		36B893701E17FB0B00881890 /* ResponseGeneratorFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseGeneratorFactory.swift; sourceTree = "<group>"; };
+		36B893731E1A6C9500881890 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		36BC589A1CF2A3D400E0E367 /* TUNTCPSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNTCPSocket.swift; sourceTree = "<group>"; };
 		36C48D4D1CF88DED0071804F /* NEKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NEKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36C48D4F1CF88DED0071804F /* NEKit-iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NEKit-iOS.h"; sourceTree = "<group>"; };
@@ -1053,6 +1056,7 @@
 				361176591DFFE98700A1A058 /* Buffer.swift */,
 				36D4007C1E07E48B00583102 /* HTTPURL.swift */,
 				36DB3CE31E0BCB1600D907DB /* UInt128.swift */,
+				36B893731E1A6C9500881890 /* Queue.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1464,6 +1468,7 @@
 				36B1622E1CDDA0EA00F24C97 /* SOCKS5ProxySocket.swift in Sources */,
 				362347A31D82525200A047DE /* SOCKS5AdapterFactory.swift in Sources */,
 				36411A621D167AE0005F4108 /* AllRule.swift in Sources */,
+				36B893741E1A6C9500881890 /* Queue.swift in Sources */,
 				36B162301CDDA0EA00F24C97 /* Utils.swift in Sources */,
 				36B1622C1CDDA0EA00F24C97 /* SocketProtocol.swift in Sources */,
 				36411A7C1D1FE696005F4108 /* ConnectSession.swift in Sources */,
@@ -1582,6 +1587,7 @@
 				362347A41D82525200A047DE /* SOCKS5AdapterFactory.swift in Sources */,
 				36C48D781CF88ED40071804F /* TUNTCPSocket.swift in Sources */,
 				36C63E021D02BDEC00A00CA2 /* IPStackProtocol.swift in Sources */,
+				36B893751E1A6C9500881890 /* Queue.swift in Sources */,
 				36C48D731CF88ED40071804F /* GCDTCPSocket.swift in Sources */,
 				36411A7D1D1FE696005F4108 /* ConnectSession.swift in Sources */,
 				36C48D711CF88ECF0071804F /* ProxyServer.swift in Sources */,
