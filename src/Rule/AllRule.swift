@@ -26,7 +26,7 @@ open class AllRule: Rule {
 
      - returns: The result of match.
      */
-    override func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+    override open func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
         // only return real IP when we connect to remote directly
         if let _ = adapterFactory as? DirectAdapterFactory {
             return .real
@@ -42,7 +42,7 @@ open class AllRule: Rule {
 
      - returns: The configured adapter.
      */
-    override func match(_ session: ConnectSession) -> AdapterFactory? {
+    override open func match(_ session: ConnectSession) -> AdapterFactory? {
         return adapterFactory
     }
 }
