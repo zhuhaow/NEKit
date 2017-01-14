@@ -26,7 +26,7 @@ open class DNSFailRule: Rule {
 
      - returns: The result of match.
      */
-    override func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+    override open func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
         guard type == .ip else {
             return .unknown
         }
@@ -50,7 +50,7 @@ open class DNSFailRule: Rule {
 
      - returns: The configured adapter.
      */
-    override func match(_ session: ConnectSession) -> AdapterFactory? {
+    override open func match(_ session: ConnectSession) -> AdapterFactory? {
         if session.ipAddress == "" {
             return adapterFactory
         } else {

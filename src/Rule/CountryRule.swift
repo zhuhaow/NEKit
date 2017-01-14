@@ -37,7 +37,7 @@ open class CountryRule: Rule {
 
      - returns: The result of match.
      */
-    override func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+    override open func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
         guard type == .ip else {
             return .unknown
         }
@@ -59,7 +59,7 @@ open class CountryRule: Rule {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(_ session: ConnectSession) -> AdapterFactory? {
+    override open func match(_ session: ConnectSession) -> AdapterFactory? {
         if (session.country != countryCode) != match {
             return adapterFactory
         }

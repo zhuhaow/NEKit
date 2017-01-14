@@ -49,7 +49,7 @@ open class DomainListRule: Rule {
 
      - returns: The result of match.
      */
-    override func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+    override open func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
         if matchDomain(session.requestMessage.queries.first!.name) {
             if let _ = adapterFactory as? DirectAdapterFactory {
                 return .real
@@ -66,7 +66,7 @@ open class DomainListRule: Rule {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(_ session: ConnectSession) -> AdapterFactory? {
+    override open func match(_ session: ConnectSession) -> AdapterFactory? {
         if matchDomain(session.host) {
             return adapterFactory
         }
