@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
-## Unreleased
+## 0.11.0
 
 ### Changed
 - Courageous adventurers are never satisfied with the status quo. They are not only always prepared, but also desired to explore something new, something never happened before. Some of the bravest tried to let the Internet know thay were here, ready to chanllenge the law and order and put an end to the old, antiquated and decayed speficications. Well, they have been acknowledged. 
