@@ -20,7 +20,7 @@ open class Rule: CustomStringConvertible {
 
      - returns: The result of match.
      */
-    func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+    open func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
         return .real
     }
 
@@ -31,7 +31,7 @@ open class Rule: CustomStringConvertible {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    func match(_ session: ConnectSession) -> AdapterFactory? {
+    open func match(_ session: ConnectSession) -> AdapterFactory? {
         return nil
     }
 }

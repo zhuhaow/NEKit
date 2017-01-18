@@ -35,7 +35,7 @@ open class IPRangeListRule: Rule {
 
      - returns: The result of match.
      */
-    override func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
+    override open func matchDNS(_ session: DNSSession, type: DNSSessionMatchType) -> DNSSessionMatchResult {
         guard type == .ip else {
             return .unknown
         }
@@ -60,7 +60,7 @@ open class IPRangeListRule: Rule {
 
      - returns: The configured adapter if matched, return `nil` if not matched.
      */
-    override func match(_ session: ConnectSession) -> AdapterFactory? {
+    override open func match(_ session: ConnectSession) -> AdapterFactory? {
         guard let ip = IPAddress(fromString: session.ipAddress) else {
             return nil
         }
