@@ -3,7 +3,7 @@ import tun2socks
 import CocoaLumberjackSwift
 
 /// This class wraps around tun2socks to build a TCP only IP stack.
-open class TCPStack: TSIPStackDelegate, IPStackProtocol {
+@objc open class TCPStack: NSObject, TSIPStackDelegate, IPStackProtocol {
     /// The `TCPStack` singleton instance.
     open static var stack: TCPStack {
         TSIPStack.stack.delegate = _stack
@@ -30,7 +30,8 @@ open class TCPStack: TSIPStackDelegate, IPStackProtocol {
     /**
      Inistailize a new TCP stack.
      */
-    fileprivate init() {
+    fileprivate override init() {
+        super.init()
     }
     
     /**

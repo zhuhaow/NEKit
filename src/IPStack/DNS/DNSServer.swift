@@ -5,7 +5,7 @@ import CocoaLumberjackSwift
 /// A DNS server designed as an `IPStackProtocol` implementation which works with TUN interface.
 ///
 /// This class is thread-safe.
-open class DNSServer: DNSResolverDelegate, IPStackProtocol {
+open class DNSServer: NSObject, DNSResolverDelegate, IPStackProtocol {
     /// Current DNS server.
     ///
     /// - warning: There is at most one DNS server running at the same time. If a DNS server is registered to `TUNInterface` then it must also be set here.
@@ -39,6 +39,7 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
         serverAddress = address
         serverPort = port
         pool = fakeIPPool
+        super.init()
     }
 
     /**

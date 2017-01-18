@@ -4,7 +4,7 @@ public enum IPRangeError: Error {
     case invalidCIDRFormat, invalidRangeFormat, invalidRange, invalidFormat, addressIncompatible, noRange, intervalInvalid, invalidMask
 }
 
-public class IPRange {
+@objc public class IPRange : NSObject {
     public let startIP: IPAddress
     // including, so we can include 255.255.255.255 in range.
     public let endIP: IPAddress
@@ -23,6 +23,7 @@ public class IPRange {
         self.startIP = startIP
         self.endIP = endIP
         family = startIP.family
+        super.init()
     }
 
     public convenience init(startIP: IPAddress, interval: IPInterval) throws {

@@ -1,7 +1,7 @@
 import Foundation
 
 /// The protocol defines an IP stack.
-public protocol IPStackProtocol: class {
+@objc public protocol IPStackProtocol: class, NSObjectProtocol {
     /**
      Input a packet into the stack.
 

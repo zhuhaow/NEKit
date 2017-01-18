@@ -12,7 +12,7 @@ public enum SocketBaseType {
 }
 
 /// Factory to create `RawTCPSocket` based on configuration.
-open class RawSocketFactory {
+@objc open class RawSocketFactory : NSObject {
     /// Current active `NETunnelProvider` which creates `NWTCPConnection` instance.
     ///
     /// - note: Must set before any connection is created if `NWTCPSocket` or `NWUDPSocket` is used.

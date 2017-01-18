@@ -1,21 +1,22 @@
 import Foundation
 
-public protocol DNSResolverProtocol: class {
+@objc public protocol DNSResolverProtocol: class, NSObjectProtocol {
     weak var delegate: DNSResolverDelegate? { get set }
     func resolve(session: DNSSession)
     func stop()
 }
 
-public protocol DNSResolverDelegate: class {
+@objc public protocol DNSResolverDelegate: class, NSObjectProtocol {
     func didReceive(rawResponse: Data)
 }
 
-public class UDPDNSResolver: DNSResolverProtocol, NWUDPSocketDelegate {
+@objc public class UDPDNSResolver: NSObject, DNSResolverProtocol, NWUDPSocketDelegate {
     let socket: NWUDPSocket
     public weak var delegate: DNSResolverDelegate?
 
     public init(address: IPAddress, port: Port) {
         socket = NWUDPSocket(host: address.presentation, port: Int(port.value))!
+        super.init()
         socket.delegate = self
     }
 

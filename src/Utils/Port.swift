@@ -1,7 +1,7 @@
 import Foundation
 
 /// Represents the port number of IP protocol.
-public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiteral {
+@objc public class Port: NSObject, ExpressibleByIntegerLiteral {
     public typealias IntegerLiteralType = UInt16
 
     fileprivate var inport: UInt16
@@ -15,6 +15,7 @@ public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiter
      */
     public init(portInNetworkOrder: UInt16) {
         self.inport = portInNetworkOrder
+        super.init()
     }
 
     /**
@@ -24,11 +25,11 @@ public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiter
 
      - returns: The initailized port.
      */
-    public init(port: UInt16) {
+    public convenience init(port: UInt16) {
         self.init(portInNetworkOrder: NSSwapHostShortToBig(port))
     }
 
-    public init(integerLiteral value: Port.IntegerLiteralType) {
+    public required convenience init(integerLiteral value: Port.IntegerLiteralType) {
         self.init(port: value)
     }
 
@@ -39,11 +40,11 @@ public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiter
 
      - returns: The initailized port.
      */
-    public init(bytesInNetworkOrder: UnsafeRawPointer) {
+    public convenience init(bytesInNetworkOrder: UnsafeRawPointer) {
         self.init(portInNetworkOrder: bytesInNetworkOrder.load(as: UInt16.self))
     }
 
-    public var description: String {
+    public override var description: String {
         return "<Port \(value)>"
     }
 
@@ -57,7 +58,7 @@ public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiter
     }
 
     /// The hash value of the port.
-    public var hashValue: Int {
+    public override var hashValue: Int {
         return Int(inport)
     }
 
@@ -68,7 +69,7 @@ public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiter
 
      - returns: The value the block returns.
      */
-    public mutating func withUnsafeBufferPointer<T>(_ block: (UnsafeRawBufferPointer) -> T) -> T {
+    public func withUnsafeBufferPointer<T>(_ block: (UnsafeRawBufferPointer) -> T) -> T {
         return withUnsafeBytes(of: &inport) {
             return block($0)
         }
