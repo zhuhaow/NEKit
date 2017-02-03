@@ -10,7 +10,7 @@ class HTTPStreamScanner {
     }
     
     enum HTTPStreamScannerError: Error {
-        case contentIsTooLong, scannerIsStopped
+        case contentIsTooLong, scannerIsStopped, unsupportedStreamType
     }
     
     var nextAction: ReadAction = .readHeader
@@ -29,7 +29,7 @@ class HTTPStreamScanner {
                 header = try HTTPHeader(headerData: data)
                 // To temporarily solve a bug in firefox for mac
                 if currentHeader != nil && header.host != currentHeader.host {
-                    throw HTTPStreamScannerError.scannerIsStopped
+                    throw HTTPStreamScannerError.unsupportedStreamType
                 }
             } catch let error {
                 nextAction = .stop
