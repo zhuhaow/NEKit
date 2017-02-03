@@ -27,6 +27,10 @@ class HTTPStreamScanner {
             let header: HTTPHeader
             do {
                 header = try HTTPHeader(headerData: data)
+                // To temporarily solve a bug in firefox for mac
+                if currentHeader != nil && header.host != currentHeader.host {
+                    throw HTTPStreamScannerError.scannerIsStopped
+                }
             } catch let error {
                 nextAction = .stop
                 throw error
