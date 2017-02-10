@@ -105,6 +105,8 @@ public class NWUDPSocket: NSObject {
             queueCall {
                 self.delegate?.didCancel(socket: self)
             }
+        case .ready:
+            checkWrite()
         default:
             break
         }
@@ -112,6 +114,10 @@ public class NWUDPSocket: NSObject {
     
     private func checkWrite() {
         updateActivityTimer()
+        
+        guard session.state == .ready else {
+            return
+        }
         
         guard !writing else {
             return
