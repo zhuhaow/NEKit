@@ -227,8 +227,8 @@ open class IPPacket {
 
         switch version {
         case .iPv4:
-            sourceAddress = IPAddress(ipv4InNetworkOrder: scanner.read32()!)
-            destinationAddress = IPAddress(ipv4InNetworkOrder: scanner.read32()!)
+            sourceAddress = IPAddress(ipv4InNetworkOrder: CFSwapInt32(scanner.read32()!))
+            destinationAddress = IPAddress(ipv4InNetworkOrder: CFSwapInt32(scanner.read32()!))
         default:
             // IPv6 is not supported yet.
             DDLogWarn("IPv6 is not supported yet.")
