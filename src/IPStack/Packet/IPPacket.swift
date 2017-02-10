@@ -256,7 +256,7 @@ open class IPPacket {
             result += address.UInt32InNetworkOrder! >> 16 + address.UInt32InNetworkOrder! & 0xFFFF
         }
         result += UInt32(transportProtocol.rawValue) << 8
-        result += UInt32(protocolParser.bytesLength)
+        result += CFSwapInt32(UInt32(protocolParser.bytesLength))
         return result
     }
 
