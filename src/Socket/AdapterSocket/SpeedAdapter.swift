@@ -19,7 +19,7 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
         if session.isIPv6() {
             _cancelled = true
             // Note `socket` is nil so `didDisconnectWith(socket:)` will never be called.
-            didDisconnectWith(socket: self)
+            didDisconnectWith(session: self.session, socket: self)
             return
         }
 
@@ -61,7 +61,7 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
         }
     }
 
-    public func didBecomeReadyToForwardWith(socket: SocketProtocol) {
+    public func didBecomeReadyToForwardWith(session: ConnectSession, socket: SocketProtocol) {
         guard let adapterSocket = socket as? AdapterSocket else {
             return
         }
@@ -78,28 +78,28 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
             }
         }
 
-        delegate?.updateAdapterWith(newAdapter: adapterSocket)
+        delegate?.updateAdapterWith(session: self.session, newAdapter: adapterSocket)
         adapterSocket.observer = observer
         observer?.signal(.connected(adapterSocket))
-        delegate?.didConnectWith(adapterSocket: adapterSocket)
+        delegate?.didConnectWith(session: self.session, adapterSocket: adapterSocket)
         observer?.signal(.readyForForward(adapterSocket))
-        delegate?.didBecomeReadyToForwardWith(socket: adapterSocket)
+        delegate?.didBecomeReadyToForwardWith(session: self.session, socket: adapterSocket)
         delegate = nil
     }
 
-    public func didDisconnectWith(socket: SocketProtocol) {
+    public func didDisconnectWith(session: ConnectSession, socket: SocketProtocol) {
         connectingCount -= 1
         if connectingCount <= 0 && pendingCount == 0 {
             // failed to connect
             _status = .closed
             observer?.signal(.disconnected(self))
-            delegate?.didDisconnectWith(socket: self)
+            delegate?.didDisconnectWith(session: self.session, socket: self)
         }
     }
-
-    public func didConnectWith(adapterSocket socket: AdapterSocket) {}
-    public func didWrite(data: Data?, by: SocketProtocol) {}
-    public func didRead(data: Data, from: SocketProtocol) {}
-    public func updateAdapterWith(newAdapter: AdapterSocket) {}
+    
+    public func didConnectWith(session: ConnectSession, adapterSocket socket: AdapterSocket) {}
+    public func didWrite(session: ConnectSession, data: Data?, by: SocketProtocol) {}
+    public func didRead(session: ConnectSession, data: Data, from: SocketProtocol) {}
+    public func updateAdapterWith(session: ConnectSession, newAdapter: AdapterSocket) {}
     public func didReceive(session: ConnectSession, from: ProxySocket) {}
 }

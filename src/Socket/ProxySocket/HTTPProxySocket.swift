@@ -61,6 +61,9 @@ public class HTTPProxySocket: ProxySocket {
     
     public var isConnectCommand = false
     
+    // Remember the hosts we have handled in this proxy socket
+    private var hostAndPorts: [String: Int] = [String: Int]()
+    
     public var readStatusDescription: String {
         return readStatus.description
     }
@@ -90,7 +93,7 @@ public class HTTPProxySocket: ProxySocket {
         
         // Return the first header we read when the socket was opened if the proxy command is not CONNECT.
         if readStatus == .pendingFirstHeader {
-            delegate?.didRead(data: currentHeader.toData(), from: self)
+            delegate?.didRead(session: self.session!, data: currentHeader.toData(), from: self)
             readStatus = .readingContent
             return
         }
@@ -132,6 +135,15 @@ public class HTTPProxySocket: ProxySocket {
             return
         }
         
+        self.session = ConnectSession(host: scanner.currentHeader.host, port: scanner.currentHeader.port)
+        let currentHostAndPort = scanner.currentHeader.host+":"+String(scanner.currentHeader.port)
+        
+        if hostAndPorts[currentHostAndPort] == nil {
+            // we need to open new adapter
+            readStatus = .readingFirstHeader
+            hostAndPorts[currentHostAndPort] = 1
+        }
+        
         switch (readStatus, result) {
         case (.readingFirstHeader, .header(let header)):
             currentHeader = header
@@ -156,9 +168,13 @@ public class HTTPProxySocket: ProxySocket {
             currentHeader.removeProxyHeader()
             currentHeader.rewriteToRelativePath()
             
-            delegate?.didRead(data: currentHeader.toData(), from: self)
+            destinationHost = currentHeader.host
+            destinationPort = currentHeader.port
+            isConnectCommand = currentHeader.isConnect
+            
+            delegate?.didRead(session: self.session!, data: currentHeader.toData(), from: self)
         case (.readingContent, .content(let content)):
-            delegate?.didRead(data: content, from: self)
+            delegate?.didRead(session: self.session!, data: content, from: self)
         default:
             return
         }
@@ -177,9 +193,9 @@ public class HTTPProxySocket: ProxySocket {
         case .sendingConnectResponse:
             writeStatus = .forwarding
             observer?.signal(.readyForForward(self))
-            delegate?.didBecomeReadyToForwardWith(socket: self)
+            delegate?.didBecomeReadyToForwardWith(session: self.session!, socket: self)
         default:
-            delegate?.didWrite(data: data, by: self)
+            delegate?.didWrite(session: self.session!, data: data, by: self)
         }
     }
     
@@ -201,7 +217,7 @@ public class HTTPProxySocket: ProxySocket {
         } else {
             writeStatus = .forwarding
             observer?.signal(.readyForForward(self))
-            delegate?.didBecomeReadyToForwardWith(socket: self)
+            delegate?.didBecomeReadyToForwardWith(session: self.session!, socket: self)
         }
     }
 }

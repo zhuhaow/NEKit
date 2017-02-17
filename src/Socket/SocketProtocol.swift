@@ -101,55 +101,55 @@ extension SocketProtocol {
 public protocol SocketDelegate : class {
     /**
      The socket did connect to remote.
-
+     
      - parameter adapterSocket: The connected socket.
      */
-    func didConnectWith(adapterSocket: AdapterSocket)
-
+    func didConnectWith(session: ConnectSession, adapterSocket: AdapterSocket)
+    
     /**
      The socket did disconnect.
-
+     
      This should only be called once in the entire lifetime of a socket. After this is called, the delegate will not receive any other events from that socket and the socket should be released.
-
+     
      - parameter socket: The socket which did disconnect.
      */
-    func didDisconnectWith(socket: SocketProtocol)
-
+    func didDisconnectWith(session: ConnectSession, socket: SocketProtocol)
+    
     /**
      The socket did read some data.
-
+     
      - parameter data:    The data read from the socket.
      - parameter from:    The socket where the data is read from.
      */
-    func didRead(data: Data, from: SocketProtocol)
-
+    func didRead(session: ConnectSession, data: Data, from: SocketProtocol)
+    
     /**
      The socket did send some data.
-
+     
      - parameter data:    The data which have been sent to remote (acknowledged). Note this may not be available since the data may be released to save memory.
      - parameter by:      The socket where the data is sent out.
      */
-    func didWrite(data: Data?, by: SocketProtocol)
-
+    func didWrite(session: ConnectSession, data: Data?, by: SocketProtocol)
+    
     /**
      The socket is ready to forward data back and forth.
-
+     
      - parameter socket: The socket which becomes ready to forward data.
      */
-    func didBecomeReadyToForwardWith(socket: SocketProtocol)
-
+    func didBecomeReadyToForwardWith(session: ConnectSession, socket: SocketProtocol)
+    
     /**
      Did receive a `ConnectSession` from local now it is time to connect to remote.
-
+     
      - parameter session: The received `ConnectSession`.
      - parameter from:    The socket where the `ConnectSession` is received.
      */
     func didReceive(session: ConnectSession, from: ProxySocket)
-
+    
     /**
      The adapter socket decided to replace itself with a new `AdapterSocket` to connect to remote.
-
+     
      - parameter newAdapter: The new `AdapterSocket` to replace the old one.
      */
-    func updateAdapterWith(newAdapter: AdapterSocket)
+    func updateAdapterWith(session: ConnectSession, newAdapter: AdapterSocket)
 }

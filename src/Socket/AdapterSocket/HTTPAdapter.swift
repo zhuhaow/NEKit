@@ -91,10 +91,10 @@ public class HTTPAdapter: AdapterSocket {
         case .readingResponse:
             internalStatus = .forwarding
             observer?.signal(.readyForForward(self))
-            delegate?.didBecomeReadyToForwardWith(socket: self)
+            delegate?.didBecomeReadyToForwardWith(session: self.session, socket: self)
         case .forwarding:
             observer?.signal(.readData(data, on: self))
-            delegate?.didRead(data: data, from: self)
+            delegate?.didRead(session: self.session, data: data, from: self)
         default:
             return
         }
@@ -104,7 +104,7 @@ public class HTTPAdapter: AdapterSocket {
         super.didWrite(data: data, by: socket)
         if internalStatus == .forwarding {
             observer?.signal(.wroteData(data, on: self))
-            delegate?.didWrite(data: data, by: self)
+            delegate?.didWrite(session: self.session, data: data, by: self)
         }
     }
 }

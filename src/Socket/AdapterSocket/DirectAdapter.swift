@@ -33,16 +33,16 @@ public class DirectAdapter: AdapterSocket {
     override public func didConnectWith(socket: RawTCPSocketProtocol) {
         super.didConnectWith(socket: socket)
         observer?.signal(.readyForForward(self))
-        delegate?.didBecomeReadyToForwardWith(socket: self)
+        delegate?.didBecomeReadyToForwardWith(session: self.session, socket: self)
     }
 
     override public func didRead(data: Data, from rawSocket: RawTCPSocketProtocol) {
         super.didRead(data: data, from: rawSocket)
-        delegate?.didRead(data: data, from: self)
+        delegate?.didRead(session: self.session, data: data, from: self)
     }
 
     override public func didWrite(data: Data?, by rawSocket: RawTCPSocketProtocol) {
         super.didWrite(data: data, by: rawSocket)
-        delegate?.didWrite(data: data, by: self)
+        delegate?.didWrite(session: self.session, data: data, by: self)
     }
 }

@@ -17,6 +17,9 @@ class HTTPStreamScanner {
     
     var remainContentLength: Int = 0
     
+    // Remember all of the hosts we have scanned
+    var hostAndPorts: [String: Int] = [String: Int]()
+    
     var currentHeader: HTTPHeader!
     
     var isConnect: Bool = false
@@ -27,16 +30,12 @@ class HTTPStreamScanner {
             let header: HTTPHeader
             do {
                 header = try HTTPHeader(headerData: data)
-                // To temporarily solve a bug in firefox for mac
-                if currentHeader != nil && header.host != currentHeader.host {
-                    throw HTTPStreamScannerError.unsupportedStreamType
-                }
             } catch let error {
                 nextAction = .stop
                 throw error
             }
             
-            if currentHeader == nil {
+            if hostAndPorts[header.host+":"+String(header.port)] == nil {
                 if header.isConnect {
                     isConnect = true
                     remainContentLength = -1
@@ -45,8 +44,11 @@ class HTTPStreamScanner {
                     remainContentLength = header.contentLength
                 }
             } else {
+                isConnect = header.isConnect
                 remainContentLength = header.contentLength
             }
+            
+            hostAndPorts[header.host+":"+String(header.port)] = 1
             
             currentHeader = header
             

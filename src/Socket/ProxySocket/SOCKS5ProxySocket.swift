@@ -105,7 +105,7 @@ public class SOCKS5ProxySocket: ProxySocket {
 
         switch readStatus {
         case .forwarding:
-            delegate?.didRead(data: data, from: self)
+            delegate?.didRead(session: self.session!, data: data, from: self)
         case .readingVersionIdentifierAndNumberOfMethods:
             data.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
                 guard pointer.pointee == 5 else {
@@ -214,11 +214,11 @@ public class SOCKS5ProxySocket: ProxySocket {
 
         switch writeStatus {
         case .forwarding:
-            delegate?.didWrite(data: data, by: self)
+            delegate?.didWrite(session: self.session!, data: data, by: self)
         case .sendingResponse:
             writeStatus = .forwarding
             observer?.signal(.readyForForward(self))
-            delegate?.didBecomeReadyToForwardWith(socket: self)
+            delegate?.didBecomeReadyToForwardWith(session: self.session!, socket: self)
         default:
             return
         }
