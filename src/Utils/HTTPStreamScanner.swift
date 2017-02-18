@@ -10,12 +10,15 @@ class HTTPStreamScanner {
     }
     
     enum HTTPStreamScannerError: Error {
-        case contentIsTooLong, scannerIsStopped
+        case contentIsTooLong, scannerIsStopped, unsupportedStreamType
     }
     
     var nextAction: ReadAction = .readHeader
     
     var remainContentLength: Int = 0
+    
+    // Remember all of the hosts we have scanned
+    var hostAndPorts: [String: Int] = [String: Int]()
     
     var currentHeader: HTTPHeader!
     
@@ -32,7 +35,7 @@ class HTTPStreamScanner {
                 throw error
             }
             
-            if currentHeader == nil {
+            if hostAndPorts[header.host+":"+String(header.port)] == nil {
                 if header.isConnect {
                     isConnect = true
                     remainContentLength = -1
@@ -41,8 +44,11 @@ class HTTPStreamScanner {
                     remainContentLength = header.contentLength
                 }
             } else {
+                isConnect = header.isConnect
                 remainContentLength = header.contentLength
             }
+            
+            hostAndPorts[header.host+":"+String(header.port)] = 1
             
             currentHeader = header
             

@@ -37,6 +37,10 @@ public class Tunnel: NSObject, SocketDelegate {
     /// The adapter socket connecting to remote.
     var adapterSocket: AdapterSocket?
     
+    /// Remember all of the adapter sockets connecting to remote
+    /// One proxy socket can have multiple adapters by different host and port
+    var adaptersByHostAndPort: [String: AdapterSocket] = [String: AdapterSocket]()
+    
     /// The delegate instance.
     weak var delegate: TunnelDelegate?
     
@@ -45,9 +49,18 @@ public class Tunnel: NSObject, SocketDelegate {
     /// Indicating how many socket is ready to forward data.
     private var readySignal = 0
     
+    /// Indicating how many socket is ready to forward data for each adapter.
+    private var readySignalByHostAndPort: [String: Int] = [String: Int]()
+    
     /// If the tunnel is closed, i.e., proxy socket and adapter socket are both disconnected.
     var isClosed: Bool {
-        return proxySocket.isDisconnected && (adapterSocket?.isDisconnected ?? true)
+        var isDisconnected: Bool = true
+        var a: AdapterSocket?
+        for adapter in self.adaptersByHostAndPort.values {
+            a = adapter
+            isDisconnected = isDisconnected && (a?.isDisconnected ?? true)
+        }
+        return proxySocket.isDisconnected && (isDisconnected)
     }
     
     fileprivate var _cancelled: Bool = false
@@ -110,9 +123,13 @@ public class Tunnel: NSObject, SocketDelegate {
         if !self.proxySocket.isDisconnected {
             self.proxySocket.disconnect()
         }
-        if let adapterSocket = self.adapterSocket {
-            if !adapterSocket.isDisconnected {
-                adapterSocket.disconnect()
+        
+        for adapter in self.adaptersByHostAndPort.values {
+            self.adapterSocket = adapter
+            if let adapterSocket = self.adapterSocket {
+                if !adapterSocket.isDisconnected {
+                    adapterSocket.disconnect()
+                }
             }
         }
     }
@@ -134,9 +151,13 @@ public class Tunnel: NSObject, SocketDelegate {
         if !self.proxySocket.isDisconnected {
             self.proxySocket.forceDisconnect()
         }
-        if let adapterSocket = self.adapterSocket {
-            if !adapterSocket.isDisconnected {
-                adapterSocket.forceDisconnect()
+        
+        for adapter in self.adaptersByHostAndPort.values {
+            self.adapterSocket = adapter
+            if let adapterSocket = self.adapterSocket {
+                if !adapterSocket.isDisconnected {
+                    adapterSocket.forceDisconnect()
+                }
             }
         }
     }
@@ -144,6 +165,10 @@ public class Tunnel: NSObject, SocketDelegate {
     public func didReceive(session: ConnectSession, from: ProxySocket) {
         guard !isCancelled else {
             return
+        }
+        
+        if readySignalByHostAndPort[session.host+":"+String(session.port)] == nil {
+            readySignalByHostAndPort[session.host+":"+String(session.port)] = 0
         }
         
         _status = .waitingToBeReady
@@ -175,15 +200,19 @@ public class Tunnel: NSObject, SocketDelegate {
         let factory = manager.match(session)!
         adapterSocket = factory.getAdapterFor(session: session)
         adapterSocket!.delegate = self
+        self.adaptersByHostAndPort[session.host+":"+String(session.port)] = adapterSocket
         adapterSocket!.openSocketWith(session: session)
     }
     
-    public func didBecomeReadyToForwardWith(socket: SocketProtocol) {
+    public func didBecomeReadyToForwardWith(session: ConnectSession, socket: SocketProtocol) {
         guard !isCancelled else {
             return
         }
         
+        readySignal = readySignalByHostAndPort[session.host+":"+String(session.port)]!
         readySignal += 1
+        readySignalByHostAndPort[session.host+":"+String(session.port)] = readySignal
+        
         observer?.signal(.receivedReadySignal(socket, currentReady: readySignal, on: self))
         
         defer {
@@ -194,11 +223,12 @@ public class Tunnel: NSObject, SocketDelegate {
         if readySignal == 2 {
             _status = .forwarding
             proxySocket.readData()
+            self.adapterSocket = self.adaptersByHostAndPort[session.host+":"+String(session.port)]
             adapterSocket?.readData()
         }
     }
     
-    public func didDisconnectWith(socket: SocketProtocol) {
+    public func didDisconnectWith(session: ConnectSession, socket: SocketProtocol) {
         if !isCancelled {
             _stopForwarding = true
             close()
@@ -206,13 +236,14 @@ public class Tunnel: NSObject, SocketDelegate {
         checkStatus()
     }
     
-    public func didRead(data: Data, from socket: SocketProtocol) {
+    public func didRead(session: ConnectSession, data: Data, from socket: SocketProtocol) {
         if let socket = socket as? ProxySocket {
             observer?.signal(.proxySocketReadData(data, from: socket, on: self))
             
             guard !isCancelled else {
                 return
             }
+            self.adapterSocket = self.adaptersByHostAndPort[session.host+":"+String(session.port)]
             adapterSocket!.write(data: data)
         } else if let socket = socket as? AdapterSocket {
             observer?.signal(.adapterSocketReadData(data, from: socket, on: self))
@@ -224,7 +255,7 @@ public class Tunnel: NSObject, SocketDelegate {
         }
     }
     
-    public func didWrite(data: Data?, by socket: SocketProtocol) {
+    public func didWrite(session: ConnectSession, data: Data?, by socket: SocketProtocol) {
         if let socket = socket as? ProxySocket {
             observer?.signal(.proxySocketWroteData(data, by: socket, on: self))
             
@@ -232,6 +263,7 @@ public class Tunnel: NSObject, SocketDelegate {
                 return
             }
             QueueFactory.getQueue().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.microseconds(Opt.forwardReadInterval)) { [weak self] in
+                self?.adapterSocket = self?.adaptersByHostAndPort[session.host+":"+String(session.port)]
                 self?.adapterSocket?.readData()
             }
         } else if let socket = socket as? AdapterSocket {
@@ -245,7 +277,7 @@ public class Tunnel: NSObject, SocketDelegate {
         }
     }
     
-    public func didConnectWith(adapterSocket: AdapterSocket) {
+    public func didConnectWith(session: ConnectSession, adapterSocket: AdapterSocket) {
         guard !isCancelled else {
             return
         }
@@ -253,7 +285,7 @@ public class Tunnel: NSObject, SocketDelegate {
         observer?.signal(.connectedToRemote(adapterSocket, on: self))
     }
     
-    public func updateAdapterWith(newAdapter: AdapterSocket) {
+    public func updateAdapterWith(session: ConnectSession, newAdapter: AdapterSocket) {
         guard !isCancelled else {
             return
         }
@@ -262,6 +294,8 @@ public class Tunnel: NSObject, SocketDelegate {
         
         adapterSocket = newAdapter
         adapterSocket?.delegate = self
+        
+        self.adaptersByHostAndPort[session.host+":"+String(session.port)] = self.adapterSocket
     }
     
     fileprivate func checkStatus() {

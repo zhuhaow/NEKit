@@ -84,7 +84,7 @@ public class ShadowsocksAdapter: AdapterSocket {
     }
 
     public func input(data: Data) {
-        delegate?.didRead(data: data, from: self)
+        delegate?.didRead(session: self.session!, data: data, from: self)
     }
 
     public func output(data: Data) {
@@ -98,7 +98,7 @@ public class ShadowsocksAdapter: AdapterSocket {
 
         switch internalStatus {
         case .forwarding:
-            delegate?.didWrite(data: data, by: self)
+            delegate?.didWrite(session: self.session!, data: data, by: self)
         default:
             return
         }
@@ -107,6 +107,6 @@ public class ShadowsocksAdapter: AdapterSocket {
     func becomeReadyToForward() {
         internalStatus = .forwarding
         observer?.signal(.readyForForward(self))
-        delegate?.didBecomeReadyToForwardWith(socket: self)
+        delegate?.didBecomeReadyToForwardWith(session: self.session!, socket: self)
     }
 }

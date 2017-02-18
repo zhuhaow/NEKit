@@ -28,7 +28,7 @@ public class RejectAdapter: AdapterSocket {
         session.disconnected(becauseOf: error, by: .adapter)
         observer?.signal(.disconnectCalled(self))
         _status = .closed
-        delegate?.didDisconnectWith(socket: self)
+        delegate?.didDisconnectWith(session: self.session, socket: self)
     }
 
     /**
@@ -43,7 +43,7 @@ public class RejectAdapter: AdapterSocket {
         session.disconnected(becauseOf: error, by: .adapter)
         observer?.signal(.forceDisconnectCalled(self))
         _status = .closed
-        delegate?.didDisconnectWith(socket: self)
+        delegate?.didDisconnectWith(session: self.session, socket: self)
     }
 
 }

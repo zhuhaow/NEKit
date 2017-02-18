@@ -86,7 +86,7 @@ public class DirectProxySocket: ProxySocket {
         writeStatus = .forwarding
 
         observer?.signal(.readyForForward(self))
-        delegate?.didBecomeReadyToForwardWith(socket: self)
+        delegate?.didBecomeReadyToForwardWith(session: self.session!, socket: self)
     }
 
     /**
@@ -97,7 +97,7 @@ public class DirectProxySocket: ProxySocket {
      */
     override open func didRead(data: Data, from: RawTCPSocketProtocol) {
         super.didRead(data: data, from: from)
-        delegate?.didRead(data: data, from: self)
+        delegate?.didRead(session: self.session!, data: data, from: self)
     }
 
     /**
@@ -108,6 +108,6 @@ public class DirectProxySocket: ProxySocket {
      */
     override open func didWrite(data: Data?, by: RawTCPSocketProtocol) {
         super.didWrite(data: data, by: by)
-        delegate?.didWrite(data: data, by: self)
+        delegate?.didWrite(session: self.session!, data: data, by: self)
     }
 }

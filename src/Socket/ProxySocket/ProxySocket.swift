@@ -140,7 +140,14 @@ open class ProxySocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     open func didDisconnectWith(socket: RawTCPSocketProtocol) {
         _status = .closed
         observer?.signal(.disconnected(self))
-        delegate?.didDisconnectWith(socket: self)
+        
+        if self.session == nil {
+            // sometimes the session is nil but actually the Tunnel.didDisconnectWith don't
+            // need the session, so we pass a nil host to it.
+            let s = ConnectSession(host: "", port: 80)
+            delegate?.didDisconnectWith(session: s!, socket: self)
+        }
+        delegate?.didDisconnectWith(session: self.session!, socket: self)
     }
 
     /**

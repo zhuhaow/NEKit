@@ -116,7 +116,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     open func didDisconnectWith(socket: RawTCPSocketProtocol) {
         _status = .closed
         observer?.signal(.disconnected(self))
-        delegate?.didDisconnectWith(socket: self)
+        delegate?.didDisconnectWith(session: self.session, socket: self)
     }
 
     /**
@@ -147,6 +147,6 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     open func didConnectWith(socket: RawTCPSocketProtocol) {
         _status = .established
         observer?.signal(.connected(self))
-        delegate?.didConnectWith(adapterSocket: self)
+        delegate?.didConnectWith(session: self.session, adapterSocket: self)
     }
 }

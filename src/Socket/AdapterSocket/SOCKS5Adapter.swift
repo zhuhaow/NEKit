@@ -94,9 +94,9 @@ public class SOCKS5Adapter: AdapterSocket {
         case .readingResponseSecondPart:
             internalStatus = .forwarding
             observer?.signal(.readyForForward(self))
-            delegate?.didBecomeReadyToForwardWith(socket: self)
+            delegate?.didBecomeReadyToForwardWith(session: self.session, socket: self)
         case .forwarding:
-            delegate?.didRead(data: data, from: self)
+            delegate?.didRead(session: self.session, data: data, from: self)
         default:
             return
         }
@@ -106,7 +106,7 @@ public class SOCKS5Adapter: AdapterSocket {
         super.didWrite(data: data, by: socket)
 
         if internalStatus == .forwarding {
-            delegate?.didWrite(data: data, by: self)
+            delegate?.didWrite(session: self.session, data: data, by: self)
         }
     }
 }
