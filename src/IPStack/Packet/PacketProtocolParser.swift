@@ -62,10 +62,11 @@ class UDPProtocolParser: TransportProtocolParserProtocol {
             packetData.replaceSubrange(offset+4..<offset+6, with: $0)
         }
         packetData.replaceSubrange(offset+8..<offset+8+payload.count, with: payload)
-        packetData.resetBytes(in: offset+6..<offset+8)
 
-        // Todo: compute checksum
-//        var checksum = Checksum.computeChecksum(datagram, from: 0, to: nil, withPseudoHeaderChecksum: pseudoHeaderChecksum)
-//        datagram.replaceBytesInRange(NSRange(location: 6, length: 2), withBytes: &checksum)
+        packetData.resetBytes(in: offset+6..<offset+8)
+        var checksum = Checksum.computeChecksum(packetData, from: 0, to: nil, withPseudoHeaderChecksum: pseudoHeaderChecksum)
+        withUnsafeBytes(of: &checksum) {
+            packetData.replaceSubrange(offset+6..<offset+8, with: $0)
+        }
     }
 }

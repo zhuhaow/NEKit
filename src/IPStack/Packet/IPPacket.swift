@@ -227,8 +227,8 @@ open class IPPacket {
 
         switch version {
         case .iPv4:
-            sourceAddress = IPAddress(ipv4InNetworkOrder: scanner.read32()!)
-            destinationAddress = IPAddress(ipv4InNetworkOrder: scanner.read32()!)
+            sourceAddress = IPAddress(ipv4InNetworkOrder: CFSwapInt32(scanner.read32()!))
+            destinationAddress = IPAddress(ipv4InNetworkOrder: CFSwapInt32(scanner.read32()!))
         default:
             // IPv6 is not supported yet.
             DDLogWarn("IPv6 is not supported yet.")
@@ -256,7 +256,7 @@ open class IPPacket {
             result += address.UInt32InNetworkOrder! >> 16 + address.UInt32InNetworkOrder! & 0xFFFF
         }
         result += UInt32(transportProtocol.rawValue) << 8
-        result += UInt32(protocolParser.bytesLength)
+        result += CFSwapInt32(UInt32(protocolParser.bytesLength))
         return result
     }
 
@@ -271,17 +271,19 @@ open class IPPacket {
         setPayloadWithUInt16(offset, at: 6)
         setPayloadWithUInt8(TTL, at: 8)
         setPayloadWithUInt8(transportProtocol.rawValue, at: 9)
-        // clear checksum bytes
-        resetPayloadAt(10, length: 2)
+
         setPayloadWithUInt32(sourceAddress.UInt32InNetworkOrder!, at: 12, swap: false)
         setPayloadWithUInt32(destinationAddress.UInt32InNetworkOrder!, at: 16, swap: false)
 
+        // set IP checksum
+        resetPayloadAt(10, length: 2)
+        setPayloadWithUInt16(Checksum.computeChecksum(packetData, from: 0, to: Int(headerLength)), at: 10, swap: false)
+        
         // let TCP or UDP packet build
         protocolParser.packetData = packetData
         protocolParser.offset = Int(headerLength)
         protocolParser.buildSegment(computePseudoHeaderChecksum())
-
-        setPayloadWithUInt16(Checksum.computeChecksum(packetData, from: 0, to: Int(headerLength)), at: 10, swap: false)
+        packetData = protocolParser.packetData
     }
 
     func setPayloadWithUInt8(_ value: UInt8, at: Int) {
