@@ -64,7 +64,7 @@ class UDPProtocolParser: TransportProtocolParserProtocol {
         packetData.replaceSubrange(offset+8..<offset+8+payload.count, with: payload)
 
         packetData.resetBytes(in: offset+6..<offset+8)
-        var checksum = Checksum.computeChecksum(packetData, from: 0, to: nil, withPseudoHeaderChecksum: pseudoHeaderChecksum)
+        var checksum = Checksum.computeChecksum(packetData, from: offset, to: nil, withPseudoHeaderChecksum: pseudoHeaderChecksum)
         withUnsafeBytes(of: &checksum) {
             packetData.replaceSubrange(offset+6..<offset+8, with: $0)
         }
