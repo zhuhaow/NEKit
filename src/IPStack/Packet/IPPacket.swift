@@ -271,19 +271,18 @@ open class IPPacket {
         setPayloadWithUInt16(offset, at: 6)
         setPayloadWithUInt8(TTL, at: 8)
         setPayloadWithUInt8(transportProtocol.rawValue, at: 9)
-
+        // clear checksum bytes
+        resetPayloadAt(10, length: 2)
         setPayloadWithUInt32(sourceAddress.UInt32InNetworkOrder!, at: 12, swap: false)
         setPayloadWithUInt32(destinationAddress.UInt32InNetworkOrder!, at: 16, swap: false)
 
-        // set IP checksum
-        resetPayloadAt(10, length: 2)
-        setPayloadWithUInt16(Checksum.computeChecksum(packetData, from: 0, to: Int(headerLength)), at: 10, swap: false)
-        
         // let TCP or UDP packet build
         protocolParser.packetData = packetData
         protocolParser.offset = Int(headerLength)
         protocolParser.buildSegment(computePseudoHeaderChecksum())
         packetData = protocolParser.packetData
+
+        setPayloadWithUInt16(Checksum.computeChecksum(packetData, from: 0, to: Int(headerLength)), at: 10, swap: false)
     }
 
     func setPayloadWithUInt8(_ value: UInt8, at: Int) {
