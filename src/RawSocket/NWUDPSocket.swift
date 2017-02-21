@@ -58,6 +58,7 @@ public class NWUDPSocket: NSObject {
                 self?.checkStatus()
             }
         }
+        timer.resume()
         
         session.addObserver(self, forKeyPath: #keyPath(NWUDPSession.state), options: [.new], context: nil)
         
@@ -93,6 +94,7 @@ public class NWUDPSocket: NSObject {
     
     func disconnect() {
         session.cancel()
+        timer.cancel()
     }
     
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
