@@ -19,7 +19,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
 
      - parameter session: The connect session.
      */
-    func openSocketWith(session: ConnectSession) {
+    open func openSocketWith(session: ConnectSession) {
         guard !isCancelled else {
             return
         }
