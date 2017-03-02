@@ -45,7 +45,7 @@ public class ShadowsocksAdapter: AdapterSocket {
         streamObfuscator.outputStreamProcessor = cryptor
     }
 
-    override func openSocketWith(session: ConnectSession) {
+    override public func openSocketWith(session: ConnectSession) {
         super.openSocketWith(session: session)
 
         do {

@@ -8,7 +8,7 @@ public class SpeedAdapter: AdapterSocket, SocketDelegate {
 
     fileprivate var _shouldConnect: Bool = true
 
-    override func openSocketWith(session: ConnectSession) {
+    override public func openSocketWith(session: ConnectSession) {
         for (adapter, _) in adapters {
             adapter.observer = nil
         }
