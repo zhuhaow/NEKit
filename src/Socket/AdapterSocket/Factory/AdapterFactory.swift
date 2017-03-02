@@ -11,7 +11,7 @@ open class AdapterFactory {
 
      - returns: The built adapter.
      */
-    func getAdapterFor(session: ConnectSession) -> AdapterSocket {
+    public func getAdapterFor(session: ConnectSession) -> AdapterSocket {
         return getDirectAdapter()
     }
 
