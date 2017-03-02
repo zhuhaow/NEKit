@@ -2,6 +2,8 @@ import Foundation
 
 /// The base class of adapter factory.
 open class AdapterFactory {
+    public init() {}
+    
     /**
      Build an adapter.
 
