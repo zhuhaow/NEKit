@@ -10,7 +10,7 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
     }
 
     internal var _cancelled = false
-    var isCancelled: Bool {
+    public var isCancelled: Bool {
         return _cancelled
     }
 
