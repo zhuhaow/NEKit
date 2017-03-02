@@ -87,12 +87,12 @@ public class NWUDPSocket: NSObject {
      
      - parameter data: The data to send.
      */
-    func write(data: Data) {
+    public func write(data: Data) {
         pendingWriteData.append(data)
         checkWrite()
     }
     
-    func disconnect() {
+    public func disconnect() {
         session.cancel()
         timer.cancel()
     }
