@@ -42,3 +42,9 @@ open class DNSSession {
         requestIPPacket = packet
     }
 }
+
+extension DNSSession: CustomStringConvertible {
+    public var description: String {
+        return "<\(type(of: self)) domain: \(self.requestMessage.queries.first!.name) realIP: \(realIP) fakeIP: \(fakeIP)>"
+    }
+}
