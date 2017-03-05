@@ -1,7 +1,7 @@
 import Foundation
 
 /// The class managing rules.
-open class RuleManager {
+@objc open class RuleManager : NSObject {
     /// The current used `RuleManager`, there is only one manager should be used at a time.
     ///
     /// - note: This should be set before any DNS or connect sessions.
@@ -20,6 +20,8 @@ open class RuleManager {
      */
     public init(fromRules rules: [Rule], appendDirect: Bool = false) {
         self.rules = rules
+
+        super.init()
 
         if appendDirect || self.rules.count == 0 {
             self.rules.append(DirectRule())

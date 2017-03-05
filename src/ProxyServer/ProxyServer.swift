@@ -7,7 +7,7 @@ import Resolver
  
  This proxy does not listen on any port.
  */
-open class ProxyServer: NSObject, TunnelDelegate {
+@objc open class ProxyServer: NSObject, TunnelDelegate {
     typealias TunnelArray = [Tunnel]
 
     /// The port of proxy server.

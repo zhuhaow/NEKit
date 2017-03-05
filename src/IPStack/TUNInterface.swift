@@ -2,7 +2,7 @@ import Foundation
 import NetworkExtension
 
 /// TUN interface provide a scheme to register a set of IP Stacks (implementing `IPStackProtocol`) to process IP packets from a virtual TUN interface.
-open class TUNInterface {
+@objc open class TUNInterface : NSObject {
     fileprivate weak var packetFlow: NEPacketTunnelFlow?
     fileprivate var stacks: [IPStackProtocol] = []
     
@@ -13,6 +13,7 @@ open class TUNInterface {
      */
     public init(packetFlow: NEPacketTunnelFlow) {
         self.packetFlow = packetFlow
+        super.init()
     }
     
     /**

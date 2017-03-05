@@ -1,7 +1,7 @@
 import Foundation
 import CocoaLumberjackSwift
 
-open class DNSSession {
+@objc open class DNSSession : NSObject {
     open let requestMessage: DNSMessage
     var requestIPPacket: IPPacket?
     open var realIP: IPAddress?
@@ -32,6 +32,7 @@ open class DNSSession {
         }
 
         requestMessage = message
+        super.init()
     }
 
     convenience init?(packet: IPPacket) {

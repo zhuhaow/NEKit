@@ -6,7 +6,7 @@ import CocoaLumberjackSwift
  
  - note: It is NOT thread-safe.
  */
-public final class IPPool {
+@objc public final class IPPool : NSObject {
     let family: IPAddress.Family
     let range: IPRange
     var currentEnd: IPAddress
@@ -17,6 +17,7 @@ public final class IPPool {
         self.range = range
 
         currentEnd = range.startIP
+        super.init()
     }
 
     func fetchIP() -> IPAddress? {

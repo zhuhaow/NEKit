@@ -19,13 +19,13 @@ func == (left: ConnectInfo, right: ConnectInfo) -> Bool {
 }
 
 /// This stack tranmits UDP packets directly.
-public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
+public class UDPDirectStack: NSObject, IPStackProtocol, NWUDPSocketDelegate {
     fileprivate var activeSockets: [ConnectInfo: NWUDPSocket] = [:]
     public var outputFunc: (([Data], [NSNumber]) -> Void)!
 
     fileprivate let queue: DispatchQueue = DispatchQueue(label: "NEKit.UDPDirectStack.SocketArrayQueue", attributes: [])
 
-    public init() {}
+    public override init() { super.init() }
     
     /**
      Input a packet into the stack.

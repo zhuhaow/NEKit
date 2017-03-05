@@ -1,6 +1,6 @@
 import Foundation
 
-public class IPAddress: CustomStringConvertible, Hashable, Comparable {
+@objc public class IPAddress: NSObject, Comparable {
     public enum Family {
         case IPv4, IPv6
     }
@@ -104,7 +104,7 @@ public class IPAddress: CustomStringConvertible, Hashable, Comparable {
         }
     }
 
-    public var hashValue: Int {
+    public override var hashValue: Int {
         switch address {
         case .IPv4(let addr):
             return addr.s_addr.hashValue
@@ -115,7 +115,7 @@ public class IPAddress: CustomStringConvertible, Hashable, Comparable {
         }
     }
 
-    public var description: String {
+    public override var description: String {
         return presentation
     }
 
