@@ -29,6 +29,8 @@ open class ProxyServer: NSObject, TunnelDelegate {
     open var observer: Observer<ProxyServerEvent>?
 
     var tunnels: TunnelArray = []
+    
+    private let accessQueue = DispatchQueue(label: "NEKit.ProxyServer.TunnelArrayAccess", attributes: .concurrent)
 
     /**
      Create an instance of proxy server.
@@ -82,9 +84,14 @@ open class ProxyServer: NSObject, TunnelDelegate {
      */
     func didAcceptNewSocket(_ socket: ProxySocket) {
         observer?.signal(.newSocketAccepted(socket, onServer: self))
+        
         let tunnel = Tunnel(proxySocket: socket)
         tunnel.delegate = self
-        tunnels.append(tunnel)
+        
+        self.accessQueue.async(flags: .barrier) {
+            self.tunnels.append(tunnel)
+        }
+        
         tunnel.openTunnel()
     }
 
@@ -97,11 +104,20 @@ open class ProxyServer: NSObject, TunnelDelegate {
      */
     func tunnelDidClose(_ tunnel: Tunnel) {
         observer?.signal(.tunnelClosed(tunnel, onServer: self))
-        guard let index = tunnels.index(of: tunnel) else {
+        
+        var tunnelIndex: Int? = nil
+        
+        accessQueue.sync {
+            tunnelIndex = tunnels.index(of: tunnel)
+        }
+        
+        guard let index = tunnelIndex else {
             // things went strange
             return
         }
-
-        tunnels.remove(at: index)
+        
+        accessQueue.async(flags: .barrier) {
+            self.tunnels.remove(at: index)
+        }
     }
 }
