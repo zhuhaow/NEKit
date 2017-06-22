@@ -61,7 +61,7 @@ public struct Utils {
 
         public static func IPv4ToBytes(_ ipAddress: String) -> [UInt8]? {
             if let ipv4int = IPv4ToInt(ipAddress) {
-                return Utils.toByteArray(ipv4int).reversed()
+                return Utils.toByteArray(ipv4int)
             } else {
                 return nil
             }
@@ -71,7 +71,7 @@ public struct Utils {
             let utf8Str = (ipAddress as NSString).utf8String
             var dst = [UInt8](repeating: 0, count: 16)
             if inet_pton(AF_INET6, utf8Str, &dst) == 1 {
-                return Utils.toByteArray(dst).reversed()
+                return Utils.toByteArray(dst)
             } else {
                 return nil
             }
