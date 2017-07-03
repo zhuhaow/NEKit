@@ -15,20 +15,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         ObserverFactory.currentFactory = DebugObserverFactory()
 
-        let config = Configuration()
-        let filepath = (NSHomeDirectory() as NSString).appendingPathComponent(".NEKit_demo.yaml")
-        // swiftlint:disable force_try
-        do {
-            try config.load(fromConfigFile: filepath)
-        } catch let error {
-            DDLogError("\(error)")
-        }
-        RuleManager.currentManager = config.ruleManager
-        httpProxy = GCDHTTPProxyServer(address: nil, port: NEKit.Port(port: UInt16(config.proxyPort!)))
-        // swiftlint:disable force_try
+        httpProxy = GCDHTTPProxyServer(address: nil, port: NEKit.Port(port: UInt16(16881)))
         try! httpProxy!.start()
 
-        let port = NEKit.Port(port: UInt16(config.proxyPort!+1))
+        let port = NEKit.Port(port: UInt16(16881+1))
         socks5Proxy = GCDSOCKS5ProxyServer(address: nil, port: port)
         // swiftlint:disable force_try
         try! socks5Proxy!.start()
