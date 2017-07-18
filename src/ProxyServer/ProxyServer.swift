@@ -1,6 +1,5 @@
 import Foundation
 import CocoaAsyncSocket
-import Resolver
 
 /**
  The base proxy server class.
@@ -23,7 +22,7 @@ open class ProxyServer: NSObject, TunnelDelegate {
 
     /// The description of proxy server.
     open override var description: String {
-        return "<\(type) address:\(address) port:\(port)>"
+        return "<\(type) address:\(String(describing: address)) port:\(port)>"
     }
 
     open var observer: Observer<ProxyServerEvent>?
