@@ -130,13 +130,6 @@ custom_categories:
       - DebugProxyServerObserver
       - DebugRuleManagerObserver
 
-  - name: Configuration Parser
-    children:
-      - Configuration
-      - AdapterFactoryParser
-      - RuleParser
-      - ConfigurationParserError
-
   - name: Utilities
     children:
       - Atomic
