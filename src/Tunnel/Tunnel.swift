@@ -1,5 +1,4 @@
 import Foundation
-import Resolver
 
 protocol TunnelDelegate : class {
     func tunnelDidClose(_ tunnel: Tunnel)
