@@ -69,7 +69,7 @@ extension IPRange {
             }
             mask = IPMask.IPv4(m)
         case .IPv6:
-            guard let m6 = try? UInt128.fromUnparsedString(info[1]) else {
+            guard let m6 = try? UInt128(info[1]) else {
                 throw IPRangeError.invalidCIDRFormat
             }
             mask = IPMask.IPv6(m6)
@@ -96,7 +96,7 @@ extension IPRange {
             }
             interval = IPInterval.IPv4(m)
         case .IPv6:
-            guard let m6 = try? UInt128.fromUnparsedString(info[1]) else {
+            guard let m6 = try? UInt128(info[1]) else {
                 throw IPRangeError.invalidRangeFormat
             }
             interval = IPInterval.IPv6(m6)

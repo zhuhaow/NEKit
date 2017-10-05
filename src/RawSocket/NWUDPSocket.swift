@@ -52,7 +52,7 @@ public class NWUDPSocket: NSObject {
         
         super.init()
         
-        timer.scheduleRepeating(deadline: DispatchTime.now(), interval: DispatchTimeInterval.seconds(Opt.UDPSocketActiveCheckInterval), leeway: DispatchTimeInterval.seconds(Opt.UDPSocketActiveCheckInterval))
+        timer.schedule(deadline: DispatchTime.now(), repeating: DispatchTimeInterval.seconds(Opt.UDPSocketActiveCheckInterval), leeway: DispatchTimeInterval.seconds(Opt.UDPSocketActiveCheckInterval))
         timer.setEventHandler { [weak self] in
             self?.queueCall {
                 self?.checkStatus()

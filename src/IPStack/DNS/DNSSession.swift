@@ -45,6 +45,6 @@ open class DNSSession {
 
 extension DNSSession: CustomStringConvertible {
     public var description: String {
-        return "<\(type(of: self)) domain: \(self.requestMessage.queries.first!.name) realIP: \(realIP) fakeIP: \(fakeIP)>"
+        return "<\(type(of: self)) domain: \(self.requestMessage.queries.first!.name) realIP: \(String(describing: realIP)) fakeIP: \(String(describing: fakeIP))>"
     }
 }

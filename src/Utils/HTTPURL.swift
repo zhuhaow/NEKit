@@ -21,32 +21,32 @@ public class HTTPURL {
             return nil
         }
 
-        guard result.rangeAt(0).location != NSNotFound else {
+        guard result.range(at: 0).location != NSNotFound else {
             return nil
         }
 
-        var range = result.rangeAt(1)
+        var range = result.range(at: 1)
         if range.location != NSNotFound {
             scheme = nsurl.substring(with: range)
         } else {
             scheme = nil
         }
 
-        range = result.rangeAt(2)
+        range = result.range(at: 2)
         if range.location != NSNotFound {
             host = nsurl.substring(with: range)
         } else {
             host = nil
         }
 
-        range = result.rangeAt(3)
+        range = result.range(at: 3)
         if range.location != NSNotFound {
             port = Int(nsurl.substring(with: range))
         } else {
             port = nil
         }
 
-        range = result.rangeAt(4)
+        range = result.range(at: 4)
         if range.location != NSNotFound {
             relativePath = nsurl.substring(with: range)
         } else {
