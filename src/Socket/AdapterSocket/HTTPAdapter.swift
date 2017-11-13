@@ -54,7 +54,12 @@ public class HTTPAdapter: AdapterSocket {
 
         do {
             internalStatus = .connecting
-            try socket.connectTo(host: serverHost, port: serverPort, enableTLS: secured, tlsSettings: nil)
+            var tlsSettings: [String: NSObject]? = nil
+            if secured {
+                tlsSettings = [:]
+                tlsSettings![kCFStreamSSLPeerName as String] = serverHost as NSString
+            }
+            try socket.connectTo(host: serverHost, port: serverPort, enableTLS: secured, tlsSettings: tlsSettings)
         } catch {}
     }
 
