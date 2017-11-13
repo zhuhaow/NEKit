@@ -1323,7 +1323,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo Checking for $PROJECT_DIR/CommonCrypto\necho SDKROOT is $SDKROOT\necho PLATFORM_NAME is $PLATFORM_NAME\necho FRAMEWORK_SEARCH_PATHS is $FRAMEWORK_SEARCH_PATHS\n\n#if [ ! -e $PROJECT_DIR/CommonCrypto ] ; then\n#echo Generating $PROJECT_DIR/CommonCrypto\nSWIFT_SDK=`xcrun --show-sdk-path -sdk macosx`\necho SWIFT_SDK is $SWIFT_SDK\nxcrun -sdk macosx swift  ./GenerateCommonCryptoModule.swift $PLATFORM_NAME $PROJECT_DIR\n#else\n#echo Directory exists, skipping generation of $PROJECT_DIR/CommonCrypto\n#fi";
+			shellScript = "SWIFT_SDK=`xcrun --show-sdk-path -sdk macosx`\necho SWIFT_SDK is $SWIFT_SDK\nxcrun -sdk macosx swift  ./GenerateCommonCryptoModule.swift $PLATFORM_NAME $PROJECT_DIR\n";
 		};
 		36B05A1B1DE4503800074910 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1336,7 +1336,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ ! -e $PROJECT_DIR/Frameworks/$PLATFORM_NAME ] ; then\necho Generating $PROJECT_DIR/Frameworks/$(PLATFORM_NAME)/CommonCrypto.framework\nxcrun -sdk macosx swift ./GenerateCommonCryptoModule.swift $PLATFORM_NAME $PROJECT_DIR\nelse\necho Directory exists, skipping generation of $PROJECT_DIR/Frameworks/$(PLATFORM_NAME)/CommonCrypto.framework\nfi";
+			shellScript = "echo Generating $PROJECT_DIR/Frameworks/$(PLATFORM_NAME)/CommonCrypto.framework\nxcrun -sdk macosx swift ./GenerateCommonCryptoModule.swift $PLATFORM_NAME $PROJECT_DIR";
 		};
 		54BD0DA398CF0C5B9E0B9491 /* Set version number */ = {
 			isa = PBXShellScriptBuildPhase;
