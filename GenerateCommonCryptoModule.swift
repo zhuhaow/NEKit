@@ -12,7 +12,7 @@ NSSetUncaughtExceptionHandler(handler)
 
 // MARK: - Task Utilities
 func runShellCommand(command: String) -> String? {
-    let args: [String] = command.characters.split { $0 == " " }.map(String.init)
+    let args: [String] = command.split { $0 == " " }.map(String.init)
     let other = args[1..<args.count]
     let outputPipe = Pipe()
     let task = Process()

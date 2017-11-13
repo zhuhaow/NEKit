@@ -35,7 +35,7 @@ open class HTTPHeader {
         HTTPVersion = request[2]
 
         for line in lines[1..<lines.count-2] {
-            let header = line.characters.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
+            let header = line.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
             guard header.count == 2 else {
                 throw HTTPHeaderError.invalidHeaderField
             }
@@ -189,7 +189,7 @@ open class HTTPHeader {
         static let relativePathRegex = try! NSRegularExpression(pattern: "http.?:\\/\\/.*?(\\/.*)", options: NSRegularExpression.Options.caseInsensitive)
 
         static func matchRelativePath(_ url: String) -> String? {
-            if let result = relativePathRegex.firstMatch(in: url, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: url.characters.count)) {
+            if let result = relativePathRegex.firstMatch(in: url, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: url.count)) {
 
                 return (url as NSString).substring(with: result.range(at: 1))
             } else {

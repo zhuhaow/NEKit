@@ -112,7 +112,7 @@ struct AdapterFactoryParser {
             let headerMethod = "GET"
 
             if let param = config["obfs_param"].string {
-                let params = param.characters.split(separator: "#", maxSplits: 1, omittingEmptySubsequences: true)
+                let params = param.split(separator: "#", maxSplits: 1, omittingEmptySubsequences: true)
                 if params.count > 0 {
                     headerHosts = String(params[0]).components(separatedBy: ",")
                     if params.count > 1 {

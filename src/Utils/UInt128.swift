@@ -687,7 +687,7 @@ extension UInt128 : CustomStringConvertible {
         // Go through internal value until every base position is string(ed).
         repeat {
             divmodResult = divmodResult.quotient.quotientAndRemainder(dividingBy: UInt128(radix))
-            let index = characterPool.characters.index(characterPool.startIndex, offsetBy: Int(divmodResult.remainder))
+            let index = characterPool.index(characterPool.startIndex, offsetBy: Int(divmodResult.remainder))
             result.insert(characterPool[index], at: result.startIndex)
         } while divmodResult.quotient > 0
         return result
