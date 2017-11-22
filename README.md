@@ -24,7 +24,8 @@ Currently, NEKit supports:
 - Some tools to build IP packets.
 - ...
 
-Check document [here](https://zhuhaow.github.io/NEKit).
+**Part of the following content may be out of date. But the general design principle still holds.**
+Check document [here](https://zhuhaow.github.io/NEKit), which should be up to date.
 
 Also, you may be more interested in [Potatso](https://github.com/shadowsocks/Potatso-iOS) if you just need an open source iOS app with GUI supporting shadowsocks.
 
