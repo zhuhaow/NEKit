@@ -31,6 +31,10 @@ open class AdapterSocket: NSObject, SocketProtocol, RawTCPSocketDelegate {
         _status = .connecting
     }
 
+    deinit {
+        socket?.delegate = nil
+    }
+    
     // MARK: SocketProtocol Implementation
 
     /// The underlying TCP socket transmitting data.
