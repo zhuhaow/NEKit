@@ -40,7 +40,7 @@ public class Tunnel: NSObject, SocketDelegate {
     /// The delegate instance.
     weak var delegate: TunnelDelegate?
     
-    weak var observer: Observer<TunnelEvent>?
+    var observer: Observer<TunnelEvent>?
     
     /// Indicating how many socket is ready to forward data.
     private var readySignal = 0
