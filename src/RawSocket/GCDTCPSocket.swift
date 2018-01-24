@@ -7,6 +7,7 @@ import CocoaAsyncSocket
 open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol {
     fileprivate let socket: GCDAsyncSocket
     fileprivate var enableTLS: Bool = false
+    fileprivate var host: String?
 
     /**
      Initailize an instance with `GCDAsyncSocket`.
@@ -20,6 +21,7 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
         } else {
             self.socket = GCDAsyncSocket(delegate: nil, delegateQueue: QueueFactory.getQueue(), socketQueue: QueueFactory.getQueue())
         }
+        
         super.init()
 
         self.socket.synchronouslySetDelegate(self)
@@ -73,6 +75,7 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
      - throws: The error occured when connecting to host.
      */
     open func connectTo(host: String, port: Int, enableTLS: Bool = false, tlsSettings: [AnyHashable: Any]? = nil) throws {
+        self.host = host
         try connectTo(host: host, withPort: port)
         self.enableTLS = enableTLS
         if enableTLS {
@@ -206,9 +209,9 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
      */
     func startTLSWith(settings: [AnyHashable: Any]!) {
         if let settings = settings as? [String: NSObject] {
-            socket.startTLS(settings)
+            socket.startTLS(ensureSendPeerName(tlsSettings: settings))
         } else {
-            socket.startTLS(nil)
+            socket.startTLS(ensureSendPeerName(tlsSettings: nil))
         }
     }
 
@@ -239,4 +242,13 @@ open class GCDTCPSocket: NSObject, GCDAsyncSocketDelegate, RawTCPSocketProtocol 
         }
     }
 
+    private func ensureSendPeerName(tlsSettings: [String: NSObject]? = nil) -> [String: NSObject] {
+        var setting = tlsSettings ?? [:]
+        guard setting[kCFStreamSSLPeerName as String] == nil else {
+            return setting
+        }
+        
+        setting[kCFStreamSSLPeerName as String] = host! as NSString
+        return setting
+    }
 }
