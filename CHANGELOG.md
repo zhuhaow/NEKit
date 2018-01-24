@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## 0.12.4
+
+### Fixed
+- Fix that HTTPS adapter crash when using with `NWTCPSocket`.
+
 ## 0.12.3
 
 ### Fixed
