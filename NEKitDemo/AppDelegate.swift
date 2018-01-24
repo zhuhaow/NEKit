@@ -11,7 +11,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         DDLog.removeAllLoggers()
-        DDLog.add(DDTTYLogger.sharedInstance(), with: .info)
+        DDLog.add(DDTTYLogger.sharedInstance, with: .info)
 
         ObserverFactory.currentFactory = DebugObserverFactory()
 
