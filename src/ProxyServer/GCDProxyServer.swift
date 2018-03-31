@@ -39,7 +39,7 @@ open class GCDProxyServer: ProxyServer, GCDAsyncSocketDelegate {
      
      - parameter socket: The accepted socket.
      */
-    func handleNewGCDSocket(_ socket: GCDTCPSocket) {
+    open func handleNewGCDSocket(_ socket: GCDTCPSocket) {
 
     }
 
