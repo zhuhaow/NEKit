@@ -58,7 +58,7 @@ The only solution is to create a fake IP pool and assign each requested domain w
 I recommend adding this project to your project, which is easier to debug. 
 
 However, you can still use it with Carthage (you'll need Carthage anyway since NEKit uses Carthage) by adding
-```
+```swift
 github "zhuhaow/NEKit"
 ```
 to you `Cartfile`.
