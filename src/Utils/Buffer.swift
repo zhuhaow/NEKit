@@ -24,8 +24,9 @@ struct Buffer {
             return
         }
 
+        let buffer_ = buffer
         buffer.withUnsafeMutableBytes {
-            buffer.copyBytes(to: $0, from: offset..<buffer.count)
+            buffer_.copyBytes(to: $0, from: offset..<buffer_.count)
         }
         buffer.replaceSubrange(buffer.count - offset ..< buffer.count, with: Data())
         offset = 0
