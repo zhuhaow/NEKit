@@ -349,17 +349,16 @@ extension ShadowsocksAdapter {
                 var unpackedData = Data()
                 while buffer.left > 5 {
                     buffer.skip(3)
-                    if !buffer.withUnsafeBytes({ (ptr: UnsafePointer<UInt16>) -> Bool in
-                        let length = Int(ptr.pointee.byteSwapped)
-                        self.buffer.skip(2)
-                        if self.buffer.left >= length {
-                            unpackedData.append(self.buffer.get(length: length)!)
-                            return true
-                        } else {
-                            self.buffer.setBack(length: 5)
-                            return false
-                        }
-                    }) {
+                    var length: Int = 0
+                    buffer.withUnsafeBytes({ (ptr: UnsafePointer<UInt16>) in
+                        length = Int(ptr.pointee.byteSwapped)
+                    })
+                    buffer.skip(2)
+                    if buffer.left >= length {
+                        unpackedData.append(buffer.get(length: length)!)
+                        continue
+                    } else {
+                        buffer.setBack(length: 5)
                         break
                     }
                 }

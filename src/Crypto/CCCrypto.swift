@@ -47,8 +47,9 @@ open class CCCrypto: StreamCryptoProtocol {
     }
 
     open func update( _ data: inout Data) {
+        let count = data.count
         _ = data.withUnsafeMutableBytes {
-            CCCryptorUpdate(cryptor, $0, data.count, $0, data.count, nil)
+            CCCryptorUpdate(cryptor, $0, count, $0, count, nil)
         }
     }
 
