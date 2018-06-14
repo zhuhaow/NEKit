@@ -103,7 +103,7 @@ There is also `Configuration` to load rules from a Yaml config file. But that is
 Now we can start a HTTP/SOCKS5 proxy server locally.
 
 ```swift
-let server = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: 9090)
+let server = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: 9090))
 try! server.start()
 ```
 
