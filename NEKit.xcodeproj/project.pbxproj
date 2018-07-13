@@ -290,6 +290,8 @@
 		36E9CD001DD6EEF5003597CE /* QueueFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E9CCFE1DD6EEF5003597CE /* QueueFactory.swift */; };
 		36E9CD041DD6F0DE003597CE /* Resolver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; };
 		36E9CD051DD6F0DE003597CE /* Resolver.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4ECFF5CF20F837DF00E049BA /* SOCKS5AuthenAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ECFF5CE20F837DF00E049BA /* SOCKS5AuthenAdapterFactory.swift */; };
+		4ECFF5D020F837DF00E049BA /* SOCKS5AuthenAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ECFF5CE20F837DF00E049BA /* SOCKS5AuthenAdapterFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -558,6 +560,7 @@
 		36DB3CEE1E0D610500D907DB /* IPAddressSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPAddressSpec.swift; sourceTree = "<group>"; };
 		36E44A011CF2ED4800185DBF /* TUNInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUNInterface.swift; sourceTree = "<group>"; };
 		36E9CCFE1DD6EEF5003597CE /* QueueFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QueueFactory.swift; path = Tunnel/QueueFactory.swift; sourceTree = "<group>"; };
+		4ECFF5CE20F837DF00E049BA /* SOCKS5AuthenAdapterFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOCKS5AuthenAdapterFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -927,6 +930,7 @@
 				366EB5B51CDE150C00E0E942 /* ServerAdapterFactory.swift */,
 				3664F0B71CE1B814008BA6D8 /* ShadowsocksAdapterFactory.swift */,
 				366EB5C41CDF3FA700E0E942 /* SpeedAdapterFactory.swift */,
+				4ECFF5CE20F837DF00E049BA /* SOCKS5AuthenAdapterFactory.swift */,
 			);
 			path = Factory;
 			sourceTree = "<group>";
@@ -1392,7 +1396,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "git=$(sh /etc/profile; which git)\ngit_release_version=$(\"$git\" describe --tags --always --abbrev=0)\nnumber_of_commits=$(\"$git\" rev-list master --count)\ntarget_plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\ndsym_plist=\"$DWARF_DSYM_FOLDER_PATH/$DWARF_DSYM_FILE_NAME/Contents/Info.plist\"\n\nfor plist in \"$target_plist\" \"$dsym_plist\"; do\n  if [ -f \"$plist\" ]; then\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $number_of_commits\" \"$plist\"\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString ${git_release_version#*v}\" \"$plist\"\n  fi\ndone\n";
+			shellScript = "git=$(sh /etc/profile; which git)\ngit_release_version=$(\"$git\" describe --tags --always --abbrev=0)\nnumber_of_commits=$(\"$git\" rev-list master --count)\ntarget_plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\ndsym_plist=\"$DWARF_DSYM_FOLDER_PATH/$DWARF_DSYM_FILE_NAME/Contents/Info.plist\"\n\nfor plist in \"$target_plist\" \"$dsym_plist\"; do\nif [ -f \"$plist\" ]; then\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $number_of_commits\" \"$plist\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString 3.0.0\" \"$plist\"\nfi\ndone\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1519,6 +1523,7 @@
 				36B1622F1CDDA0EA00F24C97 /* Tunnel.swift in Sources */,
 				3629504E1D6AE332001A30F6 /* AdapterSocketEvent.swift in Sources */,
 				36DB3CEA1E0CD19000D907DB /* IPMask.swift in Sources */,
+				4ECFF5CF20F837DF00E049BA /* SOCKS5AuthenAdapterFactory.swift in Sources */,
 				366EB5CB1CE061F200E0E942 /* AdapterFactoryParser.swift in Sources */,
 				36A71A051D69B00400DC35F5 /* DebugObserver.swift in Sources */,
 				362347A01D824E4300A047DE /* SOCKS5Adapter.swift in Sources */,
@@ -1637,6 +1642,7 @@
 				36C48D851CF88EE60071804F /* StreamScanner.swift in Sources */,
 				3629504F1D6AE332001A30F6 /* AdapterSocketEvent.swift in Sources */,
 				36DB3CEB1E0CD19000D907DB /* IPMask.swift in Sources */,
+				4ECFF5D020F837DF00E049BA /* SOCKS5AuthenAdapterFactory.swift in Sources */,
 				36C48D811CF88EDE0071804F /* DirectProxySocket.swift in Sources */,
 				36A71A061D69B00400DC35F5 /* DebugObserver.swift in Sources */,
 				362347A11D824E4300A047DE /* SOCKS5Adapter.swift in Sources */,
