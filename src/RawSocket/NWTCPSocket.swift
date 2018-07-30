@@ -23,7 +23,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
     /// If the socket is connected.
     public var isConnected: Bool {
-        return connection != nil && connection!.state == .connected
+        return connection != nil && connection?.state == .connected
     }
 
     /// The source address.
@@ -88,7 +88,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     public func disconnect() {
         cancelled = true
 
-        if connection == nil  || connection!.state == .cancelled {
+        if connection == nil  || connection?.state == .cancelled {
             delegate?.didDisconnectWith(socket: self)
         } else {
             closeAfterWriting = true
@@ -102,7 +102,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
     public func forceDisconnect() {
         cancelled = true
 
-        if connection == nil  || connection!.state == .cancelled {
+        if connection == nil  || connection?.state == .cancelled {
             delegate?.didDisconnectWith(socket: self)
         } else {
             cancel()
@@ -140,7 +140,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             return
         }
 
-        connection!.readMinimumLength(1, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
+        connection?.readMinimumLength(1, maximumLength: Opt.MAXNWTCPSocketReadDataSize) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(String(describing: error))")
                 self.queueCall {
@@ -164,7 +164,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             return
         }
 
-        connection!.readLength(length) { data, error in
+        connection?.readLength(length) { data, error in
             guard error == nil else {
                 DDLogError("NWTCPSocket got an error when reading data: \(String(describing: error))")
                 self.queueCall {
@@ -220,8 +220,8 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
         guard keyPath == "state" else {
             return
         }
-
-        switch connection!.state {
+        let state = connection?.state ?? .cancelled
+        switch state {
         case .connected:
             queueCall {
                 self.delegate?.didConnectWith(socket: self)
@@ -230,6 +230,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             cancelled = true
             cancel()
         case .cancelled:
+            destroyConnection()
             cancelled = true
             queueCall {
                 let delegate = self.delegate
@@ -276,7 +277,7 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
 
     private func send(data: Data) {
         writePending = true
-        self.connection!.write(data) { error in
+        self.connection?.write(data) { error in
             self.queueCall {
                 self.writePending = false
 
@@ -319,12 +320,13 @@ public class NWTCPSocket: NSObject, RawTCPSocketProtocol {
             cancel()
         }
     }
+    
+    private func destroyConnection() {
+        connection?.removeObserver(self, forKeyPath: "state")
+        connection = nil
+    }
 
     deinit {
-        guard let connection = connection else {
-            return
-        }
-
-        connection.removeObserver(self, forKeyPath: "state")
+        destroyConnection()
     }
 }
