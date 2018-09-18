@@ -101,8 +101,9 @@ public struct Utils {
 
     struct Random {
         static func fill(data: inout Data, from: Int = 0, to: Int = -1) {
+            let c = data.count
             data.withUnsafeMutableBytes {
-                arc4random_buf($0.advanced(by: from), to == -1 ? data.count - from : to - from)
+                arc4random_buf($0.advanced(by: from), to == -1 ? c - from : to - from)
             }
         }
 

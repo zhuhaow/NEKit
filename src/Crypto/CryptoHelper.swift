@@ -20,8 +20,9 @@ public struct CryptoHelper {
 
     public static func getIV(_ methodType: CryptoAlgorithm) -> Data {
         var IV = Data(count: getIVLength(methodType))
+        let c = IV.count
         _ = IV.withUnsafeMutableBytes {
-            SecRandomCopyBytes(kSecRandomDefault, IV.count, $0)
+            SecRandomCopyBytes(kSecRandomDefault, c, $0)
         }
         return IV
     }

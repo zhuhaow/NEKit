@@ -1,7 +1,7 @@
 import Foundation
 
 open class ObserverFactory {
-    open static var currentFactory: ObserverFactory?
+    public static var currentFactory: ObserverFactory?
 
     public init() {}
 

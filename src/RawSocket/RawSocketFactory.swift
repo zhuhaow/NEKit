@@ -16,7 +16,7 @@ open class RawSocketFactory {
     /// Current active `NETunnelProvider` which creates `NWTCPConnection` instance.
     ///
     /// - note: Must set before any connection is created if `NWTCPSocket` or `NWUDPSocket` is used.
-    open static weak var TunnelProvider: NETunnelProvider?
+    public static weak var TunnelProvider: NETunnelProvider?
 
     /**
      Return `RawTCPSocket` instance.
@@ -25,7 +25,7 @@ open class RawSocketFactory {
 
      - returns: The created socket instance.
      */
-    open static func getRawSocket(_ type: SocketBaseType? = nil) -> RawTCPSocketProtocol {
+    public static func getRawSocket(_ type: SocketBaseType? = nil) -> RawTCPSocketProtocol {
         switch type {
         case .some(.nw):
             return NWTCPSocket()

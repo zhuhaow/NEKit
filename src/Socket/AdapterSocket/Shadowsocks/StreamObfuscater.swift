@@ -144,8 +144,9 @@ extension ShadowsocksAdapter {
                     var kc = Data(count: writeIV!.count + MemoryLayout.size(ofValue: count))
                     kc.replaceSubrange(0..<writeIV!.count, with: writeIV!)
                     var c = count.bigEndian
+                    let ms = MemoryLayout.size(ofValue: c)
                     withUnsafeBytes(of: &c) {
-                        kc.replaceSubrange(writeIV!.count..<writeIV!.count+MemoryLayout.size(ofValue: c), with: $0)
+                        kc.replaceSubrange(writeIV!.count..<writeIV!.count+ms, with: $0)
                     }
 
                     data.withUnsafeRawPointer {
