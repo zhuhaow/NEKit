@@ -5,10 +5,10 @@ cache:
   - Carthage
 install:
 - bin/bootstrap-if-needed
-- gem install scan
+- gem install fastlane
 script:
-- scan --scheme NEKit-macOS
-- scan --scheme NEKit-iOS
+- fastlane scan --scheme NEKit-macOS
+- fastlane scan --scheme NEKit-iOS
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - "./docs/build_docs.sh"
