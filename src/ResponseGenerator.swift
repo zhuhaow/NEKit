@@ -1,7 +1,7 @@
 import Foundation
 
 open class ResponseGenerator {
-    open let session: ConnectSession
+    public let session: ConnectSession
     
     public init(withSession session: ConnectSession) {
         self.session = session

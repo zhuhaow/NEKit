@@ -229,9 +229,9 @@ open class DNSMessage {
 }
 
 open class DNSQuery {
-    open let name: String
-    open let type: DNSType
-    open let klass: DNSClass
+    public let name: String
+    public let type: DNSType
+    public let klass: DNSClass
     let nameBytesLength: Int
 
     init(name: String, type: DNSType = .a, klass: DNSClass = .internet) {
@@ -267,12 +267,12 @@ open class DNSQuery {
 }
 
 open class DNSResource {
-    open let name: String
-    open let type: DNSType
-    open let klass: DNSClass
-    open let TTL: UInt32
+    public let name: String
+    public let type: DNSType
+    public let klass: DNSClass
+    public let TTL: UInt32
     let dataLength: UInt16
-    open let data: Data
+    public let data: Data
 
     let nameBytesLength: Int
 

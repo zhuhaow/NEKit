@@ -5,7 +5,7 @@ open class RuleManager {
     /// The current used `RuleManager`, there is only one manager should be used at a time.
     ///
     /// - note: This should be set before any DNS or connect sessions.
-    open static var currentManager: RuleManager = RuleManager(fromRules: [], appendDirect: true)
+    public static var currentManager: RuleManager = RuleManager(fromRules: [], appendDirect: true)
 
     /// The rule list.
     var rules: [Rule] = []

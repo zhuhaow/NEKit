@@ -34,7 +34,7 @@ public protocol SocketProtocol: class {
     var socket: RawTCPSocketProtocol! { get }
 
     /// The delegate instance.
-    weak var delegate: SocketDelegate? { get set }
+    var delegate: SocketDelegate? { get set }
 
     /// The current connection status of the socket.
     var status: SocketStatus { get }

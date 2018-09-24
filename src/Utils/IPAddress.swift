@@ -181,9 +181,10 @@ public func < (lhs: IPAddress, rhs: IPAddress) -> Bool {
     case (.IPv4(let addrl), .IPv4(let addrr)):
         return addrl.s_addr.byteSwapped < addrr.s_addr.byteSwapped
     case (.IPv6(var addrl), .IPv6(var addrr)):
+        let ms = MemoryLayout.size(ofValue: addrl)
         return (withUnsafeBytes(of: &addrl) { ptrl in
             withUnsafeBytes(of: &addrr) { ptrr in
-                return memcmp(ptrl.baseAddress!, ptrr.baseAddress!, MemoryLayout.size(ofValue: addrl))
+                return memcmp(ptrl.baseAddress!, ptrr.baseAddress!, ms)
             }
         }) < 0
     case (.IPv4, .IPv6):

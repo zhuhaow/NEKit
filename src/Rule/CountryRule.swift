@@ -6,10 +6,10 @@ open class CountryRule: Rule {
     fileprivate let adapterFactory: AdapterFactory
 
     /// The ISO code of the country.
-    open let countryCode: String
+    public let countryCode: String
 
     /// The rule should match the session which matches the country or not.
-    open let match: Bool
+    public let match: Bool
 
     open override var description: String {
         return "<CountryRule countryCode:\(countryCode) match:\(match)>"

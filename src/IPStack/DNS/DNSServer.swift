@@ -9,7 +9,7 @@ open class DNSServer: DNSResolverDelegate, IPStackProtocol {
     /// Current DNS server.
     ///
     /// - warning: There is at most one DNS server running at the same time. If a DNS server is registered to `TUNInterface` then it must also be set here.
-    open static var currentServer: DNSServer?
+    public static var currentServer: DNSServer?
 
     /// The address of DNS server.
     let serverAddress: IPAddress

@@ -1,7 +1,7 @@
 import Foundation
 
 open class RejectAdapterFactory: AdapterFactory {
-    open let delay: Int
+    public let delay: Int
 
     public init(delay: Int = Opt.RejectAdapterDefaultDelay) {
         self.delay = delay
