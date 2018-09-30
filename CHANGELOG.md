@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## 0.13.1
+
+### Fixed
+- URL parser can parse domain with hyphen.
+
 ## 0.13.0
 
 ### Fixed
