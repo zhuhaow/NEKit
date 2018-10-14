@@ -291,6 +291,7 @@
 		36E9CD041DD6F0DE003597CE /* Resolver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; };
 		36E9CD051DD6F0DE003597CE /* Resolver.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 360F392B1DD2068E002BED59 /* Resolver.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F3D2964221731CB4002C696C /* SOCKS5AuthenAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D2964121731CB4002C696C /* SOCKS5AuthenAdapterFactory.swift */; };
+		F3D2964421732DA3002C696C /* SOCKS5AuthenAdapterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D2964121731CB4002C696C /* SOCKS5AuthenAdapterFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1543,6 +1544,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3D2964421732DA3002C696C /* SOCKS5AuthenAdapterFactory.swift in Sources */,
 				36B2ACDA1DDF407F00BD2C3D /* HMAC.swift in Sources */,
 				36C48D681CF88EC10071804F /* GeoIP.swift in Sources */,
 				36B3667C1D586CA1003343AA /* DNSFailRule.swift in Sources */,
