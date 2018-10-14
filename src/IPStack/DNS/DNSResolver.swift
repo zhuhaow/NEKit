@@ -1,7 +1,7 @@
 import Foundation
 
 public protocol DNSResolverProtocol: class {
-    weak var delegate: DNSResolverDelegate? { get set }
+    var delegate: DNSResolverDelegate? { get set }
     func resolve(session: DNSSession)
     func stop()
 }

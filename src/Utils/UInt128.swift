@@ -106,6 +106,8 @@ public struct UInt128 {
 // MARK: - FixedWidthInteger Conformance
 
 extension UInt128 : FixedWidthInteger {
+    public static var bitWidth : Int { return 128 }
+
     // MARK: Instance Properties
     
     public var nonzeroBitCount: Int {
@@ -435,7 +437,7 @@ extension UInt128 : FixedWidthInteger {
 extension UInt128 : BinaryInteger {
     // MARK: Instance Properties
     
-    public static var bitWidth : Int { return 128 }
+    public var bitWidth : Int { return 128 }
     
     
     // MARK: Instance Methods

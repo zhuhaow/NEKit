@@ -1,7 +1,7 @@
 import Foundation
 
 public class RejectAdapter: AdapterSocket {
-    open let delay: Int
+    public let delay: Int
 
     public init(delay: Int) {
         self.delay = delay

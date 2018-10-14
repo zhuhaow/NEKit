@@ -2,7 +2,7 @@ import Foundation
 import CocoaLumberjackSwift
 
 open class DNSSession {
-    open let requestMessage: DNSMessage
+    public let requestMessage: DNSMessage
     var requestIPPacket: IPPacket?
     open var realIP: IPAddress?
     open var fakeIP: IPAddress?

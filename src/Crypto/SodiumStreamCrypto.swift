@@ -6,9 +6,9 @@ open class SodiumStreamCrypto: StreamCryptoProtocol {
         case chacha20, salsa20
     }
 
-    open let key: Data
-    open let iv: Data
-    open let algorithm: Alogrithm
+    public let key: Data
+    public let iv: Data
+    public let algorithm: Alogrithm
 
     var counter = 0
 
@@ -38,19 +38,21 @@ open class SodiumStreamCrypto: StreamCryptoProtocol {
 
         switch algorithm {
         case .chacha20:
+            let c = UInt64(outputData.count)
             _ = outputData.withUnsafeMutableBytes { outputPtr in
                 iv.withUnsafeBytes { ivPtr in
                     key.withUnsafeBytes { keyPtr in
-                        crypto_stream_chacha20_xor_ic(outputPtr, outputPtr, UInt64(outputData.count), ivPtr, UInt64(counter/blockSize), keyPtr)
+                        crypto_stream_chacha20_xor_ic(outputPtr, outputPtr, c, ivPtr, UInt64(counter/blockSize), keyPtr)
                     }
                 }
             }
 
         case .salsa20:
+            let c = UInt64(outputData.count)
             _ = outputData.withUnsafeMutableBytes { outputPtr in
                 iv.withUnsafeBytes { ivPtr in
                     key.withUnsafeBytes { keyPtr in
-                        crypto_stream_salsa20_xor_ic(outputPtr, outputPtr, UInt64(outputData.count), ivPtr, UInt64(counter/blockSize), keyPtr)
+                        crypto_stream_salsa20_xor_ic(outputPtr, outputPtr, c, ivPtr, UInt64(counter/blockSize), keyPtr)
                     }
                 }
             }

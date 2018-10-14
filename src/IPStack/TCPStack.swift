@@ -5,7 +5,7 @@ import CocoaLumberjackSwift
 /// This class wraps around tun2socks to build a TCP only IP stack.
 open class TCPStack: TSIPStackDelegate, IPStackProtocol {
     /// The `TCPStack` singleton instance.
-    open static var stack: TCPStack {
+    public static var stack: TCPStack {
         TSIPStack.stack.delegate = _stack
         TSIPStack.stack.processQueue = QueueFactory.getQueue()
         return _stack

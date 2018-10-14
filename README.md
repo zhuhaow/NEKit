@@ -1,6 +1,8 @@
 # NEKit
 
-[![Join the chat at https://gitter.im/zhuhaow/NEKit](https://badges.gitter.im/zhuhaow/NEKit.svg)](https://gitter.im/zhuhaow/NEKit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join the chat at https://telegram.me/NEKitGroup](https://img.shields.io/badge/chat-on%20Telegram-blue.svg)](https://telegram.me/NEKitGroup) [![Build Status](https://travis-ci.org/zhuhaow/NEKit.svg?branch=master)](https://travis-ci.org/zhuhaow/NEKit) [![GitHub release](https://img.shields.io/github/release/zhuhaow/NEKit.svg)](https://github.com/zhuhaow/NEKit/releases) [![Code Climate](https://codeclimate.com/github/zhuhaow/NEKit/badges/gpa.svg)](https://codeclimate.com/github/zhuhaow/NEKit) [![codecov](https://codecov.io/gh/zhuhaow/NEKit/branch/master/graph/badge.svg)](https://codecov.io/gh/zhuhaow/NEKit) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![GitHub license](https://img.shields.io/badge/license-BSD_3--Clause-blue.svg)](LICENSE.md)
+[![Join the chat at https://gitter.im/zhuhaow/NEKit](https://badges.gitter.im/zhuhaow/NEKit.svg)](https://gitter.im/zhuhaow/NEKit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Join the chat at https://telegram.me/NEKitGroup](https://img.shields.io/badge/chat-on%20Telegram-blue.svg)](https://telegram.me/NEKitGroup) [![Build Status](https://travis-ci.org/zhuhaow/NEKit.svg?branch=master)](https://travis-ci.org/zhuhaow/NEKit) [![GitHub release](https://img.shields.io/github/release/zhuhaow/NEKit.svg)](https://github.com/zhuhaow/NEKit/releases) [![codecov](https://codecov.io/gh/zhuhaow/NEKit/branch/master/graph/badge.svg)](https://codecov.io/gh/zhuhaow/NEKit) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![GitHub license](https://img.shields.io/badge/license-BSD_3--Clause-blue.svg)](LICENSE.md)
+
+**Take a look at the next generation of this project, [libnekit](https://github.com/zhuhaow/libnekit).**
 
 A toolkit for Network Extension Framework.
 
@@ -103,7 +105,7 @@ There is also `Configuration` to load rules from a Yaml config file. But that is
 Now we can start a HTTP/SOCKS5 proxy server locally.
 
 ```swift
-let server = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: 9090)
+let server = GCDHTTPProxyServer(address: IPv4Address(fromString: "127.0.0.1"), port: Port(port: 9090))
 try! server.start()
 ```
 

@@ -8,7 +8,7 @@ public class HTTPURL {
     public let relativePath: String
 
     // swiftlint:disable:next force_try
-    static let urlreg = try! NSRegularExpression(pattern: "^(?:(?:(https?):\\/\\/)?([\\w\\.]+)(?::(\\d+))?)?(?:\\/(.*))?$", options: NSRegularExpression.Options.caseInsensitive)
+    static let urlreg = try! NSRegularExpression(pattern: "^(?:(?:(https?):\\/\\/)?([\\w\\.-]+)(?::(\\d+))?)?(?:\\/(.*))?$", options: NSRegularExpression.Options.caseInsensitive)
 
     init?(string url: String) {
         let nsurl = url as NSString

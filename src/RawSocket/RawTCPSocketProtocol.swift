@@ -7,7 +7,7 @@ import Foundation
 /// - warning: It is expected that the instance is accessed on the specific queue only.
 public protocol RawTCPSocketProtocol : class {
     /// The `RawTCPSocketDelegate` instance.
-    weak var delegate: RawTCPSocketDelegate? { get set }
+    var delegate: RawTCPSocketDelegate? { get set }
 
     /// If the socket is connected.
     var isConnected: Bool { get }
