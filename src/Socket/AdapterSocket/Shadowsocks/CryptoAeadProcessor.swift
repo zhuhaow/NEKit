@@ -59,14 +59,14 @@ extension ShadowsocksAdapter {
     
     
     public class CryptoAeadProcessor: CryptoStreamProcessor {
-        private var encryptor:AeadCrypto?
-        private var decryptor:AeadCrypto?
+        private var encryptor: AeadCrypto?
+        private var decryptor: AeadCrypto?
         
         private var skey: Data = Data()
         var chunkSize = 0
         let subkey = "ss-subkey"
-        let CHUNK_SIZE_LEN = 2
-        let CHUNK_SIZE_MASK = 0x3FFF
+        let chunkSizeLen = 2
+        let chunkSizeMask = 0x3FFF
         
         override init(key: Data, algorithm: CryptoAlgorithm) {
             super.init(key: key, algorithm: algorithm)
@@ -74,7 +74,7 @@ extension ShadowsocksAdapter {
             skey = HKDF.deriveKey(ikm: key,
                                   salt: writeIV,
                                   info: subkey.data(using: .utf8)!,
-                                  algorithm:.SHA1,
+                                  algorithm: .SHA1,
                                   count: key.count)
             
             encryptor = AeadCrypto(algorithm: algorithm,
@@ -117,11 +117,11 @@ extension ShadowsocksAdapter {
                                        tagSize: tagSize,
                                        nonceSize: nonceSize)
             }
-            try inputStreamProcessor!.input(data: decrypt_all(data))
+            try inputStreamProcessor!.input(data: decryptAll(data))
         }
         
         public override func output(data: Data) {
-            var data = encrypt_all(data)
+            var data = encryptAll(data)
             
             if sendKey {
                 outputStreamProcessor!.output(data: data)
@@ -144,20 +144,20 @@ extension ShadowsocksAdapter {
          :return: data encrypted data
          """
          */
-        func encrypt_all( _ data: Data) -> Data {
-            if data.count <= CHUNK_SIZE_MASK {
-                return encrypt_chunk(data)
+        func encryptAll(_ data: Data) -> Data {
+            if data.count <= chunkSizeMask {
+                return encryptChunk(data)
             } else {
                 var ctext = Data()
                 
                 var index = data.startIndex
                 while index != data.endIndex {
                     let startIndex = index
-                    let endIndex = data.index(index, offsetBy: CHUNK_SIZE_MASK, limitedBy: data.endIndex) ?? data.endIndex
+                    let endIndex = data.index(index, offsetBy: chunkSizeMask, limitedBy: data.endIndex) ?? data.endIndex
                     let range = startIndex ..< endIndex
                     let chunk = data[range]
                     
-                    ctext.append(encrypt_chunk(chunk))
+                    ctext.append(encryptChunk(chunk))
                     index = endIndex
                 }
                 
@@ -172,15 +172,15 @@ extension ShadowsocksAdapter {
          :return: data [len][tag][payload][tag]
          """
          */
-        func encrypt_chunk( _ data: Data) -> Data {
-            let plen = UInt16(data.count & CHUNK_SIZE_MASK)
+        func encryptChunk(_ data: Data) -> Data {
+            let plen = UInt16(data.count & chunkSizeMask)
             // l = CHUNK_SIZE_LEN + plen + tagSize * 2
             
             // network byte order
             var t = plen.bigEndian
-            let td = Data(bytes: &t, count: CHUNK_SIZE_LEN)
-            var ctext = encryptor!.aead_encrypt(td)
-            ctext.append(encryptor!.aead_encrypt(data))
+            let td = Data(bytes: &t, count: chunkSizeLen)
+            var ctext = encryptor!.aeadEncrypt(td)
+            ctext.append(encryptor!.aeadEncrypt(data))
             return ctext
         }
         
@@ -194,13 +194,13 @@ extension ShadowsocksAdapter {
          :return: data
          """
          */
-        func decrypt_all( _ data: Data) -> Data {
+        func decryptAll(_ data: Data) -> Data {
             var ptext = Data()
-            var (pnext, left) = decrypt_chunk(data)
+            var (pnext, left) = decryptChunk(data)
             ptext.append(pnext)
             
             while left.count > 0 {
-                (pnext, left) = decrypt_chunk(left)
+                (pnext, left) = decryptChunk(left)
                 ptext.append(pnext)
             }
             return ptext
@@ -213,12 +213,12 @@ extension ShadowsocksAdapter {
          :return: (data, data) decrypted msg and remaining encrypted data
          """
          */
-        func decrypt_chunk( _ data: Data) -> (Data, Data) {
-            let (plen, data) = decrypt_chunk_size(data)
+        func decryptChunk(_ data: Data) -> (Data, Data) {
+            let (plen, data) = decryptChunkSize(data)
             if plen<=0 {
                 return (Data(), Data())
             } else {
-                return decrypt_chunk_payload(plen, data)
+                return decryptChunkPayload(plen, data)
             }
         }
         
@@ -229,7 +229,7 @@ extension ShadowsocksAdapter {
          :return: (int, data) msg length and remaining encrypted data
          """
          */
-        func decrypt_chunk_size( _ data: Data) -> (Int, Data) {
+        func decryptChunkSize(_ data: Data) -> (Int, Data) {
             if chunkSize > 0 {
                 return (chunkSize, data)
             }
@@ -237,16 +237,16 @@ extension ShadowsocksAdapter {
             var mdata = buffer.get() ?? Data()
             mdata.append(data)
             
-            let hlen = CHUNK_SIZE_LEN + tagSize
+            let hlen = chunkSizeLen + tagSize
             if mdata.count < hlen {
                 buffer.replace(data: mdata)
                 return (0, Data())
             }
             
-            let ldata = decryptor!.aead_decrypt(data: mdata.subdata(in: 0 ..< hlen))
+            let ldata = decryptor!.aeadDecrypt(mdata.subdata(in: 0 ..< hlen))
             let bytes = [UInt8](ldata)
             let plen = Int(bytes[0]) * 256 + Int(bytes[1])
-            if plen > CHUNK_SIZE_MASK || plen < 0 {
+            if plen > chunkSizeMask || plen < 0 {
                 return (0, Data())
             }
             
@@ -261,7 +261,7 @@ extension ShadowsocksAdapter {
          :return: (data, data) plain text and remaining encrypted data
          """
          */
-        func decrypt_chunk_payload( _ plen:Int, _ data:Data) -> (Data, Data) {
+        func decryptChunkPayload(_ plen:Int, _ data:Data) -> (Data, Data) {
             var mdata = buffer.get() ?? Data()
             mdata.append(data)
             
@@ -274,17 +274,13 @@ extension ShadowsocksAdapter {
             chunkSize = 0
             buffer.reset()
             
-            let plaintext = decryptor!.aead_decrypt(data: mdata.subdata(in: 0 ..< plen+tagSize))
+            let plaintext = decryptor!.aeadDecrypt(mdata.subdata(in: 0 ..< plen+tagSize))
             if  plaintext.count != plen {
                 return (Data(), Data())
             }
             
             return (plaintext, mdata.subdata(in:  plen+tagSize ..< mdata.count))
         }
-        
     }
-    
-    
+
 }
-
-

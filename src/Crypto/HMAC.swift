@@ -35,7 +35,7 @@ public class HMAC {
     
     
     var context: CCHmacContext = CCHmacContext()
-    var algorithm:HashAlgorithm
+    var algorithm: HashAlgorithm
     
     public init(algorithm: HashAlgorithm, key: Data) {
         self.algorithm = algorithm

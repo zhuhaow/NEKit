@@ -62,6 +62,4 @@ public struct CryptoHelper {
         
         return result.subdata(in: 0..<getKeyLength(methodType))
     }
-    
-    
 }
