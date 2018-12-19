@@ -1,4 +1,5 @@
 import Foundation
+import CocoaLumberjackSwift
 
 extension ShadowsocksAdapter {
     public class CryptoStreamProcessor {
@@ -6,62 +7,75 @@ extension ShadowsocksAdapter {
             let password: String
             let algorithm: CryptoAlgorithm
             let key: Data
-
+            
             public init(password: String, algorithm: CryptoAlgorithm) {
                 self.password = password
                 self.algorithm = algorithm
-                key = CryptoHelper.getKey(password, methodType: algorithm)
+                key = CryptoHelper.EVP_BytesToKey(password, methodType: algorithm)
             }
-
+            
             public func build() -> CryptoStreamProcessor {
-                return CryptoStreamProcessor(key: key, algorithm: algorithm)
+                if algorithm.isAead {
+                    return CryptoAeadProcessor(key: key, algorithm: algorithm)
+                } else {
+                    return CryptoStreamProcessor(key: key, algorithm: algorithm)
+                }
             }
         }
-
+        
         public weak var inputStreamProcessor: StreamObfuscater.StreamObfuscaterBase!
         public weak var outputStreamProcessor: ProtocolObfuscater.ProtocolObfuscaterBase!
-
+        
         var readIV: Data!
         let key: Data
         let algorithm: CryptoAlgorithm
-
+        
         var sendKey = false
-
+        
         var buffer = Buffer(capacity: 0)
-
+        
         lazy var writeIV: Data = {
             [unowned self] in
-            CryptoHelper.getIV(self.algorithm)
+            CryptoHelper.getIV(algorithm)
             }()
         lazy var ivLength: Int = {
             [unowned self] in
-            CryptoHelper.getIVLength(self.algorithm)
+            CryptoHelper.getIVLength(algorithm)
             }()
-        lazy var encryptor: StreamCryptoProtocol = {
+        
+        private lazy var encryptor: StreamCryptoProtocol? = {
             [unowned self] in
             self.getCrypto(.encrypt)
             }()
-        lazy var decryptor: StreamCryptoProtocol = {
+        private lazy var decryptor: StreamCryptoProtocol? = {
             [unowned self] in
             self.getCrypto(.decrypt)
             }()
-
+        
         init(key: Data, algorithm: CryptoAlgorithm) {
             self.key = key
             self.algorithm = algorithm
         }
-
-        func encrypt(data: inout Data) {
-            return encryptor.update(&data)
+        
+        private func encrypt(data: inout Data) {
+            if let encryptor = encryptor {
+                encryptor.update(&data)
+            } else {
+                DDLogError("no encryptor for \(algorithm.rawValue)")
+            }
         }
-
-        func decrypt(data: inout Data) {
-            return decryptor.update(&data)
+        
+        private func decrypt(data: inout Data) {
+            if let decryptor = decryptor {
+                decryptor.update(&data)
+            } else {
+                DDLogError("no decryptor for \(algorithm.rawValue)")
+            }
         }
-
+        
         public func input(data: Data) throws {
             var data = data
-
+            
             if readIV == nil {
                 buffer.append(data: data)
                 readIV = buffer.get(length: ivLength)
@@ -69,31 +83,31 @@ extension ShadowsocksAdapter {
                     try inputStreamProcessor!.input(data: Data())
                     return
                 }
-
+                
                 data = buffer.get() ?? Data()
-                buffer.release()
+                buffer.reset()
             }
-
+            
             decrypt(data: &data)
             try inputStreamProcessor!.input(data: data)
         }
-
+        
         public func output(data: Data) {
             var data = data
             encrypt(data: &data)
             if sendKey {
-                return outputStreamProcessor!.output(data: data)
+                outputStreamProcessor!.output(data: data)
             } else {
                 sendKey = true
                 var out = Data(capacity: data.count + writeIV.count)
                 out.append(writeIV)
                 out.append(data)
-
-                return outputStreamProcessor!.output(data: out)
+                
+                outputStreamProcessor!.output(data: out)
             }
         }
-
-        private func getCrypto(_ operation: CryptoOperation) -> StreamCryptoProtocol {
+        
+        private func getCrypto(_ operation: CryptoOperation) -> StreamCryptoProtocol? {
             switch algorithm {
             case .AES128CFB, .AES192CFB, .AES256CFB:
                 switch operation {
@@ -127,7 +141,14 @@ extension ShadowsocksAdapter {
                     combinedKey.append(writeIV)
                     return CCCrypto(operation: .encrypt, mode: .rc4, algorithm: .rc4, initialVector: nil, key: MD5Hash.final(combinedKey))
                 }
+                
+            default:
+                return nil
             }
         }
     }
+    
 }
+
+
+
