@@ -61,7 +61,7 @@ extension ShadowsocksAdapter {
             if let encryptor = encryptor {
                 encryptor.update(&data)
             } else {
-                DDLogError("no encryptor for \(algorithm.rawValue)")
+                DDLogError("no encryptor for \(algorithm)")
             }
         }
 
@@ -69,7 +69,7 @@ extension ShadowsocksAdapter {
             if let decryptor = decryptor {
                 decryptor.update(&data)
             } else {
-                DDLogError("no decryptor for \(algorithm.rawValue)")
+                DDLogError("no decryptor for \(algorithm)")
             }
         }
 
