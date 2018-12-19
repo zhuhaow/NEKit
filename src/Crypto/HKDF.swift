@@ -41,5 +41,5 @@ public class HKDF {
 
         return Data(bytes: result[0..<count])
     }
-    
+
 }

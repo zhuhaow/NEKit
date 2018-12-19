@@ -68,5 +68,5 @@ public enum HashAlgorithm {
         }
         return Int(result)
     }
-}
 
+}

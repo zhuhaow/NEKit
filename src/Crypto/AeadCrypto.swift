@@ -66,7 +66,7 @@ open class AeadCrypto {
             var ciphertext = [UInt8](repeating: 0, count: Int(ciphertextLen))
 
             let cryptoResult = data.withUnsafeBytes { (dataBytes: UnsafePointer<UInt8>) in
-                skey.withUnsafeBytes{ keyBytes  in
+                skey.withUnsafeBytes { keyBytes  in
                     crypto_aead_chacha20poly1305_ietf_encrypt(&ciphertext, &ciphertextLen, dataBytes, UInt64(data.count), nil, 0, nil, &nonce, keyBytes)
                 }
             }
@@ -123,5 +123,5 @@ open class AeadCrypto {
 
         return Data()
     }
-    
+
 }

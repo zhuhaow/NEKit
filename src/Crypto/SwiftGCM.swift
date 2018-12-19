@@ -334,7 +334,7 @@ private final class GaloisField {
 
         return result
     }
-    
+
 }
 
 
@@ -348,10 +348,10 @@ struct NUInt128: Equatable, ExpressibleByIntegerLiteral {
     }
 
     init(_ raw: Array<UInt8>) {
-        self = raw.prefix(MemoryLayout<NUInt128>.stride).withUnsafeBytes({ rawBufferPointer -> NUInt128 in
+        self = raw.prefix(MemoryLayout<NUInt128>.stride).withUnsafeBytes { rawBufferPointer -> NUInt128 in
             let arr = rawBufferPointer.bindMemory(to: UInt64.self)
             return NUInt128((arr[0].bigEndian, arr[1].bigEndian))
-        })
+        }
     }
 
     init(_ raw: Data) {

@@ -62,5 +62,5 @@ public class HMAC {
         CCHmacFinal(&context, &hmac)
         return Data(bytes: hmac)
     }
-    
+
 }
