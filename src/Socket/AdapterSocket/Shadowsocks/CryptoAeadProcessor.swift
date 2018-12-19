@@ -261,7 +261,7 @@ extension ShadowsocksAdapter {
          :return: (data, data) plain text and remaining encrypted data
          """
          */
-        func decryptChunkPayload(_ plen:Int, _ data:Data) -> (Data, Data) {
+        func decryptChunkPayload(_ plen:Int, _ data: Data) -> (Data, Data) {
             var mdata = buffer.get() ?? Data()
             mdata.append(data)
 
@@ -279,8 +279,9 @@ extension ShadowsocksAdapter {
                 return (Data(), Data())
             }
 
-            return (plaintext, mdata.subdata(in:  plen+tagSize ..< mdata.count))
+            return (plaintext, mdata.subdata(in: plen+tagSize ..< mdata.count))
         }
+        
     }
 
 }

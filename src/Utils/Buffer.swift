@@ -87,5 +87,5 @@ struct Buffer {
     mutating func skip(_ step: Int) {
         offset += step
     }
+    
 }
-
