@@ -65,9 +65,9 @@ open class AeadCrypto {
             var ciphertextLen: UInt64 = UInt64(data.count + tagSize)
             var ciphertext = [UInt8](repeating: 0, count: Int(ciphertextLen))
 
-            let cryptoResult = data.withUnsafeBytes { (data_bytes: UnsafePointer<UInt8>) in
-                skey.withUnsafeBytes({ key_bytes  in
-                    crypto_aead_chacha20poly1305_ietf_encrypt(&ciphertext, &ciphertextLen, data_bytes, UInt64(data.count), nil, 0, nil, &nonce, key_bytes)
+            let cryptoResult = data.withUnsafeBytes { (dataBytes: UnsafePointer<UInt8>) in
+                skey.withUnsafeBytes({ keyBytes  in
+                    crypto_aead_chacha20poly1305_ietf_encrypt(&ciphertext, &ciphertextLen, dataBytes, UInt64(data.count), nil, 0, nil, &nonce, keyBytes)
                 })
             }
 
@@ -102,16 +102,16 @@ open class AeadCrypto {
             }
 
         case .CHACHA20POLY1305:
-            var decrypted_len:UInt64 = UInt64(data.count - tagSize)
-            var decrypted = [UInt8](repeating: 0, count: Int(decrypted_len))
+            var decryptedLen:UInt64 = UInt64(data.count - tagSize)
+            var decrypted = [UInt8](repeating: 0, count: Int(decryptedLen))
 
-            let cryptoResult = data.withUnsafeBytes { (data_bytes: UnsafePointer<UInt8>) in
-                skey.withUnsafeBytes({ key_bytes  in
-                    crypto_aead_chacha20poly1305_ietf_decrypt(&decrypted, &decrypted_len, nil, data_bytes, UInt64(data.count), nil, 0, &nonce, key_bytes)
+            let cryptoResult = data.withUnsafeBytes { (dataBytes: UnsafePointer<UInt8>) in
+                skey.withUnsafeBytes({ keyBytes  in
+                    crypto_aead_chacha20poly1305_ietf_decrypt(&decrypted, &decryptedLen, nil, dataBytes, UInt64(data.count), nil, 0, &nonce, keyBytes)
                 })
             }
 
-            if cryptoResult==0 && Int(decrypted_len)==data.count - tagSize {
+            if cryptoResult==0 && Int(decryptedLen)==data.count - tagSize {
                 nonceIncrement()
                 return Data(bytes: decrypted)
             }
@@ -124,4 +124,3 @@ open class AeadCrypto {
         return Data()
     }
 }
-

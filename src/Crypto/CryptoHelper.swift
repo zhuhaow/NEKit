@@ -15,23 +15,23 @@ public struct CryptoHelper {
         .AES256GCM: (32, 32, 12, 16),
         .CHACHA20POLY1305: (32, 32, 12, 16)
     ]
-    
+
     public static func getKeyLength(_ methodType: CryptoAlgorithm) -> Int {
         return infoDictionary[methodType]!.0
     }
-    
+
     public static func getIVLength(_ methodType: CryptoAlgorithm) -> Int {
         return infoDictionary[methodType]!.1
     }
-    
+
     public static func getNonceSize(_ methodType: CryptoAlgorithm) -> Int {
         return infoDictionary[methodType]!.2
     }
-    
+
     public static func getTagSize(_ methodType: CryptoAlgorithm) -> Int {
         return infoDictionary[methodType]!.3
     }
-    
+
     public static func getIV(_ methodType: CryptoAlgorithm) -> Data {
         let c = getIVLength(methodType)
         var IV = Data(count: c)
@@ -40,15 +40,15 @@ public struct CryptoHelper {
         }
         return IV
     }
-    
+
     public static func EVP_BytesToKey(_ password: String, methodType: CryptoAlgorithm) -> Data {
         var result = Data(count: getIVLength(methodType) + getKeyLength(methodType))
         let passwordData = password.data(using: String.Encoding.utf8)!
         var md5result = MD5Hash.final(password)
         var extendPasswordData = Data(count: passwordData.count + md5result.count)
-        
+
         extendPasswordData.replaceSubrange(md5result.count..<extendPasswordData.count, with: passwordData)
-        
+
         var length = 0
         repeat {
             let copyLength = min(result.count - length, md5result.count)
@@ -59,7 +59,8 @@ public struct CryptoHelper {
             md5result = MD5Hash.final(extendPasswordData)
             length += copyLength
         } while length < result.count
-        
+
         return result.subdata(in: 0..<getKeyLength(methodType))
     }
 }
+

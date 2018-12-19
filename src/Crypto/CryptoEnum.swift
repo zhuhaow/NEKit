@@ -3,7 +3,7 @@ import CommonCrypto
 
 public enum CryptoOperation {
     case encrypt, decrypt
-    
+
     public func toCCOperation() -> CCOperation {
         switch self {
         case .encrypt:
@@ -27,7 +27,7 @@ public enum CryptoAlgorithm: String {
     AES192GCM,
     AES256GCM,
     CHACHA20POLY1305
-    
+
     var isAead: Bool {
         switch self {
         case .AES128GCM, .AES192GCM, .AES256GCM:
@@ -42,7 +42,7 @@ public enum CryptoAlgorithm: String {
 
 public enum HashAlgorithm {
     case MD5, SHA1, SHA224, SHA256, SHA384, SHA512
-    
+
     var HMACAlgorithm: CCHmacAlgorithm {
         var result: Int = 0
         switch self {
@@ -55,7 +55,7 @@ public enum HashAlgorithm {
         }
         return CCHmacAlgorithm(result)
     }
-    
+
     var digestLength: Int {
         var result: Int32 = 0
         switch self {
@@ -68,5 +68,5 @@ public enum HashAlgorithm {
         }
         return Int(result)
     }
-    
 }
+

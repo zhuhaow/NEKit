@@ -423,5 +423,5 @@ struct NUInt128: Equatable, ExpressibleByIntegerLiteral {
     static func != (lhs: NUInt128, rhs: NUInt128) -> Bool {
         return !(lhs == rhs)
     }
-}
 
+}
