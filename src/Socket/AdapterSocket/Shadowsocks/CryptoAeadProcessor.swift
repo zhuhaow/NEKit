@@ -1,10 +1,3 @@
-//
-//  CryptoAeadProcessor.swift
-//  PacketTunnel
-//
-//  Created by Hanson on 2018/12/9.
-//  Copyright © 2018 Nobody. All rights reserved.
-//
 
 import Foundation
 extension ShadowsocksAdapter {

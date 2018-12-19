@@ -1,10 +1,3 @@
-//
-//  AeadCrypto.swift
-//  PacketTunnel
-//
-//  Created by Hanson on 2018/12/11.
-//  Copyright © 2018 Nobody. All rights reserved.
-//
 
 import Foundation
 import Sodium
