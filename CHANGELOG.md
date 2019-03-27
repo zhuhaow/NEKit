@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 I will do my best to guarantee that this project adheres to [Semantic Versioning](http://semver.org/) after 1.0.0, but please do read change log before updating.
 
+## 0.14.0
+
+### Changed
+- Migrate to Swift 5.
+- Update all dependencies to latest.
+
 ## 0.13.1
 
 ### Fixed
