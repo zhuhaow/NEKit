@@ -1,14 +1,14 @@
 language: objective-c
-osx_image: xcode10
+osx_image: xcode10.2
 cache:
   directories:
   - Carthage
 install:
 - bin/bootstrap-if-needed
-- gem install fastlane
+- bundle install
 script:
-- fastlane scan --scheme NEKit-macOS
-- fastlane scan --scheme NEKit-iOS
+- bundle exec fastlane scan --scheme NEKit-macOS
+- bundle exec fastlane scan --scheme NEKit-iOS
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - "./docs/build_docs.sh"
