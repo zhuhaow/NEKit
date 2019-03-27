@@ -57,8 +57,8 @@ open class BinaryDataScanner {
             return nil
         }
 
-        let v = data.withUnsafeRawPointer {
-            $0.advanced(by: position).assumingMemoryBound(to: T.self).pointee
+        let v = data.withUnsafeBytes {
+            $0.baseAddress!.advanced(by: position).assumingMemoryBound(to: T.self).pointee
         }
         position += MemoryLayout<T>.size
         return littleEndian ? v.littleEndian : v.bigEndian

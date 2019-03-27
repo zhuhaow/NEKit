@@ -107,38 +107,42 @@ public class SOCKS5ProxySocket: ProxySocket {
         case .forwarding:
             delegate?.didRead(data: data, from: self)
         case .readingVersionIdentifierAndNumberOfMethods:
-            data.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
-                guard pointer.pointee == 5 else {
+            data.withUnsafeBytes { pointer in
+                let p = pointer.bindMemory(to: Int8.self)
+                
+                guard p.baseAddress!.pointee == 5 else {
                     // TODO: notify observer
                     self.disconnect()
                     return
                 }
 
-                guard pointer.successor().pointee > 0 else {
+                guard p.baseAddress!.successor().pointee > 0 else {
                     // TODO: notify observer
                     self.disconnect()
                     return
                 }
 
                 self.readStatus = .readingMethods
-                self.socket.readDataTo(length: Int(pointer.successor().pointee))
+                self.socket.readDataTo(length: Int(p.baseAddress!.successor().pointee))
             }
         case .readingMethods:
             // TODO: check for 0x00 in read data
 
-            let response = Data(bytes: [0x05, 0x00])
+            let response = Data([0x05, 0x00])
             // we would not be able to read anything before the data is written out, so no need to handle the dataWrote event.
             write(data: response)
             readStatus = .readingConnectHeader
             socket.readDataTo(length: 4)
         case .readingConnectHeader:
-            data.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
-                guard pointer.pointee == 5 && pointer.successor().pointee == 1 else {
+            data.withUnsafeBytes { pointer in
+                let p = pointer.bindMemory(to: Int8.self)
+                
+                guard p.baseAddress!.pointee == 5 && p.baseAddress!.successor().pointee == 1 else {
                     // TODO: notify observer
                     self.disconnect()
                     return
                 }
-                switch pointer.advanced(by: 3).pointee {
+                switch p.baseAddress!.advanced(by: 3).pointee {
                 case 1:
                     readStatus = .readingIPv4Address
                     socket.readDataTo(length: 4)
@@ -154,43 +158,37 @@ public class SOCKS5ProxySocket: ProxySocket {
             }
         case .readingIPv4Address:
             var address = Data(count: Int(INET_ADDRSTRLEN))
-            _ = data.withUnsafeRawPointer { data_ptr in
+            _ = data.withUnsafeBytes { data_ptr in
                 address.withUnsafeMutableBytes { addr_ptr in
-                    inet_ntop(AF_INET, data_ptr, addr_ptr, socklen_t(INET_ADDRSTRLEN))
+                    inet_ntop(AF_INET, data_ptr.baseAddress!, addr_ptr.bindMemory(to: Int8.self).baseAddress!, socklen_t(INET_ADDRSTRLEN))
                 }
             }
-
-            address.withUnsafeBytes {
-                destinationHost = String(cString: $0, encoding: .utf8)
-            }
+            
+            destinationHost = String(data: address, encoding: .utf8)
 
             readStatus = .readingPort
             socket.readDataTo(length: 2)
         case .readingIPv6Address:
             var address = Data(count: Int(INET6_ADDRSTRLEN))
-            _ = data.withUnsafeRawPointer { data_ptr in
+            _ = data.withUnsafeBytes { data_ptr in
                 address.withUnsafeMutableBytes { addr_ptr in
-                    inet_ntop(AF_INET6, data_ptr, addr_ptr, socklen_t(INET6_ADDRSTRLEN))
+                    inet_ntop(AF_INET6, data_ptr.baseAddress!, addr_ptr.bindMemory(to: Int8.self).baseAddress!, socklen_t(INET6_ADDRSTRLEN))
                 }
             }
 
-            address.withUnsafeBytes {
-                destinationHost = String(cString: $0, encoding: .utf8)
-            }
+            destinationHost = String(data: address, encoding: .utf8)
 
             readStatus = .readingPort
             socket.readDataTo(length: 2)
         case .readingDomainLength:
-            data.withUnsafeRawPointer {
-                readStatus = .readingDomain
-                socket.readDataTo(length: Int($0.load(as: UInt8.self)))
-            }
+            readStatus = .readingDomain
+            socket.readDataTo(length: Int(data.first!))
         case .readingDomain:
             destinationHost = String(data: data, encoding: .utf8)
             readStatus = .readingPort
             socket.readDataTo(length: 2)
         case .readingPort:
-            data.withUnsafeRawPointer {
+            data.withUnsafeBytes {
                 destinationPort = Int($0.load(as: UInt16.self).bigEndian)
             }
 
@@ -238,7 +236,7 @@ public class SOCKS5ProxySocket: ProxySocket {
 
         var responseBytes = [UInt8](repeating: 0, count: 10)
         responseBytes[0...3] = [0x05, 0x00, 0x00, 0x01]
-        let responseData = Data(bytes: responseBytes)
+        let responseData = Data(responseBytes)
 
         writeStatus = .sendingResponse
         write(data: responseData)

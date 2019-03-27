@@ -22,7 +22,7 @@ public struct CryptoHelper {
         var IV = Data(count: getIVLength(methodType))
         let c = IV.count
         _ = IV.withUnsafeMutableBytes {
-            SecRandomCopyBytes(kSecRandomDefault, c, $0)
+            SecRandomCopyBytes(kSecRandomDefault, c, $0.baseAddress!)
         }
         return IV
     }
@@ -38,8 +38,8 @@ public struct CryptoHelper {
         var length = 0
         repeat {
             let copyLength = min(result.count - length, md5result.count)
-            result.withUnsafeMutableBytes {
-                md5result.copyBytes(to: $0.advanced(by: length), count: copyLength)
+            result.withUnsafeMutableBytes { ptr in
+                md5result.copyBytes(to: ptr.baseAddress!.advanced(by: length).assumingMemoryBound(to: UInt8.self), count: copyLength)
             }
             extendPasswordData.replaceSubrange(0..<md5result.count, with: md5result)
             md5result = MD5Hash.final(extendPasswordData)

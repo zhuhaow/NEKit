@@ -224,8 +224,8 @@ extension ShadowsocksAdapter {
                 }
 
                 Utils.Random.fill(data: &output, from: 4, length: 18)
-                output.withUnsafeRawPointer {
-                    output.replaceSubrange(22 ..< 32, with: HMAC.final(value: $0, length: 22, algorithm: .SHA1, key: key).subdata(in: 0..<10))
+                output.withUnsafeBytes {
+                    output.replaceSubrange(22 ..< 32, with: HMAC.final(value: $0.baseAddress!, length: 22, algorithm: .SHA1, key: key).subdata(in: 0..<10))
                 }
                 return output
             }
@@ -335,8 +335,8 @@ extension ShadowsocksAdapter {
 
                 var key = inputStreamProcessor.key
                 key.append(clientID)
-                outputData.withUnsafeRawPointer {
-                    outputData.append(HMAC.final(value: $0, length: outputData.count, algorithm: .SHA1, key: key).subdata(in: 0..<10))
+                outputData.withUnsafeBytes {
+                    outputData.append(HMAC.final(value: $0.baseAddress!, length: outputData.count, algorithm: .SHA1, key: key).subdata(in: 0..<10))
                 }
 
                 outputData.append(pack(data: data))
@@ -350,9 +350,9 @@ extension ShadowsocksAdapter {
                 while buffer.left > 5 {
                     buffer.skip(3)
                     var length: Int = 0
-                    buffer.withUnsafeBytes({ (ptr: UnsafePointer<UInt16>) in
+                    buffer.withUnsafeBytes { (ptr: UnsafePointer<UInt16>) in
                         length = Int(ptr.pointee.byteSwapped)
-                    })
+                    }
                     buffer.skip(2)
                     if buffer.left >= length {
                         unpackedData.append(buffer.get(length: length)!)

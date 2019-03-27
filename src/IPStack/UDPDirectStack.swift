@@ -1,15 +1,13 @@
 import Foundation
 
-struct ConnectInfo: Hashable {
+struct ConnectInfo {
     let sourceAddress: IPAddress
     let sourcePort: Port
     let destinationAddress: IPAddress
     let destinationPort: Port
-
-    var hashValue: Int {
-        return sourceAddress.hashValue &+ sourcePort.hashValue &+ destinationAddress.hashValue &+ destinationPort.hashValue
-    }
 }
+
+extension ConnectInfo: Hashable {}
 
 func == (left: ConnectInfo, right: ConnectInfo) -> Bool {
     return left.destinationAddress == right.destinationAddress &&
@@ -96,7 +94,7 @@ public class UDPDirectStack: IPStackProtocol, NWUDPSocketDelegate {
                 return
             }
 
-            guard let index = self.activeSockets.index(where: { _, sock in
+            guard let index = self.activeSockets.firstIndex(where: { _, sock in
                 return socket === sock
             }) else {
                 result = nil

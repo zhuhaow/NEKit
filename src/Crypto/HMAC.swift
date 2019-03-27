@@ -10,12 +10,12 @@ public struct HMAC {
 
     public static func final(value: Data, algorithm: HashAlgorithm, key: Data) -> Data {
         var result = Data(count: algorithm.digestLength)
-        _ = value.withUnsafeRawPointer { v in
-            result.withUnsafeMutableBytes { res in
-                key.withUnsafeRawPointer { k in
-                CCHmac(algorithm.HMACAlgorithm, k, key.count, v, value.count, res)
+        _ = value.withUnsafeBytes { v in
+                result.withUnsafeMutableBytes { res in
+                    key.withUnsafeBytes { k in
+                        CCHmac(algorithm.HMACAlgorithm, k.baseAddress!, key.count, v.baseAddress!, value.count, res.baseAddress!)
+                    }
                 }
-            }
         }
 
         return result
@@ -25,8 +25,8 @@ public struct HMAC {
         var result = Data(count: algorithm.digestLength)
 
         _ = result.withUnsafeMutableBytes { res in
-                key.withUnsafeRawPointer { k in
-                    CCHmac(algorithm.HMACAlgorithm, k, key.count, value, length, res)
+                key.withUnsafeBytes { k in
+                    CCHmac(algorithm.HMACAlgorithm, k.baseAddress!, key.count, value, length, res.baseAddress!)
                 }
             }
 

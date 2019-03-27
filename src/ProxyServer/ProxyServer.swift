@@ -97,7 +97,7 @@ open class ProxyServer: NSObject, TunnelDelegate {
      */
     func tunnelDidClose(_ tunnel: Tunnel) {
         observer?.signal(.tunnelClosed(tunnel, onServer: self))
-        guard let index = tunnels.index(of: tunnel) else {
+        guard let index = tunnels.firstIndex(of: tunnel) else {
             // things went strange
             return
         }

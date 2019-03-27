@@ -9,9 +9,9 @@ public struct MD5Hash {
 
     public static func final(_ value: Data) -> Data {
         var result = Data(count: Int(CC_MD5_DIGEST_LENGTH))
-        _ = value.withUnsafeRawPointer { v in
+        _ = value.withUnsafeBytes { v in
             result.withUnsafeMutableBytes { res in
-                CC_MD5(v, CC_LONG(value.count), res)
+                CC_MD5(v.baseAddress!, CC_LONG(value.count), res.bindMemory(to: UInt8.self).baseAddress!)
             }
         }
 

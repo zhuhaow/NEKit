@@ -599,8 +599,9 @@ extension UInt128 : UnsignedInteger {}
 // MARK: - Hashable Conformance
 
 extension UInt128 : Hashable {
-    public var hashValue: Int {
-        return self.value.lowerBits.hashValue ^ self.value.upperBits.hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.value.lowerBits)
+        hasher.combine(self.value.upperBits)
     }
 }
 

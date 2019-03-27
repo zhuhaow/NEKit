@@ -1,7 +1,7 @@
 import Foundation
 
 /// Represents the port number of IP protocol.
-public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiteral {
+public struct Port: CustomStringConvertible, ExpressibleByIntegerLiteral {
     public typealias IntegerLiteralType = UInt16
 
     fileprivate var inport: UInt16
@@ -56,11 +56,6 @@ public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiter
         return inport
     }
 
-    /// The hash value of the port.
-    public var hashValue: Int {
-        return Int(inport)
-    }
-
     /**
      Run a block with the bytes of port in **network order**.
 
@@ -78,3 +73,5 @@ public struct Port: CustomStringConvertible, Hashable, ExpressibleByIntegerLiter
 public func == (left: Port, right: Port) -> Bool {
     return left.valueInNetworkOrder == right.valueInNetworkOrder
 }
+
+extension Port: Hashable {}

@@ -73,23 +73,21 @@ public class SOCKS5Adapter: AdapterSocket {
 
             let portBytes: [UInt8] = Utils.toByteArray(UInt16(session.port)).reversed()
             response.append(contentsOf: portBytes)
-            write(data: Data(bytes: response))
+            write(data: Data(response))
 
             internalStatus = .readingResponseFirstPart
             socket.readDataTo(length: 5)
         case .readingResponseFirstPart:
             var readLength = 0
-            data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) in
-                switch ptr.advanced(by: 3).pointee {
-                case 1:
-                    readLength = 3 + 2
-                case 3:
-                    readLength = Int(ptr.advanced(by: 1).pointee) + 2
-                case 4:
-                    readLength = 15 + 2
-                default:
-                    break
-                }
+            switch data[3] {
+            case 1:
+                readLength = 3 + 2
+            case 3:
+                readLength = Int(data[4]) + 2
+            case 4:
+                readLength = 15 + 2
+            default:
+                break
             }
             internalStatus = .readingResponseSecondPart
             socket.readDataTo(length: readLength)

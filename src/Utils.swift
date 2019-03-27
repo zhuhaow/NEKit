@@ -103,7 +103,7 @@ public struct Utils {
         static func fill(data: inout Data, from: Int = 0, to: Int = -1) {
             let c = data.count
             data.withUnsafeMutableBytes {
-                arc4random_buf($0.advanced(by: from), to == -1 ? c - from : to - from)
+                arc4random_buf($0.baseAddress!.advanced(by: from), to == -1 ? c - from : to - from)
             }
         }
 
