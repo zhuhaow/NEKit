@@ -1,20 +1,20 @@
 language: objective-c
-osx_image: xcode10.2
+osx_image: xcode11.3
 cache:
   directories:
-  - Carthage
+    - Carthage
 install:
-- bin/bootstrap-if-needed
-- bundle install
+  - bin/bootstrap-if-needed
+  - bundle install
 script:
-- bundle exec fastlane scan --scheme NEKit-macOS
-- bundle exec fastlane scan --scheme NEKit-iOS
+  - bundle exec fastlane scan --scheme NEKit-macOS
+  - bundle exec fastlane scan --scheme NEKit-iOS
 after_success:
-- bash <(curl -s https://codecov.io/bash)
-- "./docs/build_docs.sh"
+  - bash <(curl -s https://codecov.io/bash)
+  - "./docs/build_docs.sh"
 before_deploy:
-- carthage build --no-skip-current
-- carthage archive NEKit
+  - carthage build --no-skip-current
+  - carthage archive NEKit
 deploy:
   provider: releases
   skip_cleanup: true
