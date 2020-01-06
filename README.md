@@ -86,6 +86,9 @@ let httpAdapterFactory = HTTPAdapterFactory(serverHost: "remote.http.proxy", ser
 let ssAdapterFactory = ShadowsocksAdapterFactory(serverHost: "remote.ss.proxy", serverPort: 7077, encryptMethod: "AES-256-CFB", password: "1234567890")
 
 // Then create rules
+// To use geo ip database, first init it
+// Download the binary database https://dev.maxmind.com/geoip/geoip2/geolite2/
+GeoIP.database = MMDB("PATH_TO_THE_DATABASE")!
 let chinaRule = CountryRule(countryCode: "CN", match: true, adapterFactory: directAdapterFactory)
 // `urls` are regular expressions
 let listRule = try! ListRule(adapterFactory: ssAdapterFactory, urls: ["some\\.site\\.does\\.not\\.exists"])
