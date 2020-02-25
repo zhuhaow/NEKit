@@ -1,25 +1,28 @@
-name: macOS
+name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: macOS-latest
+    strategy:
+      matrix:
+        os: [iOS, macOS]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Recovering Cache
-      uses: actions/cache@v1.1.2
-      id: cache
-      with:
-        path: Carthage
-        key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
-        restore-keys: |
-          ${{ runner.os }}-carthage-
-    - name: Building Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: carthage build --no-use-binaries --platform mac
-    - name: Installing Bundler
-      run: bundle install
-    - name: Build and Test
-      run: bundle exec fastlane scan --scheme NEKit-macOS
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Recovering Cache
+        uses: actions/cache@v1.1.2
+        id: cache
+        with:
+          path: Carthage
+          key: ${{ matrix.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+          restore-keys: |
+            ${{ matrix.os }}-carthage-
+      - name: Building Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: carthage build --no-use-binaries --platform ${{ matrix.os }}
+      - name: Installing Bundler
+        run: bundle install
+      - name: Build and Test
+        run: bundle exec fastlane scan --scheme NEKit-${{ matrix.os }}
