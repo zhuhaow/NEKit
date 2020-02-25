@@ -25,7 +25,7 @@ jobs:
             ${{ matrix.os }}-carthage-
       - name: Building Carthage Dependencies
         if: steps.carthage_cache.outputs.cache-hit != 'true'
-        run: carthage build --no-use-binaries --platform ${{ steps.os_transform.outputs.os }}
+        run: carthage bootstrap --no-use-binaries --platform ${{ steps.os_transform.outputs.os }}
       - name: Recovering Bundler Cache
         uses: actions/cache@v1.1.2
         id: bundler_cache
