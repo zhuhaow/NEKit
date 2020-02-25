@@ -11,18 +11,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Recovering Cache
+      - name: Convert OS to Carthage OS parameter
+        id: os_transform
+        run: |
+          printf "##[set-output name=os;]" && [[ "${{ matrix.os }}" = "iOS" ]] && echo ios || echo mac
+      - name: Recovering Carthage Cache
         uses: actions/cache@v1.1.2
-        id: cache
+        id: carthage_cache
         with:
           path: Carthage
           key: ${{ matrix.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
           restore-keys: |
             ${{ matrix.os }}-carthage-
-      - name: Building Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: carthage build --no-use-binaries --platform ${{ matrix.os }}
-      - name: Installing Bundler
+      - name: Building Carthage Dependencies
+        if: steps.carthage_cache.outputs.cache-hit != 'true'
+        run: carthage build --no-use-binaries --platform ${{ steps.os_transform.outputs.os }}
+      - name: Recovering Bundler Cache
+        uses: actions/cache@v1.1.2
+        id: bundler_cache
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Installing Bundler Dependencies
+        if: steps.bundler_cache.outputs.cache-hit != 'true'
         run: bundle install
       - name: Build and Test
         run: bundle exec fastlane scan --scheme NEKit-${{ matrix.os }}
