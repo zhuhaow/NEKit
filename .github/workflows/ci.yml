@@ -21,8 +21,6 @@ jobs:
         with:
           path: Carthage
           key: ${{ matrix.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
-          restore-keys: |
-            ${{ matrix.os }}-carthage-
       - name: Building Carthage Dependencies
         if: steps.carthage_cache.outputs.cache-hit != 'true'
         run: carthage bootstrap --no-use-binaries --platform ${{ steps.os_transform.outputs.os }}
