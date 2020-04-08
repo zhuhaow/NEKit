@@ -14,7 +14,7 @@ public class SOCKS5Adapter: AdapterSocket {
 
     var internalStatus: SOCKS5AdapterStatus = .invalid
 
-    let helloData = Data(bytes: UnsafePointer<UInt8>(([0x05, 0x01, 0x00] as [UInt8])), count: 3)
+    let helloData = Data([0x05, 0x01, 0x00])
 
     public enum ReadTag: Int {
         case methodResponse = -20000, connectResponseFirstPart, connectResponseSecondPart
